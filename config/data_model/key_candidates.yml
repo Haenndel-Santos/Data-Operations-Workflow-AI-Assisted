@@ -1,0 +1,1367 @@
+generated_at: '2026-06-17T06:47:19+00:00'
+status: pending_review
+key_candidates:
+- table_name: creditor_export_creditor
+  source_file: Creditor.xlsx
+  candidate_key: ref_nr
+  key_type: natural
+  non_null_rate: 98.47
+  uniqueness_rate: 98.66
+  duplicate_count: 7
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: creditor_export_creditor
+  source_file: Creditor.xlsx
+  candidate_key: supplier_code
+  key_type: natural
+  non_null_rate: 0.0
+  uniqueness_rate: 0.19
+  duplicate_count: 522
+  confidence_level: needs_review
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: customerproject_export_customerproject
+  source_file: CustomerProject.xlsx
+  candidate_key: ref_nr
+  key_type: natural
+  non_null_rate: 100.0
+  uniqueness_rate: 100.0
+  duplicate_count: 0
+  confidence_level: high
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: customerproject_export_customerproject
+  source_file: CustomerProject.xlsx
+  candidate_key: project_name
+  key_type: natural
+  non_null_rate: 99.84
+  uniqueness_rate: 96.58
+  duplicate_count: 44
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: debtor_export_debtor
+  source_file: Debtor.xlsx
+  candidate_key: ref_nr
+  key_type: natural
+  non_null_rate: 94.42
+  uniqueness_rate: 94.88
+  duplicate_count: 11
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: debtor_export_debtor
+  source_file: Debtor.xlsx
+  candidate_key: vat_number
+  key_type: natural
+  non_null_rate: 40.93
+  uniqueness_rate: 41.4
+  duplicate_count: 126
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: deliverynote_export_deliverynote
+  source_file: DeliveryNote.xlsx
+  candidate_key: ref_nr
+  key_type: natural
+  non_null_rate: 100.0
+  uniqueness_rate: 100.0
+  duplicate_count: 0
+  confidence_level: high
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: deliverynoteline
+  source_file: DeliveryNoteLine.csv
+  candidate_key: ref_nr + part_nr_sku + tot + tot_sal_ex_vat
+  key_type: composite
+  non_null_rate: 100.0
+  uniqueness_rate: 97.32
+  duplicate_count: 109
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: deliverynoteline
+  source_file: DeliveryNoteLine.csv
+  candidate_key: ref_nr + part_nr_sku + tot
+  key_type: composite
+  non_null_rate: 100.0
+  uniqueness_rate: 95.75
+  duplicate_count: 173
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: deliverynoteline
+  source_file: DeliveryNoteLine.csv
+  candidate_key: ref_nr + comm_description + tot
+  key_type: composite
+  non_null_rate: 100.0
+  uniqueness_rate: 97.42
+  duplicate_count: 105
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: deliverynoteline
+  source_file: DeliveryNoteLine.csv
+  candidate_key: ref_nr + part_nr_sku
+  key_type: composite
+  non_null_rate: 100.0
+  uniqueness_rate: 90.88
+  duplicate_count: 371
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: deliverynoteline
+  source_file: DeliveryNoteLine.csv
+  candidate_key: part_nr_sku
+  key_type: natural
+  non_null_rate: 100.0
+  uniqueness_rate: 16.29
+  duplicate_count: 3406
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: deliverynoteline
+  source_file: DeliveryNoteLine.csv
+  candidate_key: ref_nr + row_position
+  key_type: composite
+  non_null_rate: 100.0
+  uniqueness_rate: 100.0
+  duplicate_count: 0
+  confidence_level: high
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: deliverynoteline_export_deliverynoteline
+  source_file: DeliveryNoteLine.xlsx
+  candidate_key: ref_nr + part_nr_sku + tot + tot_sal_ex_vat
+  key_type: composite
+  non_null_rate: 96.41
+  uniqueness_rate: 97.32
+  duplicate_count: 109
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: deliverynoteline_export_deliverynoteline
+  source_file: DeliveryNoteLine.xlsx
+  candidate_key: ref_nr + part_nr_sku + tot
+  key_type: composite
+  non_null_rate: 96.53
+  uniqueness_rate: 95.75
+  duplicate_count: 173
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: deliverynoteline_export_deliverynoteline
+  source_file: DeliveryNoteLine.xlsx
+  candidate_key: ref_nr + comm_description + tot
+  key_type: composite
+  non_null_rate: 99.36
+  uniqueness_rate: 97.42
+  duplicate_count: 105
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: deliverynoteline_export_deliverynoteline
+  source_file: DeliveryNoteLine.xlsx
+  candidate_key: ref_nr + part_nr_sku
+  key_type: composite
+  non_null_rate: 96.61
+  uniqueness_rate: 90.88
+  duplicate_count: 371
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: deliverynoteline_export_deliverynoteline
+  source_file: DeliveryNoteLine.xlsx
+  candidate_key: part_nr_sku
+  key_type: natural
+  non_null_rate: 96.61
+  uniqueness_rate: 16.29
+  duplicate_count: 3406
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: deliverynoteline_export_deliverynoteline
+  source_file: DeliveryNoteLine.xlsx
+  candidate_key: ref_nr + row_position
+  key_type: composite
+  non_null_rate: 100.0
+  uniqueness_rate: 100.0
+  duplicate_count: 0
+  confidence_level: high
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: goodsreception_export_goodsreception
+  source_file: GoodsReception.xlsx
+  candidate_key: ref_nr
+  key_type: natural
+  non_null_rate: 100.0
+  uniqueness_rate: 100.0
+  duplicate_count: 0
+  confidence_level: high
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: goodsreception_export_goodsreception
+  source_file: GoodsReception.xlsx
+  candidate_key: ref_nr_purchase_order
+  key_type: natural
+  non_null_rate: 99.92
+  uniqueness_rate: 71.33
+  duplicate_count: 735
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: goodsreceptionline_export_goodsreceptionline
+  source_file: GoodsReceptionLine.xlsx
+  candidate_key: ref_nr + suppl_part_nr_sku
+  key_type: composite
+  non_null_rate: 96.0
+  uniqueness_rate: 91.57
+  duplicate_count: 373
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: goodsreceptionline_export_goodsreceptionline
+  source_file: GoodsReceptionLine.xlsx
+  candidate_key: suppl_part_nr_sku
+  key_type: natural
+  non_null_rate: 96.0
+  uniqueness_rate: 18.5
+  duplicate_count: 3607
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: goodsreceptionline_export_goodsreceptionline
+  source_file: GoodsReceptionLine.xlsx
+  candidate_key: ref_nr + row_position
+  key_type: composite
+  non_null_rate: 100.0
+  uniqueness_rate: 100.0
+  duplicate_count: 0
+  confidence_level: high
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: organisation_export_organisation
+  source_file: Organisation.xlsx
+  candidate_key: ref_nr
+  key_type: natural
+  non_null_rate: 100.0
+  uniqueness_rate: 99.98
+  duplicate_count: 1
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: organisation_export_organisation
+  source_file: Organisation.xlsx
+  candidate_key: creditor_no
+  key_type: natural
+  non_null_rate: 11.89
+  uniqueness_rate: 11.91
+  duplicate_count: 3779
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: product_export_product
+  source_file: Product.xlsx
+  candidate_key: part_nr_sku
+  key_type: natural
+  non_null_rate: 99.65
+  uniqueness_rate: 99.6
+  duplicate_count: 7
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: product_export_product
+  source_file: Product.xlsx
+  candidate_key: suppl_part_nr_sku
+  key_type: natural
+  non_null_rate: 6.63
+  uniqueness_rate: 6.17
+  duplicate_count: 1627
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: product_export_product
+  source_file: Product.xlsx
+  candidate_key: product_barcode_ce
+  key_type: natural
+  non_null_rate: 31.89
+  uniqueness_rate: 24.8
+  duplicate_count: 1304
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: product_export_product
+  source_file: Product.xlsx
+  candidate_key: product_group_name
+  key_type: natural
+  non_null_rate: 98.79
+  uniqueness_rate: 0.92
+  duplicate_count: 1718
+  confidence_level: low
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: product_export_product
+  source_file: Product.xlsx
+  candidate_key: name
+  key_type: natural
+  non_null_rate: 0.0
+  uniqueness_rate: 0.06
+  duplicate_count: 1733
+  confidence_level: needs_review
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: productcomposition_export_productcomposition
+  source_file: ProductComposition.xlsx
+  candidate_key: part_nr_sku
+  key_type: natural
+  non_null_rate: 99.83
+  uniqueness_rate: 85.5
+  duplicate_count: 86
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: productcomposition_export_productcomposition
+  source_file: ProductComposition.xlsx
+  candidate_key: parent_product_code
+  key_type: natural
+  non_null_rate: 97.98
+  uniqueness_rate: 41.82
+  duplicate_count: 345
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: productdescription_export_productdescription
+  source_file: ProductDescription.xlsx
+  candidate_key: part_nr_sku
+  key_type: natural
+  non_null_rate: 100.0
+  uniqueness_rate: 94.19
+  duplicate_count: 125
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: productdescription_export_productdescription
+  source_file: ProductDescription.xlsx
+  candidate_key: product_group_name
+  key_type: natural
+  non_null_rate: 96.7
+  uniqueness_rate: 0.65
+  duplicate_count: 2139
+  confidence_level: needs_review
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: productdescription_export_productdescription
+  source_file: ProductDescription.xlsx
+  candidate_key: specification_code
+  key_type: natural
+  non_null_rate: 0.14
+  uniqueness_rate: 0.19
+  duplicate_count: 2149
+  confidence_level: needs_review
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: productpricebreak_export_productpricebreak
+  source_file: ProductPriceBreak.xlsx
+  candidate_key: part_nr_sku
+  key_type: natural
+  non_null_rate: 99.76
+  uniqueness_rate: 64.7
+  duplicate_count: 1195
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: productsupplier_export_productsupplier
+  source_file: ProductSupplier.xlsx
+  candidate_key: creditor_no
+  key_type: natural
+  non_null_rate: 97.57
+  uniqueness_rate: 7.2
+  duplicate_count: 993
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: productsupplier_export_productsupplier
+  source_file: ProductSupplier.xlsx
+  candidate_key: part_nr_sku
+  key_type: natural
+  non_null_rate: 99.35
+  uniqueness_rate: 78.6
+  duplicate_count: 229
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: purchaseinvoice
+  source_file: PurchaseInvoice.csv
+  candidate_key: ref_nr
+  key_type: natural
+  non_null_rate: 100.0
+  uniqueness_rate: 99.61
+  duplicate_count: 11
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: purchaseinvoice
+  source_file: PurchaseInvoice.csv
+  candidate_key: not_paid_cc
+  key_type: natural
+  non_null_rate: 100.0
+  uniqueness_rate: 1.34
+  duplicate_count: 2806
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: purchaseinvoiceline
+  source_file: PurchaseInvoiceLine.csv
+  candidate_key: ref_nr + suppl_part_nr_sku
+  key_type: composite
+  non_null_rate: 100.0
+  uniqueness_rate: 77.62
+  duplicate_count: 1472
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: purchaseinvoiceline
+  source_file: PurchaseInvoiceLine.csv
+  candidate_key: suppl_part_nr_sku
+  key_type: natural
+  non_null_rate: 100.0
+  uniqueness_rate: 11.93
+  duplicate_count: 5793
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: purchaseinvoiceline
+  source_file: PurchaseInvoiceLine.csv
+  candidate_key: ref_nr + row_position
+  key_type: composite
+  non_null_rate: 100.0
+  uniqueness_rate: 100.0
+  duplicate_count: 0
+  confidence_level: high
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: purchaseinvoiceline_export_purchaseinvoiceline
+  source_file: PurchaseInvoiceLine.xlsx
+  candidate_key: ref_nr + suppl_part_nr_sku
+  key_type: composite
+  non_null_rate: 61.89
+  uniqueness_rate: 77.62
+  duplicate_count: 1472
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: purchaseinvoiceline_export_purchaseinvoiceline
+  source_file: PurchaseInvoiceLine.xlsx
+  candidate_key: suppl_part_nr_sku
+  key_type: natural
+  non_null_rate: 61.9
+  uniqueness_rate: 11.93
+  duplicate_count: 5793
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: purchaseinvoiceline_export_purchaseinvoiceline
+  source_file: PurchaseInvoiceLine.xlsx
+  candidate_key: ref_nr + row_position
+  key_type: composite
+  non_null_rate: 99.98
+  uniqueness_rate: 100.0
+  duplicate_count: 0
+  confidence_level: high
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: purchaseorder_3_export_purchaseorder
+  source_file: PurchaseOrder (3).xlsx
+  candidate_key: ref_nr
+  key_type: natural
+  non_null_rate: 100.0
+  uniqueness_rate: 100.0
+  duplicate_count: 0
+  confidence_level: high
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: purchaseorderline_export_purchaseorderline
+  source_file: PurchaseOrderLine.xlsx
+  candidate_key: ref_nr + suppl_part_nr_sku
+  key_type: composite
+  non_null_rate: 95.64
+  uniqueness_rate: 83.36
+  duplicate_count: 713
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: purchaseorderline_export_purchaseorderline
+  source_file: PurchaseOrderLine.xlsx
+  candidate_key: suppl_part_nr_sku
+  key_type: natural
+  non_null_rate: 95.64
+  uniqueness_rate: 20.21
+  duplicate_count: 3419
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: purchaseorderline_export_purchaseorderline
+  source_file: PurchaseOrderLine.xlsx
+  candidate_key: ref_nr + row_position
+  key_type: composite
+  non_null_rate: 100.0
+  uniqueness_rate: 100.0
+  duplicate_count: 0
+  confidence_level: high
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: purchaseorderline2_export_purchaseorderline
+  source_file: PurchaseOrderLine2.xlsx
+  candidate_key: ref_nr + part_nr_sku
+  key_type: composite
+  non_null_rate: 46.14
+  uniqueness_rate: 48.31
+  duplicate_count: 2215
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: purchaseorderline2_export_purchaseorderline
+  source_file: PurchaseOrderLine2.xlsx
+  candidate_key: doc_ref_nr
+  key_type: natural
+  non_null_rate: 100.0
+  uniqueness_rate: 46.49
+  duplicate_count: 2293
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: purchaseorderline2_export_purchaseorderline
+  source_file: PurchaseOrderLine2.xlsx
+  candidate_key: ref_number
+  key_type: natural
+  non_null_rate: 46.42
+  uniqueness_rate: 17.15
+  duplicate_count: 3550
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: purchaseorderline2_export_purchaseorderline
+  source_file: PurchaseOrderLine2.xlsx
+  candidate_key: part_nr_sku
+  key_type: natural
+  non_null_rate: 95.64
+  uniqueness_rate: 20.21
+  duplicate_count: 3419
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: purchaseorderline2_export_purchaseorderline
+  source_file: PurchaseOrderLine2.xlsx
+  candidate_key: ref_number_1
+  key_type: natural
+  non_null_rate: 41.03
+  uniqueness_rate: 15.99
+  duplicate_count: 3600
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: purchaseorderline2_export_purchaseorderline
+  source_file: PurchaseOrderLine2.xlsx
+  candidate_key: sales_order_no
+  key_type: natural
+  non_null_rate: 0.0
+  uniqueness_rate: 0.02
+  duplicate_count: 4284
+  confidence_level: needs_review
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: purchaseorderline2_export_purchaseorderline
+  source_file: PurchaseOrderLine2.xlsx
+  candidate_key: ref_nr + row_position
+  key_type: composite
+  non_null_rate: 46.42
+  uniqueness_rate: 100.0
+  duplicate_count: 0
+  confidence_level: high
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: purchaseorderline3_export_purchaseorderline
+  source_file: PurchaseOrderLine3.xlsx
+  candidate_key: ref_nr + part_nr_sku
+  key_type: composite
+  non_null_rate: 46.14
+  uniqueness_rate: 48.31
+  duplicate_count: 2215
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: purchaseorderline3_export_purchaseorderline
+  source_file: PurchaseOrderLine3.xlsx
+  candidate_key: doc_ref_nr
+  key_type: natural
+  non_null_rate: 100.0
+  uniqueness_rate: 46.49
+  duplicate_count: 2293
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: purchaseorderline3_export_purchaseorderline
+  source_file: PurchaseOrderLine3.xlsx
+  candidate_key: ref_number
+  key_type: natural
+  non_null_rate: 46.42
+  uniqueness_rate: 17.15
+  duplicate_count: 3550
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: purchaseorderline3_export_purchaseorderline
+  source_file: PurchaseOrderLine3.xlsx
+  candidate_key: part_nr_sku
+  key_type: natural
+  non_null_rate: 95.64
+  uniqueness_rate: 20.21
+  duplicate_count: 3419
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: purchaseorderline3_export_purchaseorderline
+  source_file: PurchaseOrderLine3.xlsx
+  candidate_key: ref_number_1
+  key_type: natural
+  non_null_rate: 41.03
+  uniqueness_rate: 15.99
+  duplicate_count: 3600
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: purchaseorderline3_export_purchaseorderline
+  source_file: PurchaseOrderLine3.xlsx
+  candidate_key: sales_order_no
+  key_type: natural
+  non_null_rate: 0.0
+  uniqueness_rate: 0.02
+  duplicate_count: 4284
+  confidence_level: needs_review
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: purchaseorderline3_export_purchaseorderline
+  source_file: PurchaseOrderLine3.xlsx
+  candidate_key: creditor_no
+  key_type: natural
+  non_null_rate: 99.95
+  uniqueness_rate: 2.4
+  duplicate_count: 4182
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: purchaseorderline3_export_purchaseorderline
+  source_file: PurchaseOrderLine3.xlsx
+  candidate_key: ref_nr_1
+  key_type: natural
+  non_null_rate: 92.35
+  uniqueness_rate: 6.53
+  duplicate_count: 4005
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: purchaseorderline3_export_purchaseorderline
+  source_file: PurchaseOrderLine3.xlsx
+  candidate_key: part_nr_sku_1
+  key_type: natural
+  non_null_rate: 91.6
+  uniqueness_rate: 14.66
+  duplicate_count: 3657
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: purchaseorderline3_export_purchaseorderline
+  source_file: PurchaseOrderLine3.xlsx
+  candidate_key: ref_nr_2
+  key_type: natural
+  non_null_rate: 91.6
+  uniqueness_rate: 14.7
+  duplicate_count: 3655
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: purchaseorderline3_export_purchaseorderline
+  source_file: PurchaseOrderLine3.xlsx
+  candidate_key: ref_number_2
+  key_type: natural
+  non_null_rate: 0.0
+  uniqueness_rate: 0.02
+  duplicate_count: 4284
+  confidence_level: needs_review
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: purchaseorderline3_export_purchaseorderline
+  source_file: PurchaseOrderLine3.xlsx
+  candidate_key: ref_number_3
+  key_type: natural
+  non_null_rate: 41.03
+  uniqueness_rate: 15.99
+  duplicate_count: 3600
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: purchaseorderline3_export_purchaseorderline
+  source_file: PurchaseOrderLine3.xlsx
+  candidate_key: ref_nr_3
+  key_type: natural
+  non_null_rate: 46.42
+  uniqueness_rate: 17.15
+  duplicate_count: 3550
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: purchaseorderline3_export_purchaseorderline
+  source_file: PurchaseOrderLine3.xlsx
+  candidate_key: ref_nr + row_position
+  key_type: composite
+  non_null_rate: 46.42
+  uniqueness_rate: 100.0
+  duplicate_count: 0
+  confidence_level: high
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: purchasequotation
+  source_file: PurchaseQuotation.csv
+  candidate_key: ref_nr
+  key_type: natural
+  non_null_rate: 100.0
+  uniqueness_rate: 100.0
+  duplicate_count: 0
+  confidence_level: high
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: purchasequotationline_export_purchasequotationline
+  source_file: PurchaseQuotationLine.xlsx
+  candidate_key: ref_nr + suppl_part_nr_sku
+  key_type: composite
+  non_null_rate: 78.53
+  uniqueness_rate: 68.29
+  duplicate_count: 3477
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: purchasequotationline_export_purchasequotationline
+  source_file: PurchaseQuotationLine.xlsx
+  candidate_key: suppl_part_nr_sku
+  key_type: natural
+  non_null_rate: 78.53
+  uniqueness_rate: 17.77
+  duplicate_count: 9017
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: purchasequotationline_export_purchasequotationline
+  source_file: PurchaseQuotationLine.xlsx
+  candidate_key: ref_nr + row_position
+  key_type: composite
+  non_null_rate: 100.0
+  uniqueness_rate: 100.0
+  duplicate_count: 0
+  confidence_level: high
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesinvoice
+  source_file: SalesInvoice.csv
+  candidate_key: ref_nr
+  key_type: natural
+  non_null_rate: 100.0
+  uniqueness_rate: 100.0
+  duplicate_count: 0
+  confidence_level: high
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesinvoice
+  source_file: SalesInvoice.csv
+  candidate_key: debtor_no
+  key_type: natural
+  non_null_rate: 100.0
+  uniqueness_rate: 5.15
+  duplicate_count: 2285
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesinvoice
+  source_file: SalesInvoice.csv
+  candidate_key: paid_cc
+  key_type: natural
+  non_null_rate: 100.0
+  uniqueness_rate: 77.42
+  duplicate_count: 544
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesinvoice
+  source_file: SalesInvoice.csv
+  candidate_key: not_paid_cc
+  key_type: natural
+  non_null_rate: 100.0
+  uniqueness_rate: 0.75
+  duplicate_count: 2391
+  confidence_level: needs_review
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesinvoiceline_export_salesinvoiceline
+  source_file: SalesInvoiceLine.xlsx
+  candidate_key: ref_nr + part_nr_sku
+  key_type: composite
+  non_null_rate: 65.77
+  uniqueness_rate: 67.5
+  duplicate_count: 1915
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesinvoiceline_export_salesinvoiceline
+  source_file: SalesInvoiceLine.xlsx
+  candidate_key: part_nr_sku
+  key_type: natural
+  non_null_rate: 66.94
+  uniqueness_rate: 9.84
+  duplicate_count: 5312
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesinvoiceline_export_salesinvoiceline
+  source_file: SalesInvoiceLine.xlsx
+  candidate_key: ref_nr + row_position
+  key_type: composite
+  non_null_rate: 97.06
+  uniqueness_rate: 100.0
+  duplicate_count: 0
+  confidence_level: high
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesopportunity
+  source_file: SalesOpportunity.csv
+  candidate_key: ref_nr
+  key_type: natural
+  non_null_rate: 100.0
+  uniqueness_rate: 100.0
+  duplicate_count: 0
+  confidence_level: high
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesopportunityline_export_salesopportunityline
+  source_file: SalesOpportunityLine.xlsx
+  candidate_key: ref_nr + part_nr_sku
+  key_type: composite
+  non_null_rate: 56.18
+  uniqueness_rate: 70.51
+  duplicate_count: 210
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesopportunityline_export_salesopportunityline
+  source_file: SalesOpportunityLine.xlsx
+  candidate_key: part_nr_sku
+  key_type: natural
+  non_null_rate: 56.18
+  uniqueness_rate: 50.7
+  duplicate_count: 351
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesopportunityline_export_salesopportunityline
+  source_file: SalesOpportunityLine.xlsx
+  candidate_key: ref_nr + row_position
+  key_type: composite
+  non_null_rate: 100.0
+  uniqueness_rate: 100.0
+  duplicate_count: 0
+  confidence_level: high
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesorder
+  source_file: SalesOrder.csv
+  candidate_key: ref_nr
+  key_type: natural
+  non_null_rate: 100.0
+  uniqueness_rate: 100.0
+  duplicate_count: 0
+  confidence_level: high
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesorder
+  source_file: SalesOrder.csv
+  candidate_key: project_number_name
+  key_type: natural
+  non_null_rate: 100.0
+  uniqueness_rate: 24.31
+  duplicate_count: 993
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesorderline
+  source_file: SalesOrderLine.csv
+  candidate_key: ref_nr + part_nr_sku
+  key_type: composite
+  non_null_rate: 100.0
+  uniqueness_rate: 74.52
+  duplicate_count: 1119
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesorderline
+  source_file: SalesOrderLine.csv
+  candidate_key: part_nr_sku
+  key_type: natural
+  non_null_rate: 100.0
+  uniqueness_rate: 17.65
+  duplicate_count: 3616
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesorderline
+  source_file: SalesOrderLine.csv
+  candidate_key: ref_nr + row_position
+  key_type: composite
+  non_null_rate: 100.0
+  uniqueness_rate: 100.0
+  duplicate_count: 0
+  confidence_level: high
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesorderline_export_salesorderline
+  source_file: SalesOrderLine.xlsx
+  candidate_key: ref_nr + part_nr_sku
+  key_type: composite
+  non_null_rate: 94.44
+  uniqueness_rate: 74.52
+  duplicate_count: 1119
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesorderline_export_salesorderline
+  source_file: SalesOrderLine.xlsx
+  candidate_key: part_nr_sku
+  key_type: natural
+  non_null_rate: 94.44
+  uniqueness_rate: 17.65
+  duplicate_count: 3616
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesorderline_export_salesorderline
+  source_file: SalesOrderLine.xlsx
+  candidate_key: ref_nr + row_position
+  key_type: composite
+  non_null_rate: 100.0
+  uniqueness_rate: 100.0
+  duplicate_count: 0
+  confidence_level: high
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesorderline2_export_salesorderline
+  source_file: SalesOrderLine2.xlsx
+  candidate_key: ref_nr + suppl_part_nr_sku
+  key_type: composite
+  non_null_rate: 16.49
+  uniqueness_rate: 5.42
+  duplicate_count: 4153
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesorderline2_export_salesorderline
+  source_file: SalesOrderLine2.xlsx
+  candidate_key: ref_nr + part_nr_sku
+  key_type: composite
+  non_null_rate: 52.99
+  uniqueness_rate: 23.98
+  duplicate_count: 3338
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesorderline2_export_salesorderline
+  source_file: SalesOrderLine2.xlsx
+  candidate_key: doc_ref_nr
+  key_type: natural
+  non_null_rate: 100.0
+  uniqueness_rate: 29.88
+  duplicate_count: 3079
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesorderline2_export_salesorderline
+  source_file: SalesOrderLine2.xlsx
+  candidate_key: part_nr_sku
+  key_type: natural
+  non_null_rate: 94.44
+  uniqueness_rate: 17.65
+  duplicate_count: 3616
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesorderline2_export_salesorderline
+  source_file: SalesOrderLine2.xlsx
+  candidate_key: hs_code
+  key_type: natural
+  non_null_rate: 31.41
+  uniqueness_rate: 0.89
+  duplicate_count: 4352
+  confidence_level: low
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesorderline2_export_salesorderline
+  source_file: SalesOrderLine2.xlsx
+  candidate_key: part_nr_sku_1
+  key_type: natural
+  non_null_rate: 94.44
+  uniqueness_rate: 17.65
+  duplicate_count: 3616
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesorderline2_export_salesorderline
+  source_file: SalesOrderLine2.xlsx
+  candidate_key: company_name
+  key_type: natural
+  non_null_rate: 100.0
+  uniqueness_rate: 0.02
+  duplicate_count: 4390
+  confidence_level: needs_review
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesorderline2_export_salesorderline
+  source_file: SalesOrderLine2.xlsx
+  candidate_key: supplier_code
+  key_type: natural
+  non_null_rate: 0.0
+  uniqueness_rate: 0.02
+  duplicate_count: 4390
+  confidence_level: needs_review
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesorderline2_export_salesorderline
+  source_file: SalesOrderLine2.xlsx
+  candidate_key: ref_nr_1
+  key_type: natural
+  non_null_rate: 97.02
+  uniqueness_rate: 7.24
+  duplicate_count: 4073
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesorderline2_export_salesorderline
+  source_file: SalesOrderLine2.xlsx
+  candidate_key: debtor_no
+  key_type: natural
+  non_null_rate: 100.0
+  uniqueness_rate: 2.35
+  duplicate_count: 4288
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesorderline2_export_salesorderline
+  source_file: SalesOrderLine2.xlsx
+  candidate_key: ref_nr_2
+  key_type: natural
+  non_null_rate: 79.69
+  uniqueness_rate: 38.17
+  duplicate_count: 2715
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesorderline2_export_salesorderline
+  source_file: SalesOrderLine2.xlsx
+  candidate_key: part_nr_sku_2
+  key_type: natural
+  non_null_rate: 76.75
+  uniqueness_rate: 15.1
+  duplicate_count: 3728
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesorderline2_export_salesorderline
+  source_file: SalesOrderLine2.xlsx
+  candidate_key: hs_code_1
+  key_type: natural
+  non_null_rate: 31.41
+  uniqueness_rate: 0.89
+  duplicate_count: 4352
+  confidence_level: low
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesorderline2_export_salesorderline
+  source_file: SalesOrderLine2.xlsx
+  candidate_key: part_nr_sku_3
+  key_type: natural
+  non_null_rate: 92.42
+  uniqueness_rate: 15.71
+  duplicate_count: 3701
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesorderline2_export_salesorderline
+  source_file: SalesOrderLine2.xlsx
+  candidate_key: ref_nr_3
+  key_type: natural
+  non_null_rate: 92.42
+  uniqueness_rate: 15.76
+  duplicate_count: 3699
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesorderline2_export_salesorderline
+  source_file: SalesOrderLine2.xlsx
+  candidate_key: serial_number
+  key_type: natural
+  non_null_rate: 0.0
+  uniqueness_rate: 0.02
+  duplicate_count: 4390
+  confidence_level: needs_review
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesorderline2_export_salesorderline
+  source_file: SalesOrderLine2.xlsx
+  candidate_key: suppl_part_nr_sku
+  key_type: natural
+  non_null_rate: 25.05
+  uniqueness_rate: 2.55
+  duplicate_count: 4279
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesorderline2_export_salesorderline
+  source_file: SalesOrderLine2.xlsx
+  candidate_key: creditor_no
+  key_type: natural
+  non_null_rate: 45.14
+  uniqueness_rate: 1.43
+  duplicate_count: 4328
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesorderline2_export_salesorderline
+  source_file: SalesOrderLine2.xlsx
+  candidate_key: doc_ref_nr_1
+  key_type: natural
+  non_null_rate: 45.18
+  uniqueness_rate: 21.23
+  duplicate_count: 3459
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesorderline2_export_salesorderline
+  source_file: SalesOrderLine2.xlsx
+  candidate_key: part_nr_sku_4
+  key_type: natural
+  non_null_rate: 44.91
+  uniqueness_rate: 13.23
+  duplicate_count: 3810
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesorderline2_export_salesorderline
+  source_file: SalesOrderLine2.xlsx
+  candidate_key: ref_number
+  key_type: natural
+  non_null_rate: 45.18
+  uniqueness_rate: 16.74
+  duplicate_count: 3656
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesorderline2_export_salesorderline
+  source_file: SalesOrderLine2.xlsx
+  candidate_key: creditor_no_1
+  key_type: natural
+  non_null_rate: 40.01
+  uniqueness_rate: 1.32
+  duplicate_count: 4333
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesorderline2_export_salesorderline
+  source_file: SalesOrderLine2.xlsx
+  candidate_key: doc_ref_nr_2
+  key_type: natural
+  non_null_rate: 40.01
+  uniqueness_rate: 23.96
+  duplicate_count: 3339
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesorderline2_export_salesorderline
+  source_file: SalesOrderLine2.xlsx
+  candidate_key: part_nr_sku_5
+  key_type: natural
+  non_null_rate: 39.79
+  uniqueness_rate: 12.14
+  duplicate_count: 3858
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesorderline2_export_salesorderline
+  source_file: SalesOrderLine2.xlsx
+  candidate_key: ref_number_1
+  key_type: natural
+  non_null_rate: 40.01
+  uniqueness_rate: 15.6
+  duplicate_count: 3706
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesquotation
+  source_file: SalesQuotation.csv
+  candidate_key: ref_nr
+  key_type: natural
+  non_null_rate: 100.0
+  uniqueness_rate: 100.0
+  duplicate_count: 0
+  confidence_level: high
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesquotationline_export_salesquotationline
+  source_file: SalesQuotationLine.xlsx
+  candidate_key: ref_nr + part_nr_sku
+  key_type: composite
+  non_null_rate: 88.23
+  uniqueness_rate: 71.38
+  duplicate_count: 1680
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesquotationline_export_salesquotationline
+  source_file: SalesQuotationLine.xlsx
+  candidate_key: part_nr_sku
+  key_type: natural
+  non_null_rate: 88.23
+  uniqueness_rate: 25.45
+  duplicate_count: 4377
+  confidence_level: medium
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review
+- table_name: salesquotationline_export_salesquotationline
+  source_file: SalesQuotationLine.xlsx
+  candidate_key: ref_nr + row_position
+  key_type: composite
+  non_null_rate: 100.0
+  uniqueness_rate: 100.0
+  duplicate_count: 0
+  confidence_level: high
+  reason: Measured non-null, uniqueness, and duplicate rates. Line tables exclude
+    ref_nr alone.
+  status: pending_review

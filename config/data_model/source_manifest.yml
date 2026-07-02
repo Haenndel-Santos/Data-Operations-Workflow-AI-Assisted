@@ -1,0 +1,1114 @@
+generated_at: '2026-06-17T06:47:19+00:00'
+sources:
+- source_id: creditor
+  file_name: Creditor.xlsx
+  file_path: originaldatabase\Creditor.xlsx
+  file_type: xlsx
+  file_hash: 66db01c4b61d6c63c6f08df39f4992e8e89431b202c0af94e87954023a7b478a
+  detected_sheets:
+  - sheet_name: Export_Creditor
+    proposed_table_name: creditor_export_creditor
+    row_count: 523
+    column_count: 12
+    columns:
+    - creditor_extended
+    - ref_nr
+    - visiting_city
+    - fiscal_country
+    - contact
+    - supplier_code
+    - type
+    - currency_cred
+    - language
+    - payment_method
+    - payment_terms
+    - int_approval
+  row_count: 523
+  column_count: 12
+  first_detected_at: '2026-06-17T06:46:44+00:00'
+  last_checked_at: '2026-06-17T06:46:44+00:00'
+  status: new
+  classification: pending_sheet_review
+  notes: Source observed by Step 3 onboarding. No approval implied.
+- source_id: customerproject
+  file_name: CustomerProject.xlsx
+  file_path: originaldatabase\CustomerProject.xlsx
+  file_type: xlsx
+  file_hash: 4243ccf7b7ccd03338a33857f222f7bea742c99db16945e74d7bfae77451d22e
+  detected_sheets:
+  - sheet_name: Export_CustomerProject
+    proposed_table_name: customerproject_export_customerproject
+    row_count: 1285
+    column_count: 12
+    columns:
+    - ref_nr
+    - project_name
+    - debtor
+    - organisation
+    - contact
+    - date_contract
+    - account_manager
+    - sales
+    - project_type
+    - status
+    - financial_status
+    - contract_price_costplus
+  row_count: 1285
+  column_count: 12
+  first_detected_at: '2026-06-17T06:46:44+00:00'
+  last_checked_at: '2026-06-17T06:46:44+00:00'
+  status: new
+  classification: pending_sheet_review
+  notes: Source observed by Step 3 onboarding. No approval implied.
+- source_id: debtor
+  file_name: Debtor.xlsx
+  file_path: originaldatabase\Debtor.xlsx
+  file_type: xlsx
+  file_hash: 8aa5ce8011d88cf3aab7e1a0b039f46216c3d6e8eae70c4cb96346ea1d222a40
+  detected_sheets:
+  - sheet_name: Export_Debtor
+    proposed_table_name: debtor_export_debtor
+    row_count: 215
+    column_count: 11
+    columns:
+    - debtor_extended
+    - ref_nr
+    - visiting_city_organisation
+    - fiscal_country
+    - contact_invoice_reminder
+    - vat_number
+    - currency_debtor
+    - language
+    - payment_method
+    - payment_terms
+    - price_list
+  row_count: 215
+  column_count: 11
+  first_detected_at: '2026-06-17T06:46:44+00:00'
+  last_checked_at: '2026-06-17T06:46:44+00:00'
+  status: new
+  classification: pending_sheet_review
+  notes: Source observed by Step 3 onboarding. No approval implied.
+- source_id: deliverynote
+  file_name: DeliveryNote.xlsx
+  file_path: originaldatabase\DeliveryNote.xlsx
+  file_type: xlsx
+  file_hash: fe74998da7c1b3702b28287382379617053e6bd9e4ff01db91324df89a61d3ca
+  detected_sheets:
+  - sheet_name: Export_DeliveryNote
+    proposed_table_name: deliverynote_export_deliverynote
+    row_count: 1893
+    column_count: 12
+    columns:
+    - ref_nr
+    - debtor
+    - organisation
+    - contact
+    - print_date
+    - period
+    - shipping_date
+    - project
+    - serial_origin
+    - references_document
+    - transport_by
+    - track_n_tracenr
+  row_count: 1893
+  column_count: 12
+  first_detected_at: '2026-06-17T06:46:44+00:00'
+  last_checked_at: '2026-06-17T06:46:44+00:00'
+  status: new
+  classification: pending_sheet_review
+  notes: Source observed by Step 3 onboarding. No approval implied.
+- source_id: deliverynoteline
+  file_name: DeliveryNoteLine.csv
+  file_path: originaldatabase\DeliveryNoteLine.csv
+  file_type: csv
+  file_hash: 9bf559d612a2a03b1156ae0660733ddd25889bd1115f04dc1a9930dc24cd4e49
+  detected_sheets:
+  - sheet_name: ''
+    proposed_table_name: deliverynoteline
+    row_count: 4069
+    column_count: 17
+    columns:
+    - ref_nr
+    - debtor
+    - organisation
+    - contact
+    - project
+    - source_sales
+    - print_date
+    - period
+    - productgroup
+    - icon_product
+    - part_nr_sku
+    - comm_description
+    - tot
+    - currency_doc
+    - sales_pr_net_p_u
+    - tot_sal_ex_vat
+    - tot_sal_ex_vat_cc
+  row_count: 4069
+  column_count: 17
+  first_detected_at: '2026-06-17T06:46:44+00:00'
+  last_checked_at: '2026-06-17T06:46:44+00:00'
+  status: new
+  classification: pending_sheet_review
+  notes: Source observed by Step 3 onboarding. No approval implied.
+- source_id: deliverynoteline
+  file_name: DeliveryNoteLine.xlsx
+  file_path: originaldatabase\DeliveryNoteLine.xlsx
+  file_type: xlsx
+  file_hash: b5e068f4daaade305d35fa83f5f22d202a5ce9bc79eb0f35a514c7faa6850f75
+  detected_sheets:
+  - sheet_name: Export_DeliveryNoteLine
+    proposed_table_name: deliverynoteline_export_deliverynoteline
+    row_count: 4069
+    column_count: 17
+    columns:
+    - ref_nr
+    - debtor
+    - organisation
+    - contact
+    - project
+    - source_sales
+    - print_date
+    - period
+    - productgroup
+    - icon_product
+    - part_nr_sku
+    - comm_description
+    - tot
+    - currency_doc
+    - sales_pr_net_p_u
+    - tot_sal_ex_vat
+    - tot_sal_ex_vat_cc
+  row_count: 4069
+  column_count: 17
+  first_detected_at: '2026-06-17T06:46:44+00:00'
+  last_checked_at: '2026-06-17T06:46:44+00:00'
+  status: new
+  classification: pending_sheet_review
+  notes: Source observed by Step 3 onboarding. No approval implied.
+- source_id: goodsreception
+  file_name: GoodsReception.xlsx
+  file_path: originaldatabase\GoodsReception.xlsx
+  file_type: xlsx
+  file_hash: 5382d5c162797fdab4bc0b691fbe73069b6c10bc7d714243bfcfdd333ca05cfb
+  detected_sheets:
+  - sheet_name: Export_GoodsReception
+    proposed_table_name: goodsreception_export_goodsreception
+    row_count: 2564
+    column_count: 12
+    columns:
+    - ref_nr
+    - creditor
+    - ref_nr_purchase_order
+    - receipt_nr_supplier
+    - internal_contact
+    - stage_gr
+    - project
+    - internal_keyword
+    - organisation_project
+    - created_date
+    - period
+    - remark
+  row_count: 2564
+  column_count: 12
+  first_detected_at: '2026-06-17T06:46:44+00:00'
+  last_checked_at: '2026-06-17T06:46:44+00:00'
+  status: new
+  classification: pending_sheet_review
+  notes: Source observed by Step 3 onboarding. No approval implied.
+- source_id: goodsreceptionline
+  file_name: GoodsReceptionLine.xlsx
+  file_path: originaldatabase\GoodsReceptionLine.xlsx
+  file_type: xlsx
+  file_hash: 4b0f898b70922cd874a4c3c527380914cc0752cf52c5471c4a1be6939a2aecb0
+  detected_sheets:
+  - sheet_name: Export_GoodsReceptionLine
+    proposed_table_name: goodsreceptionline_export_goodsreceptionline
+    row_count: 4426
+    column_count: 13
+    columns:
+    - ref_nr
+    - icon_un_approved
+    - period
+    - creditor
+    - project
+    - source_purchase
+    - source_sales
+    - icon_product
+    - suppl_part_nr_sku
+    - product_description
+    - rec
+    - purch_pr_net_p_u
+    - tot_pur_ex_vat_cc
+  row_count: 4426
+  column_count: 13
+  first_detected_at: '2026-06-17T06:46:44+00:00'
+  last_checked_at: '2026-06-17T06:46:44+00:00'
+  status: new
+  classification: pending_sheet_review
+  notes: Source observed by Step 3 onboarding. No approval implied.
+- source_id: organisation
+  file_name: Organisation.xlsx
+  file_path: originaldatabase\Organisation.xlsx
+  file_type: xlsx
+  file_hash: 97693d06f0e60d29f251809f7948f794536d0efdb6b118fc870c74521725e8db
+  detected_sheets:
+  - sheet_name: Export_Organisation
+    proposed_table_name: organisation_export_organisation
+    row_count: 4290
+    column_count: 11
+    columns:
+    - organisation_extended
+    - logo
+    - ref_nr
+    - visiting_city
+    - visiting_country
+    - deb_no
+    - creditor_no
+    - phone
+    - account_manager
+    - engineering
+    - status
+  row_count: 4290
+  column_count: 11
+  first_detected_at: '2026-06-17T06:46:44+00:00'
+  last_checked_at: '2026-06-17T06:46:44+00:00'
+  status: new
+  classification: pending_sheet_review
+  notes: Source observed by Step 3 onboarding. No approval implied.
+- source_id: product
+  file_name: Product.xlsx
+  file_path: originaldatabase\Product.xlsx
+  file_type: xlsx
+  file_hash: cf23c5fd531d4fd55292f950a5c39f51814d90370688604af24ede9fbf7dbc32
+  detected_sheets:
+  - sheet_name: Export_Product
+    proposed_table_name: product_export_product
+    row_count: 1734
+    column_count: 10
+    columns:
+    - part_nr_sku
+    - suppl_part_nr_sku
+    - product_barcode_ce
+    - image
+    - item_description
+    - creditor
+    - product_group_name
+    - hour_type
+    - name
+    - gross_sales
+  row_count: 1734
+  column_count: 10
+  first_detected_at: '2026-06-17T06:46:44+00:00'
+  last_checked_at: '2026-06-17T06:46:44+00:00'
+  status: new
+  classification: pending_sheet_review
+  notes: Source observed by Step 3 onboarding. No approval implied.
+- source_id: productcomposition
+  file_name: ProductComposition.xlsx
+  file_path: originaldatabase\ProductComposition.xlsx
+  file_type: xlsx
+  file_hash: 315ee7eaa588e21d7301f53a62503d8924eee2866b45c1eea5acfcbc6888620c
+  detected_sheets:
+  - sheet_name: Export_ProductComposition
+    proposed_table_name: productcomposition_export_productcomposition
+    row_count: 593
+    column_count: 4
+    columns:
+    - part_nr_sku
+    - item_description
+    - parent_product_code
+    - parent_product_description
+  row_count: 593
+  column_count: 4
+  first_detected_at: '2026-06-17T06:46:44+00:00'
+  last_checked_at: '2026-06-17T06:46:44+00:00'
+  status: new
+  classification: pending_sheet_review
+  notes: Source observed by Step 3 onboarding. No approval implied.
+- source_id: productdescription
+  file_name: ProductDescription.xlsx
+  file_path: originaldatabase\ProductDescription.xlsx
+  file_type: xlsx
+  file_hash: 792f9fd0c5c7c4f29701a1a652a13952f2516106ac26798e2c37399c356db90f
+  detected_sheets:
+  - sheet_name: Export_ProductDescription
+    proposed_table_name: productdescription_export_productdescription
+    row_count: 2153
+    column_count: 12
+    columns:
+    - part_nr_sku
+    - icon_un_approved
+    - image
+    - item_description
+    - product_group_name
+    - icon_phased_out
+    - icon_blocked
+    - language_descr
+    - product_description
+    - description_extra_optional_sales
+    - specification_code
+    - specification_description
+  row_count: 2153
+  column_count: 12
+  first_detected_at: '2026-06-17T06:46:44+00:00'
+  last_checked_at: '2026-06-17T06:46:44+00:00'
+  status: new
+  classification: pending_sheet_review
+  notes: Source observed by Step 3 onboarding. No approval implied.
+- source_id: productpricebreak
+  file_name: ProductPriceBreak.xlsx
+  file_path: originaldatabase\ProductPriceBreak.xlsx
+  file_type: xlsx
+  file_hash: 6a0a3d135062ce785901a3f22c9697d163bb3a4b3161a32ed719d0543a0fb756
+  detected_sheets:
+  - sheet_name: Export_ProductPriceBreak
+    proposed_table_name: productpricebreak_export_productpricebreak
+    row_count: 3385
+    column_count: 17
+    columns:
+    - type
+    - icon_un_approved
+    - part_nr_sku
+    - image
+    - item_description
+    - icon_phased_out
+    - icon_blocked
+    - creditor
+    - productgroup
+    - icon_stock
+    - from
+    - up_to
+    - techn_stock
+    - default
+    - currency
+    - gr_pur_ex_vat_p_u
+    - salesprice
+  row_count: 3385
+  column_count: 17
+  first_detected_at: '2026-06-17T06:46:44+00:00'
+  last_checked_at: '2026-06-17T06:46:44+00:00'
+  status: new
+  classification: pending_sheet_review
+  notes: Source observed by Step 3 onboarding. No approval implied.
+- source_id: productsupplier
+  file_name: ProductSupplier.xlsx
+  file_path: originaldatabase\ProductSupplier.xlsx
+  file_type: xlsx
+  file_hash: baef0b0075e9cba092e0cda213518211c6864693b5e79d3d3b65dbaf726d4eec
+  detected_sheets:
+  - sheet_name: Export_ProductSupplier
+    proposed_table_name: productsupplier_export_productsupplier
+    row_count: 1070
+    column_count: 14
+    columns:
+    - creditor_no
+    - creditor
+    - part_nr_sku
+    - icon_un_approved
+    - item_description
+    - del_per_pur_days_etd
+    - del_per_sales_days
+    - from
+    - up_to
+    - currency
+    - gr_pur_ex_vat_p_u
+    - discount
+    - discount_type_purchase
+    - purchase_price_net_unit
+  row_count: 1070
+  column_count: 14
+  first_detected_at: '2026-06-17T06:46:44+00:00'
+  last_checked_at: '2026-06-17T06:46:44+00:00'
+  status: new
+  classification: pending_sheet_review
+  notes: Source observed by Step 3 onboarding. No approval implied.
+- source_id: purchaseinvoice
+  file_name: PurchaseInvoice.csv
+  file_path: originaldatabase\PurchaseInvoice.csv
+  file_type: csv
+  file_hash: 9a1415aa521e9e6cf0e29431237b236cc955586926f0c61495f44e705e7162b7
+  detected_sheets:
+  - sheet_name: ''
+    proposed_table_name: purchaseinvoice
+    row_count: 2844
+    column_count: 12
+    columns:
+    - ref_nr
+    - creditor
+    - project
+    - invoice_nr_suppl
+    - date_invoice
+    - period
+    - approver_purch_inv
+    - status_internal
+    - tot_pur_ex_vat_cc
+    - total_pur_inc_vat_cc
+    - due_date
+    - not_paid_cc
+  row_count: 2844
+  column_count: 12
+  first_detected_at: '2026-06-17T06:46:44+00:00'
+  last_checked_at: '2026-06-17T06:46:44+00:00'
+  status: new
+  classification: pending_sheet_review
+  notes: Source observed by Step 3 onboarding. No approval implied.
+- source_id: purchaseinvoiceline
+  file_name: PurchaseInvoiceLine.csv
+  file_path: originaldatabase\PurchaseInvoiceLine.csv
+  file_type: csv
+  file_hash: 5d7d134955ac46188ebcb69ad7ec4c06bf3963231e8a0d822ef49e4885f9f3aa
+  detected_sheets:
+  - sheet_name: ''
+    proposed_table_name: purchaseinvoiceline
+    row_count: 6578
+    column_count: 14
+    columns:
+    - ref_nr
+    - icon_un_approved
+    - creditor
+    - project
+    - period
+    - icon_product
+    - suppl_part_nr_sku
+    - product_description
+    - ledger_purchase_costprice
+    - goods_recep_lines_pur
+    - qty
+    - purch_pr_net_p_u
+    - tot_pur_excl_vat
+    - tot_pur_ex_vat_cc
+  row_count: 6578
+  column_count: 14
+  first_detected_at: '2026-06-17T06:46:44+00:00'
+  last_checked_at: '2026-06-17T06:46:44+00:00'
+  status: new
+  classification: pending_sheet_review
+  notes: Source observed by Step 3 onboarding. No approval implied.
+- source_id: purchaseinvoiceline
+  file_name: PurchaseInvoiceLine.xlsx
+  file_path: originaldatabase\PurchaseInvoiceLine.xlsx
+  file_type: xlsx
+  file_hash: 1cd58858cdaf0c7d7ab6db770a264a008588e654eff3223ec92b93a58e3a5cdd
+  detected_sheets:
+  - sheet_name: Export_PurchaseInvoiceLine
+    proposed_table_name: purchaseinvoiceline_export_purchaseinvoiceline
+    row_count: 6578
+    column_count: 14
+    columns:
+    - ref_nr
+    - icon_un_approved
+    - creditor
+    - project
+    - period
+    - icon_product
+    - suppl_part_nr_sku
+    - product_description
+    - ledger_purchase_costprice
+    - goods_recep_lines_pur
+    - qty
+    - purch_pr_net_p_u
+    - tot_pur_excl_vat
+    - tot_pur_ex_vat_cc
+  row_count: 6578
+  column_count: 14
+  first_detected_at: '2026-06-17T06:46:44+00:00'
+  last_checked_at: '2026-06-17T06:46:44+00:00'
+  status: new
+  classification: pending_sheet_review
+  notes: Source observed by Step 3 onboarding. No approval implied.
+- source_id: purchaseorder_3
+  file_name: PurchaseOrder (3).xlsx
+  file_path: originaldatabase\PurchaseOrder (3).xlsx
+  file_type: xlsx
+  file_hash: cf70f7c0c18963a3bd66be8bcf3e7297b7aeb50e4ae510890050176a983b7668
+  detected_sheets:
+  - sheet_name: Export_PurchaseOrder
+    proposed_table_name: purchaseorder_3_export_purchaseorder
+    row_count: 1994
+    column_count: 12
+    columns:
+    - ref_nr
+    - creditor
+    - your_reference
+    - project
+    - order
+    - keywords
+    - internal_contact
+    - int_approval
+    - print_date
+    - stage_po
+    - doc_eta_est_time_of_arr
+    - tot_pur_ex_vat_cc
+  row_count: 1994
+  column_count: 12
+  first_detected_at: '2026-06-17T06:46:44+00:00'
+  last_checked_at: '2026-06-17T06:46:44+00:00'
+  status: new
+  classification: pending_sheet_review
+  notes: Source observed by Step 3 onboarding. No approval implied.
+- source_id: purchaseorderline
+  file_name: PurchaseOrderLine.xlsx
+  file_path: originaldatabase\PurchaseOrderLine.xlsx
+  file_type: xlsx
+  file_hash: cd9a80df74e13add5f276a57ca91fa3ffe671daadea5107327060ba781eb1c4c
+  detected_sheets:
+  - sheet_name: Export_PurchaseOrderLine
+    proposed_table_name: purchaseorderline_export_purchaseorderline
+    row_count: 4285
+    column_count: 11
+    columns:
+    - ref_nr
+    - icon_un_approved
+    - creditor
+    - project
+    - source_sales
+    - icon_product
+    - suppl_part_nr_sku
+    - product_description
+    - qty
+    - purch_pr_net_p_u
+    - tot_pur_ex_vat_cc
+  row_count: 4285
+  column_count: 11
+  first_detected_at: '2026-06-17T06:46:44+00:00'
+  last_checked_at: '2026-06-17T06:46:44+00:00'
+  status: new
+  classification: pending_sheet_review
+  notes: Source observed by Step 3 onboarding. No approval implied.
+- source_id: purchaseorderline2
+  file_name: PurchaseOrderLine2.xlsx
+  file_path: originaldatabase\PurchaseOrderLine2.xlsx
+  file_type: xlsx
+  file_hash: 52053c1362a0368a011d7658b5eb0f6c81a2bf2049ad5c80f9b4168b4376db48
+  detected_sheets:
+  - sheet_name: Export_PurchaseOrderLine
+    proposed_table_name: purchaseorderline2_export_purchaseorderline
+    row_count: 4285
+    column_count: 15
+    columns:
+    - doc_ref_nr
+    - icon_un_approved
+    - creditor
+    - project
+    - ref_number
+    - icon_product
+    - part_nr_sku
+    - product_description
+    - ordered
+    - purchase_price_net_unit
+    - tot_pur_excl_vat_bought_cc
+    - ref_number_1
+    - reference_line
+    - sales_order_no
+    - ref_nr
+  row_count: 4285
+  column_count: 15
+  first_detected_at: '2026-06-17T06:46:44+00:00'
+  last_checked_at: '2026-06-17T06:46:44+00:00'
+  status: new
+  classification: pending_sheet_review
+  notes: Source observed by Step 3 onboarding. No approval implied.
+- source_id: purchaseorderline3
+  file_name: PurchaseOrderLine3.xlsx
+  file_path: originaldatabase\PurchaseOrderLine3.xlsx
+  file_type: xlsx
+  file_hash: 0c7622e081b8d16d864b33886803aa22e30710b4c2ac97cc00b9bc70e31fc349
+  detected_sheets:
+  - sheet_name: Export_PurchaseOrderLine
+    proposed_table_name: purchaseorderline3_export_purchaseorderline
+    row_count: 4285
+    column_count: 28
+    columns:
+    - doc_ref_nr
+    - icon_un_approved
+    - creditor
+    - project
+    - ref_number
+    - icon_product
+    - part_nr_sku
+    - product_description
+    - ordered
+    - purchase_price_net_unit
+    - tot_pur_excl_vat_bought_cc
+    - ref_number_1
+    - reference_line
+    - sales_order_no
+    - ref_nr
+    - creditor_no
+    - project_1
+    - organisation
+    - ref_nr_1
+    - reference_nr
+    - debtor
+    - our_reference
+    - part_nr_sku_1
+    - ref_nr_2
+    - ref_number_2
+    - ref_number_3
+    - deb_no
+    - ref_nr_3
+  row_count: 4285
+  column_count: 28
+  first_detected_at: '2026-06-17T06:46:44+00:00'
+  last_checked_at: '2026-06-17T06:46:44+00:00'
+  status: new
+  classification: pending_sheet_review
+  notes: Source observed by Step 3 onboarding. No approval implied.
+- source_id: purchasequotation
+  file_name: PurchaseQuotation.csv
+  file_path: originaldatabase\PurchaseQuotation.csv
+  file_type: csv
+  file_hash: f4f7c44d94983d7f81678f612e50ad2e4788f2622113f2a980f882f1a896bc8e
+  detected_sheets:
+  - sheet_name: ''
+    proposed_table_name: purchasequotation
+    row_count: 2742
+    column_count: 10
+    columns:
+    - ref_nr
+    - creditor
+    - project
+    - print_date
+    - internal_keyword
+    - internal_contact
+    - approver
+    - stage_rfq
+    - int_approval
+    - tot_pur_ex_vat_cc
+  row_count: 2742
+  column_count: 10
+  first_detected_at: '2026-06-17T06:46:44+00:00'
+  last_checked_at: '2026-06-17T06:46:44+00:00'
+  status: new
+  classification: pending_sheet_review
+  notes: Source observed by Step 3 onboarding. No approval implied.
+- source_id: purchasequotationline
+  file_name: PurchaseQuotationLine.xlsx
+  file_path: originaldatabase\PurchaseQuotationLine.xlsx
+  file_type: xlsx
+  file_hash: 7fb0c9490812ba9aacbf0e8ad99e7b98e1bc97ce9dc7dfffc022f5ff4b8301f0
+  detected_sheets:
+  - sheet_name: Export_PurchaseQuotationLine
+    proposed_table_name: purchasequotationline_export_purchasequotationline
+    row_count: 10965
+    column_count: 11
+    columns:
+    - ref_nr
+    - icon_un_approved
+    - creditor
+    - project
+    - source_sales
+    - icon_product
+    - suppl_part_nr_sku
+    - product_description
+    - qty
+    - purch_pr_net_p_u
+    - tot_pur_ex_vat_cc
+  row_count: 10965
+  column_count: 11
+  first_detected_at: '2026-06-17T06:46:44+00:00'
+  last_checked_at: '2026-06-17T06:46:44+00:00'
+  status: new
+  classification: pending_sheet_review
+  notes: Source observed by Step 3 onboarding. No approval implied.
+- source_id: salesinvoice
+  file_name: SalesInvoice.csv
+  file_path: originaldatabase\SalesInvoice.csv
+  file_type: csv
+  file_hash: 1c33a46bed7e47a7639562e836a388773647b8d517b6da8afc5be1073893f3fa
+  detected_sheets:
+  - sheet_name: ''
+    proposed_table_name: salesinvoice
+    row_count: 2409
+    column_count: 12
+    columns:
+    - ref_nr
+    - debtor_no
+    - debtor
+    - project
+    - internal_keyword
+    - account_manager
+    - invoicedate
+    - period
+    - tot_sal_ex_vat_cc
+    - tot_sal_in_vat_cc
+    - paid_cc
+    - not_paid_cc
+  row_count: 2409
+  column_count: 12
+  first_detected_at: '2026-06-17T06:46:44+00:00'
+  last_checked_at: '2026-06-17T06:46:44+00:00'
+  status: new
+  classification: pending_sheet_review
+  notes: Source observed by Step 3 onboarding. No approval implied.
+- source_id: salesinvoiceline
+  file_name: SalesInvoiceLine.xlsx
+  file_path: originaldatabase\SalesInvoiceLine.xlsx
+  file_type: xlsx
+  file_hash: 1663b56fa000bd096325475182cbfd54147974c8f68c050c5d82dd9a8792b9aa
+  detected_sheets:
+  - sheet_name: Export_SalesInvoiceLine
+    proposed_table_name: salesinvoiceline_export_salesinvoiceline
+    row_count: 5892
+    column_count: 18
+    columns:
+    - ref_nr
+    - debtor
+    - organisation
+    - contact
+    - project
+    - source_sales
+    - origin
+    - invoicedate
+    - period
+    - productgroup
+    - part_nr_sku
+    - comm_description
+    - qty
+    - currency
+    - sales_pr_net_p_u
+    - tot_sal_ex_vat
+    - tot_sal_ex_vat_cc
+    - ledger_sales
+  row_count: 5892
+  column_count: 18
+  first_detected_at: '2026-06-17T06:46:44+00:00'
+  last_checked_at: '2026-06-17T06:46:44+00:00'
+  status: new
+  classification: pending_sheet_review
+  notes: Source observed by Step 3 onboarding. No approval implied.
+- source_id: salesopportunity
+  file_name: SalesOpportunity.csv
+  file_path: originaldatabase\SalesOpportunity.csv
+  file_type: csv
+  file_hash: c5876737285682c2a91c773058ff712862910d7ff8b6f58ab187c9a0164fc28b
+  detected_sheets:
+  - sheet_name: ''
+    proposed_table_name: salesopportunity
+    row_count: 350
+    column_count: 14
+    columns:
+    - ref_nr
+    - organisation
+    - contact
+    - internal_keyword
+    - stage
+    - type_request
+    - status
+    - account_manager
+    - engineering
+    - follow_up
+    - lat_foll_up_date
+    - tot_ex_vat_cc
+    - success_rate
+    - weighted_sal_ex_vat_cc
+  row_count: 350
+  column_count: 14
+  first_detected_at: '2026-06-17T06:46:44+00:00'
+  last_checked_at: '2026-06-17T06:46:44+00:00'
+  status: new
+  classification: pending_sheet_review
+  notes: Source observed by Step 3 onboarding. No approval implied.
+- source_id: salesopportunityline
+  file_name: SalesOpportunityLine.xlsx
+  file_path: originaldatabase\SalesOpportunityLine.xlsx
+  file_type: xlsx
+  file_hash: ececc4f32ed062f3ae5c41d24d15b45a020a5d774f01bad52b2c573b45ed8f13
+  detected_sheets:
+  - sheet_name: Export_SalesOpportunityLine
+    proposed_table_name: salesopportunityline_export_salesopportunityline
+    row_count: 712
+    column_count: 15
+    columns:
+    - ref_nr
+    - debtor
+    - organisation
+    - contact
+    - project
+    - print_date
+    - productgroup
+    - icon_product
+    - part_nr_sku
+    - comm_description
+    - qty
+    - currency
+    - sales_pr_net_p_u
+    - tot_sal_ex_vat
+    - tot_sal_ex_vat_cc
+  row_count: 712
+  column_count: 15
+  first_detected_at: '2026-06-17T06:46:44+00:00'
+  last_checked_at: '2026-06-17T06:46:44+00:00'
+  status: new
+  classification: pending_sheet_review
+  notes: Source observed by Step 3 onboarding. No approval implied.
+- source_id: salesorder
+  file_name: SalesOrder.csv
+  file_path: originaldatabase\SalesOrder.csv
+  file_type: csv
+  file_hash: dfa1d94a18933a11225c630cb8c95c85cd52f5bf4f5ea3e27cb01d2cf908e2cc
+  detected_sheets:
+  - sheet_name: ''
+    proposed_table_name: salesorder
+    row_count: 1312
+    column_count: 19
+    columns:
+    - ref_nr
+    - your_reference
+    - concerns
+    - remark
+    - debtor
+    - industry
+    - organisation
+    - contact
+    - project_number_name
+    - int_recoq
+    - stage
+    - am
+    - eng
+    - eerst_gek_gew_afl_datum
+    - eerst_gek_levertijd_weken
+    - eerst_gek_ver_afl_datum
+    - tot_nett_weight
+    - nett_weight
+    - tot_sal_ex_vat_cc
+  row_count: 1312
+  column_count: 19
+  first_detected_at: '2026-06-17T06:46:44+00:00'
+  last_checked_at: '2026-06-17T06:46:44+00:00'
+  status: new
+  classification: pending_sheet_review
+  notes: Source observed by Step 3 onboarding. No approval implied.
+- source_id: salesorderline
+  file_name: SalesOrderLine.csv
+  file_path: originaldatabase\SalesOrderLine.csv
+  file_type: csv
+  file_hash: 03e8b04fe28758f734aea648bc8dabba86f906c1a040ef242d3ad9d1b9134c8e
+  detected_sheets:
+  - sheet_name: ''
+    proposed_table_name: salesorderline
+    row_count: 4391
+    column_count: 15
+    columns:
+    - ref_nr
+    - debtor
+    - organisation
+    - contact
+    - project
+    - print_date
+    - productgroup
+    - icon_product
+    - part_nr_sku
+    - comm_description
+    - qty
+    - currency_doc
+    - sales_pr_net_p_u
+    - tot_sal_ex_vat
+    - tot_sal_ex_vat_cc
+  row_count: 4391
+  column_count: 15
+  first_detected_at: '2026-06-17T06:46:44+00:00'
+  last_checked_at: '2026-06-17T06:46:44+00:00'
+  status: new
+  classification: pending_sheet_review
+  notes: Source observed by Step 3 onboarding. No approval implied.
+- source_id: salesorderline
+  file_name: SalesOrderLine.xlsx
+  file_path: originaldatabase\SalesOrderLine.xlsx
+  file_type: xlsx
+  file_hash: 1b27294f8274d3843e2963c9cb0be5962737cc953dba4c023ba12854b824aa8a
+  detected_sheets:
+  - sheet_name: Export_SalesOrderLine
+    proposed_table_name: salesorderline_export_salesorderline
+    row_count: 4391
+    column_count: 15
+    columns:
+    - ref_nr
+    - debtor
+    - organisation
+    - contact
+    - project
+    - print_date
+    - productgroup
+    - icon_product
+    - part_nr_sku
+    - comm_description
+    - qty
+    - currency_doc
+    - sales_pr_net_p_u
+    - tot_sal_ex_vat
+    - tot_sal_ex_vat_cc
+  row_count: 4391
+  column_count: 15
+  first_detected_at: '2026-06-17T06:46:44+00:00'
+  last_checked_at: '2026-06-17T06:46:44+00:00'
+  status: new
+  classification: pending_sheet_review
+  notes: Source observed by Step 3 onboarding. No approval implied.
+- source_id: salesorderline2
+  file_name: SalesOrderLine2.xlsx
+  file_path: originaldatabase\SalesOrderLine2.xlsx
+  file_type: xlsx
+  file_hash: c798fefc9cb527e09714f3de2fa1d182200940b38c499a8fb3ad541c9d241cb4
+  detected_sheets:
+  - sheet_name: Export_SalesOrderLine
+    proposed_table_name: salesorderline2_export_salesorderline
+    row_count: 4391
+    column_count: 80
+    columns:
+    - doc_ref_nr
+    - debtor
+    - organisation
+    - contact
+    - project
+    - print_date
+    - productgroup
+    - icon_product
+    - part_nr_sku
+    - comm_description
+    - sold_2_decimal
+    - currency_doc
+    - sales_pr_net_p_u
+    - tot_sal_ex_vat
+    - tot_sal_ex_vat_cc
+    - debtor_1
+    - hs_code
+    - margin
+    - part_nr_sku_1
+    - product
+    - project_1
+    - price_per_unit_sales
+    - qty
+    - company_name
+    - creditor
+    - invoice_nr_suppl
+    - ref_nr
+    - supplier_code
+    - debtor_2
+    - organisation_1
+    - ref_nr_1
+    - debtor_3
+    - debtor_no
+    - deb_no
+    - debtor_4
+    - delivery_city
+    - delivery_country
+    - our_reference
+    - ref_nr_2
+    - debtor_5
+    - description
+    - gr_pur_ex_vat_p_u
+    - organisation_2
+    - part_nr_sku_2
+    - product_1
+    - project_2
+    - qty_1
+    - hs_code_1
+    - part_nr_sku_3
+    - ref_nr_3
+    - sales_pr_net_p_u_1
+    - serial_number
+    - suppl_part_nr_sku
+    - tot_margin
+    - creditor_1
+    - creditor_no
+    - currency_product
+    - doc_ref_nr_1
+    - part_nr_sku_4
+    - ref_number
+    - reference_line
+    - creditor_no_1
+    - creditor_2
+    - doc_ref_nr_2
+    - part_nr_sku_5
+    - product_2
+    - product_description
+    - project_3
+    - ref_number_1
+    - debtor_6
+    - hs_code_2
+    - creation_date
+    - deb_no_1
+    - deb_country
+    - delivery_country_1
+    - delivery_city_1
+    - description_1
+    - our_reference_1
+    - organisation_3
+    - ref_nr_4
+  row_count: 4391
+  column_count: 80
+  first_detected_at: '2026-06-17T06:46:44+00:00'
+  last_checked_at: '2026-06-17T06:46:44+00:00'
+  status: new
+  classification: pending_sheet_review
+  notes: Source observed by Step 3 onboarding. No approval implied.
+- source_id: salesquotation
+  file_name: SalesQuotation.csv
+  file_path: originaldatabase\SalesQuotation.csv
+  file_type: csv
+  file_hash: b60f001551a92568c2f1eaf82d6107e3a3843762c15c5613f6088fbb67720e75
+  detected_sheets:
+  - sheet_name: ''
+    proposed_table_name: salesquotation
+    row_count: 1205
+    column_count: 14
+    columns:
+    - ref_nr
+    - organisation
+    - contact
+    - project
+    - keywords
+    - type_request
+    - stage_sal_quo
+    - status_forecast
+    - date_possible
+    - account_manager
+    - engineering
+    - tot_sal_ex_vat_cc
+    - success_rate
+    - weighted_sal_ex_vat_cc
+  row_count: 1205
+  column_count: 14
+  first_detected_at: '2026-06-17T06:46:44+00:00'
+  last_checked_at: '2026-06-17T06:46:44+00:00'
+  status: new
+  classification: pending_sheet_review
+  notes: Source observed by Step 3 onboarding. No approval implied.
+- source_id: salesquotationline
+  file_name: SalesQuotationLine.xlsx
+  file_path: originaldatabase\SalesQuotationLine.xlsx
+  file_type: xlsx
+  file_hash: 64acfe63ee09b98bdf7efb0c562eba4ed0788a9262afaa4dc4bee17ec36f321c
+  detected_sheets:
+  - sheet_name: Export_SalesQuotationLine
+    proposed_table_name: salesquotationline_export_salesquotationline
+    row_count: 5871
+    column_count: 15
+    columns:
+    - ref_nr
+    - debtor
+    - organisation
+    - contact
+    - project
+    - print_date
+    - productgroup
+    - icon_product
+    - part_nr_sku
+    - comm_description
+    - qty
+    - currency
+    - sales_pr_net_p_u
+    - tot_sal_ex_vat
+    - tot_sal_ex_vat_cc
+  row_count: 5871
+  column_count: 15
+  first_detected_at: '2026-06-17T06:46:44+00:00'
+  last_checked_at: '2026-06-17T06:46:44+00:00'
+  status: new
+  classification: pending_sheet_review
+  notes: Source observed by Step 3 onboarding. No approval implied.

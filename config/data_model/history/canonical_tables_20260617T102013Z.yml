@@ -1,0 +1,116 @@
+generated_at: '2026-06-17T10:18:05+00:00'
+canonical_tables:
+  creditor:
+    business_name: Creditor / Supplier
+    expected_prefix: CR
+    semantic_namespace: creditor
+    semantic_ref_name: cr_ref_nr
+    table_role: canonical_master
+    primary_key_rule: serial_ref_nr
+    status: manually_confirmed_pending_application
+  customerproject:
+    business_name: Customer Project
+    expected_prefix: CP
+    semantic_namespace: customer_project
+    semantic_ref_name: cp_ref_nr
+    table_role: canonical_document
+    primary_key_rule: serial_ref_nr
+    status: manually_confirmed_pending_application
+  debtor:
+    business_name: Debtor / Customer
+    expected_prefix: DE
+    semantic_namespace: debtor
+    semantic_ref_name: de_ref_nr
+    table_role: canonical_master
+    primary_key_rule: serial_ref_nr
+    status: manually_confirmed_pending_application
+  deliverynote:
+    business_name: Delivery Note
+    expected_prefix: GU
+    semantic_namespace: delivery_note
+    semantic_ref_name: gu_ref_nr
+    table_role: canonical_document
+    primary_key_rule: serial_ref_nr
+    status: manually_confirmed_pending_application
+  goodsreception:
+    business_name: Goods Reception
+    expected_prefix: GO
+    semantic_namespace: goods_reception
+    semantic_ref_name: go_ref_nr
+    table_role: canonical_document
+    primary_key_rule: serial_ref_nr
+    status: manually_confirmed_pending_application
+  organisation:
+    business_name: Organisation
+    expected_prefix: null
+    semantic_namespace: organisation
+    semantic_ref_name: organisation_ref_nr
+    table_role: canonical_master
+    primary_key_rule: generic_ref_nr_or_business_key
+    status: needs_business_context
+  product:
+    business_name: Product
+    expected_prefix: PD
+    semantic_namespace: product
+    semantic_ref_name: product_ref
+    optional_serial_ref_name: pd_ref_nr
+    table_role: canonical_master
+    primary_key_rule: part_nr_sku_business_reference
+    optional_serial_rule: PDYY99999 when available
+    status: manually_confirmed_pending_duplicate_validation
+  purchaseinvoice:
+    business_name: Purchase Invoice
+    expected_prefix: IF
+    semantic_namespace: purchase_invoice
+    semantic_ref_name: if_ref_nr
+    table_role: canonical_document
+    primary_key_rule: serial_ref_nr
+    status: manually_confirmed_pending_application
+  purchaseorder:
+    business_name: Purchase Order
+    expected_prefix: 'ON'
+    semantic_namespace: purchase_order
+    semantic_ref_name: on_ref_nr
+    table_role: canonical_document
+    primary_key_rule: serial_ref_nr
+    status: manually_confirmed_pending_application
+  purchasequotation:
+    business_name: Purchase Quotation
+    expected_prefix: RFQ
+    semantic_namespace: purchase_quotation
+    semantic_ref_name: rfq_ref_nr
+    table_role: canonical_document
+    primary_key_rule: serial_ref_nr
+    status: manually_confirmed_pending_application
+  salesinvoice:
+    business_name: Sales Invoice
+    expected_prefix: CI
+    semantic_namespace: sales_invoice
+    semantic_ref_name: ci_ref_nr
+    table_role: canonical_document
+    primary_key_rule: serial_ref_nr
+    status: manually_confirmed_pending_application
+  salesopportunity:
+    business_name: Sales Opportunity
+    expected_prefix: VK
+    semantic_namespace: sales_opportunity
+    semantic_ref_name: vk_ref_nr
+    table_role: canonical_document
+    primary_key_rule: serial_ref_nr
+    status: manually_confirmed_pending_application
+  salesorder:
+    business_name: Sales Order
+    expected_prefix: OC
+    semantic_namespace: sales_order
+    semantic_ref_name: oc_ref_nr
+    table_role: canonical_document
+    primary_key_rule: serial_ref_nr
+    status: manually_confirmed_pending_application
+  salesquotation:
+    business_name: Sales Quotation
+    expected_prefix: CQ
+    semantic_namespace: sales_quotation
+    semantic_ref_name: cq_ref_nr
+    table_role: canonical_document
+    primary_key_rule: serial_ref_nr
+    status: manually_confirmed_pending_application

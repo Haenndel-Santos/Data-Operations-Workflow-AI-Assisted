@@ -1,0 +1,222 @@
+generated_at: '2026-06-17T08:34:51+00:00'
+translations:
+- module_original_normalized: agenda afspraken
+  module_english: needs_business_context
+  semantic_namespace: needs_business_context
+  status: needs_business_context
+- module_original_normalized: assemblage opdrachten
+  module_english: needs_business_context
+  semantic_namespace: needs_business_context
+  status: needs_business_context
+- module_original_normalized: berichten
+  module_english: needs_business_context
+  semantic_namespace: needs_business_context
+  status: needs_business_context
+- module_original_normalized: bijlagen
+  module_english: needs_business_context
+  semantic_namespace: needs_business_context
+  status: needs_business_context
+- module_original_normalized: concurrenten
+  module_english: needs_business_context
+  semantic_namespace: needs_business_context
+  status: needs_business_context
+- module_original_normalized: concurrentierapporten
+  module_english: needs_business_context
+  semantic_namespace: needs_business_context
+  status: needs_business_context
+- module_original_normalized: contactrapporten
+  module_english: needs_business_context
+  semantic_namespace: needs_business_context
+  status: needs_business_context
+- module_original_normalized: crediteuren
+  module_english: Creditors / Suppliers
+  semantic_namespace: creditor
+  status: pending_review
+- module_original_normalized: debiteuren
+  module_english: Debtors / Customers
+  semantic_namespace: debtor
+  status: pending_review
+- module_original_normalized: evenementprojecten
+  module_english: needs_business_context
+  semantic_namespace: needs_business_context
+  status: needs_business_context
+- module_original_normalized: grootboekrekeningen
+  module_english: needs_business_context
+  semantic_namespace: needs_business_context
+  status: needs_business_context
+- module_original_normalized: holding / samenw.
+  module_english: needs_business_context
+  semantic_namespace: needs_business_context
+  status: needs_business_context
+- module_original_normalized: hrm / personeel
+  module_english: needs_business_context
+  semantic_namespace: needs_business_context
+  status: needs_business_context
+- module_original_normalized: hrm notitie's
+  module_english: needs_business_context
+  semantic_namespace: needs_business_context
+  status: needs_business_context
+- module_original_normalized: inkoopaanvragen
+  module_english: Purchase RFQ
+  semantic_namespace: purchase_rfq
+  status: pending_review
+- module_original_normalized: inkoopfacturen
+  module_english: Purchase Invoices
+  semantic_namespace: purchase_invoice
+  status: pending_review
+- module_original_normalized: inkoopopdrachten
+  module_english: Purchase Orders
+  semantic_namespace: purchase_order
+  status: pending_review
+- module_original_normalized: interne projecten
+  module_english: needs_business_context
+  semantic_namespace: needs_business_context
+  status: needs_business_context
+- module_original_normalized: journaalpost instellingen
+  module_english: needs_business_context
+  semantic_namespace: needs_business_context
+  status: needs_business_context
+- module_original_normalized: journaalposten
+  module_english: needs_business_context
+  semantic_namespace: needs_business_context
+  status: needs_business_context
+- module_original_normalized: kennis extern
+  module_english: needs_business_context
+  semantic_namespace: needs_business_context
+  status: needs_business_context
+- module_original_normalized: kennis intern
+  module_english: needs_business_context
+  semantic_namespace: needs_business_context
+  status: needs_business_context
+- module_original_normalized: klachtprojecten
+  module_english: needs_business_context
+  semantic_namespace: needs_business_context
+  status: needs_business_context
+- module_original_normalized: klant project
+  module_english: Customer Project
+  semantic_namespace: customer_project
+  status: pending_review
+- module_original_normalized: leden
+  module_english: needs_business_context
+  semantic_namespace: needs_business_context
+  status: needs_business_context
+- module_original_normalized: leden regels
+  module_english: needs_business_context
+  semantic_namespace: needs_business_context
+  status: needs_business_context
+- module_original_normalized: marketingprojecten
+  module_english: needs_business_context
+  semantic_namespace: needs_business_context
+  status: needs_business_context
+- module_original_normalized: notities
+  module_english: needs_business_context
+  semantic_namespace: needs_business_context
+  status: needs_business_context
+- module_original_normalized: ontvangsten
+  module_english: Goods Reception
+  semantic_namespace: goods_reception
+  status: pending_review
+- module_original_normalized: overige kosten
+  module_english: needs_business_context
+  semantic_namespace: needs_business_context
+  status: needs_business_context
+- module_original_normalized: personen
+  module_english: needs_business_context
+  semantic_namespace: needs_business_context
+  status: needs_business_context
+- module_original_normalized: poc boekingen
+  module_english: needs_business_context
+  semantic_namespace: needs_business_context
+  status: needs_business_context
+- module_original_normalized: prijsafspraken debiteur(en)
+  module_english: needs_business_context
+  semantic_namespace: needs_business_context
+  status: needs_business_context
+- module_original_normalized: product
+  module_english: Product
+  semantic_namespace: product
+  status: pending_review
+- module_original_normalized: productgroepen
+  module_english: needs_business_context
+  semantic_namespace: needs_business_context
+  status: needs_business_context
+- module_original_normalized: project werksoorten
+  module_english: needs_business_context
+  semantic_namespace: needs_business_context
+  status: needs_business_context
+- module_original_normalized: reiskosten
+  module_english: needs_business_context
+  semantic_namespace: needs_business_context
+  status: needs_business_context
+- module_original_normalized: reistijd
+  module_english: needs_business_context
+  semantic_namespace: needs_business_context
+  status: needs_business_context
+- module_original_normalized: service aanvragen
+  module_english: needs_business_context
+  semantic_namespace: needs_business_context
+  status: needs_business_context
+- module_original_normalized: service offertes
+  module_english: needs_business_context
+  semantic_namespace: needs_business_context
+  status: needs_business_context
+- module_original_normalized: serviceproject producten
+  module_english: needs_business_context
+  semantic_namespace: needs_business_context
+  status: needs_business_context
+- module_original_normalized: serviceprojecten
+  module_english: needs_business_context
+  semantic_namespace: needs_business_context
+  status: needs_business_context
+- module_original_normalized: taken
+  module_english: needs_business_context
+  semantic_namespace: needs_business_context
+  status: needs_business_context
+- module_original_normalized: tijdregels
+  module_english: needs_business_context
+  semantic_namespace: needs_business_context
+  status: needs_business_context
+- module_original_normalized: tijdregistratie project uursoorten
+  module_english: needs_business_context
+  semantic_namespace: needs_business_context
+  status: needs_business_context
+- module_original_normalized: uitgiftes (pakbonnen)
+  module_english: Delivery Notes
+  semantic_namespace: delivery_note
+  status: pending_review
+- module_original_normalized: verkoop factuur
+  module_english: Sales Invoice
+  semantic_namespace: sales_invoice
+  status: pending_review
+- module_original_normalized: verkoop opdracht
+  module_english: Sales Order
+  semantic_namespace: sales_order
+  status: pending_review
+- module_original_normalized: verkoopaanmaningen
+  module_english: needs_business_context
+  semantic_namespace: needs_business_context
+  status: needs_business_context
+- module_original_normalized: verkoopkansen
+  module_english: Sales Opportunities
+  semantic_namespace: sales_opportunity
+  status: pending_review
+- module_original_normalized: verkoopleads
+  module_english: needs_business_context
+  semantic_namespace: needs_business_context
+  status: needs_business_context
+- module_original_normalized: verkoopoffertes
+  module_english: Sales Quotations
+  semantic_namespace: sales_quotation
+  status: pending_review
+- module_original_normalized: voorraad (locaties)
+  module_english: needs_business_context
+  semantic_namespace: needs_business_context
+  status: needs_business_context
+- module_original_normalized: voorraadcorrecties
+  module_english: needs_business_context
+  semantic_namespace: needs_business_context
+  status: needs_business_context
+- module_original_normalized: voorraadherwaardering
+  module_english: needs_business_context
+  semantic_namespace: needs_business_context
+  status: needs_business_context

@@ -1,0 +1,318 @@
+generated_at: '2026-06-17T12:39:17+00:00'
+status: business_flow_documented_pending_technical_validation
+supplier_purchase_flow:
+  flow: RFQ -> ON -> GO -> IF
+  supplier_context: Creditor / Organisation
+  status: business_confirmed_pending_field_validation
+  objects:
+  - code: RFQ
+    business_name: Purchase Quotation / Purchase RFQ
+    table_candidate: purchasequotation
+  - code: 'ON'
+    business_name: Purchase Order
+    table_candidate: purchaseorder
+  - code: GO
+    business_name: Goods Reception
+    table_candidate: goodsreception
+  - code: IF
+    business_name: Purchase Invoice
+    table_candidate: purchaseinvoice
+  notes: Supplier purchase flow can start from RFQ and continue through purchase order,
+    goods reception, and purchase invoice.
+sales_customer_flow:
+  primary_flow: VK -> CQ -> OC -> GU -> CI
+  operational_flow: Organisation / Debtor -> CP -> OC -> ON -> GO -> GU -> CI
+  customer_context: Debtor / DE maps to customer or financial customer side; Organisation
+    is general company/person context.
+  status: business_confirmed_pending_field_validation
+  objects:
+  - code: VK
+    business_name: Sales Opportunity
+    table_candidate: salesopportunity
+  - code: CQ
+    business_name: Sales Quotation
+    table_candidate: salesquotation
+  - code: OC
+    business_name: Sales Order
+    table_candidate: salesorder
+  - code: GU
+    business_name: Delivery Note
+    table_candidate: deliverynote
+  - code: CI
+    business_name: Sales Invoice
+    table_candidate: salesinvoice
+  - code: CP
+    business_name: Customer Project
+    table_candidate: customerproject
+  notes: VK does not necessarily have an internal project. CP may relate to multiple
+    commercial document references including OC and ON.
+document_line_rules:
+- line_table: salesorderline
+  header_table: salesorder
+  relationship: salesorderline.ref_nr -> salesorder.ref_nr
+  relationship_type: header_line
+  line_ref_column: ref_nr
+  header_ref_column: ref_nr
+  line_key_rule: ref_nr + row_position
+  line_key_type: technical_only
+  status: manually_confirmed_pending_application
+  notes: '`ref_nr` points to the document header and is not the primary key of the
+    line table.'
+- line_table: purchaseorderline
+  header_table: purchaseorder
+  relationship: purchaseorderline.ref_nr -> purchaseorder.ref_nr
+  relationship_type: header_line
+  line_ref_column: ref_nr
+  header_ref_column: ref_nr
+  line_key_rule: ref_nr + row_position
+  line_key_type: technical_only
+  status: manually_confirmed_pending_application
+  notes: '`ref_nr` points to the document header and is not the primary key of the
+    line table.'
+- line_table: deliverynoteline
+  header_table: deliverynote
+  relationship: deliverynoteline.ref_nr -> deliverynote.ref_nr
+  relationship_type: header_line
+  line_ref_column: ref_nr
+  header_ref_column: ref_nr
+  line_key_rule: ref_nr + row_position
+  line_key_type: technical_only
+  status: manually_confirmed_pending_application
+  notes: '`ref_nr` points to the document header and is not the primary key of the
+    line table.'
+- line_table: goodsreceptionline
+  header_table: goodsreception
+  relationship: goodsreceptionline.ref_nr -> goodsreception.ref_nr
+  relationship_type: header_line
+  line_ref_column: ref_nr
+  header_ref_column: ref_nr
+  line_key_rule: ref_nr + row_position
+  line_key_type: technical_only
+  status: manually_confirmed_pending_application
+  notes: '`ref_nr` points to the document header and is not the primary key of the
+    line table.'
+- line_table: salesinvoiceline
+  header_table: salesinvoice
+  relationship: salesinvoiceline.ref_nr -> salesinvoice.ref_nr
+  relationship_type: header_line
+  line_ref_column: ref_nr
+  header_ref_column: ref_nr
+  line_key_rule: ref_nr + row_position
+  line_key_type: technical_only
+  status: manually_confirmed_pending_application
+  notes: '`ref_nr` points to the document header and is not the primary key of the
+    line table.'
+- line_table: purchaseinvoiceline
+  header_table: purchaseinvoice
+  relationship: purchaseinvoiceline.ref_nr -> purchaseinvoice.ref_nr
+  relationship_type: header_line
+  line_ref_column: ref_nr
+  header_ref_column: ref_nr
+  line_key_rule: ref_nr + row_position
+  line_key_type: technical_only
+  status: manually_confirmed_pending_application
+  notes: '`ref_nr` points to the document header and is not the primary key of the
+    line table.'
+- line_table: salesquotationline
+  header_table: salesquotation
+  relationship: salesquotationline.ref_nr -> salesquotation.ref_nr
+  relationship_type: header_line
+  line_ref_column: ref_nr
+  header_ref_column: ref_nr
+  line_key_rule: ref_nr + row_position
+  line_key_type: technical_only
+  status: manually_confirmed_pending_application
+  notes: '`ref_nr` points to the document header and is not the primary key of the
+    line table.'
+- line_table: purchasequotationline
+  header_table: purchasequotation
+  relationship: purchasequotationline.ref_nr -> purchasequotation.ref_nr
+  relationship_type: header_line
+  line_ref_column: ref_nr
+  header_ref_column: ref_nr
+  line_key_rule: ref_nr + row_position
+  line_key_type: technical_only
+  status: manually_confirmed_pending_application
+  notes: '`ref_nr` points to the document header and is not the primary key of the
+    line table.'
+- line_table: salesopportunityline
+  header_table: salesopportunity
+  relationship: salesopportunityline.ref_nr -> salesopportunity.ref_nr
+  relationship_type: header_line
+  line_ref_column: ref_nr
+  header_ref_column: ref_nr
+  line_key_rule: ref_nr + row_position
+  line_key_type: technical_only
+  status: manually_confirmed_pending_application
+  notes: '`ref_nr` points to the document header and is not the primary key of the
+    line table.'
+master_data_context:
+  creditor: Supplier or purchase-side financial context.
+  debtor: Customer or sales-side financial customer context.
+  organisation: General company/person master context shared by supplier and customer
+    flows.
+  product: Canonical master table with generated product_id and reconciled product_ref_nr
+    pending final application.
+  status: business_confirmed_pending_key_and_relationship_application
+document_flow_candidates:
+- flow_name: supplier_purchase_flow
+  source_business_object: RFQ
+  source_table_candidate: purchasequotation
+  target_business_object: 'ON'
+  target_table_candidate: purchaseorder
+  expected_source_ref: rfq_ref_nr
+  expected_target_ref: rfq_ref_nr / source reference field
+  relationship_type: document_flow
+  business_status: business_confirmed_pending_field_validation
+  technical_validation_status: pending_field_validation
+  approved_status: not_approved_pending_validation
+  notes: RFQ can lead to ON.
+- flow_name: supplier_purchase_flow
+  source_business_object: 'ON'
+  source_table_candidate: purchaseorder
+  target_business_object: GO
+  target_table_candidate: goodsreception
+  expected_source_ref: on_ref_nr
+  expected_target_ref: on_ref_nr / source reference field
+  relationship_type: document_flow
+  business_status: business_confirmed_pending_field_validation
+  technical_validation_status: pending_field_validation
+  approved_status: not_approved_pending_validation
+  notes: Purchase Order can lead to Goods Reception.
+- flow_name: supplier_purchase_flow
+  source_business_object: GO
+  source_table_candidate: goodsreception
+  target_business_object: IF
+  target_table_candidate: purchaseinvoice
+  expected_source_ref: go_ref_nr
+  expected_target_ref: go_ref_nr / source reference field
+  relationship_type: document_flow
+  business_status: business_confirmed_pending_field_validation
+  technical_validation_status: pending_field_validation
+  approved_status: not_approved_pending_validation
+  notes: Goods Reception can lead to Purchase Invoice.
+- flow_name: sales_customer_flow
+  source_business_object: VK
+  source_table_candidate: salesopportunity
+  target_business_object: CQ
+  target_table_candidate: salesquotation
+  expected_source_ref: vk_ref_nr
+  expected_target_ref: vk_ref_nr / source reference field
+  relationship_type: document_flow
+  business_status: business_confirmed_pending_field_validation
+  technical_validation_status: pending_field_validation
+  approved_status: not_approved_pending_validation
+  notes: Sales Opportunity can lead to Sales Quotation.
+- flow_name: sales_customer_flow
+  source_business_object: CQ
+  source_table_candidate: salesquotation
+  target_business_object: OC
+  target_table_candidate: salesorder
+  expected_source_ref: cq_ref_nr
+  expected_target_ref: cq_ref_nr / source reference field
+  relationship_type: document_flow
+  business_status: business_confirmed_pending_field_validation
+  technical_validation_status: pending_field_validation
+  approved_status: not_approved_pending_validation
+  notes: Sales Quotation can lead to Sales Order.
+- flow_name: sales_customer_flow
+  source_business_object: OC
+  source_table_candidate: salesorder
+  target_business_object: GU
+  target_table_candidate: deliverynote
+  expected_source_ref: oc_ref_nr
+  expected_target_ref: oc_ref_nr / source reference field
+  relationship_type: document_flow
+  business_status: business_confirmed_pending_field_validation
+  technical_validation_status: pending_field_validation
+  approved_status: not_approved_pending_validation
+  notes: Sales Order can lead to Delivery Note.
+- flow_name: sales_customer_flow
+  source_business_object: GU
+  source_table_candidate: deliverynote
+  target_business_object: CI
+  target_table_candidate: salesinvoice
+  expected_source_ref: gu_ref_nr
+  expected_target_ref: gu_ref_nr / source reference field
+  relationship_type: document_flow
+  business_status: business_confirmed_pending_field_validation
+  technical_validation_status: pending_field_validation
+  approved_status: not_approved_pending_validation
+  notes: Delivery Note can lead to Sales Invoice.
+- flow_name: sales_customer_flow
+  source_business_object: CP
+  source_table_candidate: customerproject
+  target_business_object: OC
+  target_table_candidate: salesorder
+  expected_source_ref: cp_ref_nr
+  expected_target_ref: cp_ref_nr / project reference field
+  relationship_type: document_flow
+  business_status: business_confirmed_pending_field_validation
+  technical_validation_status: pending_field_validation
+  approved_status: not_approved_pending_validation
+  notes: Customer Project may contain or relate to Sales Orders.
+- flow_name: cross_operational_flow
+  source_business_object: OC
+  source_table_candidate: salesorder
+  target_business_object: 'ON'
+  target_table_candidate: purchaseorder
+  expected_source_ref: oc_ref_nr
+  expected_target_ref: oc_ref_nr / sales order reference field
+  relationship_type: document_flow
+  business_status: business_confirmed_pending_field_validation
+  technical_validation_status: pending_field_validation
+  approved_status: not_approved_pending_validation
+  notes: Sales Order may drive Purchase Order in the operational flow.
+- flow_name: master_to_document_flow
+  source_business_object: Organisation/Debtor
+  source_table_candidate: organisation / debtor
+  target_business_object: CP
+  target_table_candidate: customerproject
+  expected_source_ref: organisation_ref / debtor_ref
+  expected_target_ref: customer/project party reference
+  relationship_type: master_document_context
+  business_status: business_confirmed_pending_field_validation
+  technical_validation_status: pending_field_validation
+  approved_status: not_approved_pending_validation
+  notes: Customer context can lead to Customer Project.
+- flow_name: master_to_document_flow
+  source_business_object: Creditor/Organisation
+  source_table_candidate: creditor / organisation
+  target_business_object: RFQ
+  target_table_candidate: purchasequotation
+  expected_source_ref: creditor_ref / organisation_ref
+  expected_target_ref: supplier party reference
+  relationship_type: master_document_context
+  business_status: business_confirmed_pending_field_validation
+  technical_validation_status: pending_field_validation
+  approved_status: not_approved_pending_validation
+  notes: Supplier context can lead to RFQ.
+- flow_name: master_to_document_flow
+  source_business_object: Creditor/Organisation
+  source_table_candidate: creditor / organisation
+  target_business_object: 'ON'
+  target_table_candidate: purchaseorder
+  expected_source_ref: creditor_ref / organisation_ref
+  expected_target_ref: supplier party reference
+  relationship_type: master_document_context
+  business_status: business_confirmed_pending_field_validation
+  technical_validation_status: pending_field_validation
+  approved_status: not_approved_pending_validation
+  notes: Supplier context can be present on Purchase Order.
+- flow_name: master_to_document_flow
+  source_business_object: Creditor/Organisation
+  source_table_candidate: creditor / organisation
+  target_business_object: IF
+  target_table_candidate: purchaseinvoice
+  expected_source_ref: creditor_ref / organisation_ref
+  expected_target_ref: supplier party reference
+  relationship_type: master_document_context
+  business_status: business_confirmed_pending_field_validation
+  technical_validation_status: pending_field_validation
+  approved_status: not_approved_pending_validation
+  notes: Supplier context can be present on Purchase Invoice.
+guardrails:
+- This file does not approve keys or relationships.
+- '`approved_keys.yml` must not be updated by the business-flow mapping step.'
+- '`approved_relationships.yml` must not be updated by the business-flow mapping step.'
+- Field-level validation is still required before applying document-flow relationships.

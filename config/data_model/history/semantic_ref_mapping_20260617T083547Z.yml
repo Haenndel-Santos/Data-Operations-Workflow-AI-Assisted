@@ -1,0 +1,176 @@
+generated_at: '2026-06-17T08:34:51+00:00'
+table_ref_mapping:
+  creditor_export_creditor:
+    expected_prefix: CR
+    semantic_namespace: creditor
+    semantic_ref_name: cr_ref_nr
+    raw_column: ref_nr
+    status: pending_review
+  customerproject_export_customerproject:
+    expected_prefix: CP
+    semantic_namespace: customer_project
+    semantic_ref_name: cp_ref_nr
+    raw_column: ref_nr
+    status: pending_review
+  debtor_export_debtor:
+    expected_prefix: DE
+    semantic_namespace: debtor
+    semantic_ref_name: de_ref_nr
+    raw_column: ref_nr
+    status: pending_review
+  deliverynote_export_deliverynote:
+    expected_prefix: GU
+    semantic_namespace: delivery_note
+    semantic_ref_name: gu_ref_nr
+    raw_column: ref_nr
+    status: pending_review
+  deliverynoteline:
+    expected_prefix: GU
+    semantic_namespace: delivery_note
+    semantic_ref_name: gu_ref_nr
+    raw_column: ref_nr
+    status: pending_review
+  deliverynoteline_export_deliverynoteline:
+    expected_prefix: GU
+    semantic_namespace: delivery_note
+    semantic_ref_name: gu_ref_nr
+    raw_column: ref_nr
+    status: pending_review
+  goodsreception_export_goodsreception:
+    expected_prefix: GO
+    semantic_namespace: goods_reception
+    semantic_ref_name: go_ref_nr
+    raw_column: ref_nr
+    status: pending_review
+  goodsreceptionline_export_goodsreceptionline:
+    expected_prefix: GO
+    semantic_namespace: goods_reception
+    semantic_ref_name: go_ref_nr
+    raw_column: ref_nr
+    status: pending_review
+  organisation_export_organisation:
+    expected_prefix: ''
+    semantic_namespace: organisation
+    semantic_ref_name: needs_business_context_ref_nr
+    raw_column: ref_nr
+    status: needs_business_context
+  purchaseinvoice:
+    expected_prefix: IF
+    semantic_namespace: purchase_invoice
+    semantic_ref_name: if_ref_nr
+    raw_column: ref_nr
+    status: pending_review
+  purchaseinvoiceline:
+    expected_prefix: IF
+    semantic_namespace: purchase_invoice
+    semantic_ref_name: if_ref_nr
+    raw_column: ref_nr
+    status: pending_review
+  purchaseinvoiceline_export_purchaseinvoiceline:
+    expected_prefix: IF
+    semantic_namespace: purchase_invoice
+    semantic_ref_name: if_ref_nr
+    raw_column: ref_nr
+    status: pending_review
+  purchaseorder_3_export_purchaseorder:
+    expected_prefix: 'ON'
+    semantic_namespace: purchase_order
+    semantic_ref_name: on_ref_nr
+    raw_column: ref_nr
+    status: pending_review
+  purchaseorderline_export_purchaseorderline:
+    expected_prefix: 'ON'
+    semantic_namespace: purchase_order
+    semantic_ref_name: on_ref_nr
+    raw_column: ref_nr
+    status: pending_review
+  purchaseorderline2_export_purchaseorderline:
+    expected_prefix: 'ON'
+    semantic_namespace: purchase_order
+    semantic_ref_name: on_ref_nr
+    raw_column: ref_nr
+    status: pending_review
+  purchaseorderline3_export_purchaseorderline:
+    expected_prefix: 'ON'
+    semantic_namespace: purchase_order
+    semantic_ref_name: on_ref_nr
+    raw_column: ref_nr
+    status: pending_review
+  purchasequotation:
+    expected_prefix: RFQ
+    semantic_namespace: purchase_rfq
+    semantic_ref_name: rfq_ref_nr
+    raw_column: ref_nr
+    status: pending_review
+  purchasequotationline_export_purchasequotationline:
+    expected_prefix: RFQ
+    semantic_namespace: purchase_rfq
+    semantic_ref_name: rfq_ref_nr
+    raw_column: ref_nr
+    status: pending_review
+  salesinvoice:
+    expected_prefix: CI
+    semantic_namespace: sales_invoice
+    semantic_ref_name: ci_ref_nr
+    raw_column: ref_nr
+    status: pending_review
+  salesinvoiceline_export_salesinvoiceline:
+    expected_prefix: CI
+    semantic_namespace: sales_invoice
+    semantic_ref_name: ci_ref_nr
+    raw_column: ref_nr
+    status: pending_review
+  salesopportunity:
+    expected_prefix: VK
+    semantic_namespace: sales_opportunity
+    semantic_ref_name: vk_ref_nr
+    raw_column: ref_nr
+    status: pending_review
+  salesopportunityline_export_salesopportunityline:
+    expected_prefix: VK
+    semantic_namespace: sales_opportunity
+    semantic_ref_name: vk_ref_nr
+    raw_column: ref_nr
+    status: pending_review
+  salesorder:
+    expected_prefix: OC
+    semantic_namespace: sales_order
+    semantic_ref_name: oc_ref_nr
+    raw_column: ref_nr
+    status: pending_review
+  salesorderline:
+    expected_prefix: OC
+    semantic_namespace: sales_order
+    semantic_ref_name: oc_ref_nr
+    raw_column: ref_nr
+    status: pending_review
+  salesorderline_export_salesorderline:
+    expected_prefix: OC
+    semantic_namespace: sales_order
+    semantic_ref_name: oc_ref_nr
+    raw_column: ref_nr
+    status: pending_review
+  salesorderline2_export_salesorderline:
+    expected_prefix: OC
+    semantic_namespace: sales_order
+    semantic_ref_name: oc_ref_nr
+    raw_column: ref_nr
+    status: pending_review
+  salesquotation:
+    expected_prefix: CQ
+    semantic_namespace: sales_quotation
+    semantic_ref_name: cq_ref_nr
+    raw_column: ref_nr
+    status: pending_review
+  salesquotationline_export_salesquotationline:
+    expected_prefix: CQ
+    semantic_namespace: sales_quotation
+    semantic_ref_name: cq_ref_nr
+    raw_column: ref_nr
+    status: pending_review
+  serials_export_serials:
+    expected_prefix: ''
+    semantic_namespace: needs_business_context
+    semantic_ref_name: needs_business_context_ref_nr
+    raw_column: ref_nr
+    status: needs_business_context

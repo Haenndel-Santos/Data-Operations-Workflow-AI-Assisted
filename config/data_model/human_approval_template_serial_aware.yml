@@ -1,0 +1,458 @@
+generated_at: '2026-06-17T08:48:41+00:00'
+instructions: Serial-aware recommendations only. Edit human_decision manually; no
+  approval is applied by this file.
+decisions:
+- decision_id: KEY_CREDITOR_EXPORT_CREDITOR_REF_NR
+  decision_type: primary_key
+  table_name: creditor_export_creditor
+  candidate: ref_nr
+  semantic_ref_name: cr_ref_nr
+  semantic_namespace: creditor
+  evidence:
+    uniqueness_rate: '98.66'
+    non_null_rate: '98.47'
+    prefix_match_rate: '100.0'
+    regex_match_rate: '100.0'
+  recommended_decision: approve_as_semantic_master_reference_candidate
+  human_decision: pending
+  human_notes: ''
+- decision_id: KEY_CUSTOMERPROJECT_EXPORT_CUSTOMERPROJECT_REF_NR
+  decision_type: primary_key
+  table_name: customerproject_export_customerproject
+  candidate: ref_nr
+  semantic_ref_name: cp_ref_nr
+  semantic_namespace: customer_project
+  evidence:
+    uniqueness_rate: '100.0'
+    non_null_rate: '100.0'
+    prefix_match_rate: '100.0'
+    regex_match_rate: '100.0'
+  recommended_decision: approve_as_semantic_primary_key
+  human_decision: pending
+  human_notes: ''
+- decision_id: KEY_DEBTOR_EXPORT_DEBTOR_REF_NR
+  decision_type: primary_key
+  table_name: debtor_export_debtor
+  candidate: ref_nr
+  semantic_ref_name: de_ref_nr
+  semantic_namespace: debtor
+  evidence:
+    uniqueness_rate: '94.88'
+    non_null_rate: '94.42'
+    prefix_match_rate: '100.0'
+    regex_match_rate: '100.0'
+  recommended_decision: approve_as_semantic_master_reference_candidate
+  human_decision: pending
+  human_notes: ''
+- decision_id: KEY_DELIVERYNOTE_EXPORT_DELIVERYNOTE_REF_NR
+  decision_type: primary_key
+  table_name: deliverynote_export_deliverynote
+  candidate: ref_nr
+  semantic_ref_name: gu_ref_nr
+  semantic_namespace: delivery_note
+  evidence:
+    uniqueness_rate: '100.0'
+    non_null_rate: '100.0'
+    prefix_match_rate: '100.0'
+    regex_match_rate: '100.0'
+  recommended_decision: approve_as_semantic_primary_key
+  human_decision: pending
+  human_notes: ''
+- decision_id: KEY_DELIVERYNOTELINE_REF_NR_ROW_POSITION
+  decision_type: technical_key
+  table_name: deliverynoteline
+  candidate: ref_nr + row_position
+  semantic_ref_name: gu_ref_nr
+  semantic_namespace: delivery_note
+  evidence:
+    uniqueness_rate: '100.0'
+    non_null_rate: '100.0'
+    prefix_match_rate: '100.0'
+    regex_match_rate: '100.0'
+  recommended_decision: approve_as_technical_key_only
+  human_decision: pending
+  human_notes: ''
+- decision_id: KEY_DELIVERYNOTELINE_EXPORT_DELIVERYNOTELINE_REF_NR_ROW_POSITION
+  decision_type: technical_key
+  table_name: deliverynoteline_export_deliverynoteline
+  candidate: ref_nr + row_position
+  semantic_ref_name: gu_ref_nr
+  semantic_namespace: delivery_note
+  evidence:
+    uniqueness_rate: '100.0'
+    non_null_rate: '100.0'
+    prefix_match_rate: '100.0'
+    regex_match_rate: '100.0'
+  recommended_decision: approve_as_technical_key_only
+  human_decision: pending
+  human_notes: ''
+- decision_id: KEY_GOODSRECEPTION_EXPORT_GOODSRECEPTION_REF_NR
+  decision_type: primary_key
+  table_name: goodsreception_export_goodsreception
+  candidate: ref_nr
+  semantic_ref_name: go_ref_nr
+  semantic_namespace: goods_reception
+  evidence:
+    uniqueness_rate: '100.0'
+    non_null_rate: '100.0'
+    prefix_match_rate: '100.0'
+    regex_match_rate: '100.0'
+  recommended_decision: approve_as_semantic_primary_key
+  human_decision: pending
+  human_notes: ''
+- decision_id: KEY_GOODSRECEPTIONLINE_EXPORT_GOODSRECEPTIONLINE_REF_NR_ROW_POSITION
+  decision_type: technical_key
+  table_name: goodsreceptionline_export_goodsreceptionline
+  candidate: ref_nr + row_position
+  semantic_ref_name: go_ref_nr
+  semantic_namespace: goods_reception
+  evidence:
+    uniqueness_rate: '100.0'
+    non_null_rate: '100.0'
+    prefix_match_rate: '100.0'
+    regex_match_rate: '100.0'
+  recommended_decision: approve_as_technical_key_only
+  human_decision: pending
+  human_notes: ''
+- decision_id: KEY_PURCHASEINVOICELINE_REF_NR_ROW_POSITION
+  decision_type: technical_key
+  table_name: purchaseinvoiceline
+  candidate: ref_nr + row_position
+  semantic_ref_name: if_ref_nr
+  semantic_namespace: purchase_invoice
+  evidence:
+    uniqueness_rate: '100.0'
+    non_null_rate: '100.0'
+    prefix_match_rate: '100.0'
+    regex_match_rate: '100.0'
+  recommended_decision: approve_as_technical_key_only
+  human_decision: pending
+  human_notes: ''
+- decision_id: KEY_PURCHASEORDER_3_EXPORT_PURCHASEORDER_REF_NR
+  decision_type: primary_key
+  table_name: purchaseorder_3_export_purchaseorder
+  candidate: ref_nr
+  semantic_ref_name: on_ref_nr
+  semantic_namespace: purchase_order
+  evidence:
+    uniqueness_rate: '100.0'
+    non_null_rate: '100.0'
+    prefix_match_rate: '100.0'
+    regex_match_rate: '100.0'
+  recommended_decision: approve_as_semantic_primary_key
+  human_decision: pending
+  human_notes: ''
+- decision_id: KEY_PURCHASEORDERLINE_EXPORT_PURCHASEORDERLINE_REF_NR_ROW_POSITION
+  decision_type: technical_key
+  table_name: purchaseorderline_export_purchaseorderline
+  candidate: ref_nr + row_position
+  semantic_ref_name: on_ref_nr
+  semantic_namespace: purchase_order
+  evidence:
+    uniqueness_rate: '100.0'
+    non_null_rate: '100.0'
+    prefix_match_rate: '100.0'
+    regex_match_rate: '100.0'
+  recommended_decision: approve_as_technical_key_only
+  human_decision: pending
+  human_notes: ''
+- decision_id: KEY_PURCHASEQUOTATION_REF_NR
+  decision_type: primary_key
+  table_name: purchasequotation
+  candidate: ref_nr
+  semantic_ref_name: rfq_ref_nr
+  semantic_namespace: purchase_rfq
+  evidence:
+    uniqueness_rate: '100.0'
+    non_null_rate: '100.0'
+    prefix_match_rate: '100.0'
+    regex_match_rate: '100.0'
+  recommended_decision: approve_as_semantic_primary_key
+  human_decision: pending
+  human_notes: ''
+- decision_id: KEY_PURCHASEQUOTATIONLINE_EXPORT_PURCHASEQUOTATIONLINE_REF_NR_ROW_POSITION
+  decision_type: technical_key
+  table_name: purchasequotationline_export_purchasequotationline
+  candidate: ref_nr + row_position
+  semantic_ref_name: rfq_ref_nr
+  semantic_namespace: purchase_rfq
+  evidence:
+    uniqueness_rate: '100.0'
+    non_null_rate: '100.0'
+    prefix_match_rate: '100.0'
+    regex_match_rate: '100.0'
+  recommended_decision: approve_as_technical_key_only
+  human_decision: pending
+  human_notes: ''
+- decision_id: KEY_SALESINVOICE_REF_NR
+  decision_type: primary_key
+  table_name: salesinvoice
+  candidate: ref_nr
+  semantic_ref_name: ci_ref_nr
+  semantic_namespace: sales_invoice
+  evidence:
+    uniqueness_rate: '100.0'
+    non_null_rate: '100.0'
+    prefix_match_rate: '100.0'
+    regex_match_rate: '100.0'
+  recommended_decision: approve_as_semantic_primary_key
+  human_decision: pending
+  human_notes: ''
+- decision_id: KEY_SALESOPPORTUNITY_REF_NR
+  decision_type: primary_key
+  table_name: salesopportunity
+  candidate: ref_nr
+  semantic_ref_name: vk_ref_nr
+  semantic_namespace: sales_opportunity
+  evidence:
+    uniqueness_rate: '100.0'
+    non_null_rate: '100.0'
+    prefix_match_rate: '100.0'
+    regex_match_rate: '100.0'
+  recommended_decision: approve_as_semantic_primary_key
+  human_decision: pending
+  human_notes: ''
+- decision_id: KEY_SALESOPPORTUNITYLINE_EXPORT_SALESOPPORTUNITYLINE_REF_NR_ROW_POSITION
+  decision_type: technical_key
+  table_name: salesopportunityline_export_salesopportunityline
+  candidate: ref_nr + row_position
+  semantic_ref_name: vk_ref_nr
+  semantic_namespace: sales_opportunity
+  evidence:
+    uniqueness_rate: '100.0'
+    non_null_rate: '100.0'
+    prefix_match_rate: '100.0'
+    regex_match_rate: '100.0'
+  recommended_decision: approve_as_technical_key_only
+  human_decision: pending
+  human_notes: ''
+- decision_id: KEY_SALESORDER_REF_NR
+  decision_type: primary_key
+  table_name: salesorder
+  candidate: ref_nr
+  semantic_ref_name: oc_ref_nr
+  semantic_namespace: sales_order
+  evidence:
+    uniqueness_rate: '100.0'
+    non_null_rate: '100.0'
+    prefix_match_rate: '100.0'
+    regex_match_rate: '100.0'
+  recommended_decision: approve_as_semantic_primary_key
+  human_decision: pending
+  human_notes: ''
+- decision_id: KEY_SALESORDERLINE_REF_NR_ROW_POSITION
+  decision_type: technical_key
+  table_name: salesorderline
+  candidate: ref_nr + row_position
+  semantic_ref_name: oc_ref_nr
+  semantic_namespace: sales_order
+  evidence:
+    uniqueness_rate: '100.0'
+    non_null_rate: '100.0'
+    prefix_match_rate: '100.0'
+    regex_match_rate: '100.0'
+  recommended_decision: approve_as_technical_key_only
+  human_decision: pending
+  human_notes: ''
+- decision_id: KEY_SALESORDERLINE_EXPORT_SALESORDERLINE_REF_NR_ROW_POSITION
+  decision_type: technical_key
+  table_name: salesorderline_export_salesorderline
+  candidate: ref_nr + row_position
+  semantic_ref_name: oc_ref_nr
+  semantic_namespace: sales_order
+  evidence:
+    uniqueness_rate: '100.0'
+    non_null_rate: '100.0'
+    prefix_match_rate: '100.0'
+    regex_match_rate: '100.0'
+  recommended_decision: approve_as_technical_key_only
+  human_decision: pending
+  human_notes: ''
+- decision_id: KEY_SALESQUOTATION_REF_NR
+  decision_type: primary_key
+  table_name: salesquotation
+  candidate: ref_nr
+  semantic_ref_name: cq_ref_nr
+  semantic_namespace: sales_quotation
+  evidence:
+    uniqueness_rate: '100.0'
+    non_null_rate: '100.0'
+    prefix_match_rate: '100.0'
+    regex_match_rate: '100.0'
+  recommended_decision: approve_as_semantic_primary_key
+  human_decision: pending
+  human_notes: ''
+- decision_id: KEY_SALESQUOTATIONLINE_EXPORT_SALESQUOTATIONLINE_REF_NR_ROW_POSITION
+  decision_type: technical_key
+  table_name: salesquotationline_export_salesquotationline
+  candidate: ref_nr + row_position
+  semantic_ref_name: cq_ref_nr
+  semantic_namespace: sales_quotation
+  evidence:
+    uniqueness_rate: '100.0'
+    non_null_rate: '100.0'
+    prefix_match_rate: '100.0'
+    regex_match_rate: '100.0'
+  recommended_decision: approve_as_technical_key_only
+  human_decision: pending
+  human_notes: ''
+- decision_id: REL_SALESOPPORTUNITYLINE_EXPORT_SALESOPPORTUNITYLINE_SALESOPPORTUNITY
+  decision_type: relationship
+  source_table: salesopportunityline_export_salesopportunityline
+  source_column: ref_nr
+  target_table: salesopportunity
+  target_column: ref_nr
+  source_semantic_namespace: sales_opportunity
+  target_semantic_namespace: sales_opportunity
+  evidence:
+    match_rate: '100.0'
+    target_duplicate_count: '0'
+    join_risk: low
+    prefix_consistency: consistent
+  recommended_decision: approve_header_line_relationship
+  human_decision: pending
+  human_notes: ''
+- decision_id: REL_SALESQUOTATIONLINE_EXPORT_SALESQUOTATIONLINE_SALESQUOTATION
+  decision_type: relationship
+  source_table: salesquotationline_export_salesquotationline
+  source_column: ref_nr
+  target_table: salesquotation
+  target_column: ref_nr
+  source_semantic_namespace: sales_quotation
+  target_semantic_namespace: sales_quotation
+  evidence:
+    match_rate: '100.0'
+    target_duplicate_count: '0'
+    join_risk: low
+    prefix_consistency: consistent
+  recommended_decision: approve_header_line_relationship
+  human_decision: pending
+  human_notes: ''
+- decision_id: REL_SALESORDERLINE_SALESORDER
+  decision_type: relationship
+  source_table: salesorderline
+  source_column: ref_nr
+  target_table: salesorder
+  target_column: ref_nr
+  source_semantic_namespace: sales_order
+  target_semantic_namespace: sales_order
+  evidence:
+    match_rate: '100.0'
+    target_duplicate_count: '0'
+    join_risk: low
+    prefix_consistency: consistent
+  recommended_decision: approve_header_line_relationship
+  human_decision: pending
+  human_notes: ''
+- decision_id: REL_SALESORDERLINE_EXPORT_SALESORDERLINE_SALESORDER
+  decision_type: relationship
+  source_table: salesorderline_export_salesorderline
+  source_column: ref_nr
+  target_table: salesorder
+  target_column: ref_nr
+  source_semantic_namespace: sales_order
+  target_semantic_namespace: sales_order
+  evidence:
+    match_rate: '100.0'
+    target_duplicate_count: '0'
+    join_risk: low
+    prefix_consistency: consistent
+  recommended_decision: approve_header_line_relationship
+  human_decision: pending
+  human_notes: ''
+- decision_id: REL_DELIVERYNOTELINE_DELIVERYNOTE_EXPORT_DELIVERYNOTE
+  decision_type: relationship
+  source_table: deliverynoteline
+  source_column: ref_nr
+  target_table: deliverynote_export_deliverynote
+  target_column: ref_nr
+  source_semantic_namespace: delivery_note
+  target_semantic_namespace: delivery_note
+  evidence:
+    match_rate: '100.0'
+    target_duplicate_count: '0'
+    join_risk: low
+    prefix_consistency: consistent
+  recommended_decision: approve_header_line_relationship
+  human_decision: pending
+  human_notes: ''
+- decision_id: REL_DELIVERYNOTELINE_EXPORT_DELIVERYNOTELINE_DELIVERYNOTE_EXPORT_DELIVERYNOTE
+  decision_type: relationship
+  source_table: deliverynoteline_export_deliverynoteline
+  source_column: ref_nr
+  target_table: deliverynote_export_deliverynote
+  target_column: ref_nr
+  source_semantic_namespace: delivery_note
+  target_semantic_namespace: delivery_note
+  evidence:
+    match_rate: '100.0'
+    target_duplicate_count: '0'
+    join_risk: low
+    prefix_consistency: consistent
+  recommended_decision: approve_header_line_relationship
+  human_decision: pending
+  human_notes: ''
+- decision_id: REL_SALESINVOICELINE_EXPORT_SALESINVOICELINE_SALESINVOICE
+  decision_type: relationship
+  source_table: salesinvoiceline_export_salesinvoiceline
+  source_column: ref_nr
+  target_table: salesinvoice
+  target_column: ref_nr
+  source_semantic_namespace: sales_invoice
+  target_semantic_namespace: sales_invoice
+  evidence:
+    match_rate: '100.0'
+    target_duplicate_count: '0'
+    join_risk: low
+    prefix_consistency: consistent
+  recommended_decision: approve_header_line_relationship
+  human_decision: pending
+  human_notes: ''
+- decision_id: REL_PURCHASEQUOTATIONLINE_EXPORT_PURCHASEQUOTATIONLINE_PURCHASEQUOTATION
+  decision_type: relationship
+  source_table: purchasequotationline_export_purchasequotationline
+  source_column: ref_nr
+  target_table: purchasequotation
+  target_column: ref_nr
+  source_semantic_namespace: purchase_rfq
+  target_semantic_namespace: purchase_rfq
+  evidence:
+    match_rate: '100.0'
+    target_duplicate_count: '0'
+    join_risk: low
+    prefix_consistency: consistent
+  recommended_decision: approve_header_line_relationship
+  human_decision: pending
+  human_notes: ''
+- decision_id: REL_PURCHASEORDERLINE_EXPORT_PURCHASEORDERLINE_PURCHASEORDER_3_EXPORT_PURCHASEORDER
+  decision_type: relationship
+  source_table: purchaseorderline_export_purchaseorderline
+  source_column: ref_nr
+  target_table: purchaseorder_3_export_purchaseorder
+  target_column: ref_nr
+  source_semantic_namespace: purchase_order
+  target_semantic_namespace: purchase_order
+  evidence:
+    match_rate: '100.0'
+    target_duplicate_count: '0'
+    join_risk: low
+    prefix_consistency: consistent
+  recommended_decision: approve_header_line_relationship
+  human_decision: pending
+  human_notes: ''
+- decision_id: REL_GOODSRECEPTIONLINE_EXPORT_GOODSRECEPTIONLINE_GOODSRECEPTION_EXPORT_GOODSRECEPTION
+  decision_type: relationship
+  source_table: goodsreceptionline_export_goodsreceptionline
+  source_column: ref_nr
+  target_table: goodsreception_export_goodsreception
+  target_column: ref_nr
+  source_semantic_namespace: goods_reception
+  target_semantic_namespace: goods_reception
+  evidence:
+    match_rate: '100.0'
+    target_duplicate_count: '0'
+    join_risk: low
+    prefix_consistency: consistent
+  recommended_decision: approve_header_line_relationship
+  human_decision: pending
+  human_notes: ''

@@ -1,0 +1,5 @@
+customer_id,customer_name,segment,region,signup_date
+C001,Northwind Bikes,Enterprise,North,2024-01-15
+C002,Alpine Stores,Mid-Market,West,2024-02-02
+C003,Delta Logistics,Enterprise,South,2024-03-18
+C004,Urban Retail Co,SMB,East,2024-04-09

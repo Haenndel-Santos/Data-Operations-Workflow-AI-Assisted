@@ -1,0 +1,32 @@
+generated_at: '2026-06-17T10:20:13+00:00'
+canonical_table_rules:
+- Canonical tables define the core data model only after manual approval is applied.
+- Serial references remain pending until approved through the human review process.
+document_line_rules:
+- A line table contains internal document lines for a header table.
+- ref_nr in a line table points to the header document.
+- ref_nr alone is not a primary key for line tables.
+- ref_nr + row_position may be used only as a technical analytical key.
+product_rules:
+- Product canonical reference is part_nr_sku.
+- part_nr_sku is equivalent to Part. nr. (SKU).
+- PD serial reference is optional, not mandatory.
+- Products without PD code are valid product records.
+- part_nr_sku should be validated as a business key candidate.
+- pd_ref_nr should only be derived when the value matches PD serial format.
+- If part_nr_sku starts with PD and matches PDYY99999, it can also be interpreted
+  as pd_ref_nr.
+- Product remains manually_confirmed_pending_duplicate_validation until duplicate
+  validation is reviewed.
+organisation_rules:
+- Organisation is a canonical master table.
+- Organisation may use a generic ref_nr, not a serial prefix.
+- Do not force a serial prefix for Organisation.
+- Validate uniqueness and non-null rate for organisation.ref_nr or other business
+  key candidates.
+- Keep Organisation pending review until explicitly approved.
+complement_table_rules:
+- Any table not listed in canonical_tables.yml starts as document_line, enrichment,
+  complement, bridge_candidate, support_table, or needs_business_context.
+- Complement tables should not define the core model unless manually approved.
+- Not every field in complement tables is relevant to the core model.

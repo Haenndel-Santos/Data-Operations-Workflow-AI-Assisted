@@ -1,0 +1,28 @@
+[project]
+name = "ai-assisted-data-operations-workflow"
+version = "0.1.0"
+description = "AI-assisted workflow for profiling, cleaning, modeling, validating, and exporting operational data for BI."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "duckdb>=1.1.0",
+  "openpyxl>=3.1.0",
+  "pandas>=2.2.0",
+  "pyarrow>=16.0.0",
+  "PyYAML>=6.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0.0",
+]
+
+[project.scripts]
+dataops = "data_ops_lab.cli:main"
+
+[build-system]
+requires = ["setuptools>=70.0.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]

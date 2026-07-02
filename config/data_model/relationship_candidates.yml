@@ -1,0 +1,237 @@
+generated_at: '2026-06-17T06:47:19+00:00'
+status: pending_review
+relationship_candidates:
+- source_table: salesopportunityline_export_salesopportunityline
+  source_column: ref_nr
+  target_table: salesopportunity
+  target_column: ref_nr
+  relationship_type: header_line
+  match_rate: 100.0
+  unmatched_count: 0
+  target_duplicate_count: 0
+  join_risk: low
+  confidence_level: high
+  reason: Required Step 3 header-line relationship test.
+  status: pending_review
+  notes: Candidate only. Requires manual approval before use.
+- source_table: salesquotationline_export_salesquotationline
+  source_column: ref_nr
+  target_table: salesquotation
+  target_column: ref_nr
+  relationship_type: header_line
+  match_rate: 100.0
+  unmatched_count: 0
+  target_duplicate_count: 0
+  join_risk: low
+  confidence_level: high
+  reason: Required Step 3 header-line relationship test.
+  status: pending_review
+  notes: Candidate only. Requires manual approval before use.
+- source_table: salesorderline
+  source_column: ref_nr
+  target_table: salesorder
+  target_column: ref_nr
+  relationship_type: header_line
+  match_rate: 100.0
+  unmatched_count: 0
+  target_duplicate_count: 0
+  join_risk: low
+  confidence_level: high
+  reason: Required Step 3 header-line relationship test.
+  status: pending_review
+  notes: Candidate only. Requires manual approval before use.
+- source_table: salesorderline_export_salesorderline
+  source_column: ref_nr
+  target_table: salesorder
+  target_column: ref_nr
+  relationship_type: header_line
+  match_rate: 100.0
+  unmatched_count: 0
+  target_duplicate_count: 0
+  join_risk: low
+  confidence_level: high
+  reason: Required Step 3 header-line relationship test.
+  status: pending_review
+  notes: Candidate only. Requires manual approval before use.
+- source_table: salesorderline2_export_salesorderline
+  source_column: ref_nr
+  target_table: salesorder
+  target_column: ref_nr
+  relationship_type: header_line
+  match_rate: 0.0
+  unmatched_count: 62
+  target_duplicate_count: 0
+  join_risk: medium
+  confidence_level: needs_review
+  reason: Required Step 3 header-line relationship test.
+  status: pending_review
+  notes: Candidate only. Requires manual approval before use.
+- source_table: deliverynoteline
+  source_column: ref_nr
+  target_table: deliverynote_export_deliverynote
+  target_column: ref_nr
+  relationship_type: header_line
+  match_rate: 100.0
+  unmatched_count: 0
+  target_duplicate_count: 0
+  join_risk: low
+  confidence_level: high
+  reason: Required Step 3 header-line relationship test.
+  status: pending_review
+  notes: Candidate only. Requires manual approval before use.
+- source_table: deliverynoteline_export_deliverynoteline
+  source_column: ref_nr
+  target_table: deliverynote_export_deliverynote
+  target_column: ref_nr
+  relationship_type: header_line
+  match_rate: 100.0
+  unmatched_count: 0
+  target_duplicate_count: 0
+  join_risk: low
+  confidence_level: high
+  reason: Required Step 3 header-line relationship test.
+  status: pending_review
+  notes: Candidate only. Requires manual approval before use.
+- source_table: salesinvoiceline_export_salesinvoiceline
+  source_column: ref_nr
+  target_table: salesinvoice
+  target_column: ref_nr
+  relationship_type: header_line
+  match_rate: 100.0
+  unmatched_count: 0
+  target_duplicate_count: 0
+  join_risk: low
+  confidence_level: high
+  reason: Required Step 3 header-line relationship test.
+  status: pending_review
+  notes: Candidate only. Requires manual approval before use.
+- source_table: purchasequotationline_export_purchasequotationline
+  source_column: ref_nr
+  target_table: purchasequotation
+  target_column: ref_nr
+  relationship_type: header_line
+  match_rate: 100.0
+  unmatched_count: 0
+  target_duplicate_count: 0
+  join_risk: low
+  confidence_level: high
+  reason: Required Step 3 header-line relationship test.
+  status: pending_review
+  notes: Candidate only. Requires manual approval before use.
+- source_table: purchaseorderline_export_purchaseorderline
+  source_column: ref_nr
+  target_table: purchaseorder_3_export_purchaseorder
+  target_column: ref_nr
+  relationship_type: header_line
+  match_rate: 100.0
+  unmatched_count: 0
+  target_duplicate_count: 0
+  join_risk: low
+  confidence_level: high
+  reason: Required Step 3 header-line relationship test.
+  status: pending_review
+  notes: Candidate only. Requires manual approval before use.
+- source_table: purchaseorderline2_export_purchaseorderline
+  source_column: ref_nr
+  target_table: purchaseorder_3_export_purchaseorder
+  target_column: ref_nr
+  relationship_type: header_line
+  match_rate: 0.0
+  unmatched_count: 734
+  target_duplicate_count: 0
+  join_risk: medium
+  confidence_level: needs_review
+  reason: Required Step 3 header-line relationship test.
+  status: pending_review
+  notes: Candidate only. Requires manual approval before use.
+- source_table: purchaseorderline3_export_purchaseorderline
+  source_column: ref_nr
+  target_table: purchaseorder_3_export_purchaseorder
+  target_column: ref_nr
+  relationship_type: header_line
+  match_rate: 0.0
+  unmatched_count: 734
+  target_duplicate_count: 0
+  join_risk: medium
+  confidence_level: needs_review
+  reason: Required Step 3 header-line relationship test.
+  status: pending_review
+  notes: Candidate only. Requires manual approval before use.
+- source_table: goodsreceptionline_export_goodsreceptionline
+  source_column: ref_nr
+  target_table: goodsreception_export_goodsreception
+  target_column: ref_nr
+  relationship_type: header_line
+  match_rate: 100.0
+  unmatched_count: 0
+  target_duplicate_count: 0
+  join_risk: low
+  confidence_level: high
+  reason: Required Step 3 header-line relationship test.
+  status: pending_review
+  notes: Candidate only. Requires manual approval before use.
+- source_table: purchaseinvoiceline
+  source_column: ref_nr
+  target_table: purchaseinvoice
+  target_column: ref_nr
+  relationship_type: header_line
+  match_rate: 100.0
+  unmatched_count: 0
+  target_duplicate_count: 11
+  join_risk: high
+  confidence_level: low
+  reason: Required Step 3 header-line relationship test.
+  status: pending_review
+  notes: Candidate only. Requires manual approval before use.
+- source_table: purchaseinvoiceline_export_purchaseinvoiceline
+  source_column: ref_nr
+  target_table: purchaseinvoice
+  target_column: ref_nr
+  relationship_type: header_line
+  match_rate: 100.0
+  unmatched_count: 0
+  target_duplicate_count: 11
+  join_risk: high
+  confidence_level: low
+  reason: Required Step 3 header-line relationship test.
+  status: pending_review
+  notes: Candidate only. Requires manual approval before use.
+- source_table: salesorder
+  source_column: project_number_name
+  target_table: deliverynote_export_deliverynote
+  target_column: project
+  relationship_type: document_flow
+  match_rate: 81.19
+  unmatched_count: 60
+  target_duplicate_count: 1104
+  join_risk: high
+  confidence_level: low
+  reason: Document-flow candidate met minimum measured match-rate threshold.
+  status: pending_review
+  notes: Candidate only. Requires manual approval before use.
+- source_table: salesorder
+  source_column: project_number_name
+  target_table: purchaseorder_3_export_purchaseorder
+  target_column: project
+  relationship_type: document_flow
+  match_rate: 79.0
+  unmatched_count: 67
+  target_duplicate_count: 1436
+  join_risk: high
+  confidence_level: needs_review
+  reason: Document-flow candidate met minimum measured match-rate threshold.
+  status: pending_review
+  notes: Candidate only. Requires manual approval before use.
+- source_table: purchaseorder_3_export_purchaseorder
+  source_column: ref_nr
+  target_table: goodsreception_export_goodsreception
+  target_column: ref_nr_purchase_order
+  relationship_type: document_flow
+  match_rate: 91.68
+  unmatched_count: 166
+  target_duplicate_count: 734
+  join_risk: high
+  confidence_level: low
+  reason: Document-flow candidate met minimum measured match-rate threshold.
+  status: pending_review
+  notes: Candidate only. Requires manual approval before use.

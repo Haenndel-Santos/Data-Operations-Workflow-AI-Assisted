@@ -1,0 +1,842 @@
+generated_at: '2026-06-17T08:35:57+00:00'
+rules:
+- module_original: Agenda afspraken
+  module_normalized: agenda afspraken
+  module_english: needs_business_context
+  company: EDS Casting & Forging B.V.
+  format_original: AFYY99999
+  prefix: AF
+  year_token: YY
+  sequence_token: '99999'
+  expected_regex: ^AF[0-9]{2}[0-9]{5}$
+  current_ref_counter: '42.0'
+  generate_on: Creation
+  document_setting: ''
+  semantic_namespace: needs_business_context
+  semantic_ref_name: af_ref_nr
+  status: needs_business_context
+- module_original: Bijlagen
+  module_normalized: bijlagen
+  module_english: needs_business_context
+  company: EDS Casting & Forging B.V.
+  format_original: BIYY99999
+  prefix: BI
+  year_token: YY
+  sequence_token: '99999'
+  expected_regex: ^BI[0-9]{2}[0-9]{5}$
+  current_ref_counter: '167923.0'
+  generate_on: Free entry
+  document_setting: E-mail
+  semantic_namespace: needs_business_context
+  semantic_ref_name: bi_ref_nr
+  status: needs_business_context
+- module_original: Concurrenten
+  module_normalized: concurrenten
+  module_english: needs_business_context
+  company: EDS Casting & Forging B.V.
+  format_original: COYY9999
+  prefix: CO
+  year_token: YY
+  sequence_token: '9999'
+  expected_regex: ^CO[0-9]{2}[0-9]{4}$
+  current_ref_counter: '0.0'
+  generate_on: Creation
+  document_setting: ''
+  semantic_namespace: needs_business_context
+  semantic_ref_name: co_ref_nr
+  status: needs_business_context
+- module_original: Concurrentierapporten
+  module_normalized: concurrentierapporten
+  module_english: needs_business_context
+  company: EDS Casting & Forging B.V.
+  format_original: CRYY9999
+  prefix: CR
+  year_token: YY
+  sequence_token: '9999'
+  expected_regex: ^CR[0-9]{2}[0-9]{4}$
+  current_ref_counter: '0.0'
+  generate_on: Creation
+  document_setting: ''
+  semantic_namespace: needs_business_context
+  semantic_ref_name: cr_ref_nr
+  status: needs_business_context
+- module_original: Klachtprojecten
+  module_normalized: klachtprojecten
+  module_english: needs_business_context
+  company: EDS Casting & Forging B.V.
+  format_original: KLYY99999
+  prefix: KL
+  year_token: YY
+  sequence_token: '99999'
+  expected_regex: ^KL[0-9]{2}[0-9]{5}$
+  current_ref_counter: '324.0'
+  generate_on: Creation
+  document_setting: E-mail
+  semantic_namespace: needs_business_context
+  semantic_ref_name: kl_ref_nr
+  status: needs_business_context
+- module_original: Contactrapporten
+  module_normalized: contactrapporten
+  module_english: needs_business_context
+  company: EDS Casting & Forging B.V.
+  format_original: CRYY99999
+  prefix: CR
+  year_token: YY
+  sequence_token: '99999'
+  expected_regex: ^CR[0-9]{2}[0-9]{5}$
+  current_ref_counter: '691.0'
+  generate_on: Creation
+  document_setting: ''
+  semantic_namespace: needs_business_context
+  semantic_ref_name: cr_ref_nr
+  status: needs_business_context
+- module_original: Overige kosten
+  module_normalized: overige kosten
+  module_english: needs_business_context
+  company: EDS Casting & Forging B.V.
+  format_original: COYY9999
+  prefix: CO
+  year_token: YY
+  sequence_token: '9999'
+  expected_regex: ^CO[0-9]{2}[0-9]{4}$
+  current_ref_counter: '25.0'
+  generate_on: Creation
+  document_setting: ''
+  semantic_namespace: needs_business_context
+  semantic_ref_name: co_ref_nr
+  status: needs_business_context
+- module_original: Crediteuren
+  module_normalized: crediteuren
+  module_english: Creditors / Suppliers
+  company: EDS Casting & Forging B.V.
+  format_original: CRYY99999
+  prefix: CR
+  year_token: YY
+  sequence_token: '99999'
+  expected_regex: ^CR[0-9]{2}[0-9]{5}$
+  current_ref_counter: '524.0'
+  generate_on: Approve
+  document_setting: ''
+  semantic_namespace: creditor
+  semantic_ref_name: cr_ref_nr
+  status: pending_review
+- module_original: klant project
+  module_normalized: klant project
+  module_english: Customer Project
+  company: EDS Casting & Forging B.V.
+  format_original: CPYY9999
+  prefix: CP
+  year_token: YY
+  sequence_token: '9999'
+  expected_regex: ^CP[0-9]{2}[0-9]{4}$
+  current_ref_counter: '1780.0'
+  generate_on: Creation
+  document_setting: ''
+  semantic_namespace: customer_project
+  semantic_ref_name: cp_ref_nr
+  status: pending_review
+- module_original: Debiteuren
+  module_normalized: debiteuren
+  module_english: Debtors / Customers
+  company: EDS Casting & Forging B.V.
+  format_original: DEYY99999
+  prefix: DE
+  year_token: YY
+  sequence_token: '99999'
+  expected_regex: ^DE[0-9]{2}[0-9]{5}$
+  current_ref_counter: '517.0'
+  generate_on: Approve
+  document_setting: ''
+  semantic_namespace: debtor
+  semantic_ref_name: de_ref_nr
+  status: pending_review
+- module_original: Uitgiftes (pakbonnen)
+  module_normalized: uitgiftes (pakbonnen)
+  module_english: Delivery Notes
+  company: EDS Casting & Forging B.V.
+  format_original: GUYY99999
+  prefix: GU
+  year_token: YY
+  sequence_token: '99999'
+  expected_regex: ^GU[0-9]{2}[0-9]{5}$
+  current_ref_counter: '2036.0'
+  generate_on: Approve
+  document_setting: E-mail
+  semantic_namespace: delivery_note
+  semantic_ref_name: gu_ref_nr
+  status: pending_review
+- module_original: Evenementprojecten
+  module_normalized: evenementprojecten
+  module_english: needs_business_context
+  company: EDS Casting & Forging B.V.
+  format_original: EVYY9999
+  prefix: EV
+  year_token: YY
+  sequence_token: '9999'
+  expected_regex: ^EV[0-9]{2}[0-9]{4}$
+  current_ref_counter: '0.0'
+  generate_on: Approve
+  document_setting: ''
+  semantic_namespace: needs_business_context
+  semantic_ref_name: ev_ref_nr
+  status: needs_business_context
+- module_original: Ontvangsten
+  module_normalized: ontvangsten
+  module_english: Goods Reception
+  company: EDS Casting & Forging B.V.
+  format_original: GOYY99999
+  prefix: GO
+  year_token: YY
+  sequence_token: '99999'
+  expected_regex: ^GO[0-9]{2}[0-9]{5}$
+  current_ref_counter: '2798.0'
+  generate_on: Creation
+  document_setting: ''
+  semantic_namespace: goods_reception
+  semantic_ref_name: go_ref_nr
+  status: pending_review
+- module_original: Holding / samenw.
+  module_normalized: holding / samenw.
+  module_english: needs_business_context
+  company: EDS Casting & Forging B.V.
+  format_original: HOYY99999
+  prefix: HO
+  year_token: YY
+  sequence_token: '99999'
+  expected_regex: ^HO[0-9]{2}[0-9]{5}$
+  current_ref_counter: '112.0'
+  generate_on: Creation
+  document_setting: ''
+  semantic_namespace: needs_business_context
+  semantic_ref_name: ho_ref_nr
+  status: needs_business_context
+- module_original: HRM / personeel
+  module_normalized: hrm / personeel
+  module_english: needs_business_context
+  company: EDS Casting & Forging B.V.
+  format_original: PZYY9999
+  prefix: PZ
+  year_token: YY
+  sequence_token: '9999'
+  expected_regex: ^PZ[0-9]{2}[0-9]{4}$
+  current_ref_counter: '9.0'
+  generate_on: Creation
+  document_setting: ''
+  semantic_namespace: needs_business_context
+  semantic_ref_name: pz_ref_nr
+  status: needs_business_context
+- module_original: HRM notitie's
+  module_normalized: hrm notitie's
+  module_english: needs_business_context
+  company: EDS Casting & Forging B.V.
+  format_original: NOYY9999
+  prefix: 'NO'
+  year_token: YY
+  sequence_token: '9999'
+  expected_regex: ^NO[0-9]{2}[0-9]{4}$
+  current_ref_counter: '0.0'
+  generate_on: Creation
+  document_setting: ''
+  semantic_namespace: needs_business_context
+  semantic_ref_name: no_ref_nr
+  status: needs_business_context
+- module_original: Interne projecten
+  module_normalized: interne projecten
+  module_english: needs_business_context
+  company: EDS Casting & Forging B.V.
+  format_original: IPYY9999
+  prefix: IP
+  year_token: YY
+  sequence_token: '9999'
+  expected_regex: ^IP[0-9]{2}[0-9]{4}$
+  current_ref_counter: '137.0'
+  generate_on: Creation
+  document_setting: ''
+  semantic_namespace: needs_business_context
+  semantic_ref_name: ip_ref_nr
+  status: needs_business_context
+- module_original: Journaalposten
+  module_normalized: journaalposten
+  module_english: needs_business_context
+  company: EDS Casting & Forging B.V.
+  format_original: JPYYMM99999
+  prefix: JP
+  year_token: YY
+  sequence_token: '99999'
+  expected_regex: ^JP[0-9]{2}[0-9]{2}[0-9]{5}$
+  current_ref_counter: '17645.0'
+  generate_on: Creation
+  document_setting: ''
+  semantic_namespace: needs_business_context
+  semantic_ref_name: jp_ref_nr
+  status: needs_business_context
+- module_original: Journaalpost instellingen
+  module_normalized: journaalpost instellingen
+  module_english: needs_business_context
+  company: EDS Casting & Forging B.V.
+  format_original: JIYY99999
+  prefix: JI
+  year_token: YY
+  sequence_token: '99999'
+  expected_regex: ^JI[0-9]{2}[0-9]{5}$
+  current_ref_counter: '0.0'
+  generate_on: Creation
+  document_setting: ''
+  semantic_namespace: needs_business_context
+  semantic_ref_name: ji_ref_nr
+  status: needs_business_context
+- module_original: Kennis extern
+  module_normalized: kennis extern
+  module_english: needs_business_context
+  company: EDS Casting & Forging B.V.
+  format_original: KE.YY.9999
+  prefix: KE.
+  year_token: YY
+  sequence_token: '9999'
+  expected_regex: ^KE\.[0-9]{2}\.[0-9]{4}$
+  current_ref_counter: '0.0'
+  generate_on: Creation
+  document_setting: ''
+  semantic_namespace: needs_business_context
+  semantic_ref_name: ke_ref_nr
+  status: needs_business_context
+- module_original: Kennis intern
+  module_normalized: kennis intern
+  module_english: needs_business_context
+  company: EDS Casting & Forging B.V.
+  format_original: KI.YY.9999
+  prefix: KI.
+  year_token: YY
+  sequence_token: '9999'
+  expected_regex: ^KI\.[0-9]{2}\.[0-9]{4}$
+  current_ref_counter: '0.0'
+  generate_on: Creation
+  document_setting: ''
+  semantic_namespace: needs_business_context
+  semantic_ref_name: ki_ref_nr
+  status: needs_business_context
+- module_original: Grootboekrekeningen
+  module_normalized: grootboekrekeningen
+  module_english: needs_business_context
+  company: EDS Casting & Forging B.V.
+  format_original: GBNYY999
+  prefix: GBN
+  year_token: YY
+  sequence_token: '999'
+  expected_regex: ^GBN[0-9]{2}[0-9]{3}$
+  current_ref_counter: '63.0'
+  generate_on: Approve
+  document_setting: ''
+  semantic_namespace: needs_business_context
+  semantic_ref_name: gbn_ref_nr
+  status: needs_business_context
+- module_original: Assemblage opdrachten
+  module_normalized: assemblage opdrachten
+  module_english: needs_business_context
+  company: EDS Casting & Forging B.V.
+  format_original: SLYY9999
+  prefix: SL
+  year_token: YY
+  sequence_token: '9999'
+  expected_regex: ^SL[0-9]{2}[0-9]{4}$
+  current_ref_counter: '2.0'
+  generate_on: Creation
+  document_setting: Letter
+  semantic_namespace: needs_business_context
+  semantic_ref_name: sl_ref_nr
+  status: needs_business_context
+- module_original: leden
+  module_normalized: leden
+  module_english: needs_business_context
+  company: EDS Casting & Forging B.V.
+  format_original: LIYY9999
+  prefix: LI
+  year_token: YY
+  sequence_token: '9999'
+  expected_regex: ^LI[0-9]{2}[0-9]{4}$
+  current_ref_counter: '0.0'
+  generate_on: Creation
+  document_setting: ''
+  semantic_namespace: needs_business_context
+  semantic_ref_name: li_ref_nr
+  status: needs_business_context
+- module_original: leden regels
+  module_normalized: leden regels
+  module_english: needs_business_context
+  company: EDS Casting & Forging B.V.
+  format_original: LIRYY9999
+  prefix: LIR
+  year_token: YY
+  sequence_token: '9999'
+  expected_regex: ^LIR[0-9]{2}[0-9]{4}$
+  current_ref_counter: '0.0'
+  generate_on: Creation
+  document_setting: ''
+  semantic_namespace: needs_business_context
+  semantic_ref_name: lir_ref_nr
+  status: needs_business_context
+- module_original: Marketingprojecten
+  module_normalized: marketingprojecten
+  module_english: needs_business_context
+  company: EDS Casting & Forging B.V.
+  format_original: MPYY9999
+  prefix: ''
+  year_token: YY
+  sequence_token: '9999'
+  expected_regex: ^MP[0-9]{2}[0-9]{4}$
+  current_ref_counter: '10.0'
+  generate_on: Creation
+  document_setting: ''
+  semantic_namespace: needs_business_context
+  semantic_ref_name: field_ref_nr
+  status: needs_business_context
+- module_original: Berichten
+  module_normalized: berichten
+  module_english: needs_business_context
+  company: EDS Casting & Forging B.V.
+  format_original: BEYY999999
+  prefix: BE
+  year_token: YY
+  sequence_token: '999999'
+  expected_regex: ^BE[0-9]{2}[0-9]{6}$
+  current_ref_counter: '55457.0'
+  generate_on: Creation
+  document_setting: E-mail
+  semantic_namespace: needs_business_context
+  semantic_ref_name: be_ref_nr
+  status: needs_business_context
+- module_original: Notities
+  module_normalized: notities
+  module_english: needs_business_context
+  company: EDS Casting & Forging B.V.
+  format_original: QRYY99999
+  prefix: QR
+  year_token: YY
+  sequence_token: '99999'
+  expected_regex: ^QR[0-9]{2}[0-9]{5}$
+  current_ref_counter: '261.0'
+  generate_on: Creation
+  document_setting: E-mail
+  semantic_namespace: needs_business_context
+  semantic_ref_name: qr_ref_nr
+  status: needs_business_context
+- module_original: Verkoopaanmaningen
+  module_normalized: verkoopaanmaningen
+  module_english: needs_business_context
+  company: EDS Casting & Forging B.V.
+  format_original: VAYY99999
+  prefix: VA
+  year_token: YY
+  sequence_token: '99999'
+  expected_regex: ^VA[0-9]{2}[0-9]{5}$
+  current_ref_counter: '581.0'
+  generate_on: Creation
+  document_setting: E-mail
+  semantic_namespace: needs_business_context
+  semantic_ref_name: va_ref_nr
+  status: needs_business_context
+- module_original: Personen
+  module_normalized: personen
+  module_english: needs_business_context
+  company: EDS Casting & Forging B.V.
+  format_original: PEYY99999
+  prefix: PE
+  year_token: YY
+  sequence_token: '99999'
+  expected_regex: ^PE[0-9]{2}[0-9]{5}$
+  current_ref_counter: '5908.0'
+  generate_on: Creation
+  document_setting: ''
+  semantic_namespace: needs_business_context
+  semantic_ref_name: pe_ref_nr
+  status: needs_business_context
+- module_original: Prijsafspraken debiteur(en)
+  module_normalized: prijsafspraken debiteur(en)
+  module_english: needs_business_context
+  company: EDS Casting & Forging B.V.
+  format_original: PLYY9999
+  prefix: PL
+  year_token: YY
+  sequence_token: '9999'
+  expected_regex: ^PL[0-9]{2}[0-9]{4}$
+  current_ref_counter: '0.0'
+  generate_on: Creation
+  document_setting: ''
+  semantic_namespace: needs_business_context
+  semantic_ref_name: pl_ref_nr
+  status: needs_business_context
+- module_original: product
+  module_normalized: product
+  module_english: Product
+  company: EDS Casting & Forging B.V.
+  format_original: PDYY99999
+  prefix: PD
+  year_token: YY
+  sequence_token: '99999'
+  expected_regex: ^PD[0-9]{2}[0-9]{5}$
+  current_ref_counter: '2530.0'
+  generate_on: Creation
+  document_setting: ''
+  semantic_namespace: product
+  semantic_ref_name: pd_ref_nr
+  status: pending_review
+- module_original: Productgroepen
+  module_normalized: productgroepen
+  module_english: needs_business_context
+  company: EDS Casting & Forging B.V.
+  format_original: PGYY99999
+  prefix: PG
+  year_token: YY
+  sequence_token: '99999'
+  expected_regex: ^PG[0-9]{2}[0-9]{5}$
+  current_ref_counter: '26.0'
+  generate_on: Creation
+  document_setting: ''
+  semantic_namespace: needs_business_context
+  semantic_ref_name: pg_ref_nr
+  status: needs_business_context
+- module_original: Voorraadherwaardering
+  module_normalized: voorraadherwaardering
+  module_english: needs_business_context
+  company: EDS Casting & Forging B.V.
+  format_original: PHYY99999
+  prefix: PH
+  year_token: YY
+  sequence_token: '99999'
+  expected_regex: ^PH[0-9]{2}[0-9]{5}$
+  current_ref_counter: '58.0'
+  generate_on: Creation
+  document_setting: ''
+  semantic_namespace: needs_business_context
+  semantic_ref_name: ph_ref_nr
+  status: needs_business_context
+- module_original: Project werksoorten
+  module_normalized: project werksoorten
+  module_english: needs_business_context
+  company: EDS Casting & Forging B.V.
+  format_original: KTYY9999
+  prefix: KT
+  year_token: YY
+  sequence_token: '9999'
+  expected_regex: ^KT[0-9]{2}[0-9]{4}$
+  current_ref_counter: '720.0'
+  generate_on: Creation
+  document_setting: ''
+  semantic_namespace: needs_business_context
+  semantic_ref_name: kt_ref_nr
+  status: needs_business_context
+- module_original: Tijdregistratie project uursoorten
+  module_normalized: tijdregistratie project uursoorten
+  module_english: needs_business_context
+  company: EDS Casting & Forging B.V.
+  format_original: TTYY9999
+  prefix: TT
+  year_token: YY
+  sequence_token: '9999'
+  expected_regex: ^TT[0-9]{2}[0-9]{4}$
+  current_ref_counter: '1628.0'
+  generate_on: Creation
+  document_setting: ''
+  semantic_namespace: needs_business_context
+  semantic_ref_name: tt_ref_nr
+  status: needs_business_context
+- module_original: Inkoopfacturen
+  module_normalized: inkoopfacturen
+  module_english: Purchase Invoices
+  company: EDS Casting & Forging B.V.
+  format_original: IFYY99999
+  prefix: IF
+  year_token: YY
+  sequence_token: '99999'
+  expected_regex: ^IF[0-9]{2}[0-9]{5}$
+  current_ref_counter: '2852.0'
+  generate_on: Approve
+  document_setting: ''
+  semantic_namespace: purchase_invoice
+  semantic_ref_name: if_ref_nr
+  status: pending_review
+- module_original: Inkoopopdrachten
+  module_normalized: inkoopopdrachten
+  module_english: Purchase Orders
+  company: EDS Casting & Forging B.V.
+  format_original: ONYY99999
+  prefix: 'ON'
+  year_token: YY
+  sequence_token: '99999'
+  expected_regex: ^ON[0-9]{2}[0-9]{5}$
+  current_ref_counter: '2758.0'
+  generate_on: Creation
+  document_setting: E-mail
+  semantic_namespace: purchase_order
+  semantic_ref_name: on_ref_nr
+  status: pending_review
+- module_original: Inkoopaanvragen
+  module_normalized: inkoopaanvragen
+  module_english: Purchase RFQ
+  company: EDS Casting & Forging B.V.
+  format_original: RFQYY9999
+  prefix: RFQ
+  year_token: YY
+  sequence_token: '9999'
+  expected_regex: ^RFQ[0-9]{2}[0-9]{4}$
+  current_ref_counter: '3474.0'
+  generate_on: Creation
+  document_setting: E-mail
+  semantic_namespace: purchase_rfq
+  semantic_ref_name: rfq_ref_nr
+  status: pending_review
+- module_original: ''
+  module_normalized: ''
+  module_english: needs_business_context
+  company: EDS Casting & Forging B.V.
+  format_original: IH.YY.9999
+  prefix: IH.
+  year_token: YY
+  sequence_token: '9999'
+  expected_regex: ^IH\.[0-9]{2}\.[0-9]{4}$
+  current_ref_counter: '0.0'
+  generate_on: Creation
+  document_setting: ''
+  semantic_namespace: needs_business_context
+  semantic_ref_name: ih_ref_nr
+  status: needs_business_context
+- module_original: verkoop factuur
+  module_normalized: verkoop factuur
+  module_english: Sales Invoice
+  company: EDS Casting & Forging B.V.
+  format_original: CIYY99999
+  prefix: CI
+  year_token: YY
+  sequence_token: '99999'
+  expected_regex: ^CI[0-9]{2}[0-9]{5}$
+  current_ref_counter: '2474.0'
+  generate_on: Approve
+  document_setting: E-mail
+  semantic_namespace: sales_invoice
+  semantic_ref_name: ci_ref_nr
+  status: pending_review
+- module_original: Verkoopleads
+  module_normalized: verkoopleads
+  module_english: needs_business_context
+  company: EDS Casting & Forging B.V.
+  format_original: CLYY99999
+  prefix: CL
+  year_token: YY
+  sequence_token: '99999'
+  expected_regex: ^CL[0-9]{2}[0-9]{5}$
+  current_ref_counter: '13.0'
+  generate_on: Approve
+  document_setting: ''
+  semantic_namespace: needs_business_context
+  semantic_ref_name: cl_ref_nr
+  status: needs_business_context
+- module_original: Verkoopkansen
+  module_normalized: verkoopkansen
+  module_english: Sales Opportunities
+  company: EDS Casting & Forging B.V.
+  format_original: VKYY99999
+  prefix: VK
+  year_token: YY
+  sequence_token: '99999'
+  expected_regex: ^VK[0-9]{2}[0-9]{5}$
+  current_ref_counter: '400.0'
+  generate_on: Creation
+  document_setting: ''
+  semantic_namespace: sales_opportunity
+  semantic_ref_name: vk_ref_nr
+  status: pending_review
+- module_original: verkoop opdracht
+  module_normalized: verkoop opdracht
+  module_english: Sales Order
+  company: EDS Casting & Forging B.V.
+  format_original: OCYY99999
+  prefix: OC
+  year_token: YY
+  sequence_token: '99999'
+  expected_regex: ^OC[0-9]{2}[0-9]{5}$
+  current_ref_counter: '1661.0'
+  generate_on: Creation
+  document_setting: E-mail
+  semantic_namespace: sales_order
+  semantic_ref_name: oc_ref_nr
+  status: pending_review
+- module_original: Verkoopoffertes
+  module_normalized: verkoopoffertes
+  module_english: Sales Quotations
+  company: EDS Casting & Forging B.V.
+  format_original: CQYY99999
+  prefix: CQ
+  year_token: YY
+  sequence_token: '99999'
+  expected_regex: ^CQ[0-9]{2}[0-9]{5}$
+  current_ref_counter: '1392.0'
+  generate_on: Creation
+  document_setting: E-mail
+  semantic_namespace: sales_quotation
+  semantic_ref_name: cq_ref_nr
+  status: pending_review
+- module_original: Serviceprojecten
+  module_normalized: serviceprojecten
+  module_english: needs_business_context
+  company: EDS Casting & Forging B.V.
+  format_original: SCYY9999
+  prefix: SC
+  year_token: YY
+  sequence_token: '9999'
+  expected_regex: ^SC[0-9]{2}[0-9]{4}$
+  current_ref_counter: '1.0'
+  generate_on: Creation
+  document_setting: Letter
+  semantic_namespace: needs_business_context
+  semantic_ref_name: sc_ref_nr
+  status: needs_business_context
+- module_original: Serviceproject producten
+  module_normalized: serviceproject producten
+  module_english: needs_business_context
+  company: EDS Casting & Forging B.V.
+  format_original: SOYY9999
+  prefix: SO
+  year_token: YY
+  sequence_token: '9999'
+  expected_regex: ^SO[0-9]{2}[0-9]{4}$
+  current_ref_counter: '0.0'
+  generate_on: Creation
+  document_setting: ''
+  semantic_namespace: needs_business_context
+  semantic_ref_name: so_ref_nr
+  status: needs_business_context
+- module_original: Service offertes
+  module_normalized: service offertes
+  module_english: needs_business_context
+  company: EDS Casting & Forging B.V.
+  format_original: SQYY9999
+  prefix: SQ
+  year_token: YY
+  sequence_token: '9999'
+  expected_regex: ^SQ[0-9]{2}[0-9]{4}$
+  current_ref_counter: '0.0'
+  generate_on: Creation
+  document_setting: E-mail
+  semantic_namespace: needs_business_context
+  semantic_ref_name: sq_ref_nr
+  status: needs_business_context
+- module_original: Service aanvragen
+  module_normalized: service aanvragen
+  module_english: needs_business_context
+  company: EDS Casting & Forging B.V.
+  format_original: SBYY9999
+  prefix: SB
+  year_token: YY
+  sequence_token: '9999'
+  expected_regex: ^SB[0-9]{2}[0-9]{4}$
+  current_ref_counter: '0.0'
+  generate_on: Creation
+  document_setting: E-mail
+  semantic_namespace: needs_business_context
+  semantic_ref_name: sb_ref_nr
+  status: needs_business_context
+- module_original: Voorraad (locaties)
+  module_normalized: voorraad (locaties)
+  module_english: needs_business_context
+  company: EDS Casting & Forging B.V.
+  format_original: VOYY99999
+  prefix: VO
+  year_token: YY
+  sequence_token: '99999'
+  expected_regex: ^VO[0-9]{2}[0-9]{5}$
+  current_ref_counter: '113.0'
+  generate_on: Creation
+  document_setting: ''
+  semantic_namespace: needs_business_context
+  semantic_ref_name: vo_ref_nr
+  status: needs_business_context
+- module_original: Voorraadcorrecties
+  module_normalized: voorraadcorrecties
+  module_english: needs_business_context
+  company: EDS Casting & Forging B.V.
+  format_original: VMYY99999
+  prefix: V
+  year_token: YY
+  sequence_token: '99999'
+  expected_regex: ^VM[0-9]{2}[0-9]{5}$
+  current_ref_counter: '254.0'
+  generate_on: Creation
+  document_setting: ''
+  semantic_namespace: needs_business_context
+  semantic_ref_name: v_ref_nr
+  status: needs_business_context
+- module_original: Taken
+  module_normalized: taken
+  module_english: needs_business_context
+  company: EDS Casting & Forging B.V.
+  format_original: TAYY99999
+  prefix: TA
+  year_token: YY
+  sequence_token: '99999'
+  expected_regex: ^TA[0-9]{2}[0-9]{5}$
+  current_ref_counter: '6000.0'
+  generate_on: Creation
+  document_setting: E-mail
+  semantic_namespace: needs_business_context
+  semantic_ref_name: ta_ref_nr
+  status: needs_business_context
+- module_original: Tijdregels
+  module_normalized: tijdregels
+  module_english: needs_business_context
+  company: EDS Casting & Forging B.V.
+  format_original: TIYY9999
+  prefix: TI
+  year_token: YY
+  sequence_token: '9999'
+  expected_regex: ^TI[0-9]{2}[0-9]{4}$
+  current_ref_counter: '10617.0'
+  generate_on: Creation
+  document_setting: ''
+  semantic_namespace: needs_business_context
+  semantic_ref_name: ti_ref_nr
+  status: needs_business_context
+- module_original: Reiskosten
+  module_normalized: reiskosten
+  module_english: needs_business_context
+  company: EDS Casting & Forging B.V.
+  format_original: RKYY9999
+  prefix: RK
+  year_token: YY
+  sequence_token: '9999'
+  expected_regex: ^RK[0-9]{2}[0-9]{4}$
+  current_ref_counter: '415.0'
+  generate_on: Creation
+  document_setting: ''
+  semantic_namespace: needs_business_context
+  semantic_ref_name: rk_ref_nr
+  status: needs_business_context
+- module_original: Reistijd
+  module_normalized: reistijd
+  module_english: needs_business_context
+  company: EDS Casting & Forging B.V.
+  format_original: RTYY9999
+  prefix: RT
+  year_token: YY
+  sequence_token: '9999'
+  expected_regex: ^RT[0-9]{2}[0-9]{4}$
+  current_ref_counter: '389.0'
+  generate_on: Creation
+  document_setting: ''
+  semantic_namespace: needs_business_context
+  semantic_ref_name: rt_ref_nr
+  status: needs_business_context
+- module_original: POC boekingen
+  module_normalized: poc boekingen
+  module_english: needs_business_context
+  company: EDS Casting & Forging B.V.
+  format_original: OHWYY9999
+  prefix: OHW
+  year_token: YY
+  sequence_token: '9999'
+  expected_regex: ^OHW[0-9]{2}[0-9]{4}$
+  current_ref_counter: '2429.0'
+  generate_on: Creation
+  document_setting: ''
+  semantic_namespace: needs_business_context
+  semantic_ref_name: ohw_ref_nr
+  status: needs_business_context
