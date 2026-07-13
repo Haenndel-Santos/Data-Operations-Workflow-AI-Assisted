@@ -139,6 +139,20 @@ To generate the Product final review spreadsheet for remaining blocking items:
 .\.venv\Scripts\python -m data_ops_lab product-refnr-final-review-spreadsheet
 ```
 
+To revalidate the completed Product final review without applying decisions:
+
+```powershell
+$env:PYTHONPATH = "src"
+.\.venv\Scripts\python -m data_ops_lab validate-product-refnr-final-review --workbook "outputs\<run-id>\product_refnr_human_review_shortlist_validated.xlsx"
+```
+
+To preview the Step 3E.4 Product application plan without writing approved state:
+
+```powershell
+$env:PYTHONPATH = "src"
+.\.venv\Scripts\python -m data_ops_lab apply-product-refnr-decisions --workbook "outputs\<run-id>\product_refnr_human_review_shortlist_validated.xlsx"
+```
+
 To generate the conceptual main database schema overview:
 
 ```powershell
@@ -216,4 +230,5 @@ DuckDB is a good fit for this project because it supports local analytical workf
 - [Architecture](docs/architecture.md)
 - [Testing](docs/testing.md)
 - [Orchestrator](docs/orchestrator.md)
+- [Step 3E.4 Product application contract](docs/product-refnr-application.md)
 - [Agent handoff history](docs/agent-handoff.md)

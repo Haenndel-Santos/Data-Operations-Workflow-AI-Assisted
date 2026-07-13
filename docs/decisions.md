@@ -71,3 +71,15 @@
 **Reason:** The explicit human decision is authoritative. `rejected` is the valid project decision value that represents exclusion; notes make the intended Product-level outcome auditable.
 
 **Impact:** Final review validation is clean with 28 valid decisions, 18 approved and 10 rejected. No raw records were deleted, no reconciliation was applied, and approved model YAML files remain unchanged. A future Step 3E.4 apply contract must consume these rejections as target-model exclusions.
+
+## 2026-07-13 - Step 3E.4 State Is Minimal And Explicit
+
+**Decision:** Represent applied Product reconciliation decisions in a separate `product_reconciliation_state.yml`. Keep raw Product values and notes in ignored local outputs; version only hashes, the model contract, counts, review IDs, decisions, and target actions.
+
+**Context:** The clean workbook is ready for application, but Product exclusions need an auditable representation that does not mutate sources or overload the key and relationship approval schemas.
+
+**Alternatives:** Edit raw Product rows; place Product exclusions in `approved_keys.yml`; commit full workbook values; update canonical model files directly without a decision digest.
+
+**Reason:** A separate minimal state preserves privacy and ownership boundaries, supports idempotency, and makes the exact human-decision set verifiable before downstream model construction.
+
+**Impact:** `apply-product-refnr-decisions` defaults to dry-run, revalidates its input, blocks unresolved context, and requires `--apply` for the state write. The real dry-run maps 10 rejected items to logical target-model exclusions. The representation remains unapplied until explicitly approved.

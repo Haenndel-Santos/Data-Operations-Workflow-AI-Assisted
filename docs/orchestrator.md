@@ -4,7 +4,7 @@
 
 `src/data_ops_lab/workflow.py` contains the fixed default analytical sequence. It converts inputs, profiles and cleans staging data, infers schema/keys, validates relationships, generates SQL, builds DuckDB, exports Tableau files, writes documentation, and returns `WorkflowResult`.
 
-`src/data_ops_lab/cli.py` separately dispatches ERP modeling and human-review commands. These commands are explicit and testable, but they do not yet share dependency resolution, checkpoint state, or resume behavior.
+`src/data_ops_lab/cli.py` separately dispatches ERP modeling and human-review commands. These commands are explicit and testable, but they do not yet share dependency resolution, checkpoint state, or resume behavior. Step 3E.4 now provides a command-local dry-run and decision digest; this is not yet shared orchestrator infrastructure.
 
 ## Responsibility
 
@@ -43,4 +43,4 @@ Each step requires contract, unit, integration, workflow, and regression coverag
 
 ## Current Safety Gate
 
-No orchestrator feature may treat `pending_review` or a valid-but-blocked review workbook as approval. Product application remains unavailable until required human notes are complete, readiness validation passes, and the apply contract receives explicit authorization.
+No orchestrator feature may treat `pending_review` or a valid-but-blocked review workbook as approval. Product readiness validation now passes and the Step 3E.4 dry-run is complete, but writing `product_reconciliation_state.yml` remains gated on explicit approval of the documented representation.

@@ -10,6 +10,7 @@ from .human_review import run_human_review, validate_approval_template
 from .product_reference_audit import run_product_reference_audit
 from .product_reference_final_decision import run_product_reference_final_decision
 from .product_reference_review_spreadsheet import run_product_reference_review_spreadsheet
+from .product_refnr_application import run_product_refnr_application
 from .product_refnr_decision_validation import run_validate_product_refnr_decisions
 from .product_refnr_final_review_spreadsheet import run_product_refnr_final_review_spreadsheet
 from .product_refnr_final_review_validation import run_validate_product_refnr_final_review
@@ -315,6 +316,39 @@ def build_parser() -> argparse.ArgumentParser:
         help="Optional path to product_refnr_final_review_required.xlsx. The workbook is read only.",
     )
 
+    product_refnr_application = subparsers.add_parser(
+        "apply-product-refnr-decisions",
+        help="Build or explicitly apply the validated Product reconciliation decision state.",
+    )
+    product_refnr_application.add_argument(
+        "--workbook",
+        type=Path,
+        required=True,
+        help="Validated Product final review workbook. The workbook is read only and revalidated.",
+    )
+    product_refnr_application.add_argument(
+        "--output",
+        type=Path,
+        default=Path("outputs/originaldatabase_analysis/step3e4_product_application"),
+        help="Directory for the application plan and audit report.",
+    )
+    product_refnr_application.add_argument(
+        "--config",
+        type=Path,
+        default=Path("config/data_model"),
+        help="Data model config directory containing the Product reconciliation state.",
+    )
+    product_refnr_application.add_argument(
+        "--apply",
+        action="store_true",
+        help="Write product_reconciliation_state.yml. Without this flag, only a dry-run is performed.",
+    )
+    product_refnr_application.add_argument(
+        "--replace-existing",
+        action="store_true",
+        help="Replace a different existing state after preserving a history copy. Requires --apply.",
+    )
+
     product_refnr_missing_notes_fix = subparsers.add_parser(
         "product-refnr-missing-notes-fix",
         help="Generate auxiliary spreadsheet for Product final review rows missing final_human_notes.",
@@ -574,6 +608,27 @@ def main() -> None:
         print("No approvals were applied. approved_keys.yml and approved_relationships.yml were not modified.")
         return
 
+    if args.command == "apply-product-refnr-decisions":
+        result = run_product_refnr_application(
+            args.workbook,
+            args.output,
+            args.config,
+            apply=args.apply,
+            replace_existing=args.replace_existing,
+        )
+        print("Product ref.nr decision application complete")
+        print(f"Mode: {'dry-run' if result.dry_run else 'apply'}")
+        print(f"Total decisions: {result.total_decisions}")
+        print(f"Approved decisions: {result.approved_decisions}")
+        print(f"Rejected decisions: {result.rejected_decisions}")
+        print(f"Decision digest: {result.decision_digest}")
+        print(f"State: {result.state_path}")
+        print(f"State changed: {result.state_changed}")
+        print(f"Plan CSV: {result.plan_csv_path}")
+        print(f"Report: {result.report_path}")
+        print("Raw sources, review workbooks, approved_keys.yml, and approved_relationships.yml were not modified.")
+        return
+
     if args.command == "product-refnr-missing-notes-fix":
         result = run_product_refnr_missing_notes_fix(
             args.output,
@@ -624,3 +679,7 @@ def main() -> None:
     print(f"DuckDB: {result.database_path}")
     print(f"Metadata: {result.metadata_dir}")
     print(f"Tableau export: {result.tableau_dir}")
+
+
+if __name__ == "__main__":
+    main()

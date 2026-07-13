@@ -4,7 +4,7 @@
 
 The main suite does not require network access, external databases, credentials, migrations, or production data. Tests write generated artifacts under pytest temporary directories and include checks that protected inputs and approved files remain unchanged.
 
-Because the relocated `.venv` still references the previous editable-install path, use this PowerShell sequence:
+Because the relocated `.venv` still references the previous editable-install path, use this PowerShell sequence. The generated `.venv\Scripts\dataops.exe` launcher also embeds the old environment location and should not be used until the environment is explicitly repaired.
 
 ```powershell
 $env:PYTHONPATH = "src"

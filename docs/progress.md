@@ -6,11 +6,11 @@ Turn local operational spreadsheets into validated analytical datasets and an ap
 
 ## Current Stage
 
-Stage 3E.4 readiness: Product reference final review is clean and ready for an explicit apply workflow. No Product decisions have been applied to approved model files yet.
+Stage 3E.4 contract review: the Product application command, reversible state representation, tests, and real dry-run are complete. No Product decisions have been applied to approved model state yet.
 
 ## Last Completed Milestone
 
-On 2026-07-13, the user confirmed that the 10 blocking Product review items are invalid. Their final decisions were recorded as `rejected` with explicit exclusion notes in a new review workbook and validated without applying them. The validation is clean: 28 valid decisions, 18 approved, 10 rejected, 0 pending, 0 missing notes, and 0 inconsistencies. The current report is `outputs/019f21a4-daf0-7272-b2a7-09b4f0e2c75b/product_refnr_final_review_validation_report.md`.
+On 2026-07-13, Step 3E.4 was implemented with dry-run as the default and an explicit `--apply` gate. The real validated workbook produced 28 mapped decisions, 18 approvals, and 10 `exclude_from_target_product_model` actions with digest `f2a7f0bdf338d8733ce03d4b82bfe0056e7e06d47ad157b36a059a9e1c4c0183`. Protected-file hashes were unchanged and `config/data_model/product_reconciliation_state.yml` was not created.
 
 ## Current Capabilities
 
@@ -20,17 +20,19 @@ On 2026-07-13, the user confirmed that the 10 blocking Product review items are 
 - Onboard ERP sources and keep generated model candidates pending review.
 - Import serial reference rules and prepare human approval packages.
 - Reconcile Product references and validate staged human decisions without applying them.
-- Produce a clean, validated Product review workbook that is ready for a future apply workflow.
+- Produce a clean, validated Product review workbook and a revalidated Step 3E.4 application plan.
+- Apply Product reconciliation state only through an explicit, idempotent, reversible command.
 - Generate conceptual schema and business-flow documentation.
 
 ## Test Status
 
-- Automated suite: 28 tests passed offline on 2026-07-13; latest run completed in 3.39 seconds.
+- Automated suite: 33 tests passed offline on 2026-07-13; latest run completed in 3.27 seconds.
 - All 12 project-local skills passed the official skill validator on 2026-07-13.
-- Internal link check: 10 checked, 0 broken on 2026-07-13.
+- Internal link check: 11 checked, 0 broken on 2026-07-13.
 - Main suite is offline and uses temporary directories for generated test artifacts.
 - Documentation link checker is available at `scripts/check_internal_links.py`.
 - The relocated `.venv` has a stale editable-install path; use the `PYTHONPATH=src` command in `docs/testing.md` until environment repair is explicitly approved.
+- The relocated `.venv\Scripts\dataops.exe` launcher exits unsuccessfully because it still embeds the previous environment location; use `.venv\Scripts\python.exe -m data_ops_lab` with `PYTHONPATH=src`.
 
 ## Open Risks
 
@@ -42,17 +44,17 @@ On 2026-07-13, the user confirmed that the 10 blocking Product review items are 
 ## Active Blockers
 
 - `config/data_model/approved_keys.yml` and `config/data_model/approved_relationships.yml` remain empty by design.
-- The repository has no implemented Step 3E.4 contract/command for applying Product reconciliation decisions.
-- Applying the clean workbook requires an explicit, reversible mapping from rejected review items to target-model exclusion state; raw Product sources must not be deleted or edited.
+- The proposed versioned representation, `config/data_model/product_reconciliation_state.yml`, has not yet received explicit apply authorization.
+- `product_reconciliation_state.yml` does not exist; the completed run was intentionally dry-run only.
 
 ## Next Logical Milestone
 
-Define and review the reversible Step 3E.4 apply contract. It must consume the validated workbook, exclude the 10 rejected review items from the target Product model, preserve raw sources, record an audit trail, and update approved model state only under explicit authorization.
+Review the Step 3E.4 contract in `docs/product-refnr-application.md` and its dry-run artifacts. After explicit approval of this representation, rerun the same digest with `--apply`; do not use `--replace-existing` unless a future divergent state is separately reviewed.
 
 ## Last Verified Commit
 
-`d9dc95e` (`docs(project): add execution and continuity protocol`)
+`15f8c3c` (`docs(product): record rejected final review items`)
 
 ## Last Updated
 
-2026-07-13 by Codex after clean Product final-review validation.
+2026-07-13 by Codex after Step 3E.4 contract implementation and dry-run validation.

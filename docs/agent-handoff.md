@@ -122,3 +122,67 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 .\.venv\Scripts\python.exe -m data_ops_lab validate-product-refnr-final-review --output outputs\019f21a4-daf0-7272-b2a7-09b4f0e2c75b --workbook outputs\019f21a4-daf0-7272-b2a7-09b4f0e2c75b\product_refnr_final_review_invalidated.xlsx
 .\.venv\Scripts\python.exe -m pytest -p no:cacheprovider
 ```
+
+## 2026-07-13 - Codex - Step 3E.4 contract and dry-run
+
+### Initial Context
+
+- Branch: `main`
+- Initial commit: `15f8c3c`
+- Initial worktree: clean; branch was two commits ahead of `origin/main`
+- Stage found: clean Product review ready for Step 3E.4 contract definition
+- Objective received: continue with the next project steps
+
+### Work Performed
+
+- Added the Step 3E.4 application contract, module, and CLI command.
+- Added dry-run by default, explicit apply/replace gates, deterministic decision digest, and idempotent state handling.
+- Added tests for protected-file preservation, private-value exclusion, rejected-item mapping, idempotency, unresolved context, and divergent-state refusal.
+- Ran the real validated workbook in dry-run mode only.
+
+### Decisions
+
+- Proposed approved state is `config/data_model/product_reconciliation_state.yml`.
+- Versioned state contains no raw Product references or human notes.
+- `rejected` maps to `exclude_from_target_product_model`; it never deletes source rows.
+- Writing the proposed state remains pending explicit approval.
+
+### Validation
+
+- Real dry-run: 28 decisions, 18 approved, 10 rejected/excluded.
+- Decision digest: `f2a7f0bdf338d8733ce03d4b82bfe0056e7e06d47ad157b36a059a9e1c4c0183`.
+- Validated workbook, `approved_keys.yml`, and `approved_relationships.yml` SHA-256 hashes remained unchanged.
+- `product_reconciliation_state.yml` was not created.
+- Focused tests: 7 passed.
+- Full offline suite: 33 passed in 3.27 seconds.
+- Documentation: 11 internal links checked, 0 broken.
+
+### State For Next Agent
+
+- Branch: `main`
+- Final commit: the commit containing this handoff entry; verify with `git log -1`.
+- Current stage: Step 3E.4 contract review before explicit apply authorization.
+- Contract: `docs/product-refnr-application.md`.
+- Dry-run report: `outputs/019f21a4-daf0-7272-b2a7-09b4f0e2c75b/step3e4_product_application/product_refnr_application_report.md`.
+- The relocated `.venv` editable install and `dataops.exe` still reference the old project location.
+
+### Next Logical Steps
+
+1. Review and approve or revise the proposed `product_reconciliation_state.yml` representation.
+2. If approved, run the same command with `--apply` and verify the digest and state diff.
+3. Continue downstream Product model construction only from applied state, never by editing raw sources.
+
+### Do Not Do Yet
+
+- Do not use `--apply` or `--replace-existing` without explicit authorization.
+- Do not delete or edit Product source rows or review workbooks.
+- Do not run migrations, imports, database writes, or external synchronization.
+
+### Useful Commands
+
+```powershell
+$env:PYTHONPATH = "src"
+$env:PYTHONDONTWRITEBYTECODE = "1"
+.\.venv\Scripts\python.exe -m data_ops_lab apply-product-refnr-decisions --workbook outputs\019f21a4-daf0-7272-b2a7-09b4f0e2c75b\product_refnr_human_review_shortlist_validated.xlsx --output outputs\019f21a4-daf0-7272-b2a7-09b4f0e2c75b\step3e4_product_application
+.\.venv\Scripts\python.exe -m pytest -p no:cacheprovider
+```
