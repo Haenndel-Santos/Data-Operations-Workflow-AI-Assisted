@@ -6,11 +6,11 @@ Turn local operational spreadsheets into validated analytical datasets and an ap
 
 ## Current Stage
 
-Stage 3: human review and Product reference reconciliation. Tooling has reached final Product review validation, but application is blocked.
+Stage 3E.4 readiness: Product reference final review is clean and ready for an explicit apply workflow. No Product decisions have been applied to approved model files yet.
 
 ## Last Completed Milestone
 
-The final Product RefNr review workbook was read and validated without applying decisions. All 28 decisions are syntactically valid and none are pending, but 10 required `final_human_notes` values are missing. The latest report is `outputs/originaldatabase_analysis/step3e_human_approval_spreadsheet/product_refnr_final_review_validation_report.md` (2026-06-17 14:39 local file time).
+On 2026-07-13, the user confirmed that the 10 blocking Product review items are invalid. Their final decisions were recorded as `rejected` with explicit exclusion notes in a new review workbook and validated without applying them. The validation is clean: 28 valid decisions, 18 approved, 10 rejected, 0 pending, 0 missing notes, and 0 inconsistencies. The current report is `outputs/019f21a4-daf0-7272-b2a7-09b4f0e2c75b/product_refnr_final_review_validation_report.md`.
 
 ## Current Capabilities
 
@@ -20,11 +20,12 @@ The final Product RefNr review workbook was read and validated without applying 
 - Onboard ERP sources and keep generated model candidates pending review.
 - Import serial reference rules and prepare human approval packages.
 - Reconcile Product references and validate staged human decisions without applying them.
+- Produce a clean, validated Product review workbook that is ready for a future apply workflow.
 - Generate conceptual schema and business-flow documentation.
 
 ## Test Status
 
-- Automated suite: 28 tests passed offline on 2026-07-13 in 3.41 seconds.
+- Automated suite: 28 tests passed offline on 2026-07-13; latest run completed in 3.39 seconds.
 - All 12 project-local skills passed the official skill validator on 2026-07-13.
 - Internal link check: 10 checked, 0 broken on 2026-07-13.
 - Main suite is offline and uses temporary directories for generated test artifacts.
@@ -33,25 +34,25 @@ The final Product RefNr review workbook was read and validated without applying 
 
 ## Open Risks
 
-- `outputs/.../schema_overview/pending_modeling_questions.md` is stale: it reports 18 missing notes and 2 inconsistencies, while the newer final validation reports 10 missing notes and 0 inconsistencies.
+- Reports under `outputs/originaldatabase_analysis/` are stale and still show earlier Product blockers; use the 2026-07-13 validation path cited above.
 - Organisation business-key selection and several document-flow relationships still need business context.
 - Conflicted line extracts must not be promoted to approved relationships.
 - The current orchestrator does not yet expose module discovery, dependency resolution, checkpoints, resume, or dry-run as shared infrastructure.
 
 ## Active Blockers
 
-- Ten Product final-review rows require human notes.
 - `config/data_model/approved_keys.yml` and `config/data_model/approved_relationships.yml` remain empty by design.
-- No final Product decision may be applied until validation reports `ready_for_apply=true` and the user explicitly authorizes the apply step.
+- The repository has no implemented Step 3E.4 contract/command for applying Product reconciliation decisions.
+- Applying the clean workbook requires an explicit, reversible mapping from rejected review items to target-model exclusion state; raw Product sources must not be deleted or edited.
 
 ## Next Logical Milestone
 
-Complete the 10 missing human notes, rerun `validate-product-refnr-final-review`, and confirm a clean readiness report. Only then define and review a reversible apply contract before changing approved model files.
+Define and review the reversible Step 3E.4 apply contract. It must consume the validated workbook, exclude the 10 rejected review items from the target Product model, preserve raw sources, record an audit trail, and update approved model state only under explicit authorization.
 
 ## Last Verified Commit
 
-`5bb4058` (`Initial project sync`)
+`d9dc95e` (`docs(project): add execution and continuity protocol`)
 
 ## Last Updated
 
-2026-07-13 by Codex during shared execution-protocol adoption.
+2026-07-13 by Codex after clean Product final-review validation.

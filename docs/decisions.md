@@ -59,3 +59,15 @@
 **Reason:** Explicit coordination and module contracts reduce coupling and make partial execution testable.
 
 **Impact:** Future orchestration work must avoid duplicating business logic and should add capabilities incrementally behind preserved entrypoints.
+
+## 2026-07-13 - Ten Blocking Product Review Items Are Invalid
+
+**Decision:** Treat the 10 final Product review blockers as invalid Product records. Record each final decision as `rejected`, exclude the record from the future target Product model, and do not create a technical Product identity for the five unmatched original records.
+
+**Context:** The user confirmed that Product approvals had already been reviewed and explicitly directed that the remaining 10 blocking items be considered invalid. The affected issue IDs are `CONFLICT_001`, `CONFLICT_004`, `CONFLICT_005`, `UNMATCHED_ORIGINAL_001` through `UNMATCHED_ORIGINAL_005`, `DUPLICATE_REFNR_001`, and `DUPLICATE_REFNR_004`.
+
+**Alternatives:** Retain five unmatched records with generated `product_id`; preserve the prior rejected decisions without notes; delete or edit raw Product source rows.
+
+**Reason:** The explicit human decision is authoritative. `rejected` is the valid project decision value that represents exclusion; notes make the intended Product-level outcome auditable.
+
+**Impact:** Final review validation is clean with 28 valid decisions, 18 approved and 10 rejected. No raw records were deleted, no reconciliation was applied, and approved model YAML files remain unchanged. A future Step 3E.4 apply contract must consume these rejections as target-model exclusions.
