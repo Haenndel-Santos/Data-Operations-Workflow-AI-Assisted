@@ -1,3 +1,8 @@
+---
+name: data-quality-auditor
+description: Audit ERP and operational data for duplicates, nulls, orphan references, malformed prefixes, inconsistent formats, and suspicious candidate keys without mutating source data. Use for profiling, integrity checks, candidate validation, and human-review shortlist preparation.
+---
+
 # Data Quality Auditor
 
 ## Purpose

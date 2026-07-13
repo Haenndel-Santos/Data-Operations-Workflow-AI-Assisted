@@ -1,0 +1,4 @@
+interface:
+  display_name: "Documentation Writer"
+  short_description: "Maintain project state and ERP documentation"
+  default_prompt: "Use $documentation-writer to update the affected project state, handoff, or ERP documentation concisely."

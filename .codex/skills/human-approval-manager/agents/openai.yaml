@@ -1,0 +1,4 @@
+interface:
+  display_name: "Human Approval Manager"
+  short_description: "Protect authoritative human review decisions"
+  default_prompt: "Use $human-approval-manager to validate approval status and flag conflicts or blockers without applying decisions."

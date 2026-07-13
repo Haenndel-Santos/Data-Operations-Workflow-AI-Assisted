@@ -1,0 +1,4 @@
+interface:
+  display_name: "SQL Generator"
+  short_description: "Draft approval-aware reversible SQL"
+  default_prompt: "Use $sql-generator to draft reversible SQL from approved or clearly provisional model decisions."

@@ -207,3 +207,13 @@ DuckDB is a good fit for this project because it supports local analytical workf
 - [Demo runner](scripts/run_demo.ps1)
 - [Internal link checker](scripts/check_internal_links.py)
 - [Sample customers file](samples/raw/customers.csv)
+
+## Project Governance
+
+- [Agent instructions](AGENTS.md)
+- [Project mission and stages](docs/project-master.md)
+- [Current project state](docs/progress.md)
+- [Architecture](docs/architecture.md)
+- [Testing](docs/testing.md)
+- [Orchestrator](docs/orchestrator.md)
+- [Agent handoff history](docs/agent-handoff.md)

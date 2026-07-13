@@ -1,0 +1,4 @@
+interface:
+  display_name: "Data Quality Auditor"
+  short_description: "Audit ERP data quality without mutation"
+  default_prompt: "Use $data-quality-auditor to audit these data quality and candidate-key risks without changing source data."

@@ -1,3 +1,8 @@
+---
+name: human-approval-manager
+description: Protect authoritative human review decisions and classify accepted, rejected, pending, blocked, or conflicting outcomes. Use whenever work involves approval matrices, completed review workbooks, manual decisions, approval application readiness, or conflicts between automation and human evidence.
+---
+
 # Human Approval Manager
 
 ## Purpose

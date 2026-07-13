@@ -1,0 +1,4 @@
+interface:
+  display_name: "Project Guardian"
+  short_description: "Protect mission, scope, architecture, and state"
+  default_prompt: "Use $project-guardian to verify that this proposed change aligns with the project mission, current stage, and constraints."

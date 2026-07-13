@@ -1,0 +1,4 @@
+interface:
+  display_name: "Data Model Architect"
+  short_description: "Model ERP keys and relationships safely"
+  default_prompt: "Use $data-model-architect to review this ERP schema or key and relationship decision with evidence."

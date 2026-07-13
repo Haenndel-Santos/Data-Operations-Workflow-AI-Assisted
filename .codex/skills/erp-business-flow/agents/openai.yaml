@@ -1,0 +1,4 @@
+interface:
+  display_name: "ERP Business Flow"
+  short_description: "Map validated ERP document flows"
+  default_prompt: "Use $erp-business-flow to map this ERP document chain and identify confirmed, blocked, or missing links."

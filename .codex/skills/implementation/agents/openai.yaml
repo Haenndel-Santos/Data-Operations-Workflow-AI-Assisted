@@ -1,0 +1,4 @@
+interface:
+  display_name: "Implementation"
+  short_description: "Implement small approved project changes"
+  default_prompt: "Use $implementation to implement this approved change in a small, testable, and reversible unit."

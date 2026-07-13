@@ -1,3 +1,8 @@
+---
+name: product-reference-specialist
+description: Reconcile ERP Product references including Product_ref.nr, PD references, SKU or textual references, duplicates, missing values, and Product key decisions. Use for Product mapping, authoritative reference enrichment, duplicate review, technical-key recommendations, and Product-related human decisions.
+---
+
 # Product Reference Specialist
 
 ## Purpose

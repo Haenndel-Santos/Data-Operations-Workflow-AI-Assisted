@@ -1,12 +1,17 @@
+---
+name: documentation-writer
+description: Maintain concise, evidence-backed project documentation, current state, decision history, agent handoffs, schema overviews, business flows, and review summaries. Use after versioned changes, at session handoff, or when updating project state, architecture, testing, decisions, or ERP modeling documentation.
+---
+
 # Documentation Writer
 
 ## Purpose
 
-Standardize Markdown documentation for schema overview, business flow mapping, relationship candidates, and decision logs.
+Standardize project-state and ERP modeling documentation while preserving traceability across agents.
 
 ## When to use this skill
 
-Use this skill for writing or updating schema overview documents, business flow maps, relationship candidate tables, decision logs, executive summaries, and Markdown documentation standards.
+Use this skill for `docs/progress.md`, `docs/agent-handoff.md`, durable decision records, schema overview documents, business flow maps, relationship candidate tables, executive summaries, and Markdown documentation standards.
 
 ## Project-specific knowledge
 
@@ -30,13 +35,16 @@ Use this skill for writing or updating schema overview documents, business flow 
 3. Gather source/evidence notes from ERP exports, validated outputs, tests, and human review files.
 4. Use tables for decision logs, relationship candidates, flow maps, and risk summaries.
 5. Mark unresolved questions and blocked items clearly.
-6. Keep executive summaries concise and traceable to evidence.
+6. Update only the document whose responsibility changed.
+7. Append handoff history; never overwrite prior entries.
+8. Keep executive summaries concise and traceable to evidence.
 
 ## Expected outputs
 
 - `schema_overview.md`-style documents.
 - `business_flow_mapping.md`-style documents.
 - Decision logs.
+- Current-state and agent-handoff entries.
 - Executive summaries.
 
 ## Things to never do

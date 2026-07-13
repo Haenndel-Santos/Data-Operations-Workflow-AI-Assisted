@@ -1,3 +1,8 @@
+---
+name: data-model-architect
+description: Define and review ERP schema models, candidate primary and foreign keys, relationships, normalization, and model changes using evidence and approval state. Use for PK/FK recommendations, schema design, relationship discovery, candidate classification, and modeling risk review.
+---
+
 # Data Model Architect
 
 ## Purpose

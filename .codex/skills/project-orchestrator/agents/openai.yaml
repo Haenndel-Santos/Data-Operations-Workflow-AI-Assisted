@@ -1,0 +1,4 @@
+interface:
+  display_name: "Project Orchestrator"
+  short_description: "Coordinate staged project workflows safely"
+  default_prompt: "Use $project-orchestrator to select and validate the next safe workflow stage for this project."

@@ -1,3 +1,8 @@
+---
+name: sql-generator
+description: Draft SQL schemas, constraints, indexes, views, and reversible migrations from approved or explicitly provisional ERP model decisions. Use for PostgreSQL-compatible DDL and SQL design where approval state, evidence, compatibility, and rollback must remain visible.
+---
+
 # SQL Generator
 
 ## Purpose

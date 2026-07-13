@@ -1,0 +1,4 @@
+interface:
+  display_name: "Test Engineer"
+  short_description: "Run progressive offline project validation"
+  default_prompt: "Use $test-engineer to select and run proportionate offline tests for this change."

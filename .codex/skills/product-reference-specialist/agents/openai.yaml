@@ -1,0 +1,4 @@
+interface:
+  display_name: "Product Reference Specialist"
+  short_description: "Reconcile ERP Product references safely"
+  default_prompt: "Use $product-reference-specialist to analyze these Product references, duplicates, and key implications."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Module Contract"
+  short_description: "Define and validate module boundaries"
+  default_prompt: "Use $module-contract to define or review the inputs, outputs, failures, and compatibility of this module."

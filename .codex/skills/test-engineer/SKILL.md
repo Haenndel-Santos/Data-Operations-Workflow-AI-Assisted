@@ -1,12 +1,17 @@
+---
+name: test-engineer
+description: Plan and execute progressive offline validation for units, contracts, integrations, workflows, regressions, end-to-end behavior, and ERP data integrity. Use when behavior or contracts change, when diagnosing failures, at repository checkpoints, or when validating PK/FK, prefix, preservation, and approval-safety rules.
+---
+
 # Test Engineer
 
 ## Purpose
 
-Define and run validation checks for PK uniqueness, FK consistency, missing references, naming conventions, prefix rules, and regression tests.
+Define and run proportionate validation from focused unit checks through offline end-to-end workflows, including ERP integrity and preservation rules.
 
 ## When to use this skill
 
-Use this skill for validation planning, pytest execution guidance, data integrity checks, regression test expectations, interpreting test failures, and recommending tests when modeling logic changes.
+Use this skill for validation planning, pytest execution, contract and integration checks, data integrity checks, regression expectations, failure interpretation, and test recommendations when behavior or modeling logic changes.
 
 ## Project-specific knowledge
 
@@ -22,15 +27,18 @@ Use this skill for validation planning, pytest execution guidance, data integrit
 - Recommend tests when new modeling logic is introduced.
 - Do not change test expectations to fit unapproved modeling decisions.
 - Separate data validation failures from code regression failures.
+- Keep the main suite offline; isolate and label online tests.
+- Add the smallest test that proves the new behavior before broadening coverage.
 
 ## Recommended workflow
 
 1. Read the shared domain rules.
 2. Determine whether the task changed source code, SQL logic, data, or documentation only.
-3. For code or SQL logic changes, run the existing test suite and targeted validation checks.
-4. For documentation-only changes, confirm file presence and formatting checks instead of inventing tests.
-5. Interpret failures by separating raw data issues, model assumptions, approval gaps, and code defects.
-6. Recommend additional tests when new modeling logic is introduced.
+3. Select the lowest sufficient level: unit, contract, integration, workflow, regression, end-to-end, then reliability/performance.
+4. For code or SQL logic changes, run targeted checks before the existing full suite.
+5. For documentation-only changes, confirm links and formatting instead of inventing tests.
+6. Interpret failures by separating raw data issues, model assumptions, approval gaps, and code defects.
+7. Record exact commands, outcomes, skipped online checks, and remaining risk.
 
 ## Expected outputs
 

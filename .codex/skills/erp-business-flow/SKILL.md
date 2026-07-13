@@ -1,3 +1,8 @@
+---
+name: erp-business-flow
+description: Analyze ERP commercial, logistics, purchase, sales, and finance document flows using validated evidence. Use for mapping document chains, distinguishing header and line tables, finding flow breaks, and classifying confirmed, candidate, blocked, or missing relationships.
+---
+
 # ERP Business Flow
 
 ## Purpose

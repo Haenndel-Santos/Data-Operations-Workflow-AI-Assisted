@@ -1,6 +1,8 @@
 # EDS SQL Codex Knowledge Layer
 
-This `.codex` directory gives future Codex sessions project-specific rules for the EDS ERP SQL modeling workflow. It is a documentation and guidance layer only; it does not change source code, data, migrations, outputs, tests, or analytical results.
+This `.codex` directory gives future agent sessions project-specific rules for the EDS ERP SQL modeling workflow. It is a documentation and guidance layer only; it does not change source code, data, migrations, outputs, tests, or analytical results.
+
+Read `AGENTS.md`, `docs/progress.md`, and the newest entry in `docs/agent-handoff.md` before selecting a skill.
 
 Use these skills and agent profiles when working on ERP data modeling, product reference reconciliation, business flow analysis, human approval handling, data quality review, SQL generation, documentation, and validation.
 
@@ -39,6 +41,15 @@ Use the narrowest skill that matches the work:
 | SQL schema, migration drafts, indexes, constraints, views | `sql-generator` |
 | Markdown schema docs, flow maps, decision logs, executive summaries | `documentation-writer` |
 | Validation checks, pytest planning, regression testing expectations | `test-engineer` |
+
+Use these cross-project skills for execution and continuity:
+
+| Work type | Skill |
+| --- | --- |
+| Mission, scope, stage, architecture, or change-alignment review | `project-guardian` |
+| Workflow selection, dependency ordering, state, dry-run, or resume design | `project-orchestrator` |
+| Module input/output/schema/failure/compatibility definition | `module-contract` |
+| Small approved code or documentation implementation | `implementation` |
 
 Use agent profiles in `.codex/agents/` when a task needs several skills combined.
 
