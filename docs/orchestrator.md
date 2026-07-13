@@ -43,4 +43,4 @@ Each step requires contract, unit, integration, workflow, and regression coverag
 
 ## Current Safety Gate
 
-No orchestrator feature may treat `pending_review` or a valid-but-blocked review workbook as approval. Product readiness validation now passes and the Step 3E.4 dry-run is complete, but writing `product_reconciliation_state.yml` remains gated on explicit approval of the documented representation.
+No orchestrator feature may treat `pending_review` or a valid-but-blocked review workbook as approval. The Product Step 3E.4 state is now explicitly approved and applied; downstream Product work must verify its digest and consume its actions without silently promoting unrelated pending key or relationship candidates.

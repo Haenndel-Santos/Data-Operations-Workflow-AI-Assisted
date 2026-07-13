@@ -6,11 +6,11 @@ Turn local operational spreadsheets into validated analytical datasets and an ap
 
 ## Current Stage
 
-Stage 3E.4 contract review: the Product application command, reversible state representation, tests, and real dry-run are complete. No Product decisions have been applied to approved model state yet.
+Stage 3E.4 complete: the approved Product reconciliation state is versioned locally. The next Product milestone is a read-only materialization contract that consumes this state without changing raw sources.
 
 ## Last Completed Milestone
 
-On 2026-07-13, Step 3E.4 was implemented with dry-run as the default and an explicit `--apply` gate. The real validated workbook produced 28 mapped decisions, 18 approvals, and 10 `exclude_from_target_product_model` actions with digest `f2a7f0bdf338d8733ce03d4b82bfe0056e7e06d47ad157b36a059a9e1c4c0183`. Protected-file hashes were unchanged and `config/data_model/product_reconciliation_state.yml` was not created.
+On 2026-07-13, the user explicitly approved the documented Step 3E.4 representation. `config/data_model/product_reconciliation_state.yml` was created from the validated workbook with digest `f2a7f0bdf338d8733ce03d4b82bfe0056e7e06d47ad157b36a059a9e1c4c0183`: 28 decisions, 18 approvals, and 10 `exclude_from_target_product_model` actions. A second application returned `state_changed=False` and preserved the exact state hash.
 
 ## Current Capabilities
 
@@ -19,14 +19,14 @@ On 2026-07-13, Step 3E.4 was implemented with dry-run as the default and an expl
 - Generate SQL suggestions, DuckDB datasets, Tableau exports, and data dictionaries.
 - Onboard ERP sources and keep generated model candidates pending review.
 - Import serial reference rules and prepare human approval packages.
-- Reconcile Product references and validate staged human decisions without applying them.
+- Reconcile Product references, validate staged human decisions, and persist explicitly approved Product reconciliation state.
 - Produce a clean, validated Product review workbook and a revalidated Step 3E.4 application plan.
 - Apply Product reconciliation state only through an explicit, idempotent, reversible command.
 - Generate conceptual schema and business-flow documentation.
 
 ## Test Status
 
-- Automated suite: 33 tests passed offline on 2026-07-13; latest run completed in 3.27 seconds.
+- Automated suite: 33 tests passed offline on 2026-07-13; latest run completed in 3.56 seconds.
 - All 12 project-local skills passed the official skill validator on 2026-07-13.
 - Internal link check: 11 checked, 0 broken on 2026-07-13.
 - Main suite is offline and uses temporary directories for generated test artifacts.
@@ -37,6 +37,7 @@ On 2026-07-13, Step 3E.4 was implemented with dry-run as the default and an expl
 ## Open Risks
 
 - Reports under `outputs/originaldatabase_analysis/` are stale and still show earlier Product blockers; use the 2026-07-13 validation path cited above.
+- `canonical_tables.yml` still describes the pre-application Product key candidate; downstream work must treat `product_reconciliation_state.yml` as the approved Product-specific contract until those representations are deliberately reconciled.
 - Organisation business-key selection and several document-flow relationships still need business context.
 - Conflicted line extracts must not be promoted to approved relationships.
 - The current orchestrator does not yet expose module discovery, dependency resolution, checkpoints, resume, or dry-run as shared infrastructure.
@@ -44,17 +45,17 @@ On 2026-07-13, Step 3E.4 was implemented with dry-run as the default and an expl
 ## Active Blockers
 
 - `config/data_model/approved_keys.yml` and `config/data_model/approved_relationships.yml` remain empty by design.
-- The proposed versioned representation, `config/data_model/product_reconciliation_state.yml`, has not yet received explicit apply authorization.
-- `product_reconciliation_state.yml` does not exist; the completed run was intentionally dry-run only.
+- No Product materialization module currently consumes `product_reconciliation_state.yml` to build the target Product dataset.
+- Broader canonical key and relationship approvals remain pending; the Product-specific state does not populate `approved_keys.yml` or `approved_relationships.yml`.
 
 ## Next Logical Milestone
 
-Review the Step 3E.4 contract in `docs/product-refnr-application.md` and its dry-run artifacts. After explicit approval of this representation, rerun the same digest with `--apply`; do not use `--replace-existing` unless a future divergent state is separately reviewed.
+Define and review a read-only Product materialization contract that consumes `product_reconciliation_state.yml`, applies the 18 approved actions, excludes the 10 rejected items, generates technical `product_id` values only for retained records, and produces local validation artifacts before any database or import work.
 
 ## Last Verified Commit
 
-`15f8c3c` (`docs(product): record rejected final review items`)
+`4cfc336` (`feat(product): add reconciliation apply contract`)
 
 ## Last Updated
 
-2026-07-13 by Codex after Step 3E.4 contract implementation and dry-run validation.
+2026-07-13 by Codex after the explicitly approved Step 3E.4 state application.

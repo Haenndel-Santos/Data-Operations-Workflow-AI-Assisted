@@ -12,6 +12,7 @@ CLI
   -> staged ERP modeling commands
      -> source onboarding -> serial rules -> review preparation
      -> canonical/Product reconciliation -> final review validation
+     -> explicitly approved Product reconciliation state
      -> schema and business-flow documentation
 ```
 

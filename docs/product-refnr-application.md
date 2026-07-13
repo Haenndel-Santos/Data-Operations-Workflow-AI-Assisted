@@ -4,6 +4,10 @@
 
 Step 3E.4 converts a clean Product final-review workbook into an auditable application plan and, only with explicit authorization, a versioned local model-state file. It never edits source Product rows or the human-review workbook.
 
+## Applied Checkpoint
+
+The user explicitly approved this representation on 2026-07-13. `config/data_model/product_reconciliation_state.yml` is applied with decision digest `f2a7f0bdf338d8733ce03d4b82bfe0056e7e06d47ad157b36a059a9e1c4c0183`: 28 decisions, 18 approvals, and 10 logical target-model exclusions. An immediate reapplication was idempotent and did not rewrite the state.
+
 ## Inputs
 
 - A completed Product final-review workbook.

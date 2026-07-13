@@ -83,3 +83,15 @@
 **Reason:** A separate minimal state preserves privacy and ownership boundaries, supports idempotency, and makes the exact human-decision set verifiable before downstream model construction.
 
 **Impact:** `apply-product-refnr-decisions` defaults to dry-run, revalidates its input, blocks unresolved context, and requires `--apply` for the state write. The real dry-run maps 10 rejected items to logical target-model exclusions. The representation remains unapplied until explicitly approved.
+
+## 2026-07-13 - Step 3E.4 Product State Is Approved And Applied
+
+**Decision:** Apply the documented `product_reconciliation_state.yml` representation using the validated Product workbook and decision digest `f2a7f0bdf338d8733ce03d4b82bfe0056e7e06d47ad157b36a059a9e1c4c0183`.
+
+**Context:** The user reviewed the dry-run outcome and explicitly instructed Codex to proceed. The input contains 28 clean decisions: 18 approved and 10 rejected.
+
+**Alternatives:** Keep the state at dry-run only; alter the state schema; apply decisions directly to raw files or a database.
+
+**Reason:** The separate minimal state had already passed contract, preservation, privacy, rejection, and idempotency tests and matched the authoritative human decisions.
+
+**Impact:** Product reconciliation state is now versioned and authoritative for downstream Product modeling. Rejected records map to logical exclusion and receive no target Product identity. Raw data, review workbooks, `approved_keys.yml`, and `approved_relationships.yml` remain unchanged.
