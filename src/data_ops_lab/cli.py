@@ -5,6 +5,7 @@ from pathlib import Path
 
 from .analytics_query_plan import run_analytics_query_plan
 from .approval_spreadsheet import run_approval_spreadsheet
+from .benchmark_sql_conversion import run_benchmark_sql_conversion
 from .business_flow_mapping import run_business_flow_mapping
 from .canonical_model import run_canonical_model_alignment
 from .human_review import run_human_review, validate_approval_template
@@ -61,6 +62,28 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         default=Path("outputs/analytics_query_plan"),
         help="New or byte-identical directory for local dry-run query-plan artifacts.",
+    )
+
+    benchmark_convert_sql = subparsers.add_parser(
+        "benchmark-convert-sql",
+        help="Safely materialize local T-SQL sample tables and rows as DuckDB and Parquet.",
+    )
+    benchmark_convert_sql.add_argument(
+        "--source",
+        type=Path,
+        required=True,
+        help="Local T-SQL sample script containing CREATE TABLE and INSERT statements.",
+    )
+    benchmark_convert_sql.add_argument(
+        "--dataset",
+        required=True,
+        help="Stable dataset name used for normalized derived artifacts.",
+    )
+    benchmark_convert_sql.add_argument(
+        "--output",
+        type=Path,
+        required=True,
+        help="New or verified-identical local derived dataset directory.",
     )
 
     onboard = subparsers.add_parser("source-onboard", help="Run Step 3 source onboarding and candidate modeling.")
@@ -514,6 +537,20 @@ def main() -> None:
         print(f"Blockers CSV: {result.blockers_path}")
         print(f"Report: {result.report_path}")
         print("Dry-run only. No SQL was executed and no database or external system was modified.")
+        return
+
+    if args.command == "benchmark-convert-sql":
+        result = run_benchmark_sql_conversion(args.source, args.dataset, args.output)
+        print("Local benchmark SQL conversion complete")
+        print(f"Status: {result.status}")
+        print(f"Tables: {result.table_count}")
+        print(f"Rows: {result.row_count}")
+        print(f"Relationship candidates: {result.relationship_count}")
+        print(f"Outputs changed: {result.outputs_changed}")
+        print(f"DuckDB: {result.database_path}")
+        print(f"Manifest: {result.manifest_path}")
+        print(f"Parquet directory: {result.output_dir / 'parquet'}")
+        print("No source file, external database, credential, or remote system was modified.")
         return
 
     if args.command == "source-onboard":

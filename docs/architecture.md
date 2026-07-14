@@ -23,6 +23,12 @@ CLI
      -> local catalog and approved-relationship validation
      -> parameterized SELECT dry-run plan
      -> controlled read-only execution (target)
+
+  -> public benchmark onboarding
+     -> ignored immutable raw source
+     -> restricted T-SQL parsing
+     -> local DuckDB and Parquet artifacts
+     -> versioned checksums and pending relationship candidates
 ```
 
 ## Boundaries
@@ -37,6 +43,8 @@ CLI
 | Product materialization module | Validate applied Product decisions and generate local preview/lineage artifacts | Fail closed without partial preview when approved source evidence is missing. |
 | Product canonical promotion module | Validate the complete Product snapshot and produce a hash-bound dry-run plan | Report readiness only; never apply canonical state or copy private row values. |
 | Analytics query-plan module | Compile a bounded structured request against a local DuckDB catalog | Never accept raw SQL, execute queries, expose filter values, or use unapproved joins. |
+| Benchmark SQL conversion module | Parse local sample T-SQL table definitions and rows into DuckDB and Parquet | Never execute source SQL or external operations; output remains unapproved benchmark evidence. |
+| `datasets/benchmarks/` | Separate ignored raw/derived data from versioned inventories and contracts | Dataset presence or conversion is not approval for training, upload, or relationship promotion. |
 | `config/data_model/` | Version candidate state, domain mappings, and approvals | Keep candidate and approved files separate. |
 | `originaldatabase/` | Private source exports | Read only; excluded from Git. |
 | `outputs/` | Reproducible generated artifacts | Excluded from Git; do not hand-edit. |
@@ -58,4 +66,4 @@ Modeling decisions use distinct states such as candidate, pending review, approv
 - No shared dependency graph, checkpoint, resume, or dry-run engine.
 - CLI stage dispatch and the default workflow are not yet unified under one orchestration contract.
 - Some generated summaries become stale when later review steps run; consolidated state must cite the newest validation evidence.
-- The natural-language adapter, controlled executor, semantic catalog, and benchmark harness are not implemented yet.
+- The natural-language adapter, controlled executor, semantic catalog, and benchmark question/answer harness are not implemented yet; only safe benchmark storage and SQL conversion are available.

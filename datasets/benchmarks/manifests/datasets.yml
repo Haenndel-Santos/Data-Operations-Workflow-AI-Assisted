@@ -1,0 +1,98 @@
+version: 1
+status: inventoried_local_sources
+last_verified: 2026-07-14
+governance:
+  raw_sources_read_only: true
+  local_storage_and_conversion_approved: true
+  local_benchmark_evaluation_approved: false
+  relationship_candidates_approved: false
+  model_parameter_training_approved: false
+  external_upload_approved: false
+  note: >-
+    The user authorized local relocation and efficient-format conversion. Dataset
+    evaluation, relationship promotion, model training, publication, and upload
+    remain separate approval decisions after provenance and license review.
+datasets:
+  - id: adventureworks_2025
+    status: conversion_blocked_runtime_unavailable
+    intended_role: relational_oltp_benchmark_candidate
+    provenance: user_supplied_local_download_origin_unverified
+    license: pending_exact_source_confirmation
+    sources:
+      - path: datasets/benchmarks/raw/adventureworks/AdventureWorks2025.bak
+        format: sql_server_backup
+        bytes: 50229248
+        sha256: fa6a2a5d431ad88123f89b36b1f2c7e42ca4bdf6b293269a44df80f6de3738a5
+    processing:
+      action: retained_raw_only
+      reason: No compatible local SQL Server restore runtime is available.
+      external_connection_used: false
+  - id: northwind
+    status: converted_local_pending_dataset_review
+    intended_role: relational_oltp_benchmark_candidate
+    provenance: user_supplied_local_download_origin_unverified
+    license: pending_exact_source_confirmation
+    sources:
+      - path: datasets/benchmarks/raw/northwind/instnwnd.sql
+        role: canonical_conversion_source
+        format: tsql_script_with_local_rows
+        bytes: 1049720
+        sha256: 3cc62b3fca6d244a47dbde698b809331e4f85988a0685b2b370717d431e94871
+      - path: datasets/benchmarks/raw/northwind/instnwnd (Azure SQL Database).sql
+        role: retained_alternate_source
+        format: tsql_script_with_local_rows
+        bytes: 1049643
+        sha256: 0722013fb25c4f7f9d3d6050bc76845568b465edd6f6848e1cb1e02094ee1cc5
+    processing:
+      action: parsed_create_tables_and_insert_rows_only
+      derived_path: datasets/benchmarks/derived/northwind
+      tables: 13
+      rows: 3308
+      relationship_candidates: 13
+      formats:
+        - duckdb
+        - parquet_zstd
+      ignored_sql: drop_alter_views_procedures_triggers_credentials_external_operations
+      external_connection_used: false
+  - id: pubs
+    status: converted_local_pending_dataset_review
+    intended_role: relational_oltp_benchmark_candidate
+    provenance: user_supplied_local_download_origin_unverified
+    license: pending_exact_source_confirmation
+    sources:
+      - path: datasets/benchmarks/raw/pubs/instpubs.sql
+        role: canonical_conversion_source
+        format: tsql_script_with_local_rows
+        bytes: 126532
+        sha256: 8dee7594afc00304c7697b860b7a6008047d3d3cf99dee50ff9cb5c75b1f423a
+        quality_warnings:
+          utf8_replacement_characters: 2
+    processing:
+      action: parsed_create_tables_and_insert_rows_only
+      derived_path: datasets/benchmarks/derived/pubs
+      tables: 11
+      rows: 255
+      relationship_candidates: 10
+      formats:
+        - duckdb
+        - parquet_zstd
+      ignored_sql: drop_alter_views_procedures_triggers_credentials_external_operations
+      external_connection_used: false
+  - id: contoso_data_warehouse_recipe
+    status: retained_schema_recipe_external_data_not_loaded
+    intended_role: warehouse_schema_benchmark_candidate
+    provenance: user_supplied_local_download_origin_unverified
+    license: pending_exact_source_confirmation
+    sources:
+      - path: datasets/benchmarks/raw/contoso/load-contoso-data-warehouse-to-sql-data-warehouse.sql
+        format: tsql_polybase_load_recipe
+        bytes: 59142
+        sha256: ee55477a1c1f6c917e48c2a7356e1448f047e0d507b676168dc6b0657c12232f
+      - path: datasets/benchmarks/raw/contoso/load-contoso-data-warehouse_to-sql-data-warehouse.md
+        format: markdown_copy_of_load_recipe
+        bytes: 63213
+        sha256: f628c6649f1a651eb54597f527fbc1be0c131ffa4d5c00f037a0491f463bcd0d
+    processing:
+      action: retained_raw_only
+      reason: The recipe references external Azure Blob data and contains no local rows.
+      external_connection_used: false

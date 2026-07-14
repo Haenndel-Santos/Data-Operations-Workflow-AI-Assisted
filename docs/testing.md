@@ -21,6 +21,24 @@ Remove-Item Env:PYTHONPATH
 
 Repairing the editable install is a separate environment change and should be performed only when explicitly approved.
 
+## Benchmark Conversion Validation
+
+Use the restricted converter only for a locally approved SQL sample whose
+provenance and license status are recorded. The command never executes source
+SQL or connects to a database:
+
+```powershell
+$env:PYTHONPATH = "src"
+$env:PYTHONDONTWRITEBYTECODE = "1"
+.\.venv\Scripts\python.exe -m pytest -p no:cacheprovider tests\benchmark_sql_conversion_test.py
+.\.venv\Scripts\python.exe -m data_ops_lab benchmark-convert-sql --source "datasets\benchmarks\raw\northwind\instnwnd.sql" --dataset northwind --output "datasets\benchmarks\derived\northwind"
+```
+
+A repeated conversion must report `Outputs changed: False`. Validate real
+benchmark outputs by comparing manifest counts and SHA-256 values across the
+DuckDB database and each Parquet file. Do not run `.bak` restore, external load,
+import, migration, or synchronization commands as part of the offline suite.
+
 ## Validation Levels
 
 1. Unit tests for parsers, transformations, rules, and isolated decisions.

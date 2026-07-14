@@ -6,12 +6,26 @@ from urllib.parse import unquote, urlparse
 
 
 LINK_RE = re.compile(r"\[[^\]]+\]\(([^)]+)\)|(?:href|src)=[\"']([^\"']+)[\"']", re.IGNORECASE)
+IGNORED_DIRECTORIES = {".venv", "outputs", ".pytest_cache", "__pycache__"}
+IGNORED_RELATIVE_TREES = {
+    Path("datasets/benchmarks/raw"),
+    Path("datasets/benchmarks/derived"),
+    Path("datasets/benchmarks/work"),
+}
 
 
 def iter_document_links(root: Path):
     for path in sorted(root.rglob("*")):
-        ignored_dirs = {".venv", "outputs", ".pytest_cache", "__pycache__"}
-        if ignored_dirs & set(path.parts) or not path.is_file():
+        relative = path.relative_to(root)
+        ignored_tree = any(
+            relative == tree or tree in relative.parents
+            for tree in IGNORED_RELATIVE_TREES
+        )
+        if (
+            IGNORED_DIRECTORIES & set(relative.parts)
+            or ignored_tree
+            or not path.is_file()
+        ):
             continue
         if path.suffix.lower() not in {".md", ".html", ".htm"}:
             continue

@@ -508,3 +508,52 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 .\.venv\Scripts\python.exe -m data_ops_lab analytics-query-plan --request outputs\<run-id>\analytics_request.yml --database outputs\<run-id>\duckdb\operations_lab.duckdb --relationships config\data_model\approved_relationships.yml --output outputs\<run-id>\analytics_query_plan
 .\.venv\Scripts\python.exe -m pytest -p no:cacheprovider
 ```
+
+## 2026-07-14 - Codex - Governed benchmark onboarding and conversion
+
+### Initial Context
+
+- Branch: `main`
+- Initial commit: `fb56fb9`
+- Initial worktree: clean; branch was eight commits ahead of `origin/main`
+- Objective: relocate user-supplied sample databases and convert suitable local data into more efficient analytical formats without external database access
+
+### Work Performed
+
+- Inventoried six files with byte sizes and SHA-256 values, then moved them file by file from `new_db/` into dataset-specific ignored raw directories.
+- Added versioned provenance, license, processing, and approval metadata while keeping raw and derived data outside Git.
+- Implemented `benchmark-convert-sql` using SQLGlot T-SQL parsing; it materializes only parsed columns and local insert rows, normalizes names/types, generates deterministic omitted identities, and exports DuckDB plus Zstandard-compressed Parquet.
+- Converted Northwind to 13 tables and 3,308 rows, and Pubs to 11 tables and 255 rows. Extracted 13 and 10 relationship candidates respectively, all `pending_review`.
+- Retained AdventureWorks 2025 raw-only because no compatible SQL Server runtime exists. Retained Contoso raw-only because it references external Azure data and contains no local rows.
+- Updated the internal link checker to exclude ignored benchmark raw/derived/work artifacts and added a regression test.
+
+### Validation
+
+- Focused converter tests: 5 passed in 1.40 seconds.
+- Full offline suite: 56 passed in 5.24 seconds.
+- Python compile check: passed.
+- Documentation: 20 internal links checked, 0 broken.
+- Repeated Northwind/Pubs conversions reported `Outputs changed: False`.
+- Every DuckDB and Parquet table count and artifact SHA-256 matched its conversion manifest; validation failures: zero.
+- Source SHA-256 values matched the pre-move inventory. No external database, URL, production data, migration, import, synchronization, or model API was used.
+
+### State For Next Agent
+
+- Product track remains at Step 3E.6 dry-run with no canonical apply.
+- Analytics track remains at Stage 5A query planning with no controlled executor.
+- Benchmark ingestion/conversion foundation is implemented; no benchmark pack or relationship has been approved.
+- Raw and derived locations are ignored under `datasets/benchmarks/`; versioned inventory is `datasets/benchmarks/manifests/datasets.yml`.
+- Exact source provenance/license confirmation is still pending for all supplied files.
+
+### Next Logical Steps
+
+1. Confirm authoritative download sources and licenses for each local sample.
+2. Review Northwind/Pubs schemas and relationship candidates before benchmark approval.
+3. Define expected benchmark questions, plans, results, and control totals after approval.
+4. Implement Stage 5B first against synthetic fixtures with strict read-only limits.
+
+### Do Not Do Yet
+
+- Do not restore the AdventureWorks backup, execute Contoso external loads, or connect to any external database without explicit authorization.
+- Do not treat parsed foreign keys as approved relationships.
+- Do not upload, publish, fine-tune on, or otherwise use the datasets beyond approved local storage/conversion.

@@ -178,6 +178,17 @@ $env:PYTHONPATH = "src"
 
 This first AI-backend foundation does not execute the SQL. It validates the local DuckDB catalog, parameterizes filter values, and requires approved relationships for cross-table joins.
 
+To convert an approved local T-SQL sample into DuckDB and compressed Parquet
+without executing operational SQL:
+
+```powershell
+$env:PYTHONPATH = "src"
+.\.venv\Scripts\python.exe -m data_ops_lab benchmark-convert-sql --source "datasets\benchmarks\raw\northwind\instnwnd.sql" --dataset northwind --output "datasets\benchmarks\derived\northwind"
+```
+
+Raw and derived benchmark data remain local and outside Git. The versioned
+inventory records checksums, provenance gaps, and approval boundaries.
+
 To generate the conceptual main database schema overview:
 
 ```powershell
@@ -260,4 +271,5 @@ DuckDB is a good fit for this project because it supports local analytical workf
 - [Product canonical promotion plan contract](docs/product-canonical-promotion.md)
 - [AI-assisted analytics backend and roadmap](docs/ai-analytics-backend.md)
 - [Structured analytics query plan contract](docs/analytics-query-plan.md)
+- [Benchmark dataset onboarding contract](docs/benchmark-datasets.md)
 - [Agent handoff history](docs/agent-handoff.md)

@@ -9,3 +9,6 @@ originaldatabase/
 !.env.example
 *.duckdb
 *.duckdb.wal
+datasets/benchmarks/raw/
+datasets/benchmarks/derived/
+datasets/benchmarks/work/

@@ -143,3 +143,15 @@
 **Reason:** A narrow intermediate representation can be tested offline, blocks DDL/DML by construction, preserves human relationship authority, and lets different AI models target the same backend contract.
 
 **Impact:** Stage 5A adds `analytics-query-plan` with no execution mode. EDS remains private local evaluation evidence. AdventureWorksDW2019 and Chinook are candidate benchmark packs only after provenance, license, checksum, schema, and relationship review; no public dataset was downloaded.
+
+## 2026-07-14 - Benchmark SQL Is Parsed, Never Executed
+
+**Decision:** Store user-supplied benchmark sources and derived datasets outside Git, version their checksums and approval state, and convert supported T-SQL by parsing only table definitions and local insert rows. Treat extracted foreign keys as unapproved candidates.
+
+**Context:** The user supplied Northwind, Pubs, AdventureWorks 2025, and Contoso sample files and authorized their relocation and conversion to efficient local formats. The SQL scripts contain destructive and operational statements, the AdventureWorks backup needs an unavailable SQL Server runtime, and the Contoso recipe references external Azure data.
+
+**Alternatives:** Execute the scripts against SQL Server; commit raw/derived datasets; infer approval from dataset presence; connect to the Contoso external source; discard unsupported files.
+
+**Reason:** Restricted parsing produces reproducible DuckDB and Parquet evidence without executing untrusted SQL, connecting externally, or conflating local conversion with provenance, licensing, relationship, training, or publication approval.
+
+**Impact:** Northwind and Pubs are locally converted and hash-validated. AdventureWorks and Contoso remain raw-only. Exact source/license confirmation, schema review, relationship approval, and benchmark expected-answer design remain pending.
