@@ -6,11 +6,11 @@ Turn local operational spreadsheets into validated analytical datasets and an ap
 
 ## Current Stage
 
-Three active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI analytics Stage 5C validates review-ready semantic catalogs without approving them; and benchmark onboarding remains pending dataset export/review and approval.
+Three active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI analytics Stage 5C has technical validation plus explicit human review/application contracts but no approved real catalog; and benchmark onboarding remains pending dataset export/review and approval.
 
 ## Last Completed Milestone
 
-On 2026-07-14, Stage 5C added a fail-closed semantic-catalog validator and term resolver. It binds stable business IDs to live DuckDB tables/columns, validates measure types and approved multi-hop relationship paths, normalizes names/synonyms, preserves ambiguous candidates, and produces review-ready metadata without reading table rows or authorizing adapter use.
+On 2026-07-14, Stage 5C added hash-bound human semantic review and explicit dry-run/application contracts. Every entity and ambiguity requires a complete human decision and note; stale, rejected, pending, missing, duplicate, or malformed decisions fail closed. State application is idempotent and protected against silent replacement. No real semantic catalog was reviewed or approved.
 
 ## Current Capabilities
 
@@ -33,15 +33,18 @@ On 2026-07-14, Stage 5C added a fail-closed semantic-catalog validator and term 
 - Produce hash-bound result CSV, manifest control totals, blockers, and explicit no-row diagnostics without partial output on failure or divergent overwrite.
 - Validate candidate dataset/table names, synonyms, dimensions, measures, and relationship paths against live DuckDB metadata and approved relationships.
 - Resolve normalized business terms as unique, ambiguous, unknown, or catalog-blocked without silently selecting a candidate.
+- Prepare a pending human semantic review bound to the exact compiled catalog by SHA-256.
+- Validate complete semantic decisions in dry-run mode and apply a minimal approved registry only with explicit authority.
+- Preserve ambiguity for clarification or record one exact human-selected target without promoting candidate relationships.
 - Inventory local benchmark sources with hashes, provenance/license status, and separate use approvals.
 - Convert supported T-SQL samples to deterministic DuckDB/Parquet artifacts while ignoring operational SQL and retaining foreign keys as pending candidates.
 - Restore and integrity-check the official AdventureWorks 2025 backup in an isolated local read-only SQL Server database.
 
 ## Test Status
 
-- Automated suite: 70 tests passed offline on 2026-07-14; latest run completed in 8.03 seconds.
+- Automated suite: 78 tests passed offline on 2026-07-14; latest run completed in 8.97 seconds.
 - All 12 project-local skills passed the official skill validator on 2026-07-13.
-- Internal link check: 22 checked, 0 broken on 2026-07-14.
+- Internal link check: 26 checked, 0 broken on 2026-07-14.
 - Main suite is offline and uses temporary directories for generated test artifacts.
 - Documentation link checker is available at `scripts/check_internal_links.py`.
 - The relocated `.venv` has a stale editable-install path; use the `PYTHONPATH=src` command in `docs/testing.md` until environment repair is explicitly approved.
@@ -56,7 +59,7 @@ On 2026-07-14, Stage 5C added a fail-closed semantic-catalog validator and term 
 - Conflicted line extracts must not be promoted to approved relationships.
 - The current orchestrator does not yet expose module discovery, dependency resolution, checkpoints, resume, or dry-run as shared infrastructure.
 - Several core pipeline stages still load whole Parquet tables into Pandas; larger-than-memory operation requires DuckDB pushdown and streaming refactors.
-- The semantic catalog has no approved versioned representation or human apply contract yet; `ready_for_semantic_review` cannot be used as operational authority.
+- No concrete semantic catalog has completed human review or been applied; the new contract alone does not authorize Stage 5D or any dataset use.
 - The natural-language adapter, result narration/validation, and benchmark question/answer harness are not implemented yet.
 - Plan-to-execution database drift uses size and nanosecond modification time rather than a full database content hash; immutable dataset-package identity remains future evidence work.
 - Exact download provenance and licensing remain unconfirmed for Northwind, Pubs, and Contoso; local conversion or restoration is not benchmark, training, publication, or upload approval.
@@ -69,17 +72,18 @@ On 2026-07-14, Stage 5C added a fail-closed semantic-catalog validator and term 
 - Broader canonical key and relationship approvals remain pending; the Product-specific state does not populate `approved_keys.yml` or `approved_relationships.yml`.
 - No explicit apply contract or approved versioned representation exists yet for the candidate canonical Product snapshot.
 - EDS cross-table analytics remain blocked because `approved_relationships.yml` is intentionally empty.
+- No applied `config/analytics/approved_semantic_catalog.yml` exists for a real authorized dataset.
 - Northwind and Pubs are converted but remain pending provenance, license, schema, relationship, and benchmark-use approval.
 - AdventureWorks is restored and validated but remains pending reproducible export, schema review, relationship approval, and benchmark-use approval.
 
 ## Next Logical Milestone
 
-Define the human review and minimal approved representation for Stage 5C semantics before beginning Stage 5D. In parallel, profile the highest-memory Pandas stages before selecting one measured DuckDB pushdown refactor. Keep Product canonical apply, AdventureWorks export/review, benchmark approval, and EDS execution separate.
+Define the Stage 5D natural-language adapter contract with synthetic fixtures. Require an explicitly approved semantic registry, emit only the existing structured request format, preserve clarification states, and reject raw model SQL. Keep model API integration, Product canonical apply, AdventureWorks export/review, benchmark approval, and EDS execution separate. In parallel, profile the highest-memory Pandas stages before selecting one measured DuckDB pushdown refactor.
 
 ## Last Verified Commit
 
-`4a37be1` (`feat(analytics): add controlled query execution`)
+`b71e03a` (`feat(analytics): add semantic catalog validation`)
 
 ## Last Updated
 
-2026-07-14 by Codex after Stage 5C review-ready semantic catalog validation.
+2026-07-14 by Codex after Stage 5C human semantic review/application contracts.

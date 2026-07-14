@@ -5,7 +5,9 @@ from pathlib import Path
 
 from .analytics_query_execution import AnalyticsExecutionLimits, run_analytics_query_execution
 from .analytics_query_plan import run_analytics_query_plan
+from .analytics_semantic_approval import run_analytics_semantic_approval
 from .analytics_semantic_catalog import run_analytics_semantic_catalog
+from .analytics_semantic_review import run_analytics_semantic_review
 from .approval_spreadsheet import run_approval_spreadsheet
 from .benchmark_sql_conversion import run_benchmark_sql_conversion
 from .business_flow_mapping import run_business_flow_mapping
@@ -106,6 +108,36 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         default=Path("outputs/analytics_semantic_catalog"),
     )
+
+    analytics_semantic_review = subparsers.add_parser(
+        "analytics-semantic-review",
+        help="Prepare a hash-bound pending human review for a compiled semantic catalog.",
+    )
+    analytics_semantic_review.add_argument("--catalog", type=Path, required=True)
+    analytics_semantic_review.add_argument(
+        "--output",
+        type=Path,
+        default=Path("outputs/analytics_semantic_review/analytics_semantic_review.yml"),
+    )
+
+    analytics_semantic_approval = subparsers.add_parser(
+        "analytics-semantic-approval",
+        help="Validate and explicitly apply a completed human semantic review.",
+    )
+    analytics_semantic_approval.add_argument("--catalog", type=Path, required=True)
+    analytics_semantic_approval.add_argument("--review", type=Path, required=True)
+    analytics_semantic_approval.add_argument(
+        "--output",
+        type=Path,
+        default=Path("outputs/analytics_semantic_approval"),
+    )
+    analytics_semantic_approval.add_argument(
+        "--config",
+        type=Path,
+        default=Path("config/analytics"),
+    )
+    analytics_semantic_approval.add_argument("--apply", action="store_true")
+    analytics_semantic_approval.add_argument("--replace-existing", action="store_true")
 
     benchmark_convert_sql = subparsers.add_parser(
         "benchmark-convert-sql",
@@ -625,6 +657,36 @@ def main() -> None:
         print(f"Blockers CSV: {result.blockers_path}")
         print(f"Report: {result.report_path}")
         print("Metadata validation only. No data rows, SQL plans, or queries were executed.")
+        return
+
+    if args.command == "analytics-semantic-review":
+        result = run_analytics_semantic_review(args.catalog, args.output)
+        print("Analytics semantic human review preparation complete")
+        print(f"Entities: {result.entity_count}")
+        print(f"Ambiguities: {result.ambiguity_count}")
+        print(f"Output changed: {result.output_changed}")
+        print(f"Review: {result.review_path}")
+        print("Pending review only. No semantic definition or adapter use was approved.")
+        return
+
+    if args.command == "analytics-semantic-approval":
+        result = run_analytics_semantic_approval(
+            args.catalog,
+            args.review,
+            args.output,
+            args.config,
+            apply=args.apply,
+            replace_existing=args.replace_existing,
+        )
+        print("Analytics semantic approval validation complete")
+        print(f"Status: {result.status}")
+        print(f"Mode: {'dry-run' if result.dry_run else 'apply'}")
+        print(f"Blockers: {result.blocker_count}")
+        print(f"State changed: {result.state_changed}")
+        print(f"Outputs changed: {result.outputs_changed}")
+        print(f"Plan: {result.plan_path}")
+        print(f"State: {result.state_path}")
+        print("No data rows, SQL, database connection, model API, import, or sync was used.")
         return
 
     if args.command == "benchmark-convert-sql":

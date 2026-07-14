@@ -271,5 +271,7 @@ DuckDB is a good fit for this project because it supports local analytical workf
 - [Product canonical promotion plan contract](docs/product-canonical-promotion.md)
 - [AI-assisted analytics backend and roadmap](docs/ai-analytics-backend.md)
 - [Structured analytics query plan contract](docs/analytics-query-plan.md)
+- [Analytics semantic catalog contract](docs/analytics-semantic-catalog.md)
+- [Analytics semantic review and approval contract](docs/analytics-semantic-approval.md)
 - [Benchmark dataset onboarding contract](docs/benchmark-datasets.md)
 - [Agent handoff history](docs/agent-handoff.md)

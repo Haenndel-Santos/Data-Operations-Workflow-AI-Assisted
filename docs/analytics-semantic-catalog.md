@@ -86,7 +86,8 @@ ambiguous target silently.
 A technically valid output has status `ready_for_semantic_review`. Its approval
 fields remain false. This command cannot approve business terminology or
 authorize adapter use. A separate human review/apply contract is required
-before Stage 5D may rely on the catalog operationally.
+before Stage 5D may rely on the catalog operationally. See
+[Analytics Semantic Review And Approval](analytics-semantic-approval.md).
 
 ## Limits
 

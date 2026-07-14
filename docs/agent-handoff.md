@@ -696,3 +696,51 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 - Do not begin natural-language request generation from unapproved semantic catalogs.
 - Do not auto-select ambiguous terms or import candidate relationships into semantic paths.
 - Do not execute EDS or benchmark data merely because the semantic validator exists.
+
+## 2026-07-14 - Codex - Stage 5C human semantic approval contract
+
+### Initial Context
+
+- Branch: `main`
+- Initial commit: `b71e03a`
+- Initial worktree: clean; branch was 12 commits ahead of `origin/main`
+- Objective: implement the next safe semantic-governance milestone before Stage 5D without approving or querying a real dataset
+
+### Work Performed
+
+- Added `analytics-semantic-review` to generate a pending review bound to one exact compiled Stage 5C catalog by SHA-256.
+- Required reviewer identity, timezone-aware review time, explicit completion status, and one documented decision for every semantic entity and ambiguity.
+- Added `analytics-semantic-approval` with dry-run default, blocker/plan/report evidence, and explicit `--apply` state persistence.
+- Blocked stale, rejected, pending, missing, duplicate, malformed, or undocumented decisions.
+- Preserved ambiguities for clarification or accepted one exact human-selected candidate without promoting candidate physical relationships.
+- Protected an existing different semantic registry; replacement requires `--apply --replace-existing` and preserves the prior state under `history/`.
+- Added the contract documentation, durable decision, CLI references, testing instructions, and current-state updates.
+
+### Validation
+
+- Focused semantic catalog/review tests: 14 passed in 1.90 seconds.
+- New semantic review/approval tests: 8 passed in 1.59 seconds.
+- Full offline suite: 78 passed in 8.97 seconds on the final run.
+- Python compilation: passed.
+- Documentation: 26 internal links checked, 0 broken.
+- Tests used synthetic metadata and pytest temporary directories only.
+- No real semantic catalog, EDS data, benchmark data, DuckDB/SQL Server connection, model API, migration, import, synchronization, approved relationship, or real `config/analytics` state was used or changed.
+
+### State For Next Agent
+
+- Stage 5C now has separate technical validation, human review preparation, dry-run approval validation, and explicit apply contracts.
+- The repository contains no approved real semantic registry; contract implementation is not business approval or dataset-use authorization.
+- `approved_target` records exact human ambiguity resolution; `requires_clarification` keeps the ambiguity available to a future adapter.
+- Review notes are validated but excluded from the approved registry; review and decision hashes preserve audit binding.
+
+### Next Logical Steps
+
+1. Define Stage 5D with synthetic fixtures and require an explicitly approved semantic registry before producing the existing version-1 structured request.
+2. Keep the initial adapter deterministic around a supplied model-intent payload; do not add external model API or raw-SQL execution.
+3. Profile Pandas-heavy stages separately and select a measured DuckDB pushdown target.
+
+### Do Not Do Yet
+
+- Do not apply an EDS or benchmark semantic registry without concrete completed human review and dataset-use authorization.
+- Do not let Stage 5D consume `ready_for_semantic_review`; it must require applied approved state.
+- Do not infer ambiguous targets, accept raw model SQL, start SQL Server, or execute EDS/benchmark queries.

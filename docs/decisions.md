@@ -191,3 +191,13 @@
 **Reason:** Explicit `resolved`, `ambiguous`, `unknown`, and `catalog_blocked` states let a future adapter request clarification while preserving stable business IDs and the existing approval boundary. Ambiguity itself is useful metadata, not a technical validation failure.
 
 **Impact:** `analytics-semantic-catalog` produces `ready_for_semantic_review` evidence only. Semantic definitions, adapter use, EDS queries, candidate relationships, and model-generated requests remain unauthorized until separate contracts are reviewed and approved.
+
+## 2026-07-14 - Semantic Approval Requires Complete Hash-Bound Human Review
+
+**Decision:** Bind every semantic review to the exact compiled Stage 5C catalog by SHA-256. Require one explicit decision and note for every semantic entity and ambiguity. Keep approval validation as dry-run by default; write a versioned registry only with `--apply`, and require separate replacement authority for an existing different registry.
+
+**Rationale:** Technical schema validity is not business-semantic authority. Complete, hash-bound review prevents stale or partial decisions from authorizing the natural-language adapter. Blocking rejected entities forces candidate revision and technical revalidation instead of silently creating an inconsistent approved subset.
+
+**Alternatives:** Treat technical validation as approval; approve the catalog as one opaque unit; silently omit rejected entities; infer ambiguity resolution; overwrite the existing registry.
+
+**Impact:** The review template grants no authority. Pending, rejected, missing, duplicate, malformed, or stale decisions block application. A human may preserve an ambiguity for clarification or select one exact candidate. Approved state never promotes candidate physical relationships. No real catalog is approved merely because the contract exists.

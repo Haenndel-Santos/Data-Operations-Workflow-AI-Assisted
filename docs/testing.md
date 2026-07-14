@@ -55,6 +55,23 @@ The focused tests do not read table rows, approve semantics, or invoke an AI
 model. Do not point this command at EDS or benchmark data without separate data
 authorization.
 
+## Semantic Review And Approval
+
+The semantic governance tests use synthetic compiled metadata only. They cover
+hash-bound pending review generation, complete human-decision validation,
+catalog drift, rejection and ambiguity blockers, dry-run behavior, idempotent
+apply, state-conflict refusal, and versioned replacement backup:
+
+```powershell
+$env:PYTHONPATH = "src"
+$env:PYTHONDONTWRITEBYTECODE = "1"
+.\.venv\Scripts\python.exe -m pytest -p no:cacheprovider tests\analytics_semantic_approval_test.py
+```
+
+The test applies state only inside pytest temporary directories. It does not
+read EDS or benchmark data, connect to DuckDB or SQL Server, or write the real
+`config/analytics/` directory.
+
 ## Benchmark Conversion Validation
 
 Use the restricted converter only for a locally approved SQL sample whose
