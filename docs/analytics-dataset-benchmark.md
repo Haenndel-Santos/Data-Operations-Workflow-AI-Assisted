@@ -53,6 +53,12 @@ dataset and pack, binds every supplied input hash, and separately confirms that
 recorded responses, expected requests, expected results, comparison policy, and
 local offline evaluation were reviewed.
 
+Use the separate
+[Dataset Benchmark Review And Approval](analytics-dataset-benchmark-review.md)
+workflow to prepare per-case human decisions and generate this approval. The
+approval also carries the completed review SHA-256 and normalized decision
+digest. Review preparation is not approval, and approval is not execution.
+
 ## Dataset Manifest
 
 The version-1 dataset manifest requires:
@@ -93,7 +99,9 @@ Columns without an explicit reviewed tolerance remain exact.
 
 The version-1 approval must be `approved`, match the dataset and pack IDs, and
 bind the dataset manifest, DuckDB artifact, semantic state, relationships, and
-pack by SHA-256. It requires human identity and time plus explicit approval of:
+pack by SHA-256. It must also contain SHA-256 evidence for the completed review
+and normalized decisions. It requires human identity and time plus explicit
+approval of:
 
 - local offline evaluation;
 - recorded provider responses;

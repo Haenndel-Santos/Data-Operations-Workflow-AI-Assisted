@@ -268,3 +268,26 @@ check and hashes the database as an opaque file without opening or querying it.
 It may report `ready_for_offline_evaluation`, but it does not execute cases,
 approve a live provider, authorize external disclosure or training, or make any
 current EDS/public dataset an approved benchmark.
+
+## 2026-07-14 - Benchmark Approval Requires Complete Per-Case Review
+
+**Decision:** Generate dataset benchmark approval only from a completed human
+review bound to the exact candidate sources. Require every case to approve its
+recorded response, expected request, expected result, comparison policy, and
+notes. Require local offline scope approval while live-provider, upload, and
+training scopes remain explicitly not authorized.
+
+**Rationale:** Aggregate approval booleans alone do not prove that every expected
+answer was inspected. Per-case decisions expose omissions and conflicts, while
+the review hash and normalized decision digest preserve traceability without
+copying questions, responses, expected rows, or notes into approval evidence.
+
+**Alternatives:** Let the candidate pack approve itself; accept one global
+checkbox; copy all case content into generated evidence; permit pending or
+rejected cases; overwrite a prior approval; combine approval with benchmark
+execution.
+
+**Impact:** `analytics-dataset-benchmark-review` prepares pending authority and
+`analytics-dataset-benchmark-approval` validates it in dry-run by default.
+`--apply` writes only an explicit immutable approval path. No current real
+dataset was reviewed or approved, and dataset-backed execution remains absent.

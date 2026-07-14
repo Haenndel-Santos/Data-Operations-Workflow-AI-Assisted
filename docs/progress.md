@@ -6,11 +6,11 @@ Turn local operational spreadsheets into validated analytical datasets and an ap
 
 ## Current Stage
 
-Three active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI analytics has Stage 5A-5D governed planning/execution/translation plus synthetic Stage 5E answer evaluation and dry-run dataset-backed binding validation, but no real approved catalog, approved benchmark pack, dataset-backed execution, or live provider; and benchmark onboarding remains pending dataset export/review and approval.
+Three active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI analytics has Stage 5A-5D governed planning/execution/translation plus synthetic Stage 5E answer evaluation, per-case benchmark review/approval infrastructure, and dry-run dataset-backed binding validation, but no real approved catalog, approved benchmark pack, dataset-backed execution, or live provider; and benchmark onboarding remains pending dataset export/review and approval.
 
 ## Last Completed Milestone
 
-On 2026-07-14, Stage 5E added a dry-run dataset-backed benchmark validator. It requires a verified local DuckDB manifest, exact artifact identity, approved semantic and relationship hashes, a candidate expected-answer pack, and a separate human approval bound to every source by SHA-256. Expected results use typed exact comparison by default or reviewed per-column numeric tolerance. The database is hashed as an opaque file but never opened or queried; no real dataset, provider, network, external database, or execution was used.
+On 2026-07-14, Stage 5E added hash-bound benchmark review preparation and explicit approval generation. The pending review lists every case and requires human decisions for the recorded response, expected request, expected result, comparison policy, and bounded use scopes. Approval is dry-run by default, requires explicit `--apply`, writes only a user-supplied immutable path, and carries the review hash plus normalized decision digest. No real review, approval, dataset connection, query, provider, network, upload, or training was used.
 
 ## Current Capabilities
 
@@ -48,15 +48,18 @@ On 2026-07-14, Stage 5E added a dry-run dataset-backed benchmark validator. It r
 - Validate a version-1 dataset-backed benchmark package without opening its DuckDB artifact or reading its catalog, tables, or rows.
 - Bind dataset identity, approved semantics, approved relationships, candidate pack, and separate human approval by SHA-256.
 - Validate bounded typed expected answers with exact comparison or explicit per-column numeric tolerances while refusing live-provider, upload, and training authority.
+- Prepare a pending per-case benchmark review bound to dataset, semantic, relationship, and pack hashes without duplicating case content into evidence.
+- Validate complete human case and scope decisions in dry-run mode and generate a separate approval only with explicit apply authority.
+- Refuse pending, rejected, missing, duplicate, unknown, drifted, scope-expanding, or divergent review/approval state without partial authority writes.
 - Inventory local benchmark sources with hashes, provenance/license status, and separate use approvals.
 - Convert supported T-SQL samples to deterministic DuckDB/Parquet artifacts while ignoring operational SQL and retaining foreign keys as pending candidates.
 - Restore and integrity-check the official AdventureWorks 2025 backup in an isolated local read-only SQL Server database.
 
 ## Test Status
 
-- Automated suite: 121 tests passed offline on 2026-07-14; latest run completed in 17.06 seconds.
+- Automated suite: 131 tests passed offline on 2026-07-14; latest run completed in 16.59 seconds.
 - All 12 project-local skills passed the official skill validator on 2026-07-13.
-- Internal link check: 41 checked, 0 broken on 2026-07-14.
+- Internal link check: 45 checked, 0 broken on 2026-07-14.
 - Main suite is offline and uses temporary directories for generated test artifacts.
 - Documentation link checker is available at `scripts/check_internal_links.py`.
 - The relocated `.venv` has a stale editable-install path; use the `PYTHONPATH=src` command in `docs/testing.md` until environment repair is explicitly approved.
@@ -90,12 +93,12 @@ On 2026-07-14, Stage 5E added a dry-run dataset-backed benchmark validator. It r
 
 ## Next Logical Milestone
 
-Add a hash-bound benchmark review-preparation workflow that produces a pending human review from a candidate dataset manifest and expected-answer pack, followed by explicit approval validation. Test it only with temporary synthetic data before connecting it to dataset-backed execution. Do not export/query AdventureWorks or use EDS for this implementation step. Keep live-provider selection, narration, Product canonical apply, and external/database work separate. In parallel, profile the highest-memory Pandas stages before selecting one measured DuckDB pushdown refactor.
+Design and implement the dataset-backed offline evaluator that consumes a valid generated approval, rechecks every immutable hash, replays recorded Stage 5D responses, preserves exact Stage 5A request gating and Stage 5B read-only controls, and applies exact or reviewed numeric comparison. Test only with temporary synthetic data first. Do not export/query AdventureWorks or use EDS merely to implement the runner. Keep live-provider selection, narration, Product canonical apply, and external/database work separate. In parallel, profile the highest-memory Pandas stages before selecting one measured DuckDB pushdown refactor.
 
 ## Last Verified Commit
 
-`3f0edab` (`feat(analytics): add expected answer harness`)
+`7144863` (`feat(analytics): add dataset benchmark validation`)
 
 ## Last Updated
 
-2026-07-14 by Codex after the dataset-backed Stage 5E dry-run contract checkpoint.
+2026-07-14 by Codex after the dataset benchmark review and approval checkpoint.

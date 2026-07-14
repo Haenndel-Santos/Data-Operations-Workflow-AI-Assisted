@@ -166,6 +166,24 @@ for the temporary test fixture. Validating a real package requires its own
 reviewed manifest, semantic state, relationships, pack, and approval; execution
 is a later, separate capability.
 
+## Dataset Benchmark Review And Approval
+
+The same focused synthetic fixture verifies hash-bound pending review,
+per-case and scope decisions, dry-run approval planning, explicit apply,
+approval idempotency, source drift, prohibited scope expansion, missing and
+duplicate decisions, divergent-output refusal, and final validator integration:
+
+```powershell
+$env:PYTHONPATH = "src"
+$env:PYTHONDONTWRITEBYTECODE = "1"
+.\.venv\Scripts\python.exe -m pytest -p no:cacheprovider tests\analytics_dataset_benchmark_test.py
+```
+
+One test replaces `duckdb.connect` with an immediate failure after creating the
+temporary fixture, proving that review, approval, and final binding validation
+do not connect to the database. No project approval path or real review file is
+written.
+
 ## Benchmark Conversion Validation
 
 Use the restricted converter only for a locally approved SQL sample whose

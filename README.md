@@ -208,6 +208,15 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 
 This is a hash-bound dry-run only. Current EDS and benchmark datasets do not yet meet its approval prerequisites.
 
+To prepare and validate the separate human review required by that contract:
+
+```powershell
+.\.venv\Scripts\python.exe -m data_ops_lab analytics-dataset-benchmark-review --dataset-manifest "<manifest.yml>" --database "<dataset.duckdb>" --semantic-state "<semantic.yml>" --relationships "<relationships.yml>" --pack "<pack.yml>" --output "<review.yml>"
+.\.venv\Scripts\python.exe -m data_ops_lab analytics-dataset-benchmark-approval --dataset-manifest "<manifest.yml>" --database "<dataset.duckdb>" --semantic-state "<semantic.yml>" --relationships "<relationships.yml>" --pack "<pack.yml>" --review "<completed-review.yml>" --approval-output "<approval.yml>" --output "outputs\<run-id>\analytics_dataset_benchmark_approval"
+```
+
+Approval validation is dry-run by default. Writing the approval requires `--apply`; it still does not execute benchmark queries or authorize provider, upload, or training use.
+
 To convert an approved local T-SQL sample into DuckDB and compressed Parquet
 without executing operational SQL:
 
@@ -308,5 +317,6 @@ DuckDB is a good fit for this project because it supports local analytical workf
 - [Analytics translation evaluation contract](docs/analytics-translation-evaluation.md)
 - [Analytics expected-answer evaluation contract](docs/analytics-answer-evaluation.md)
 - [Dataset-backed benchmark validation contract](docs/analytics-dataset-benchmark.md)
+- [Dataset benchmark review and approval contract](docs/analytics-dataset-benchmark-review.md)
 - [Benchmark dataset onboarding contract](docs/benchmark-datasets.md)
 - [Agent handoff history](docs/agent-handoff.md)

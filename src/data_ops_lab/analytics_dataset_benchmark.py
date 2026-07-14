@@ -55,6 +55,19 @@ class AnalyticsDatasetBenchmarkResult:
     outputs_changed: bool
 
 
+@dataclass(frozen=True)
+class AnalyticsDatasetBenchmarkCandidate:
+    dataset_id: str
+    pack_id: str
+    source: dict[str, str]
+    case_ids: tuple[str, ...]
+    case_count: int
+    exact_case_count: int
+    tolerance_case_count: int
+    relationship_count: int
+    blockers: tuple[dict[str, str], ...]
+
+
 def _valid_id(value: Any) -> bool:
     return isinstance(value, str) and bool(STABLE_ID_PATTERN.fullmatch(value))
 
@@ -476,7 +489,7 @@ def _validate_benchmark_pack(
     dataset_id: str,
     expected_bindings: dict[str, str],
     blockers: list[dict[str, str]],
-) -> tuple[str, int, int, int]:
+) -> tuple[str, int, int, int, tuple[str, ...]]:
     _reject_unknown_fields(pack, {"version", "status", "pack_id", "dataset_id", "bindings", "cases"}, blockers, "benchmark_pack")
     if isinstance(pack.get("version"), bool) or pack.get("version") != 1:
         add_blocker(blockers, "unsupported_benchmark_pack_version", "The dataset benchmark pack must use version 1.", field="benchmark_pack.version")
@@ -491,7 +504,7 @@ def _validate_benchmark_pack(
     cases = pack.get("cases")
     if not isinstance(cases, list) or not 1 <= len(cases) <= MAX_CASES:
         add_blocker(blockers, "invalid_dataset_benchmark_cases", f"A dataset benchmark pack requires between 1 and {MAX_CASES} cases.", field="benchmark_pack.cases")
-        return str(pack_id), 0, 0, 0
+        return str(pack_id), 0, 0, 0, ()
     seen_ids: set[str] = set()
     exact_count = 0
     tolerance_count = 0
@@ -532,7 +545,7 @@ def _validate_benchmark_pack(
         mode = _validate_comparison(case.get("comparison"), column_types, blockers, f"{field}.comparison")
         exact_count += mode == "exact"
         tolerance_count += mode == "numeric_tolerance"
-    return str(pack_id), len(cases), exact_count, tolerance_count
+    return str(pack_id), len(cases), exact_count, tolerance_count, tuple(sorted(seen_ids))
 
 
 def _validate_approval(
@@ -542,12 +555,20 @@ def _validate_approval(
     expected_source: dict[str, str],
     blockers: list[dict[str, str]],
 ) -> None:
-    _reject_unknown_fields(approval, {"version", "status", "dataset_id", "pack_id", "source", "decision", "approved_by", "approved_at"}, blockers, "benchmark_approval")
+    _reject_unknown_fields(approval, {"version", "status", "dataset_id", "pack_id", "source", "review_evidence", "decision", "approved_by", "approved_at"}, blockers, "benchmark_approval")
     if isinstance(approval.get("version"), bool) or approval.get("version") != 1 or approval.get("status") != "approved":
         add_blocker(blockers, "benchmark_evaluation_not_approved", "Dataset-backed evaluation requires a separate approved version-1 decision.", field="benchmark_approval.status")
     if approval.get("dataset_id") != dataset_id or approval.get("pack_id") != pack_id:
         add_blocker(blockers, "benchmark_approval_identity_mismatch", "Benchmark approval IDs must match the dataset and pack.", field="benchmark_approval")
     _validate_hash_bindings(approval.get("source"), expected_source, blockers, "benchmark_approval.source")
+    review_evidence = approval.get("review_evidence")
+    if not isinstance(review_evidence, dict):
+        add_blocker(blockers, "invalid_benchmark_review_evidence", "Benchmark approval requires hash-bound human review evidence.", field="benchmark_approval.review_evidence")
+    else:
+        _reject_unknown_fields(review_evidence, {"review_sha256", "decision_digest"}, blockers, "benchmark_approval.review_evidence")
+        for name in ("review_sha256", "decision_digest"):
+            if not _valid_sha256(review_evidence.get(name)):
+                add_blocker(blockers, "invalid_benchmark_review_evidence", "Review evidence requires SHA-256 review and decision digests.", field=f"benchmark_approval.review_evidence.{name}")
     decision = approval.get("decision")
     required_true = {
         "local_offline_evaluation_approved",
@@ -620,15 +641,13 @@ def _write_outputs(output_dir: Path, contents: dict[str, str]) -> bool:
     return True
 
 
-def run_analytics_dataset_benchmark_validation(
+def inspect_analytics_dataset_benchmark_candidate(
     dataset_manifest_path: Path,
     database_path: Path,
     semantic_state_path: Path,
     relationships_path: Path,
     benchmark_pack_path: Path,
-    benchmark_approval_path: Path,
-    output_dir: Path,
-) -> AnalyticsDatasetBenchmarkResult:
+) -> AnalyticsDatasetBenchmarkCandidate:
     blockers: list[dict[str, str]] = []
     semantic_state = _read_control_mapping(semantic_state_path, blockers, "semantic_state")
     validate_approved_state(semantic_state, blockers)
@@ -643,6 +662,7 @@ def run_analytics_dataset_benchmark_validation(
     approved = approved_relationships(relationships, relationship_blockers)
     if relationship_blockers:
         add_blocker(blockers, "invalid_benchmark_relationship_registry", "The approved relationship registry is invalid.", field="approved_relationships")
+
     database_exists = database_path.is_file()
     database_size = 0
     database_hash = ""
@@ -675,39 +695,65 @@ def run_analytics_dataset_benchmark_validation(
     )
     manifest_hash = file_sha256(dataset_manifest_path) if dataset_manifest_path.is_file() else ""
     pack = _read_control_mapping(benchmark_pack_path, blockers, "benchmark_pack")
-    pack_id, case_count, exact_count, tolerance_count = _validate_benchmark_pack(
+    pack_id, case_count, exact_count, tolerance_count, case_ids = _validate_benchmark_pack(
         pack,
         dataset_id,
         {"dataset_manifest_sha256": manifest_hash, **actual_hashes},
         blockers,
     )
-    pack_hash = file_sha256(benchmark_pack_path) if benchmark_pack_path.is_file() else ""
+    source = {
+        "dataset_manifest_sha256": manifest_hash,
+        **actual_hashes,
+        "benchmark_pack_sha256": file_sha256(benchmark_pack_path) if benchmark_pack_path.is_file() else "",
+    }
+    return AnalyticsDatasetBenchmarkCandidate(
+        dataset_id=dataset_id,
+        pack_id=pack_id,
+        source=source,
+        case_ids=case_ids,
+        case_count=case_count,
+        exact_case_count=exact_count,
+        tolerance_case_count=tolerance_count,
+        relationship_count=len(approved),
+        blockers=tuple(blockers),
+    )
+
+
+def run_analytics_dataset_benchmark_validation(
+    dataset_manifest_path: Path,
+    database_path: Path,
+    semantic_state_path: Path,
+    relationships_path: Path,
+    benchmark_pack_path: Path,
+    benchmark_approval_path: Path,
+    output_dir: Path,
+) -> AnalyticsDatasetBenchmarkResult:
+    candidate = inspect_analytics_dataset_benchmark_candidate(
+        dataset_manifest_path,
+        database_path,
+        semantic_state_path,
+        relationships_path,
+        benchmark_pack_path,
+    )
+    blockers = list(candidate.blockers)
     approval = _read_control_mapping(benchmark_approval_path, blockers, "benchmark_approval")
     _validate_approval(
         approval,
-        dataset_id,
-        pack_id,
-        {
-            "dataset_manifest_sha256": manifest_hash,
-            "database_sha256": actual_hashes["database_sha256"],
-            "approved_semantic_state_sha256": actual_hashes["approved_semantic_state_sha256"],
-            "approved_relationships_sha256": actual_hashes["approved_relationships_sha256"],
-            "benchmark_pack_sha256": pack_hash,
-        },
+        candidate.dataset_id,
+        candidate.pack_id,
+        candidate.source,
         blockers,
     )
     status = "blocked" if blockers else "ready_for_offline_evaluation"
-    safe_dataset_id = dataset_id if _valid_id(dataset_id) else ""
-    safe_pack_id = pack_id if _valid_id(pack_id) else ""
+    safe_dataset_id = candidate.dataset_id if _valid_id(candidate.dataset_id) else ""
+    safe_pack_id = candidate.pack_id if _valid_id(candidate.pack_id) else ""
     manifest = {
         "version": 1,
         "status": status,
         "dataset_id": safe_dataset_id,
         "pack_id": safe_pack_id,
         "source": {
-            "dataset_manifest_sha256": manifest_hash,
-            **actual_hashes,
-            "benchmark_pack_sha256": pack_hash,
+            **candidate.source,
             "benchmark_approval_sha256": file_sha256(benchmark_approval_path) if benchmark_approval_path.is_file() else "",
         },
         "controls": {
@@ -721,17 +767,17 @@ def run_analytics_dataset_benchmark_validation(
             "model_training_authorized": False,
         },
         "counts": {
-            "cases": case_count,
-            "exact_comparisons": exact_count,
-            "numeric_tolerance_comparisons": tolerance_count,
-            "approved_relationships": len(approved),
+            "cases": candidate.case_count,
+            "exact_comparisons": candidate.exact_case_count,
+            "numeric_tolerance_comparisons": candidate.tolerance_case_count,
+            "approved_relationships": candidate.relationship_count,
             "blockers": len(blockers),
         },
     }
     contents = {
         MANIFEST_NAME: yaml.safe_dump(manifest, sort_keys=False, allow_unicode=False),
         BLOCKERS_NAME: _blockers_csv(blockers),
-        REPORT_NAME: _render_report(status, safe_dataset_id, safe_pack_id, blockers, case_count, exact_count, tolerance_count),
+        REPORT_NAME: _render_report(status, safe_dataset_id, safe_pack_id, blockers, candidate.case_count, candidate.exact_case_count, candidate.tolerance_case_count),
     }
     outputs_changed = _write_outputs(output_dir, contents)
     return AnalyticsDatasetBenchmarkResult(
@@ -741,9 +787,9 @@ def run_analytics_dataset_benchmark_validation(
         blockers_path=output_dir / BLOCKERS_NAME,
         report_path=output_dir / REPORT_NAME,
         blocker_count=len(blockers),
-        case_count=case_count,
-        exact_case_count=exact_count,
-        tolerance_case_count=tolerance_count,
-        relationship_count=len(approved),
+        case_count=candidate.case_count,
+        exact_case_count=candidate.exact_case_count,
+        tolerance_case_count=candidate.tolerance_case_count,
+        relationship_count=candidate.relationship_count,
         outputs_changed=outputs_changed,
     )

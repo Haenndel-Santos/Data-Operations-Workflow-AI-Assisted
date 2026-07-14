@@ -5,6 +5,10 @@ from pathlib import Path
 
 from .analytics_answer_evaluation import run_analytics_answer_evaluation
 from .analytics_dataset_benchmark import run_analytics_dataset_benchmark_validation
+from .analytics_dataset_benchmark_review import (
+    run_analytics_dataset_benchmark_approval,
+    run_analytics_dataset_benchmark_review,
+)
 from .analytics_nl_translation import (
     RecordedSemanticIntentProvider,
     run_analytics_nl_translation,
@@ -248,6 +252,39 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         default=Path("outputs/analytics_dataset_benchmark_validation"),
     )
+
+    analytics_dataset_benchmark_review = subparsers.add_parser(
+        "analytics-dataset-benchmark-review",
+        help="Prepare a hash-bound pending human review for a dataset benchmark pack.",
+    )
+    analytics_dataset_benchmark_review.add_argument("--dataset-manifest", type=Path, required=True)
+    analytics_dataset_benchmark_review.add_argument("--database", type=Path, required=True)
+    analytics_dataset_benchmark_review.add_argument("--semantic-state", type=Path, required=True)
+    analytics_dataset_benchmark_review.add_argument("--relationships", type=Path, required=True)
+    analytics_dataset_benchmark_review.add_argument("--pack", type=Path, required=True)
+    analytics_dataset_benchmark_review.add_argument(
+        "--output",
+        type=Path,
+        default=Path("outputs/analytics_dataset_benchmark_review/analytics_dataset_benchmark_review.yml"),
+    )
+
+    analytics_dataset_benchmark_approval = subparsers.add_parser(
+        "analytics-dataset-benchmark-approval",
+        help="Validate and explicitly write a completed dataset benchmark approval.",
+    )
+    analytics_dataset_benchmark_approval.add_argument("--dataset-manifest", type=Path, required=True)
+    analytics_dataset_benchmark_approval.add_argument("--database", type=Path, required=True)
+    analytics_dataset_benchmark_approval.add_argument("--semantic-state", type=Path, required=True)
+    analytics_dataset_benchmark_approval.add_argument("--relationships", type=Path, required=True)
+    analytics_dataset_benchmark_approval.add_argument("--pack", type=Path, required=True)
+    analytics_dataset_benchmark_approval.add_argument("--review", type=Path, required=True)
+    analytics_dataset_benchmark_approval.add_argument("--approval-output", type=Path, required=True)
+    analytics_dataset_benchmark_approval.add_argument(
+        "--output",
+        type=Path,
+        default=Path("outputs/analytics_dataset_benchmark_approval"),
+    )
+    analytics_dataset_benchmark_approval.add_argument("--apply", action="store_true")
 
     benchmark_convert_sql = subparsers.add_parser(
         "benchmark-convert-sql",
@@ -889,6 +926,45 @@ def main() -> None:
         print(f"Outputs changed: {result.outputs_changed}")
         print(f"Manifest: {result.manifest_path}")
         print("Dry-run only. The database was hashed but never opened or queried.")
+        return
+
+    if args.command == "analytics-dataset-benchmark-review":
+        result = run_analytics_dataset_benchmark_review(
+            args.dataset_manifest,
+            args.database,
+            args.semantic_state,
+            args.relationships,
+            args.pack,
+            args.output,
+        )
+        print("Dataset benchmark human review preparation complete")
+        print(f"Cases: {result.case_count}")
+        print(f"Output changed: {result.output_changed}")
+        print(f"Review: {result.review_path}")
+        print("Pending review only. No benchmark use, provider, upload, or training was approved.")
+        return
+
+    if args.command == "analytics-dataset-benchmark-approval":
+        result = run_analytics_dataset_benchmark_approval(
+            args.dataset_manifest,
+            args.database,
+            args.semantic_state,
+            args.relationships,
+            args.pack,
+            args.review,
+            args.output,
+            args.approval_output,
+            apply=args.apply,
+        )
+        print("Dataset benchmark approval validation complete")
+        print(f"Status: {result.status}")
+        print(f"Mode: {'dry-run' if result.dry_run else 'apply'}")
+        print(f"Blockers: {result.blocker_count}")
+        print(f"Approval changed: {result.approval_changed}")
+        print(f"Outputs changed: {result.outputs_changed}")
+        print(f"Plan: {result.plan_path}")
+        print(f"Approval: {result.approval_path}")
+        print("No database connection, query, live provider, network, upload, or training was used.")
         return
 
     if args.command == "benchmark-convert-sql":

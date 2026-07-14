@@ -989,3 +989,53 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 - Do not query, export, or approve EDS, AdventureWorks, Northwind, Pubs, or another real dataset merely to exercise this contract.
 - Do not treat `ready_for_offline_evaluation` as execution, business-answer correctness, live-model quality, or permission for upload/training.
 - Do not add a live provider, credentials, narration, or external connector before their separate authority and test boundaries exist.
+
+## 2026-07-14 - Codex - Stage 5E benchmark review and approval
+
+### Initial Context
+
+- Branch: `main`
+- Initial commit: `7144863`
+- Initial worktree: clean and synchronized with `origin/main`
+- Objective: add the human-review gate required before any dataset-backed offline evaluator can consume a benchmark pack
+
+### Work Performed
+
+- Refactored dataset candidate inspection into one reusable entrypoint so review preparation, approval, and final binding validation use identical hashes and candidate gates.
+- Added `analytics-dataset-benchmark-review` to generate a pending review bound to the exact manifest, opaque DuckDB artifact, approved semantic state, approved relationships, and candidate pack.
+- Added one review row per case without copying questions, provider responses, expected requests/results, comparison values, or notes into generated approval evidence.
+- Required explicit per-case decisions for recorded provider response, expected Stage 5A request, typed expected result, comparison policy, and non-empty human notes.
+- Required explicit scope decisions: local offline evaluation must be approved, while live-provider use, external upload, and model training must be not authorized.
+- Added `analytics-dataset-benchmark-approval` with dry-run default and explicit `--apply` for one user-supplied approval path.
+- Bound generated approval to the completed review SHA-256 and a normalized decision digest, then made those fields mandatory in final dataset benchmark validation.
+- Refused source/identity drift, pending/rejected/missing/duplicate/unknown decisions, scope expansion, invalid reviewer/time, divergent evidence, and different existing approval files.
+- Preflighted approval conflicts before evidence writes, reused byte-identical review/approval/evidence, and provided no replacement flag for immutable benchmark authority.
+- Updated contract, architecture, backend, testing, decision, project-state, README, and changelog documentation.
+
+### Validation
+
+- Focused dataset benchmark validation/review/approval tests: 19 passed in 2.73 seconds.
+- Final full offline suite: 131 passed in 16.59 seconds.
+- Python compilation: passed.
+- Documentation: 45 internal links checked, 0 broken.
+- Integration test generated a synthetic approval, consumed it in final binding validation, and forced any post-fixture `duckdb.connect` call to fail.
+- No EDS, AdventureWorks, Northwind, Pubs, project database, SQL Server connection, live provider, network, credentials, export, migration, import, synchronization, narration, upload, training, real review, or real approval was used or changed.
+
+### State For Next Agent
+
+- The governance sequence now exists from valid candidate package to pending review, completed-review dry-run, explicit immutable approval, and final `ready_for_offline_evaluation` binding validation.
+- A generated approval contains only IDs, source hashes, review evidence, bounded decisions, and human authority metadata; it does not contain case content or grant execution authority.
+- No real benchmark pack or semantic registry is approved. Current Northwind/Pubs/AdventureWorks assets remain outside this workflow until their existing gates are completed.
+- No dataset-backed evaluator consumes `ready_for_offline_evaluation` yet.
+
+### Next Logical Steps
+
+1. Implement a dataset-backed offline evaluator that requires the generated approval and rechecks every bound hash immediately before execution.
+2. Reuse recorded Stage 5D translation, exact Stage 5A request matching, Stage 5A planning, Stage 5B read-only execution, and typed expected-result comparison.
+3. Test the runner only with temporary synthetic DuckDB before requesting authority for any real benchmark.
+
+### Do Not Do Yet
+
+- Do not query/export or create reviews/approvals for EDS, AdventureWorks, Northwind, Pubs, or another real dataset merely to exercise the runner.
+- Do not interpret generated approval as answer correctness, live-model quality, narration authority, external disclosure, or training permission.
+- Do not bypass immutable hash revalidation, exact request gates, approved relationships, or Stage 5B resource controls in dataset-backed execution.
