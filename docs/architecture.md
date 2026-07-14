@@ -18,6 +18,7 @@ CLI
      -> schema and business-flow documentation
 
   -> AI-assisted analytics backend
+     -> static declarative module-registry validation
      -> two-phase local recorded session coordinator
      -> natural-language translation boundary
      -> synthetic offline translation evaluation
@@ -47,6 +48,7 @@ CLI
 | --- | --- | --- |
 | `src/data_ops_lab/cli.py` | Parse commands and dispatch entrypoints | Do not absorb module business logic. |
 | `src/data_ops_lab/workflow.py` | Coordinate the default analytical pipeline | Preserve `run_workflow` and `WorkflowResult` compatibility. |
+| Analytics module registry | Describe and statically validate current session contracts and workflow order | No dynamic import, dispatch, execution, network, concurrency, or auto-approval. |
 | Analytics session module | Coordinate the recorded analytics stages through an exact human plan-review checkpoint | Two separate immutable phases; reuse stage entrypoints; never self-approve or bypass blockers. |
 | Conversion/profile/clean/schema modules | Transform and describe local data | Never modify raw input files. |
 | Validation/SQL/export/documentation modules | Validate and publish analytical artifacts | Generated output is not approval evidence by itself. |
@@ -74,7 +76,11 @@ CLI
 
 The default workflow accepts an input directory and output directory and returns `WorkflowResult` with output, database, table, metadata, and Tableau locations. Staged commands use explicit paths and return summaries or artifact locations from their module entrypoints.
 
-Formal module manifests are not yet implemented. Before adding dynamic orchestration, define contracts for inputs, outputs, dependencies, validation, and failure policy without breaking current Python entrypoints or CLI commands.
+The first formal module registry now describes the two recorded analytics
+session phases and validates inputs, outputs, dependencies, validation, tests,
+failure policy, entrypoint signatures, and review gates without changing current
+Python entrypoints or CLI commands. Other pipelines remain outside this
+registry, and dynamic orchestration is not implemented.
 
 ## State Model
 
@@ -82,7 +88,8 @@ Modeling decisions use distinct states such as candidate, pending review, approv
 
 ## Current Gaps
 
-- No common module discovery or manifest registry.
+- The analytics-session registry is validation-only; common discovery, dynamic
+  dispatch, and a registry covering other pipelines remain pending.
 - No generic dependency graph, checkpoint, resume, or dry-run engine; only the recorded analytics session has narrow tested checkpoint/resume semantics.
 - CLI stage dispatch and the default workflow are not yet unified under one orchestration contract.
 - Some generated summaries become stale when later review steps run; consolidated state must cite the newest validation evidence.

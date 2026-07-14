@@ -1,0 +1,159 @@
+version: 1
+status: active
+controls:
+  dynamic_execution_enabled: false
+  concurrency_enabled: false
+  network_enabled: false
+  review_auto_approval_enabled: false
+modules:
+  - name: analytics_semantic_adapter
+    version: 1
+    description: Compile approved semantic intent into a Stage 5A request.
+    status: implemented
+    entrypoint: data_ops_lab.analytics_semantic_adapter.run_analytics_semantic_adapter
+    inputs: [intent_path, semantic_state_path, output_dir]
+    outputs: [stage_5a_request_or_clarification]
+    dependencies: []
+    capabilities: [approved_term_resolution, ambiguity_preservation]
+    workflows: [recorded_local_prepare]
+    validation: [approved_state, semantic_contract]
+    tests: [tests/analytics_semantic_adapter_test.py]
+    failure_policy: fail_closed_without_request
+  - name: analytics_nl_translation
+    version: 1
+    description: Translate a local question through a recorded provider boundary.
+    status: implemented
+    entrypoint: data_ops_lab.analytics_nl_translation.run_analytics_nl_translation
+    inputs: [question_path, semantic_state_path, output_dir, provider, timeout_seconds, allow_network]
+    outputs: [semantic_intent, nested_semantic_adapter_evidence]
+    dependencies: [analytics_semantic_adapter]
+    capabilities: [recorded_translation, provider_boundary]
+    workflows: [recorded_local_prepare]
+    validation: [prompt_minimization, provider_response_contract]
+    tests: [tests/analytics_nl_translation_test.py]
+    failure_policy: fail_closed_without_retry
+  - name: analytics_query_plan
+    version: 1
+    description: Compile a structured request into a reviewed parameterized plan.
+    status: implemented
+    entrypoint: data_ops_lab.analytics_query_plan.run_analytics_query_plan
+    inputs: [request_path, database_path, relationships_path, output_dir]
+    outputs: [review_ready_query_plan]
+    dependencies: []
+    capabilities: [catalog_validation, parameterized_select_planning]
+    workflows: [recorded_local_prepare, exact_reviewed_local_resume]
+    validation: [catalog, approved_relationships, request_contract]
+    tests: [tests/analytics_query_plan_test.py]
+    failure_policy: fail_closed_without_sql_plan
+  - name: analytics_query_execution
+    version: 1
+    description: Execute an exact reviewed Stage 5A plan against local DuckDB.
+    status: implemented
+    entrypoint: data_ops_lab.analytics_query_execution.run_analytics_query_execution
+    inputs: [request_path, database_path, relationships_path, reviewed_plan_path, output_dir, limits]
+    outputs: [bounded_result, execution_evidence]
+    dependencies: [analytics_query_plan]
+    capabilities: [read_only_execution, bounded_results]
+    workflows: [exact_reviewed_local_resume]
+    validation: [exact_plan_revalidation, resource_limits]
+    tests: [tests/analytics_query_execution_test.py]
+    failure_policy: fail_closed_without_partial_result
+  - name: analytics_result_presentation
+    version: 1
+    description: Render validated Stage 5B evidence into bounded local facts.
+    status: implemented
+    entrypoint: data_ops_lab.analytics_result_presentation.run_analytics_result_presentation
+    inputs: [request_path, execution_manifest_path, result_path, output_dir]
+    outputs: [deterministic_presentation, facts_bundle]
+    dependencies: [analytics_query_execution]
+    capabilities: [streaming_result_validation, bounded_preview]
+    workflows: [exact_reviewed_local_resume]
+    validation: [result_hash, control_totals]
+    tests: [tests/analytics_result_presentation_test.py]
+    failure_policy: fail_closed_without_result_values
+  - name: analytics_result_narration
+    version: 1
+    description: Validate recorded cited prose against deterministic result facts.
+    status: implemented
+    entrypoint: data_ops_lab.analytics_result_narration.run_analytics_result_narration
+    inputs: [presentation_manifest_path, facts_path, output_dir, provider, timeout_seconds, allow_network]
+    outputs: [grounded_narrative, narration_evidence]
+    dependencies: [analytics_result_presentation]
+    capabilities: [fact_citations, exact_numeric_grounding]
+    workflows: [exact_reviewed_local_resume]
+    validation: [facts_hash, required_citations, numeric_tokens]
+    tests: [tests/analytics_result_presentation_test.py]
+    failure_policy: fail_closed_without_narrative
+  - name: analytics_session_prepare
+    version: 1
+    description: Coordinate recorded translation and planning before human review.
+    status: implemented
+    entrypoint: data_ops_lab.analytics_session.run_analytics_session_prepare
+    inputs: [question_path, semantic_state_path, translation_response_path, database_path, relationships_path, output_dir]
+    outputs: [prepare_checkpoint, pending_execution_review]
+    dependencies: [analytics_nl_translation, analytics_query_plan]
+    capabilities: [immutable_prepare_checkpoint, clarification_stop]
+    workflows: [recorded_local_prepare]
+    validation: [input_identity, stage_status]
+    tests: [tests/analytics_session_test.py]
+    failure_policy: stop_before_execution
+  - name: analytics_session_resume
+    version: 1
+    description: Resume an exact reviewed session through recorded narration.
+    status: implemented
+    entrypoint: data_ops_lab.analytics_session.run_analytics_session_resume
+    inputs: [prepare_manifest_path, review_path, database_path, relationships_path, narration_response_path, output_dir]
+    outputs: [resume_checkpoint, reached_stage_evidence]
+    dependencies: [analytics_query_execution, analytics_result_presentation, analytics_result_narration]
+    capabilities: [exact_review_resume, last_valid_checkpoint]
+    workflows: [exact_reviewed_local_resume]
+    validation: [review_binding, authority_preflight, input_drift]
+    tests: [tests/analytics_session_test.py]
+    failure_policy: stop_and_preserve_last_valid_checkpoint
+workflows:
+  - name: recorded_local_prepare
+    version: 1
+    description: Prepare a recorded local question and stop for exact plan review.
+    coordinator: analytics_session_prepare
+    stages:
+      - id: translate
+        module: analytics_nl_translation
+        depends_on: []
+        expected_statuses: [ready_for_query_plan, clarification_required, blocked]
+        failure_policy: stop
+      - id: plan
+        module: analytics_query_plan
+        depends_on: [translate]
+        expected_statuses: [ready_for_execution_review, blocked]
+        failure_policy: stop
+    gates: []
+    terminal_statuses: [awaiting_execution_review, clarification_required, blocked]
+    failure_policy: stop_before_execution
+  - name: exact_reviewed_local_resume
+    version: 1
+    description: Resume an exact reviewed plan through presentation and narration.
+    coordinator: analytics_session_resume
+    stages:
+      - id: execute
+        module: analytics_query_execution
+        depends_on: []
+        expected_statuses: [completed, completed_no_rows, blocked]
+        failure_policy: stop
+      - id: present
+        module: analytics_result_presentation
+        depends_on: [execute]
+        expected_statuses: [ready_for_recorded_narration, blocked]
+        failure_policy: stop
+      - id: narrate
+        module: analytics_result_narration
+        depends_on: [present]
+        expected_statuses: [ready_for_user, blocked]
+        failure_policy: stop
+    gates:
+      - id: exact_execution_review
+        before_stage: execute
+        type: human_review
+        required_decision: approved
+        auto_approval: false
+    terminal_statuses: [completed, blocked]
+    failure_policy: stop_and_preserve_last_valid_checkpoint

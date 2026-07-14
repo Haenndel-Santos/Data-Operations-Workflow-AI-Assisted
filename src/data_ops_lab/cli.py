@@ -34,6 +34,7 @@ from .benchmark_sql_conversion import run_benchmark_sql_conversion
 from .business_flow_mapping import run_business_flow_mapping
 from .canonical_model import run_canonical_model_alignment
 from .human_review import run_human_review, validate_approval_template
+from .module_registry import run_module_registry_validation
 from .product_canonical_promotion import run_product_canonical_promotion
 from .product_materialization import run_product_materialization
 from .product_reference_audit import run_product_reference_audit
@@ -59,6 +60,29 @@ def build_parser() -> argparse.ArgumentParser:
         description="Run an AI-assisted data operations workflow for local CSV/XLSX files.",
     )
     subparsers = parser.add_subparsers(dest="command")
+
+    analytics_module_registry = subparsers.add_parser(
+        "analytics-module-registry-validate",
+        help="Validate analytics module contracts and workflow dependencies without executing them.",
+    )
+    analytics_module_registry.add_argument(
+        "--registry",
+        type=Path,
+        default=Path("config/orchestrator/analytics_module_registry.yml"),
+        help="Version-1 declarative analytics module registry YAML.",
+    )
+    analytics_module_registry.add_argument(
+        "--project-root",
+        type=Path,
+        default=Path("."),
+        help="Project root used only to validate declared test-file paths.",
+    )
+    analytics_module_registry.add_argument(
+        "--output",
+        type=Path,
+        default=Path("outputs/analytics_module_registry_validation"),
+        help="New or byte-identical directory for dry-run registry validation evidence.",
+    )
 
     analytics_query_plan = subparsers.add_parser(
         "analytics-query-plan",
@@ -845,6 +869,25 @@ def build_parser() -> argparse.ArgumentParser:
 def main() -> None:
     parser = build_parser()
     args = parser.parse_args()
+
+    if args.command == "analytics-module-registry-validate":
+        result = run_module_registry_validation(
+            args.registry,
+            args.output,
+            project_root=args.project_root,
+        )
+        print("Analytics module registry validation complete")
+        print(f"Status: {result.status}")
+        print(f"Modules: {result.module_count}")
+        print(f"Workflows: {result.workflow_count}")
+        print(f"Stages: {result.stage_count}")
+        print(f"Blockers: {result.blocker_count}")
+        print(f"Outputs changed: {result.outputs_changed}")
+        print(f"Manifest: {result.manifest_path}")
+        print(f"Blockers CSV: {result.blockers_path}")
+        print(f"Report: {result.report_path}")
+        print("Dry-run only. Entrypoints were inspected statically and no workflow was executed.")
+        return
 
     if args.command == "analytics-query-plan":
         result = run_analytics_query_plan(

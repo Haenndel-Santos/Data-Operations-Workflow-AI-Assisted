@@ -6,11 +6,11 @@ Turn local operational spreadsheets into validated analytical datasets and an ap
 
 ## Current Stage
 
-Three active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI analytics has Stage 5A-5F governed planning, execution, translation, evaluation, deterministic presentation, recorded grounded narration, and a two-phase local session coordinator, but no real approved catalog, approved benchmark pack, live provider, or user interface; and benchmark onboarding remains pending dataset export/review and approval.
+Three active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI analytics has Stage 5A-5F governed planning, execution, translation, evaluation, deterministic presentation, recorded grounded narration, a two-phase local session coordinator, and a validated static module registry, but no real approved catalog, approved benchmark pack, live provider, dynamic dispatch, or user interface; and benchmark onboarding remains pending dataset export/review and approval.
 
 ## Last Completed Milestone
 
-On 2026-07-14, Stage 5F added a two-phase recorded local analytics session. Preparation reuses Stage 5D and Stage 5A, then stops at an immutable `awaiting_execution_review` checkpoint. Resume requires a separate completed human review bound to the exact preparation and plan SHA-256 before reusing Stage 5B, deterministic presentation, and grounded narration. Blocked stages stop dependent work and preserve the last valid checkpoint. Tests use only temporary synthetic DuckDB and recorded responses. No real dataset, live provider, network, credentials, upload, or training was used.
+On 2026-07-14, AI roadmap Phase 0 added a versioned registry for the 8 modules, 2 immutable phases, and 5 stages used by the recorded analytics session. The validator statically inspects entrypoint source and exact signatures, declared tests, dependencies, cycles, workflow order, failure policies, capabilities, and the separate human execution gate without importing or calling registered entrypoints. Dynamic execution, concurrency, network, and review auto-approval remain disabled. Validation used no dataset, database, provider, credentials, upload, or training.
 
 ## Current Capabilities
 
@@ -63,6 +63,9 @@ On 2026-07-14, Stage 5F added a two-phase recorded local analytics session. Prep
 - Generate a pending execution-review template bound to exact preparation and plan hashes rather than self-approving a ready plan.
 - Resume only from a separately completed human review and preserve the last valid execution, presentation, or narration checkpoint on failure.
 - Reuse byte-identical nested stage evidence while refusing divergent session checkpoints and exposing no review bypass or network switch.
+- Statically validate the versioned analytics-session module registry, exact
+  entrypoint parameters, test files, dependency closure, cycles, stage order,
+  fail-closed policies, and non-automatic human execution gate.
 - Maintain a versioned AI implementation roadmap with ordered phases, exit gates, quality targets, and explicit non-authorizations.
 - Inventory local benchmark sources with hashes, provenance/license status, and separate use approvals.
 - Convert supported T-SQL samples to deterministic DuckDB/Parquet artifacts while ignoring operational SQL and retaining foreign keys as pending candidates.
@@ -70,7 +73,7 @@ On 2026-07-14, Stage 5F added a two-phase recorded local analytics session. Prep
 
 ## Test Status
 
-- Automated suite: 159 tests passed offline on 2026-07-14; latest run completed in 23.34 seconds.
+- Automated suite: 165 tests passed offline on 2026-07-14; latest run completed in 23.15 seconds.
 - All 12 project-local skills passed the official skill validator on 2026-07-13.
 - Internal link check: 59 checked, 0 broken on 2026-07-14.
 - Main suite is offline and uses temporary directories for generated test artifacts.
@@ -85,7 +88,7 @@ On 2026-07-14, Stage 5F added a two-phase recorded local analytics session. Prep
 - `ready_for_canonical_state_review` is dry-run evidence only; it is not approval to apply a Product snapshot or change `canonical_tables.yml`.
 - Organisation business-key selection and several document-flow relationships still need business context.
 - Conflicted line extracts must not be promoted to approved relationships.
-- The recorded analytics session now has narrow checkpoints and resume semantics, but the project still lacks shared module discovery, a validated dependency registry, and generic partial-run/dry-run infrastructure.
+- The recorded analytics session now has a validated static registry and narrow checkpoints/resume semantics, but registry-driven dispatch and generic partial-run/dry-run infrastructure remain deliberately absent.
 - Several core pipeline stages still load whole Parquet tables into Pandas; larger-than-memory operation requires DuckDB pushdown and streaming refactors.
 - No concrete semantic catalog has completed human review or been applied; Stage 5D therefore remains operationally blocked for real datasets.
 - A live model provider, approved real benchmark pack, real dataset-backed evaluation, and user interface are not implemented or authorized. Recorded narration proves grounding controls only; synthetic Stage 5D/5E packs and temporary dataset-backed tests are not live-model or business-quality evidence.
@@ -106,12 +109,12 @@ On 2026-07-14, Stage 5F added a two-phase recorded local analytics session. Prep
 
 ## Next Logical Milestone
 
-Define a versioned declarative registry for the analytics-session modules and validate its dependencies, capabilities, entrypoints, stage order, and failure policies in dry-run only. Use the implemented two-phase workflow as the first exact registry fixture; do not make execution dynamic, add concurrency, auto-approve reviews, select a live provider, expose rows externally, or use EDS/public benchmarks merely to test discovery. Keep Product canonical apply and external/database work separate. In parallel, profile the highest-memory Pandas stages before selecting one measured DuckDB pushdown refactor.
+Begin AI roadmap Phase 1 by adding a reproducible synthetic performance harness that measures peak process memory, runtime, scanned/input bytes, output size, and temporary storage for selected Pandas-heavy stages. Establish baselines first, then choose one measured bottleneck for a contract-preserving DuckDB pushdown or bounded-batch refactor. Do not use EDS/public benchmark data, add a dependency, or claim an optimization without before/after evidence. Keep dynamic registry execution, Product canonical apply, and external/database work separate.
 
 ## Last Verified Commit
 
-`b5ac615` (`feat(analytics): add grounded result presentation`)
+`a53be58` (`docs(analytics): add AI implementation roadmap`)
 
 ## Last Updated
 
-2026-07-14 by Codex after formalizing the AI platform implementation roadmap.
+2026-07-14 by Codex after completing static module-registry validation for AI roadmap Phase 0.

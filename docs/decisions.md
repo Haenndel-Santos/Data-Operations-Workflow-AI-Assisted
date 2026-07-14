@@ -364,3 +364,25 @@ clarification. `analytics-session-resume-recorded` validates exact authority and
 records the last valid checkpoint through execution, presentation, and recorded
 narration. Generic orchestration, live providers, UI, and real-data authority
 remain separate future work.
+
+## 2026-07-14 - Module Registry Validation Is Static And Non-Executing
+
+**Decision:** Describe the two recorded analytics-session phases in a versioned
+declarative registry and validate entrypoint source, exact parameter names,
+tests, dependencies, cycles, workflow order, failure policies, capabilities,
+and the human execution gate without importing, calling, or dynamically
+dispatching registered entrypoints.
+
+**Rationale:** A contract registry is useful before it becomes an execution
+engine. Static inspection and disabled controls expose drift and unsafe workflow
+changes without giving configuration new authority over review, database,
+provider, or execution boundaries.
+
+**Alternatives:** Dispatch directly from the first registry; import every module
+during discovery; infer signatures at runtime; combine registry validation with
+generic concurrency, partial runs, or review completion.
+
+**Impact:** `analytics-module-registry-validate` writes immutable dry-run
+evidence for 8 modules, 2 workflow phases, and 5 stages. Dynamic execution,
+concurrency, network access, review auto-approval, and registry coverage of the
+non-analytics pipelines remain disabled or pending.

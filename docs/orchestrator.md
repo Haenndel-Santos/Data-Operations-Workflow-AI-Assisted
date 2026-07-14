@@ -15,6 +15,13 @@ recorded Stage 5D through result narration. It stops at an immutable plan-review
 checkpoint and resumes only with a separately completed exact human review. It
 does not change `workflow.py` or provide general module discovery.
 
+`src/data_ops_lab/module_registry.py` now validates the first versioned
+declarative registry at `config/orchestrator/analytics_module_registry.yml`.
+It inspects entrypoint source and exact signatures statically, validates module
+and workflow dependencies, cycles, capabilities, test files, stage order,
+failure policies, and the human execution gate, then writes dry-run evidence.
+It cannot dispatch or execute a module.
+
 ## Responsibility
 
 The orchestrator may discover, validate, select, order, execute, record, recover, and summarize module work. It must not duplicate specialized module logic, hide failures, mutate inputs, or promote unapproved decisions.
@@ -42,7 +49,9 @@ failure_policy:
 ## Incremental Evolution
 
 1. Document contracts for existing entrypoints without changing behavior.
-2. Validate contracts and dependencies in isolation.
+   Implemented for the recorded analytics session.
+2. Validate contracts and dependencies in isolation. Implemented for the
+   recorded analytics session with static, non-executing registry validation.
 3. Add workflow selection and ordered execution behind current CLI compatibility. Implemented narrowly for the recorded analytics session.
 4. Add explicit run state, logs, and failure summaries. Implemented for the recorded analytics session only.
 5. Add partial execution and dry-run. The analytics session has an explicit preparation phase; generic partial runs remain pending.
@@ -63,3 +72,7 @@ resolve business terms operationally.
 `awaiting_execution_review` is not execution authority. The analytics-session
 resume command requires a separate completed human review bound to the exact
 preparation manifest and plan hashes. It cannot auto-approve its own output.
+
+A `valid` module registry is not execution authority. Registry controls require
+dynamic execution, concurrency, network, and review auto-approval to remain
+disabled, and the validator has no execution or apply mode.

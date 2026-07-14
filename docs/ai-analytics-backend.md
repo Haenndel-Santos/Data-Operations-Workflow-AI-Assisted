@@ -125,6 +125,12 @@ stops for an exact hash-bound human plan review. Resume validates that separate
 review before Stage 5B and records the last valid execution, presentation, or
 narration checkpoint. See [Local Analytics Session](analytics-session.md).
 
+The session modules and their two phases are now described by a versioned
+declarative registry. Static dry-run validation checks entrypoints, exact
+parameter names, dependencies, cycles, capabilities, workflow order, tests,
+failure policies, and the execution-review gate without importing or calling
+the registered entrypoints. See [Analytics Module Registry](analytics-module-registry.md).
+
 ## Request Contract
 
 ```yaml

@@ -249,6 +249,20 @@ To coordinate those stages while preserving a separate human plan review:
 Preparation cannot execute queries. Resume requires a separate completed review
 bound to the exact preparation and plan hashes.
 
+To validate the versioned analytics module registry without executing any
+entrypoint:
+
+```powershell
+$env:PYTHONPATH = "src"
+$env:PYTHONDONTWRITEBYTECODE = "1"
+.\.venv\Scripts\python.exe -m data_ops_lab analytics-module-registry-validate --output "outputs\<run-id>\analytics_module_registry_validation"
+```
+
+This inspects entrypoint source and signatures statically, validates
+dependencies, workflow order, failure policies, tests, and the human execution
+gate, while dynamic execution, concurrency, network, and auto-approval remain
+disabled.
+
 To convert an approved local T-SQL sample into DuckDB and compressed Parquet
 without executing operational SQL:
 
@@ -337,6 +351,7 @@ DuckDB is a good fit for this project because it supports local analytical workf
 - [Architecture](docs/architecture.md)
 - [Testing](docs/testing.md)
 - [Orchestrator](docs/orchestrator.md)
+- [Analytics module registry contract](docs/analytics-module-registry.md)
 - [Step 3E.4 Product application contract](docs/product-refnr-application.md)
 - [Product materialization preview contract](docs/product-materialization.md)
 - [Product canonical promotion plan contract](docs/product-canonical-promotion.md)

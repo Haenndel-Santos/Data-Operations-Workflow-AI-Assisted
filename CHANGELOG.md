@@ -21,6 +21,9 @@ All notable user-facing and release-relevant changes will be documented here.
 - Approved offline dataset-backed evaluation through recorded Stage 5D, exact Stage 5A request gates, Stage 5B read-only execution, and exact/tolerance metrics.
 - Hash-bound deterministic Stage 5B result presentation plus recorded grounded narration with mandatory citations and exact numeric preservation.
 - Two-phase recorded local analytics sessions with immutable preparation, exact human plan review, safe resume, and last-valid-checkpoint evidence.
+- Versioned static analytics module-registry validation for exact entrypoint
+  signatures, dependencies, cycles, workflow order, tests, failure policies,
+  capabilities, and human execution gates without dynamic dispatch.
 - Controlled local DuckDB execution with exact plan revalidation, bounded resources/results, drift checks, and hash-bound non-overwriting evidence.
 - Review-ready semantic catalog validation with business terms, dimensions, measures, approved paths, and explicit ambiguity handling.
 - Governed local benchmark storage plus restricted T-SQL conversion to DuckDB and Zstandard-compressed Parquet for Northwind and Pubs.

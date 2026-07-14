@@ -256,6 +256,22 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 No real data, live provider, network, external database, import, migration,
 sync, upload, or training is used.
 
+## Analytics Module Registry
+
+The registry tests validate the checked-in contract, static entrypoint and
+signature inspection, declared test files, dependency cycles, workflow order,
+human execution gates, malformed input handling, idempotency, divergent-output
+refusal, and CLI safety:
+
+```powershell
+$env:PYTHONPATH = "src"
+$env:PYTHONDONTWRITEBYTECODE = "1"
+.\.venv\Scripts\python.exe -m pytest -p no:cacheprovider tests\module_registry_test.py
+```
+
+The validator does not import or call declared entrypoints, execute a workflow,
+open a database, use a provider, or authorize data and review state.
+
 ## Validation Levels
 
 1. Unit tests for parsers, transformations, rules, and isolated decisions.
