@@ -340,3 +340,27 @@ facts package without database access. `analytics-result-narrate-recorded`
 validates exact presentation/facts bindings and cited recorded prose without
 network access. The Stage 5B CSV remains authoritative; semantic truth beyond
 mechanical citations still requires human or benchmark evaluation.
+
+## 2026-07-14 - Analytics Sessions Use Two Immutable Phases
+
+**Decision:** Coordinate the recorded local analytics path as separate prepare
+and resume phases. Preparation may reach a review-ready Stage 5A plan but cannot
+execute it. Resume requires a completed human review bound to both the exact
+preparation checkpoint and reviewed plan SHA-256 before calling Stage 5B.
+
+**Rationale:** A single command that generates and immediately executes its own
+plan would make `ready_for_execution_review` equivalent to approval. Separate
+immutable outputs preserve the human checkpoint, permit safe retries, and let
+the coordinator reuse specialized stage contracts without absorbing their
+logic.
+
+**Alternatives:** Auto-approve newly generated plans; add a bypass flag; mutate
+one session manifest in place; duplicate query/result validation in the
+orchestrator; introduce a generic dependency engine before one workflow has
+tested state semantics.
+
+**Impact:** `analytics-session-prepare-recorded` stops at review or
+clarification. `analytics-session-resume-recorded` validates exact authority and
+records the last valid checkpoint through execution, presentation, and recorded
+narration. Generic orchestration, live providers, UI, and real-data authority
+remain separate future work.

@@ -23,6 +23,7 @@ from .analytics_result_narration import (
     run_analytics_result_narration,
 )
 from .analytics_result_presentation import run_analytics_result_presentation
+from .analytics_session import run_analytics_session_prepare, run_analytics_session_resume
 from .analytics_semantic_adapter import run_analytics_semantic_adapter
 from .analytics_semantic_approval import run_analytics_semantic_approval
 from .analytics_semantic_catalog import run_analytics_semantic_catalog
@@ -149,6 +150,44 @@ def build_parser() -> argparse.ArgumentParser:
         "--timeout-seconds",
         type=int,
         default=30,
+    )
+
+    analytics_session_prepare = subparsers.add_parser(
+        "analytics-session-prepare-recorded",
+        help="Prepare a recorded local analytics session and stop for plan review.",
+    )
+    analytics_session_prepare.add_argument("--question-file", type=Path, required=True)
+    analytics_session_prepare.add_argument("--semantic-state", type=Path, required=True)
+    analytics_session_prepare.add_argument(
+        "--translation-response",
+        type=Path,
+        required=True,
+    )
+    analytics_session_prepare.add_argument("--database", type=Path, required=True)
+    analytics_session_prepare.add_argument("--relationships", type=Path, required=True)
+    analytics_session_prepare.add_argument(
+        "--output",
+        type=Path,
+        default=Path("outputs/analytics_session_prepare"),
+    )
+
+    analytics_session_resume = subparsers.add_parser(
+        "analytics-session-resume-recorded",
+        help="Resume an exact reviewed session through execution and recorded narration.",
+    )
+    analytics_session_resume.add_argument("--prepare-manifest", type=Path, required=True)
+    analytics_session_resume.add_argument("--review", type=Path, required=True)
+    analytics_session_resume.add_argument("--database", type=Path, required=True)
+    analytics_session_resume.add_argument("--relationships", type=Path, required=True)
+    analytics_session_resume.add_argument(
+        "--narration-response",
+        type=Path,
+        required=True,
+    )
+    analytics_session_resume.add_argument(
+        "--output",
+        type=Path,
+        default=Path("outputs/analytics_session_resume"),
     )
 
     analytics_semantic_catalog = subparsers.add_parser(
@@ -886,6 +925,42 @@ def main() -> None:
         print(f"Outputs changed: {result.outputs_changed}")
         print(f"Narrative: {result.narrative_path or 'not written'}")
         print("Recorded response only; facts remain authoritative and no query or network was used.")
+        return
+
+    if args.command == "analytics-session-prepare-recorded":
+        result = run_analytics_session_prepare(
+            args.question_file,
+            args.semantic_state,
+            args.translation_response,
+            args.database,
+            args.relationships,
+            args.output,
+        )
+        print("Recorded local analytics session preparation complete")
+        print(f"Status: {result.status}")
+        print(f"Blockers: {result.blocker_count}")
+        print(f"Outputs changed: {result.outputs_changed}")
+        print(f"Manifest: {result.manifest_path}")
+        print(f"Execution review: {result.review_template_path or 'not written'}")
+        print("Preparation stops before Stage 5B; a separate exact human review is required.")
+        return
+
+    if args.command == "analytics-session-resume-recorded":
+        result = run_analytics_session_resume(
+            args.prepare_manifest,
+            args.review,
+            args.database,
+            args.relationships,
+            args.narration_response,
+            args.output,
+        )
+        print("Recorded local analytics session resume complete")
+        print(f"Status: {result.status}")
+        print(f"Last valid checkpoint: {result.last_valid_checkpoint}")
+        print(f"Blockers: {result.blocker_count}")
+        print(f"Outputs changed: {result.outputs_changed}")
+        print(f"Manifest: {result.manifest_path}")
+        print("Reviewed local execution and recorded narration only; no network was used.")
         return
 
     if args.command == "analytics-semantic-catalog":

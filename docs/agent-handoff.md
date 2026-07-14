@@ -1138,3 +1138,52 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 - Do not send questions, facts, rows, SQL, parameters, hashes, or approval identity to a live provider or network service.
 - Do not treat citation validation as proof that arbitrary narrative prose is semantically correct.
 - Do not query EDS or public benchmark data merely to test presentation or orchestration.
+
+## 2026-07-14 - Codex - Two-phase recorded analytics session
+
+### Initial Context
+
+- Branch: `main`
+- Initial commit: `b5ac615`
+- Initial worktree: clean and synchronized with `origin/main`
+- Objective: compose the governed analytics stages into a resumable local service without bypassing human plan review
+
+### Work Performed
+
+- Added `analytics_session` with separate preparation and resume entrypoints instead of one self-authorizing command.
+- Added `analytics-session-prepare-recorded` to reuse recorded Stage 5D translation, semantic adaptation, and Stage 5A, then stop at `awaiting_execution_review`.
+- Generated a pending human execution-review template bound to the exact preparation-manifest and Stage 5A plan SHA-256.
+- Added `analytics-session-resume-recorded` to validate a separate completed/approved human review before calling the existing Stage 5B executor.
+- Reused the unchanged deterministic presentation and grounded narration entrypoints after successful execution.
+- Recorded immutable source identities, stage states, safe artifact paths, controls, blockers, and last valid checkpoint without persisting question, filter, SQL, parameter, row, or narrative values in session manifests.
+- Preserved ambiguity as `clarification_required`, stopped dependent stages on blockers, rechecked input identities during both phases, reused byte-identical evidence, and preflighted existing resume authority before refusing divergent outputs.
+- Exposed no execution bypass, review auto-approval, raw-SQL input, live-provider choice, or network flag.
+- Added the session contract, durable two-phase decision, orchestrator/architecture/backend updates, CLI examples, testing guidance, README link, project state, and changelog entry.
+
+### Validation
+
+- Final focused analytics-session tests: 8 passed in 2.72 seconds.
+- Final full offline suite: 159 passed in 23.34 seconds.
+- Documentation: 57 internal links checked, 0 broken.
+- Diff whitespace check: passed; only expected Git line-ending notices were emitted.
+- Tests covered private/idempotent preparation, clarification stop, pending review, exact complete resume, plan-hash mismatch, relationship drift, checkpoint preservation after narration failure, input preservation, preflight refusal before dependent stages, and CLI boundaries.
+- No EDS, AdventureWorks, Northwind, Pubs, project database, SQL Server, live provider, network, credentials, real semantic approval, real review, export, migration, import, synchronization, upload, or training was used or changed.
+
+### State For Next Agent
+
+- The recorded analytics path now has tested preparation and resume semantics without changing existing specialized module contracts.
+- A ready Stage 5A plan is not execution authority; resume requires the separate exact human review file.
+- Session evidence is immutable per output directory. Corrected review/provider inputs require a new resume output directory when prior evidence differs.
+- General module discovery and dependency validation remain absent; the coordinator currently has one intentionally explicit stage order.
+
+### Next Logical Steps
+
+1. Define a versioned declarative registry for the modules used by the analytics session.
+2. Validate entrypoints, dependencies, capabilities, workflow order, cycles, and failure policies without making execution dynamic yet.
+3. Keep live providers, UI, generic concurrency, real datasets, and external disclosure separate.
+
+### Do Not Do Yet
+
+- Do not auto-complete or auto-approve the generated execution-review template.
+- Do not turn the first module registry into dynamic execution before dry-run validation and compatibility tests exist.
+- Do not use EDS or public benchmark data merely to exercise session orchestration.

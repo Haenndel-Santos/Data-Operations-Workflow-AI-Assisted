@@ -239,6 +239,23 @@ The focused suite uses a recorded YAML narrator only. It does not use real data,
 a live model, network, credentials, external databases, imports, migrations,
 sync, upload, or training.
 
+## Local Analytics Session
+
+The session tests use a temporary synthetic DuckDB, approved semantic fixture,
+and recorded local translation/narration responses. They cover preparation
+idempotency, privacy, clarification stop, pending and hash-mismatched review,
+relationship drift, complete resume, checkpoint preservation, grounded
+narration failure, and CLI review/network boundaries:
+
+```powershell
+$env:PYTHONPATH = "src"
+$env:PYTHONDONTWRITEBYTECODE = "1"
+.\.venv\Scripts\python.exe -m pytest -p no:cacheprovider tests\analytics_session_test.py
+```
+
+No real data, live provider, network, external database, import, migration,
+sync, upload, or training is used.
+
 ## Validation Levels
 
 1. Unit tests for parsers, transformations, rules, and isolated decisions.

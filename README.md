@@ -239,6 +239,16 @@ The renderer never reconnects to the database. The narrator is recorded and
 offline, requires exact fact citations, cannot execute SQL, and never replaces
 the Stage 5B result as numeric authority.
 
+To coordinate those stages while preserving a separate human plan review:
+
+```powershell
+.\.venv\Scripts\python.exe -m data_ops_lab analytics-session-prepare-recorded --question-file "<question.txt>" --semantic-state "<approved-semantic.yml>" --translation-response "<recorded-translation.yml>" --database "<database.duckdb>" --relationships "<approved-relationships.yml>" --output "outputs\<run-id>\session_prepare"
+.\.venv\Scripts\python.exe -m data_ops_lab analytics-session-resume-recorded --prepare-manifest "outputs\<run-id>\session_prepare\analytics_session_prepare.yml" --review "<completed-review.yml>" --database "<database.duckdb>" --relationships "<approved-relationships.yml>" --narration-response "<recorded-narration.yml>" --output "outputs\<run-id>\session_resume"
+```
+
+Preparation cannot execute queries. Resume requires a separate completed review
+bound to the exact preparation and plan hashes.
+
 To convert an approved local T-SQL sample into DuckDB and compressed Parquet
 without executing operational SQL:
 
@@ -343,5 +353,6 @@ DuckDB is a good fit for this project because it supports local analytical workf
 - [Dataset-backed offline benchmark evaluation contract](docs/analytics-dataset-benchmark-evaluation.md)
 - [Deterministic analytics result presentation contract](docs/analytics-result-presentation.md)
 - [Grounded analytics result narration contract](docs/analytics-result-narration.md)
+- [Local analytics session contract](docs/analytics-session.md)
 - [Benchmark dataset onboarding contract](docs/benchmark-datasets.md)
 - [Agent handoff history](docs/agent-handoff.md)

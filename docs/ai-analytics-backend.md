@@ -119,6 +119,12 @@ controls. Its concrete provider is recorded and offline; narration remains
 non-authoritative. See [Deterministic Result Presentation](analytics-result-presentation.md)
 and [Grounded Result Narration](analytics-result-narration.md).
 
+The local analytics-session service composes these existing boundaries without
+copying their logic. Preparation runs recorded translation and Stage 5A, then
+stops for an exact hash-bound human plan review. Resume validates that separate
+review before Stage 5B and records the last valid execution, presentation, or
+narration checkpoint. See [Local Analytics Session](analytics-session.md).
+
 ## Request Contract
 
 ```yaml
@@ -214,7 +220,7 @@ Calling all dataset use "training" would hide important differences. The initial
 3. **Stage 5C - Semantic catalog:** business names, synonyms, measures, dimensions, relationship paths, ambiguity scores, and dataset-specific domain packs. Technical validation plus the human review/apply infrastructure are implemented; a concrete approved catalog remains pending.
 4. **Stage 5D - Natural-language adapter:** deterministic approved-semantic compiler, provider-neutral translation boundary, and synthetic offline regression pack implemented. Live model-provider integration remains pending and unauthorized. Raw SQL is never accepted.
 5. **Stage 5E - Expected-answer harness:** synthetic evaluation, per-case benchmark review/approval, dry-run immutable binding validation, and approved offline dataset-backed execution are implemented. EDS local evaluation and separately approved public benchmark packs remain pending.
-6. **Stage 5F - User experience:** deterministic result tables and recorded cited narration contracts are implemented. Query UI, charts, evidence navigation, saved analyses, feedback, and role-aware governance remain pending.
+6. **Stage 5F - User experience:** deterministic result tables, recorded cited narration, and a two-phase local session coordinator are implemented. Query UI, charts, evidence navigation, saved analyses, feedback, and role-aware governance remain pending.
 7. **Stage 5G - Optional data connectors:** separately authorized read-only database connectors with credential isolation and online tests outside the default suite.
 
 ## Success Measures

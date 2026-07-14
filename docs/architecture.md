@@ -18,6 +18,7 @@ CLI
      -> schema and business-flow documentation
 
   -> AI-assisted analytics backend
+     -> two-phase local recorded session coordinator
      -> natural-language translation boundary
      -> synthetic offline translation evaluation
      -> structured analytics request
@@ -46,6 +47,7 @@ CLI
 | --- | --- | --- |
 | `src/data_ops_lab/cli.py` | Parse commands and dispatch entrypoints | Do not absorb module business logic. |
 | `src/data_ops_lab/workflow.py` | Coordinate the default analytical pipeline | Preserve `run_workflow` and `WorkflowResult` compatibility. |
+| Analytics session module | Coordinate the recorded analytics stages through an exact human plan-review checkpoint | Two separate immutable phases; reuse stage entrypoints; never self-approve or bypass blockers. |
 | Conversion/profile/clean/schema modules | Transform and describe local data | Never modify raw input files. |
 | Validation/SQL/export/documentation modules | Validate and publish analytical artifacts | Generated output is not approval evidence by itself. |
 | ERP modeling/review modules | Produce candidates, review workbooks, and validation reports | Do not write approved model files unless an apply contract is explicitly authorized. |
@@ -81,7 +83,7 @@ Modeling decisions use distinct states such as candidate, pending review, approv
 ## Current Gaps
 
 - No common module discovery or manifest registry.
-- No shared dependency graph, checkpoint, resume, or dry-run engine.
+- No generic dependency graph, checkpoint, resume, or dry-run engine; only the recorded analytics session has narrow tested checkpoint/resume semantics.
 - CLI stage dispatch and the default workflow are not yet unified under one orchestration contract.
 - Some generated summaries become stale when later review steps run; consolidated state must cite the newest validation evidence.
 - Semantic governance, Stage 5D translation evaluation, a synthetic Stage 5E exact-answer harness, dataset benchmark review/approval, dry-run binding validation, approved offline dataset-backed execution, deterministic result presentation, and recorded narration validation exist. No real semantic registry or benchmark pack is approved yet; live model-provider integration and a user interface are not implemented.

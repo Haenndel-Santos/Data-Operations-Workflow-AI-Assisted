@@ -6,11 +6,11 @@ Turn local operational spreadsheets into validated analytical datasets and an ap
 
 ## Current Stage
 
-Three active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI analytics has Stage 5A-5E governed planning, execution, translation, evaluation, deterministic result presentation, and recorded grounded narration, but no real approved catalog, approved benchmark pack, live provider, or user interface; and benchmark onboarding remains pending dataset export/review and approval.
+Three active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI analytics has Stage 5A-5F governed planning, execution, translation, evaluation, deterministic presentation, recorded grounded narration, and a two-phase local session coordinator, but no real approved catalog, approved benchmark pack, live provider, or user interface; and benchmark onboarding remains pending dataset export/review and approval.
 
 ## Last Completed Milestone
 
-On 2026-07-14, the Stage 5F foundation added deterministic result presentation and recorded grounded narration. The renderer revalidates exact Stage 5B request/result hashes, execution controls, CSV shape, no-row state, and result limits before emitting a bounded local table and stable fact IDs. The narrator requires the exact presentation/facts binding, cited claims, unchanged numeric tokens, and mandatory row/no-row/preview controls; it cannot query data and remains non-authoritative. Tests use only temporary synthetic DuckDB and recorded responses. No real dataset, live provider, network, credentials, upload, or training was used.
+On 2026-07-14, Stage 5F added a two-phase recorded local analytics session. Preparation reuses Stage 5D and Stage 5A, then stops at an immutable `awaiting_execution_review` checkpoint. Resume requires a separate completed human review bound to the exact preparation and plan SHA-256 before reusing Stage 5B, deterministic presentation, and grounded narration. Blocked stages stop dependent work and preserve the last valid checkpoint. Tests use only temporary synthetic DuckDB and recorded responses. No real dataset, live provider, network, credentials, upload, or training was used.
 
 ## Current Capabilities
 
@@ -59,15 +59,19 @@ On 2026-07-14, the Stage 5F foundation added deterministic result presentation a
 - Validate recorded result narration against the exact presentation manifest and facts SHA-256 before any provider call.
 - Require every narrative claim to cite supplied facts, preserve all cited numeric tokens exactly, and include row, no-row, and preview-truncation controls.
 - Reject SQL-like narration, unknown or missing citations, facts drift, implicit network providers, divergent outputs, and narrative authority over Stage 5B evidence.
+- Prepare a recorded local analytics session through translation, semantic adaptation, and Stage 5A without authorizing execution.
+- Generate a pending execution-review template bound to exact preparation and plan hashes rather than self-approving a ready plan.
+- Resume only from a separately completed human review and preserve the last valid execution, presentation, or narration checkpoint on failure.
+- Reuse byte-identical nested stage evidence while refusing divergent session checkpoints and exposing no review bypass or network switch.
 - Inventory local benchmark sources with hashes, provenance/license status, and separate use approvals.
 - Convert supported T-SQL samples to deterministic DuckDB/Parquet artifacts while ignoring operational SQL and retaining foreign keys as pending candidates.
 - Restore and integrity-check the official AdventureWorks 2025 backup in an isolated local read-only SQL Server database.
 
 ## Test Status
 
-- Automated suite: 151 tests passed offline on 2026-07-14; latest run completed in 21.72 seconds.
+- Automated suite: 159 tests passed offline on 2026-07-14; latest run completed in 23.34 seconds.
 - All 12 project-local skills passed the official skill validator on 2026-07-13.
-- Internal link check: 55 checked, 0 broken on 2026-07-14.
+- Internal link check: 57 checked, 0 broken on 2026-07-14.
 - Main suite is offline and uses temporary directories for generated test artifacts.
 - Documentation link checker is available at `scripts/check_internal_links.py`.
 - The relocated `.venv` has a stale editable-install path; use the `PYTHONPATH=src` command in `docs/testing.md` until environment repair is explicitly approved.
@@ -80,7 +84,7 @@ On 2026-07-14, the Stage 5F foundation added deterministic result presentation a
 - `ready_for_canonical_state_review` is dry-run evidence only; it is not approval to apply a Product snapshot or change `canonical_tables.yml`.
 - Organisation business-key selection and several document-flow relationships still need business context.
 - Conflicted line extracts must not be promoted to approved relationships.
-- The current orchestrator does not yet expose module discovery, dependency resolution, checkpoints, resume, or dry-run as shared infrastructure.
+- The recorded analytics session now has narrow checkpoints and resume semantics, but the project still lacks shared module discovery, a validated dependency registry, and generic partial-run/dry-run infrastructure.
 - Several core pipeline stages still load whole Parquet tables into Pandas; larger-than-memory operation requires DuckDB pushdown and streaming refactors.
 - No concrete semantic catalog has completed human review or been applied; Stage 5D therefore remains operationally blocked for real datasets.
 - A live model provider, approved real benchmark pack, real dataset-backed evaluation, and user interface are not implemented or authorized. Recorded narration proves grounding controls only; synthetic Stage 5D/5E packs and temporary dataset-backed tests are not live-model or business-quality evidence.
@@ -101,12 +105,12 @@ On 2026-07-14, the Stage 5F foundation added deterministic result presentation a
 
 ## Next Logical Milestone
 
-Define a local analysis-session service contract that composes the existing translation, semantic adapter, Stage 5A, Stage 5B, presentation, and narration boundaries without duplicating their logic or weakening checkpoints. Start with recorded/offline providers, explicit artifact inputs, resumable status, and synthetic end-to-end tests; do not add a UI, select a live provider, expose rows externally, or use EDS/public benchmarks merely to exercise orchestration. Keep Product canonical apply and external/database work separate. In parallel, profile the highest-memory Pandas stages before selecting one measured DuckDB pushdown refactor.
+Define a versioned declarative registry for the analytics-session modules and validate its dependencies, capabilities, entrypoints, stage order, and failure policies in dry-run only. Use the implemented two-phase workflow as the first exact registry fixture; do not make execution dynamic, add concurrency, auto-approve reviews, select a live provider, expose rows externally, or use EDS/public benchmarks merely to test discovery. Keep Product canonical apply and external/database work separate. In parallel, profile the highest-memory Pandas stages before selecting one measured DuckDB pushdown refactor.
 
 ## Last Verified Commit
 
-`117f6f4` (`feat(analytics): add dataset benchmark execution`)
+`b5ac615` (`feat(analytics): add grounded result presentation`)
 
 ## Last Updated
 
-2026-07-14 by Codex after the deterministic result presentation and recorded narration checkpoint.
+2026-07-14 by Codex after the two-phase recorded analytics-session checkpoint.

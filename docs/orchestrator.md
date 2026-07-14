@@ -9,8 +9,11 @@
 Stage 5A separately introduces a dry-run analytics query planner. Stage 5B adds
 an explicit controlled executor that requires exact plan revalidation and
 produces bounded local result evidence. Stage 5C adds metadata-only semantic
-catalog validation with explicit ambiguity and human-review state. None of the
-analytics modules performs an AI call or is yet coordinated by `workflow.py`.
+catalog validation with explicit ambiguity and human-review state. The local
+analytics-session service now provides one narrow two-phase coordinator for
+recorded Stage 5D through result narration. It stops at an immutable plan-review
+checkpoint and resumes only with a separately completed exact human review. It
+does not change `workflow.py` or provide general module discovery.
 
 ## Responsibility
 
@@ -40,10 +43,10 @@ failure_policy:
 
 1. Document contracts for existing entrypoints without changing behavior.
 2. Validate contracts and dependencies in isolation.
-3. Add workflow selection and ordered execution behind current CLI compatibility.
-4. Add explicit run state, logs, and failure summaries.
-5. Add partial execution and dry-run.
-6. Add idempotent checkpoints and safe resume only after state semantics are tested.
+3. Add workflow selection and ordered execution behind current CLI compatibility. Implemented narrowly for the recorded analytics session.
+4. Add explicit run state, logs, and failure summaries. Implemented for the recorded analytics session only.
+5. Add partial execution and dry-run. The analytics session has an explicit preparation phase; generic partial runs remain pending.
+6. Add idempotent checkpoints and safe resume only after state semantics are tested. Implemented for exact analytics plan review; generic resume remains pending.
 
 Each step requires contract, unit, integration, workflow, and regression coverage proportional to its impact. Do not combine this evolution with data migration, dependency upgrades, or unrelated refactoring.
 
@@ -56,3 +59,7 @@ No future AI adapter may submit raw model-generated SQL. It must produce the ver
 `ready_for_semantic_review` is also not semantic approval. Future orchestration
 must require a separate approved semantic representation before Stage 5D may
 resolve business terms operationally.
+
+`awaiting_execution_review` is not execution authority. The analytics-session
+resume command requires a separate completed human review bound to the exact
+preparation manifest and plan hashes. It cannot auto-approve its own output.
