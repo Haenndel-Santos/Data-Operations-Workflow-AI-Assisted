@@ -443,3 +443,68 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 .\.venv\Scripts\python.exe -m data_ops_lab product-canonical-promotion-plan --materialization outputs\019f21a4-daf0-7272-b2a7-09b4f0e2c75b\step3e5_product_materialization_resolved --state config\data_model\product_reconciliation_state.yml --output outputs\019f21a4-daf0-7272-b2a7-09b4f0e2c75b\step3e6_product_canonical_promotion
 .\.venv\Scripts\python.exe -m pytest -p no:cacheprovider
 ```
+
+## 2026-07-14 - Codex - Stage 5A safe analytics query planning
+
+### Initial Context
+
+- Branch: `main`
+- Initial commit: `81a9d67`
+- Initial worktree: clean; branch was seven commits ahead of `origin/main`
+- Stage found: Product Step 3E.6 dry-run complete; conversational analytics remained a future concept
+- Objective received: implement the backend direction for natural-language analysis, scalable local processing, and multi-dataset learning
+
+### Work Performed
+
+- Defined the AI-assisted analytics backend, scale strategy, dataset governance, success measures, and Stages 5A through 5G.
+- Added a structured version-1 request contract between future natural-language interpretation and SQL.
+- Implemented `analytics-query-plan` with read-only DuckDB catalog discovery, strict table/column resolution, allowlisted aggregates and filters, bounded requests, approved joins, identifier quoting, and parameterized values.
+- Added deterministic ready/blocked plan, blocker, and report artifacts without executing SQL or copying question/filter values.
+- Added tests that execute the compiled SQL only against a temporary synthetic DuckDB fixture.
+
+### Decisions
+
+- AI models may propose structured intent but may not submit executable raw SQL.
+- Cross-table queries require exact human-approved relationships; candidates are insufficient.
+- EDS is private local evaluation/retrieval evidence, not authorized parameter-training data.
+- AdventureWorksDW2019 and Chinook are candidate evaluation benchmarks only after source, license, checksum, schema, and relationship review.
+- Initial learning work means deterministic evaluation and grounded retrieval; fine-tuning remains optional and separately governed.
+
+### Validation
+
+- Focused query-plan tests: 7 passed in 1.52 seconds.
+- Full offline suite: 50 passed in 5.02 seconds.
+- Documentation: 16 internal links checked, 0 broken.
+- Tests prove parameter privacy, read-only database preservation, byte-stable idempotency, approved cross-table execution, unapproved-join blocking, raw-SQL rejection, date parameters, and non-overwrite behavior.
+- No EDS query, public dataset download, external database connection, model API call, or SQL write was performed.
+
+### State For Next Agent
+
+- Branch: `main`
+- Final commit: the commit containing this handoff entry; verify with `git log -1`.
+- Product track: Step 3E.6 remains ready for canonical-state review but unapplied.
+- Analytics track: Stage 5A query planning is implemented; execution is not authorized or implemented.
+- Backend roadmap: `docs/ai-analytics-backend.md`.
+- Query-plan contract: `docs/analytics-query-plan.md`.
+
+### Next Logical Steps
+
+1. Define Stage 5B controlled local execution with read-only enforcement, timeout/resource/result limits, and result manifests.
+2. Test execution only against synthetic temporary fixtures before requesting EDS dataset authorization.
+3. Design dataset-specific semantic/benchmark packs before onboarding AdventureWorks or Chinook.
+
+### Do Not Do Yet
+
+- Do not execute raw model-generated SQL or treat `ready_for_execution_review` as authorization.
+- Do not use candidate relationships for cross-table answers.
+- Do not upload EDS data, fine-tune on it, or connect to production systems.
+- Do not download or import public benchmark datasets without provenance and license review.
+
+### Useful Commands
+
+```powershell
+$env:PYTHONPATH = "src"
+$env:PYTHONDONTWRITEBYTECODE = "1"
+.\.venv\Scripts\python.exe -m data_ops_lab analytics-query-plan --request outputs\<run-id>\analytics_request.yml --database outputs\<run-id>\duckdb\operations_lab.duckdb --relationships config\data_model\approved_relationships.yml --output outputs\<run-id>\analytics_query_plan
+.\.venv\Scripts\python.exe -m pytest -p no:cacheprovider
+```

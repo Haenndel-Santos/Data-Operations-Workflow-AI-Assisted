@@ -169,6 +169,15 @@ $env:PYTHONPATH = "src"
 
 This command has no apply mode and does not write canonical state or connect to a database.
 
+To compile a structured analytics request into a safe read-only SQL dry-run plan:
+
+```powershell
+$env:PYTHONPATH = "src"
+.\.venv\Scripts\python -m data_ops_lab analytics-query-plan --request "outputs\<run-id>\analytics_request.yml" --database "outputs\<run-id>\duckdb\operations_lab.duckdb" --output "outputs\<run-id>\analytics_query_plan"
+```
+
+This first AI-backend foundation does not execute the SQL. It validates the local DuckDB catalog, parameterizes filter values, and requires approved relationships for cross-table joins.
+
 To generate the conceptual main database schema overview:
 
 ```powershell
@@ -249,4 +258,6 @@ DuckDB is a good fit for this project because it supports local analytical workf
 - [Step 3E.4 Product application contract](docs/product-refnr-application.md)
 - [Product materialization preview contract](docs/product-materialization.md)
 - [Product canonical promotion plan contract](docs/product-canonical-promotion.md)
+- [AI-assisted analytics backend and roadmap](docs/ai-analytics-backend.md)
+- [Structured analytics query plan contract](docs/analytics-query-plan.md)
 - [Agent handoff history](docs/agent-handoff.md)

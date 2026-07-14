@@ -16,6 +16,13 @@ CLI
      -> read-only Product materialization preview or blocker checkpoint
      -> hash-bound dry-run canonical Product promotion plan
      -> schema and business-flow documentation
+
+  -> AI-assisted analytics backend
+     -> natural-language adapter (target)
+     -> structured analytics request
+     -> local catalog and approved-relationship validation
+     -> parameterized SELECT dry-run plan
+     -> controlled read-only execution (target)
 ```
 
 ## Boundaries
@@ -29,6 +36,7 @@ CLI
 | ERP modeling/review modules | Produce candidates, review workbooks, and validation reports | Do not write approved model files unless an apply contract is explicitly authorized. |
 | Product materialization module | Validate applied Product decisions and generate local preview/lineage artifacts | Fail closed without partial preview when approved source evidence is missing. |
 | Product canonical promotion module | Validate the complete Product snapshot and produce a hash-bound dry-run plan | Report readiness only; never apply canonical state or copy private row values. |
+| Analytics query-plan module | Compile a bounded structured request against a local DuckDB catalog | Never accept raw SQL, execute queries, expose filter values, or use unapproved joins. |
 | `config/data_model/` | Version candidate state, domain mappings, and approvals | Keep candidate and approved files separate. |
 | `originaldatabase/` | Private source exports | Read only; excluded from Git. |
 | `outputs/` | Reproducible generated artifacts | Excluded from Git; do not hand-edit. |
@@ -50,3 +58,4 @@ Modeling decisions use distinct states such as candidate, pending review, approv
 - No shared dependency graph, checkpoint, resume, or dry-run engine.
 - CLI stage dispatch and the default workflow are not yet unified under one orchestration contract.
 - Some generated summaries become stale when later review steps run; consolidated state must cite the newest validation evidence.
+- The natural-language adapter, controlled executor, semantic catalog, and benchmark harness are not implemented yet.

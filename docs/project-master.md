@@ -16,6 +16,7 @@ The package is organized as a Python application under `src/data_ops_lab/`:
 - `workflow.py` coordinates the default conversion-to-export pipeline.
 - Specialized modules own conversion, profiling, cleaning, schema inference, validation, SQL suggestions, export, and documentation.
 - Modeling modules prepare source onboarding, serial rules, canonical mappings, Product reconciliation, human review, Product materialization previews, dry-run promotion plans, and schema overview artifacts.
+- The analytics backend is evolving from fixed SQL suggestions toward validated structured requests, semantic context, and controlled read-only execution.
 - `config/data_model/` stores versioned candidates, business rules, canonical mappings, and separate approved files.
 - `tests/` protects workflow behavior and preservation of source/approved files.
 - `.codex/` contains project-specific domain rules, skills, and agent profiles.
@@ -29,7 +30,8 @@ See `docs/architecture.md` and `docs/orchestrator.md` for boundaries and flow de
 3. **Human review and Product reconciliation:** active. Step 3E.4 contains the explicitly replaced Product state, Step 3E.5 produced a complete validated local Product preview, and Step 3E.6 produced a hash-bound dry-run promotion plan ready for canonical-state review.
 4. **Approved canonical model:** pending. The Product promotion plan has not been applied, while `approved_keys.yml` and `approved_relationships.yml` remain intentionally empty.
 5. **Migration/import execution:** not started and not authorized until approvals and safeguards exist.
-6. **Optional product extensions:** OpenAI SQL assistance, UI, richer BI artifacts, and performance work remain future options, not current priorities.
+6. **AI-assisted analytics interface:** Stage 5A safe structured query planning is implemented; execution, semantic catalog, natural-language translation, and benchmark packs remain pending.
+7. **Optional product extensions:** UI, richer BI artifacts, and additional performance work remain future options after the backend contracts are validated.
 
 ## Global Success Criteria
 

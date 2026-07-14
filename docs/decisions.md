@@ -131,3 +131,15 @@
 **Reason:** A separate dry-run checkpoint proves snapshot integrity and preserves the human approval boundary without exposing private values or combining model governance with operational writes.
 
 **Impact:** `product-canonical-promotion-plan` records artifact hashes, schema, counts, and validation results only. The real plan is `ready_for_canonical_state_review` with 1,733 candidate rows, 13 exclusions, and zero blockers. No canonical state, approved key, approved relationship, database, import, migration, or synchronization was changed.
+
+## 2026-07-14 - AI Produces Structured Intent, Not Executable SQL
+
+**Decision:** Place a versioned structured analytics request between natural-language interpretation and SQL. Deterministic local code must resolve the DuckDB catalog, enforce approved relationships, quote identifiers, parameterize values, and produce a dry-run plan before any future execution step.
+
+**Context:** The product direction now includes conversational analysis for users without SQL knowledge. Direct execution of model-generated SQL would weaken safety, reproducibility, privacy, and provider independence.
+
+**Alternatives:** Execute raw SQL returned by an LLM; build a fixed library of natural-language templates; postpone the safety boundary until the UI exists.
+
+**Reason:** A narrow intermediate representation can be tested offline, blocks DDL/DML by construction, preserves human relationship authority, and lets different AI models target the same backend contract.
+
+**Impact:** Stage 5A adds `analytics-query-plan` with no execution mode. EDS remains private local evaluation evidence. AdventureWorksDW2019 and Chinook are candidate benchmark packs only after provenance, license, checksum, schema, and relationship review; no public dataset was downloaded.

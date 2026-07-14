@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
+from .analytics_query_plan import run_analytics_query_plan
 from .approval_spreadsheet import run_approval_spreadsheet
 from .business_flow_mapping import run_business_flow_mapping
 from .canonical_model import run_canonical_model_alignment
@@ -32,6 +33,35 @@ def build_parser() -> argparse.ArgumentParser:
         description="Run an AI-assisted data operations workflow for local CSV/XLSX files.",
     )
     subparsers = parser.add_subparsers(dest="command")
+
+    analytics_query_plan = subparsers.add_parser(
+        "analytics-query-plan",
+        help="Compile a structured analytics request into a safe read-only SQL dry-run plan.",
+    )
+    analytics_query_plan.add_argument(
+        "--request",
+        type=Path,
+        required=True,
+        help="Local version-1 structured analytics request YAML.",
+    )
+    analytics_query_plan.add_argument(
+        "--database",
+        type=Path,
+        required=True,
+        help="Local DuckDB database inspected in read-only mode.",
+    )
+    analytics_query_plan.add_argument(
+        "--relationships",
+        type=Path,
+        default=Path("config/data_model/approved_relationships.yml"),
+        help="Human-approved relationship YAML required for cross-table joins.",
+    )
+    analytics_query_plan.add_argument(
+        "--output",
+        type=Path,
+        default=Path("outputs/analytics_query_plan"),
+        help="New or byte-identical directory for local dry-run query-plan artifacts.",
+    )
 
     onboard = subparsers.add_parser("source-onboard", help="Run Step 3 source onboarding and candidate modeling.")
     onboard.add_argument("--input", type=Path, required=True, help="Directory containing raw CSV/XLSX files.")
@@ -468,6 +498,23 @@ def build_parser() -> argparse.ArgumentParser:
 def main() -> None:
     parser = build_parser()
     args = parser.parse_args()
+
+    if args.command == "analytics-query-plan":
+        result = run_analytics_query_plan(
+            args.request,
+            args.database,
+            args.relationships,
+            args.output,
+        )
+        print("Structured analytics query planning complete")
+        print(f"Status: {result.status}")
+        print(f"Blockers: {result.blocker_count}")
+        print(f"Outputs changed: {result.outputs_changed}")
+        print(f"Plan: {result.plan_path}")
+        print(f"Blockers CSV: {result.blockers_path}")
+        print(f"Report: {result.report_path}")
+        print("Dry-run only. No SQL was executed and no database or external system was modified.")
+        return
 
     if args.command == "source-onboard":
         result = run_source_onboarding(args.input, args.output, args.config)
