@@ -40,7 +40,7 @@ requires an exact reviewed Stage 5A plan, revalidates catalog and approved
 relationships, and executes only against local DuckDB in read-only mode. It
 enforces runtime, memory, thread, temporary-storage, row, and result-byte limits;
 disables external access and extension autoload; and writes a result manifest,
-control totals, blockers, diagnostics, and CSV only on success. Natural-language
+control totals, blockers, diagnostics, and CSV only on success. Live-provider
 translation, result narration, and external database access remain unimplemented.
 
 Stage 5C adds `analytics-semantic-catalog`. It validates candidate business
@@ -72,6 +72,13 @@ explicit network opt-in, and mandatory Stage 5D adapter chaining. The only
 concrete provider reads a recorded local YAML response and uses no model or
 network. A live model provider remains unimplemented and unauthorized. See
 [Analytics Natural-Language Translation](analytics-nl-translation.md).
+
+The Stage 5D synthetic evaluation harness replays exact/equivalent intent,
+clarification, hallucination, unsafe-output, timeout, and provider-failure cases
+through that same boundary. It reports explicit status, intent, blocker, and
+clarification accuracy without persisting questions or responses. This is
+offline contract-regression evidence, not a live-model benchmark. See
+[Analytics Translation Evaluation](analytics-translation-evaluation.md).
 
 ## Request Contract
 
@@ -166,7 +173,7 @@ Calling all dataset use "training" would hide important differences. The initial
 1. **Stage 5A - Safe query planning:** structured request, catalog validation, approved joins, parameterized SQL, dry-run evidence. Implemented.
 2. **Stage 5B - Controlled local execution:** read-only DuckDB executor, timeout/resource limits, result manifest, control totals, and no-result diagnostics. Implemented.
 3. **Stage 5C - Semantic catalog:** business names, synonyms, measures, dimensions, relationship paths, ambiguity scores, and dataset-specific domain packs. Technical validation plus the human review/apply infrastructure are implemented; a concrete approved catalog remains pending.
-4. **Stage 5D - Natural-language adapter:** deterministic approved-semantic compiler plus provider-neutral, offline-tested free-text translation boundary implemented. Live model-provider integration remains pending and unauthorized. Raw SQL is never accepted.
+4. **Stage 5D - Natural-language adapter:** deterministic approved-semantic compiler, provider-neutral translation boundary, and synthetic offline regression pack implemented. Live model-provider integration remains pending and unauthorized. Raw SQL is never accepted.
 5. **Stage 5E - Benchmark harness:** EDS local evaluations plus separately approved AdventureWorks and Chinook packs with expected questions, plans, and answers.
 6. **Stage 5F - User experience:** query interface, result tables/charts, evidence view, saved analyses, feedback, and role-aware governance.
 7. **Stage 5G - Optional data connectors:** separately authorized read-only database connectors with credential isolation and online tests outside the default suite.

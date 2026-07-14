@@ -221,3 +221,13 @@
 **Alternatives:** Add an OpenAI-specific dependency immediately; send the complete approved state or database schema; let the provider replace the question; persist provider errors and prompts verbatim; retry automatically; treat schema-shaped provider output as authorized.
 
 **Impact:** `analytics-nl-translate-recorded` validates local recorded responses without inference or network access. Future live providers must implement the protocol, honor timeout, require explicit network authorization, and add isolated online tests. Physical mappings, approval identity, fingerprints, table rows, and databases are excluded from provider context. No live provider is currently implemented or authorized.
+
+## 2026-07-14 - Synthetic Translation Evaluation Is Contract Evidence
+
+**Decision:** Evaluate Stage 5D first with a versioned synthetic pack replayed through the real provider boundary and deterministic semantic adapter. Require exact governed outcomes for status, enumerated accepted intents, blockers, and clarification terms, while omitting questions and provider responses from persistent evaluation evidence.
+
+**Rationale:** The project needs measurable translation regressions before selecting a provider, but recorded responses cannot establish model accuracy. A provider-independent pack can prove safety, ambiguity, failure, and compatibility behavior offline without credentials, network disclosure, real data, or a second interpretation path.
+
+**Alternatives:** Select a live provider before defining metrics; compare generated YAML as text; accept fuzzy intent similarity; persist prompts and responses in reports; treat successful recorded cases as proof of model quality.
+
+**Impact:** `analytics-translation-evaluate` distinguishes `passed`, expectation `failed`, and contract `blocked` states and covers exact/equivalent intents, clarification, hallucination, unsafe output, timeout, and failure. It measures deterministic backend behavior only. Live-provider choice, credentials, cost, retention, online testing, and dataset-backed expected answers remain separate authorization and implementation decisions.

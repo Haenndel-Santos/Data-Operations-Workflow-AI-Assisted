@@ -109,6 +109,25 @@ The network-provider test injects an in-memory fake object; it makes no network
 request. The default suite contains no live provider, credential, endpoint, or
 online test.
 
+## Synthetic Translation Evaluation
+
+The Stage 5D evaluation tests run the versioned synthetic pack through the real
+translation boundary with in-memory response, timeout, and failure providers.
+They verify exact/equivalent intent acceptance, clarification, hallucination and
+unsafe-output rejection, sanitized provider failures, metric reporting,
+idempotency, non-overwrite behavior, approval enforcement, and omission of
+questions, responses, filter values, and physical mappings from evidence:
+
+```powershell
+$env:PYTHONPATH = "src"
+$env:PYTHONDONTWRITEBYTECODE = "1"
+.\.venv\Scripts\python.exe -m pytest -p no:cacheprovider tests\analytics_translation_evaluation_test.py
+```
+
+The synthetic pack measures deterministic backend regression behavior only. It
+does not call a model or support conclusions about live-model quality, latency,
+cost, or privacy.
+
 ## Benchmark Conversion Validation
 
 Use the restricted converter only for a locally approved SQL sample whose

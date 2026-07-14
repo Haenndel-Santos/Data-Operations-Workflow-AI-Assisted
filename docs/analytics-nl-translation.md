@@ -153,3 +153,7 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 This command validates a locally supplied recorded response. It does not infer
 the response itself. Real project use remains blocked because no real approved
 semantic registry exists.
+
+The synthetic regression harness reuses this exact boundary for governed
+acceptance and failure cases. See
+[Analytics Translation Evaluation](analytics-translation-evaluation.md).

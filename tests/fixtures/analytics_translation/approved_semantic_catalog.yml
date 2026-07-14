@@ -1,0 +1,107 @@
+version: 1
+status: approved
+source:
+  compiled_semantic_catalog_sha256: synthetic-compiled-hash
+  candidate_semantic_catalog_sha256: synthetic-candidate-hash
+  relationships_sha256: synthetic-relationships-hash
+  physical_catalog_sha256: synthetic-physical-hash
+  review_sha256: synthetic-review-hash
+  decision_digest: synthetic-decision-hash
+approval:
+  semantic_definitions_approved: true
+  adapter_use_authorized: true
+  candidate_relationships_accepted: false
+  approved_by: synthetic-reviewer
+  approved_at: "2026-07-14T12:00:00+00:00"
+  requires_clarification: true
+dataset:
+  id: sales_dataset
+  name: Sales Dataset
+  description: Synthetic sales metadata for offline contract evaluation.
+  synonyms: []
+catalog: {}
+tables:
+  - id: sales_orders
+    source_table: physical_orders_private
+    name: Sales Orders
+    description: Synthetic commercial documents.
+    synonyms:
+      - orders
+dimensions:
+  - id: order_status
+    table_id: sales_orders
+    source_table: physical_orders_private
+    source_column: private_status_column
+    source_type: VARCHAR
+    name: Order Status
+    description: Synthetic current business status.
+    synonyms:
+      - status
+measures:
+  - id: order_count
+    table_id: sales_orders
+    source_table: physical_orders_private
+    source_column: '*'
+    source_type: ROW_COUNT
+    function: count
+    name: Order Count
+    description: Synthetic number of orders.
+    synonyms:
+      - orders count
+relationship_paths: []
+term_index:
+  - term: order count
+    status: resolved
+    candidate_count: 1
+    ambiguity_score: 0.0
+    requires_clarification: false
+    targets:
+      - kind: measure
+        id: order_count
+        name: Order Count
+  - term: order status
+    status: resolved
+    candidate_count: 1
+    ambiguity_score: 0.0
+    requires_clarification: false
+    targets:
+      - kind: dimension
+        id: order_status
+        name: Order Status
+  - term: sales dataset
+    status: resolved
+    candidate_count: 1
+    ambiguity_score: 0.0
+    requires_clarification: false
+    targets:
+      - kind: dataset
+        id: sales_dataset
+        name: Sales Dataset
+  - term: sales orders
+    status: resolved
+    candidate_count: 1
+    ambiguity_score: 0.0
+    requires_clarification: false
+    targets:
+      - kind: table
+        id: sales_orders
+        name: Sales Orders
+  - term: sales
+    status: ambiguous
+    candidate_count: 2
+    ambiguity_score: 0.5
+    requires_clarification: true
+    targets:
+      - kind: measure
+        id: order_count
+        name: Order Count
+      - kind: table
+        id: sales_orders
+        name: Sales Orders
+ambiguities:
+  - sales
+ambiguity_decisions:
+  - term: sales
+    decision: requires_clarification
+    selected_target: null
+entity_decisions: []

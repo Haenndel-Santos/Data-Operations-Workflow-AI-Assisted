@@ -178,6 +178,16 @@ $env:PYTHONPATH = "src"
 
 This first AI-backend foundation does not execute the SQL. It validates the local DuckDB catalog, parameterizes filter values, and requires approved relationships for cross-table joins.
 
+To run the synthetic offline Stage 5D translation regression pack:
+
+```powershell
+$env:PYTHONPATH = "src"
+$env:PYTHONDONTWRITEBYTECODE = "1"
+.\.venv\Scripts\python.exe -m data_ops_lab analytics-translation-evaluate --pack "tests\fixtures\analytics_translation\translation_evaluation_pack.yml" --semantic-state "tests\fixtures\analytics_translation\approved_semantic_catalog.yml" --output "outputs\<run-id>\analytics_translation_evaluation"
+```
+
+This validates deterministic translation safety and acceptance behavior only; it does not call or benchmark a live model.
+
 To convert an approved local T-SQL sample into DuckDB and compressed Parquet
 without executing operational SQL:
 
@@ -246,7 +256,7 @@ DuckDB is a good fit for this project because it supports local analytical workf
 
 ## Next Extensions
 
-- Add an optional OpenAI-powered natural-language SQL assistant.
+- Add an explicitly authorized live intent-translation provider behind the governed semantic boundary.
 - Add a Streamlit UI for upload, profiling, and validation review.
 - Add Tableau workbook screenshots as a final portfolio artifact.
 - Add richer validation checks for totals before and after joins.
@@ -275,5 +285,6 @@ DuckDB is a good fit for this project because it supports local analytical workf
 - [Analytics semantic review and approval contract](docs/analytics-semantic-approval.md)
 - [Analytics semantic adapter contract](docs/analytics-semantic-adapter.md)
 - [Analytics natural-language translation contract](docs/analytics-nl-translation.md)
+- [Analytics translation evaluation contract](docs/analytics-translation-evaluation.md)
 - [Benchmark dataset onboarding contract](docs/benchmark-datasets.md)
 - [Agent handoff history](docs/agent-handoff.md)

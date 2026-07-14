@@ -843,3 +843,50 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 - Do not install a model SDK, request credentials, or call a live provider without explicit authorization.
 - Do not send EDS, benchmark rows, physical schema, approval identities, or source fingerprints to a provider.
 - Do not use recorded responses as evidence of model quality or bypass semantic, Stage 5A, or Stage 5B validation.
+
+## 2026-07-14 - Codex - Stage 5D synthetic translation evaluation
+
+### Initial Context
+
+- Branch: `main`
+- Initial commit: `ff80715`
+- Initial worktree: clean; branch was 15 commits ahead of `origin/main`
+- Objective: add measurable offline translation regression evidence before any live-provider decision
+
+### Work Performed
+
+- Added the `analytics_translation_evaluation` version-1 contract and `analytics-translation-evaluate` CLI command.
+- Added a versioned synthetic approved semantic fixture and seven-case translation pack covering exact/equivalent intent, clarification, hallucinated term, provider SQL, timeout, and provider failure.
+- Replayed every case through `run_analytics_nl_translation` and the deterministic semantic adapter using in-memory providers that declare no network requirement.
+- Added strict pack validation, required category/timeout/failure coverage, fixed category outcomes, enumerated semantic-intent acceptance, exact blocker/clarification comparison, and separate `passed`, `failed`, and `blocked` states.
+- Added aggregate status, intent, blocker, clarification, and overall metrics plus per-case boolean evidence.
+- Omitted questions, provider responses, filter values, exception details, and physical mappings from persistent outputs; temporary case artifacts are deleted.
+- Added hash-bound source evidence, exact idempotent reuse, divergent-output refusal, CLI tests, contract documentation, and shared-state updates.
+
+### Validation
+
+- New evaluation tests: 6 passed as part of the focused and full runs.
+- Focused Stage 5D evaluation/translation/adapter tests: 26 passed in 2.76 seconds.
+- Full offline suite: 104 passed in 10.77 seconds.
+- Python compilation: passed.
+- Documentation: 34 internal links checked, 0 broken.
+- The bundled seven-case pack passed 7/7 with all five reported metric rates at 1.0.
+- No model SDK, API key, endpoint, network service, EDS/benchmark data, project database, SQL Server connection, query, migration, import, synchronization, or real semantic state was used or changed.
+
+### State For Next Agent
+
+- Stage 5D now has deterministic semantic authorization, a provider-neutral translation boundary, and a reproducible synthetic contract-regression pack.
+- Synthetic pass rates prove only the programmed backend expectations; they do not estimate live-model accuracy, latency, cost, privacy, or robustness.
+- Real use remains blocked by the absence of an applied real semantic registry and an explicitly selected/authorized live provider.
+
+### Next Logical Steps
+
+1. Define a synthetic Stage 5E expected-answer harness that chains the existing offline boundaries through controlled temporary DuckDB execution.
+2. Keep result narration separate from exact answer/control validation so generated prose cannot become analytical authority.
+3. Profile Pandas-heavy stages separately and select a measured DuckDB pushdown target.
+
+### Do Not Do Yet
+
+- Do not install a model SDK, request credentials, enable network access, or claim model quality from the synthetic pack.
+- Do not use EDS or benchmark rows until the corresponding semantic, relationship, provenance, license, and data-use approvals exist.
+- Do not bypass reviewed Stage 5A plans or Stage 5B resource and drift controls in a future end-to-end harness.

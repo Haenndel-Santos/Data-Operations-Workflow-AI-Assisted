@@ -13,6 +13,7 @@ from .analytics_semantic_adapter import run_analytics_semantic_adapter
 from .analytics_semantic_approval import run_analytics_semantic_approval
 from .analytics_semantic_catalog import run_analytics_semantic_catalog
 from .analytics_semantic_review import run_analytics_semantic_review
+from .analytics_translation_evaluation import run_analytics_translation_evaluation
 from .approval_spreadsheet import run_approval_spreadsheet
 from .benchmark_sql_conversion import run_benchmark_sql_conversion
 from .business_flow_mapping import run_business_flow_mapping
@@ -188,6 +189,26 @@ def build_parser() -> argparse.ArgumentParser:
         "--timeout-seconds",
         type=int,
         default=30,
+    )
+
+    analytics_translation_evaluate = subparsers.add_parser(
+        "analytics-translation-evaluate",
+        help="Evaluate the translation boundary with a synthetic offline regression pack.",
+    )
+    analytics_translation_evaluate.add_argument(
+        "--pack",
+        type=Path,
+        required=True,
+    )
+    analytics_translation_evaluate.add_argument(
+        "--semantic-state",
+        type=Path,
+        required=True,
+    )
+    analytics_translation_evaluate.add_argument(
+        "--output",
+        type=Path,
+        default=Path("outputs/analytics_translation_evaluation"),
     )
 
     benchmark_convert_sql = subparsers.add_parser(
@@ -774,6 +795,23 @@ def main() -> None:
         request_path = result.adapter_result.request_path if result.adapter_result else None
         print(f"Stage 5A request: {request_path or 'not written'}")
         print("Recorded offline response only. No network, model API, database, or query was used.")
+        return
+
+    if args.command == "analytics-translation-evaluate":
+        result = run_analytics_translation_evaluation(
+            args.pack,
+            args.semantic_state,
+            args.output,
+        )
+        print("Synthetic translation evaluation complete")
+        print(f"Status: {result.status}")
+        print(f"Cases: {result.case_count}")
+        print(f"Passed: {result.passed_count}")
+        print(f"Failed: {result.failed_count}")
+        print(f"Contract blockers: {result.blocker_count}")
+        print(f"Outputs changed: {result.outputs_changed}")
+        print(f"Manifest: {result.manifest_path}")
+        print("Synthetic offline providers only. No network, model API, database, or query was used.")
         return
 
     if args.command == "benchmark-convert-sql":

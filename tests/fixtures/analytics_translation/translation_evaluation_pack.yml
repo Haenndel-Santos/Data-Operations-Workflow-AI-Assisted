@@ -1,0 +1,150 @@
+version: 1
+pack_id: synthetic_stage5d_v1
+description: Synthetic offline regression pack for the governed translation boundary.
+cases:
+  - id: exact_ready
+    category: exact
+    question: How many open orders exist by status?
+    provider_behavior: response
+    provider_response: &exact_intent
+      version: 1
+      from: sales orders
+      relationship_paths: []
+      dimensions:
+        - term: order status
+          alias: status
+      metrics:
+        - term: order count
+          alias: orders
+      filters:
+        - term: order status
+          operator: eq
+          value: open
+      order_by:
+        - field: orders
+          direction: desc
+      limit: 20
+    expected:
+      status: ready_for_query_plan
+      accepted_intents:
+        - *exact_intent
+      blocker_types: []
+      clarification_terms: []
+
+  - id: equivalent_ready
+    category: equivalent
+    question: Count orders grouped by their status.
+    provider_behavior: response
+    provider_response: &equivalent_intent
+      version: 1
+      from: sales orders
+      dimensions:
+        - order status
+      metrics:
+        - order count
+      order_by:
+        - field: order_count
+          direction: desc
+      limit: 100
+    expected:
+      status: ready_for_query_plan
+      accepted_intents:
+        - *equivalent_intent
+        - version: 1
+          from: sales orders
+          dimensions:
+            - term: order status
+              alias: order_status
+          metrics:
+            - term: order count
+              alias: order_count
+          order_by:
+            - field: order_count
+              direction: desc
+          limit: 100
+      blocker_types: []
+      clarification_terms: []
+
+  - id: clarification_required
+    category: clarification
+    question: Show sales by status.
+    provider_behavior: response
+    provider_response: &clarification_intent
+      version: 1
+      from: sales orders
+      dimensions:
+        - term: order status
+          alias: status
+      metrics:
+        - term: sales
+          alias: sales_metric
+      limit: 100
+    expected:
+      status: clarification_required
+      accepted_intents:
+        - *clarification_intent
+      blocker_types: []
+      clarification_terms:
+        - sales
+
+  - id: hallucinated_measure
+    category: hallucination
+    question: Show fictional revenue by status.
+    provider_behavior: response
+    provider_response:
+      version: 1
+      from: sales orders
+      dimensions:
+        - term: order status
+          alias: status
+      metrics:
+        - term: fictional revenue
+          alias: fictional_revenue
+      limit: 100
+    expected:
+      status: blocked
+      accepted_intents: []
+      blocker_types:
+        - unknown_semantic_term
+      clarification_terms: []
+
+  - id: unsafe_provider_sql
+    category: unsafe
+    question: Count all orders.
+    provider_behavior: response
+    provider_response:
+      version: 1
+      from: sales orders
+      metrics:
+        - term: order count
+          alias: orders
+      limit: 100
+      sql: SELECT COUNT(*) FROM physical_orders_private
+    expected:
+      status: blocked
+      accepted_intents: []
+      blocker_types:
+        - provider_sql_not_allowed
+      clarification_terms: []
+
+  - id: provider_timeout
+    category: provider_failure
+    question: Count all orders after a synthetic timeout.
+    provider_behavior: timeout
+    expected:
+      status: blocked
+      accepted_intents: []
+      blocker_types:
+        - provider_timeout
+      clarification_terms: []
+
+  - id: provider_failure
+    category: provider_failure
+    question: Count all orders after a synthetic provider failure.
+    provider_behavior: failure
+    expected:
+      status: blocked
+      accepted_intents: []
+      blocker_types:
+        - provider_failure
+      clarification_terms: []
