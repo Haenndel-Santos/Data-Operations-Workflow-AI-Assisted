@@ -5,6 +5,7 @@ from pathlib import Path
 
 from .analytics_query_execution import AnalyticsExecutionLimits, run_analytics_query_execution
 from .analytics_query_plan import run_analytics_query_plan
+from .analytics_semantic_catalog import run_analytics_semantic_catalog
 from .approval_spreadsheet import run_approval_spreadsheet
 from .benchmark_sql_conversion import run_benchmark_sql_conversion
 from .business_flow_mapping import run_business_flow_mapping
@@ -88,6 +89,23 @@ def build_parser() -> argparse.ArgumentParser:
     analytics_query_execute.add_argument("--memory-limit-mb", type=int, default=512)
     analytics_query_execute.add_argument("--threads", type=int, default=2)
     analytics_query_execute.add_argument("--max-temp-mb", type=int, default=1_024)
+
+    analytics_semantic_catalog = subparsers.add_parser(
+        "analytics-semantic-catalog",
+        help="Validate business terms, measures, dimensions, and approved relationship paths.",
+    )
+    analytics_semantic_catalog.add_argument("--catalog", type=Path, required=True)
+    analytics_semantic_catalog.add_argument("--database", type=Path, required=True)
+    analytics_semantic_catalog.add_argument(
+        "--relationships",
+        type=Path,
+        default=Path("config/data_model/approved_relationships.yml"),
+    )
+    analytics_semantic_catalog.add_argument(
+        "--output",
+        type=Path,
+        default=Path("outputs/analytics_semantic_catalog"),
+    )
 
     benchmark_convert_sql = subparsers.add_parser(
         "benchmark-convert-sql",
@@ -589,6 +607,24 @@ def main() -> None:
         print(f"Manifest: {result.manifest_path}")
         print(f"Result: {result.result_path or 'not written'}")
         print("DuckDB was opened read-only; no raw SQL or external access was accepted.")
+        return
+
+    if args.command == "analytics-semantic-catalog":
+        result = run_analytics_semantic_catalog(
+            args.catalog,
+            args.database,
+            args.relationships,
+            args.output,
+        )
+        print("Analytics semantic catalog validation complete")
+        print(f"Status: {result.status}")
+        print(f"Blockers: {result.blocker_count}")
+        print(f"Ambiguities: {result.ambiguity_count}")
+        print(f"Outputs changed: {result.outputs_changed}")
+        print(f"Catalog: {result.catalog_path}")
+        print(f"Blockers CSV: {result.blockers_path}")
+        print(f"Report: {result.report_path}")
+        print("Metadata validation only. No data rows, SQL plans, or queries were executed.")
         return
 
     if args.command == "benchmark-convert-sql":

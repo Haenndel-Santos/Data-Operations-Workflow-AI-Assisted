@@ -21,6 +21,7 @@ CLI
      -> natural-language adapter (target)
      -> structured analytics request
      -> local catalog and approved-relationship validation
+     -> review-ready semantic catalog and ambiguity index
      -> parameterized SELECT dry-run plan
      -> exact plan revalidation
      -> controlled read-only execution and result evidence
@@ -45,6 +46,7 @@ CLI
 | Product canonical promotion module | Validate the complete Product snapshot and produce a hash-bound dry-run plan | Report readiness only; never apply canonical state or copy private row values. |
 | Analytics query-plan module | Compile a bounded structured request against a local DuckDB catalog | Never accept raw SQL, execute queries, expose filter values, or use unapproved joins. |
 | Analytics query-execution module | Revalidate and execute an exact reviewed plan with bounded local resources | Read-only DuckDB only; disable external access; fail closed without partial results. |
+| Analytics semantic-catalog module | Validate business terms, fields, measures, paths, and ambiguity against physical metadata | Metadata only; approved relationships only; never self-approve semantics or resolve ambiguity silently. |
 | Benchmark SQL conversion module | Parse local sample T-SQL table definitions and rows into DuckDB and Parquet | Never execute source SQL or external operations; output remains unapproved benchmark evidence. |
 | `datasets/benchmarks/` | Separate ignored raw/derived data from versioned inventories and contracts | Dataset presence or conversion is not approval for training, upload, or relationship promotion. |
 | `config/data_model/` | Version candidate state, domain mappings, and approvals | Keep candidate and approved files separate. |
@@ -68,4 +70,4 @@ Modeling decisions use distinct states such as candidate, pending review, approv
 - No shared dependency graph, checkpoint, resume, or dry-run engine.
 - CLI stage dispatch and the default workflow are not yet unified under one orchestration contract.
 - Some generated summaries become stale when later review steps run; consolidated state must cite the newest validation evidence.
-- The natural-language adapter, semantic catalog, result narration, and benchmark question/answer harness are not implemented yet.
+- Semantic catalog validation exists, but human semantic approval/application, the natural-language adapter, result narration, and the benchmark question/answer harness are not implemented yet.

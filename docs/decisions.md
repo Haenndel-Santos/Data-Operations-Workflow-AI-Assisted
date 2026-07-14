@@ -179,3 +179,15 @@
 **Reason:** Deterministic recompilation preserves parameter privacy and the structured-request allowlist while exact comparison protects the human-reviewed evidence. Read-only mode, disabled external access, interruption, isolated temporary spill, and bounded rows/bytes keep execution local and fail closed.
 
 **Impact:** `analytics-query-execute` can produce a hash-bound CSV and audit manifest or blockers without partial results. Byte-identical reruns reuse evidence and divergent reruns are refused; row order still follows SQL semantics and requires explicit `order_by` when it matters. The command does not authorize EDS use, candidate relationships, external databases, natural-language translation, or result narration. Database drift uses size and nanosecond modification time for efficiency; cryptographic dataset snapshot identity remains future work.
+
+## 2026-07-14 - Semantic Ambiguity Is Preserved For Clarification
+
+**Decision:** Keep Stage 5C semantic validation separate from human approval and future natural-language translation. Normalize business terms into an index, return every candidate for ambiguous terms, and require all relationship-path hops to match already approved physical relationships.
+
+**Context:** Business words such as sales, customer, value, and order can legitimately refer to tables, dimensions, measures, or paths. Automatically choosing one would turn uncertain language into an authoritative query plan without evidence.
+
+**Alternatives:** Select the first or highest-ranked term automatically; treat every ambiguity as a catalog blocker; import candidate ERP relationships into semantic paths; couple semantic validation directly to Stage 5A query compilation.
+
+**Reason:** Explicit `resolved`, `ambiguous`, `unknown`, and `catalog_blocked` states let a future adapter request clarification while preserving stable business IDs and the existing approval boundary. Ambiguity itself is useful metadata, not a technical validation failure.
+
+**Impact:** `analytics-semantic-catalog` produces `ready_for_semantic_review` evidence only. Semantic definitions, adapter use, EDS queries, candidate relationships, and model-generated requests remain unauthorized until separate contracts are reviewed and approved.

@@ -6,11 +6,11 @@ Turn local operational spreadsheets into validated analytical datasets and an ap
 
 ## Current Stage
 
-Three active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI analytics Stage 5B provides bounded read-only DuckDB execution after exact Stage 5A plan revalidation; and benchmark onboarding remains pending dataset export/review and approval.
+Three active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI analytics Stage 5C validates review-ready semantic catalogs without approving them; and benchmark onboarding remains pending dataset export/review and approval.
 
 ## Last Completed Milestone
 
-On 2026-07-14, Stage 5B added a fail-closed local DuckDB executor. It recompiles the structured request, requires an exact reviewed plan, revalidates catalog and approved relationships, detects ordinary input/database drift, disables external access and extension autoload, enforces resource/result limits, and writes hash-bound non-overwriting evidence without exposing parameter values in metadata.
+On 2026-07-14, Stage 5C added a fail-closed semantic-catalog validator and term resolver. It binds stable business IDs to live DuckDB tables/columns, validates measure types and approved multi-hop relationship paths, normalizes names/synonyms, preserves ambiguous candidates, and produces review-ready metadata without reading table rows or authorizing adapter use.
 
 ## Current Capabilities
 
@@ -31,15 +31,17 @@ On 2026-07-14, Stage 5B added a fail-closed local DuckDB executor. It recompiles
 - Reject raw SQL, unapproved joins, unknown schema references, unsafe limits, and malformed relationship registries.
 - Execute an exact reviewed structured plan against local DuckDB with read-only, timeout, memory, thread, temporary-storage, row, and byte controls.
 - Produce hash-bound result CSV, manifest control totals, blockers, and explicit no-row diagnostics without partial output on failure or divergent overwrite.
+- Validate candidate dataset/table names, synonyms, dimensions, measures, and relationship paths against live DuckDB metadata and approved relationships.
+- Resolve normalized business terms as unique, ambiguous, unknown, or catalog-blocked without silently selecting a candidate.
 - Inventory local benchmark sources with hashes, provenance/license status, and separate use approvals.
 - Convert supported T-SQL samples to deterministic DuckDB/Parquet artifacts while ignoring operational SQL and retaining foreign keys as pending candidates.
 - Restore and integrity-check the official AdventureWorks 2025 backup in an isolated local read-only SQL Server database.
 
 ## Test Status
 
-- Automated suite: 64 tests passed offline on 2026-07-14; latest run completed in 7.58 seconds.
+- Automated suite: 70 tests passed offline on 2026-07-14; latest run completed in 8.03 seconds.
 - All 12 project-local skills passed the official skill validator on 2026-07-13.
-- Internal link check: 21 checked, 0 broken on 2026-07-14.
+- Internal link check: 22 checked, 0 broken on 2026-07-14.
 - Main suite is offline and uses temporary directories for generated test artifacts.
 - Documentation link checker is available at `scripts/check_internal_links.py`.
 - The relocated `.venv` has a stale editable-install path; use the `PYTHONPATH=src` command in `docs/testing.md` until environment repair is explicitly approved.
@@ -54,7 +56,8 @@ On 2026-07-14, Stage 5B added a fail-closed local DuckDB executor. It recompiles
 - Conflicted line extracts must not be promoted to approved relationships.
 - The current orchestrator does not yet expose module discovery, dependency resolution, checkpoints, resume, or dry-run as shared infrastructure.
 - Several core pipeline stages still load whole Parquet tables into Pandas; larger-than-memory operation requires DuckDB pushdown and streaming refactors.
-- The natural-language adapter, semantic catalog, result narration/validation, and benchmark question/answer harness are not implemented yet.
+- The semantic catalog has no approved versioned representation or human apply contract yet; `ready_for_semantic_review` cannot be used as operational authority.
+- The natural-language adapter, result narration/validation, and benchmark question/answer harness are not implemented yet.
 - Plan-to-execution database drift uses size and nanosecond modification time rather than a full database content hash; immutable dataset-package identity remains future evidence work.
 - Exact download provenance and licensing remain unconfirmed for Northwind, Pubs, and Contoso; local conversion or restoration is not benchmark, training, publication, or upload approval.
 - AdventureWorks now has a compatible local restore runtime, but the SQL Server-to-DuckDB/Parquet export is not implemented; the Contoso recipe references external data and was not executed.
@@ -71,12 +74,12 @@ On 2026-07-14, Stage 5B added a fail-closed local DuckDB executor. It recompiles
 
 ## Next Logical Milestone
 
-Define Stage 5C semantic-catalog contracts for business names, synonyms, measures, dimensions, relationship paths, and ambiguity handling, using synthetic fixtures first. Separately, profile the highest-memory Pandas stages before selecting one measured DuckDB pushdown refactor. Keep Product canonical apply, AdventureWorks export/review, and EDS execution separate.
+Define the human review and minimal approved representation for Stage 5C semantics before beginning Stage 5D. In parallel, profile the highest-memory Pandas stages before selecting one measured DuckDB pushdown refactor. Keep Product canonical apply, AdventureWorks export/review, benchmark approval, and EDS execution separate.
 
 ## Last Verified Commit
 
-`cd2f94c` (`docs(benchmarks): record AdventureWorks validation`)
+`4a37be1` (`feat(analytics): add controlled query execution`)
 
 ## Last Updated
 
-2026-07-14 by Codex after Stage 5B controlled local analytics execution.
+2026-07-14 by Codex after Stage 5C review-ready semantic catalog validation.

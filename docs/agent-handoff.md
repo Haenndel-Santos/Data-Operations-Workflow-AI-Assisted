@@ -648,3 +648,51 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 - Do not execute EDS or benchmark datasets merely because Stage 5B exists.
 - Do not accept raw model-generated SQL or candidate relationships.
 - Do not treat a successful result as semantic correctness or benchmark approval.
+
+## 2026-07-14 - Codex - Stage 5C review-ready semantic catalog
+
+### Initial Context
+
+- Branch: `main`
+- Initial commit: `4a37be1`
+- Initial worktree: clean; branch was 11 commits ahead of `origin/main`
+- Objective: implement Stage 5C semantic context after controlled Stage 5B execution without using EDS or benchmark data
+
+### Work Performed
+
+- Added the `analytics_semantic_catalog` version-1 contract and `analytics-semantic-catalog` CLI command.
+- Separated stable semantic IDs from physical DuckDB table and column names.
+- Validated candidate dataset/table names, synonyms, dimensions, aggregate measures, numeric measure compatibility, and contiguous relationship paths.
+- Required every relationship-path hop to match `approved_relationships.yml`; candidate relationships remain unusable.
+- Added accent-insensitive term normalization plus `resolved`, `ambiguous`, `unknown`, and `catalog_blocked` resolution states.
+- Preserved all ambiguity candidates with score and clarification flags instead of selecting one automatically.
+- Produced review-ready YAML, blockers, and report artifacts with byte-identical reuse and divergent-output refusal.
+- Kept semantic approval and adapter authorization false; no apply mode was introduced.
+
+### Validation
+
+- Focused semantic-catalog tests: 6 passed in 1.67 seconds.
+- Full offline suite: 70 passed in 8.03 seconds.
+- Python compilation: passed.
+- Documentation: 22 internal links checked, 0 broken.
+- Tests used schema-only temporary DuckDB fixtures and covered a contiguous two-hop approved path, unapproved paths, unknown columns, incompatible measure types, schema typos, duplicate IDs, ambiguity, accent normalization, blocked resolution, preservation, idempotency, and non-overwrite behavior.
+- No table rows, EDS data, benchmark data, SQL Server, external database, model API, migration, import, synchronization, or approval file was used or changed.
+
+### State For Next Agent
+
+- Stages 5A planning, 5B controlled execution, and 5C technical semantic validation are implemented as separate modules.
+- Valid catalogs stop at `ready_for_semantic_review`; they are not authorized for Stage 5D adapter use.
+- There is no approved semantic registry or human review/apply contract yet.
+- Ambiguous terms are evidence requiring clarification, not technical blockers.
+
+### Next Logical Steps
+
+1. Define a minimal, versioned semantic review and approval representation without conflating technical validity with business approval.
+2. Add a dry-run approval plan and explicit apply contract before Stage 5D consumes semantic definitions.
+3. Continue measured backend optimization by profiling Pandas-heavy stages separately from semantic governance.
+
+### Do Not Do Yet
+
+- Do not begin natural-language request generation from unapproved semantic catalogs.
+- Do not auto-select ambiguous terms or import candidate relationships into semantic paths.
+- Do not execute EDS or benchmark data merely because the semantic validator exists.

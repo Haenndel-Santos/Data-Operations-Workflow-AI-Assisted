@@ -8,8 +8,9 @@
 
 Stage 5A separately introduces a dry-run analytics query planner. Stage 5B adds
 an explicit controlled executor that requires exact plan revalidation and
-produces bounded local result evidence. Neither analytics module performs an AI
-call or is yet coordinated by `workflow.py`.
+produces bounded local result evidence. Stage 5C adds metadata-only semantic
+catalog validation with explicit ambiguity and human-review state. None of the
+analytics modules performs an AI call or is yet coordinated by `workflow.py`.
 
 ## Responsibility
 
@@ -51,3 +52,7 @@ Each step requires contract, unit, integration, workflow, and regression coverag
 No orchestrator feature may treat `pending_review`, a valid-but-blocked workbook, or `ready_for_canonical_state_review` as approval. Product Step 3E.4 contains the explicitly replaced 15-approved/13-rejected state, Step 3E.5 produced a complete validated local preview, and Step 3E.6 produced only a hash-bound dry-run promotion plan. No downstream stage may bypass the applied digest, restore excluded identities, consume stale blocked outputs, apply canonical state, or import/synchronize the preview without a separate authorized contract.
 
 No future AI adapter may submit raw model-generated SQL. It must produce the versioned structured analytics request, and cross-table plans must continue to require approved relationships. `ready_for_execution_review` is not execution authorization; Stage 5B runs only through its separate explicit entrypoint after exact plan revalidation.
+
+`ready_for_semantic_review` is also not semantic approval. Future orchestration
+must require a separate approved semantic representation before Stage 5D may
+resolve business terms operationally.

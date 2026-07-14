@@ -43,6 +43,13 @@ disables external access and extension autoload; and writes a result manifest,
 control totals, blockers, diagnostics, and CSV only on success. Natural-language
 translation, result narration, and external database access remain unimplemented.
 
+Stage 5C adds `analytics-semantic-catalog`. It validates candidate business
+names, synonyms, dimensions, measures, and multi-hop relationship paths against
+the live DuckDB schema and approved relationships. It emits a normalized term
+index with explicit unique, ambiguous, and unknown resolution behavior. Valid
+catalogs remain `ready_for_semantic_review`; automated approval and Stage 5D
+adapter use are not authorized. See [Analytics Semantic Catalog](analytics-semantic-catalog.md).
+
 ## Request Contract
 
 ```yaml
@@ -135,7 +142,7 @@ Calling all dataset use "training" would hide important differences. The initial
 
 1. **Stage 5A - Safe query planning:** structured request, catalog validation, approved joins, parameterized SQL, dry-run evidence. Implemented.
 2. **Stage 5B - Controlled local execution:** read-only DuckDB executor, timeout/resource limits, result manifest, control totals, and no-result diagnostics. Implemented.
-3. **Stage 5C - Semantic catalog:** business names, synonyms, measures, dimensions, relationship paths, ambiguity scores, and dataset-specific domain packs.
+3. **Stage 5C - Semantic catalog:** business names, synonyms, measures, dimensions, relationship paths, ambiguity scores, and dataset-specific domain packs. Technical validation implemented; human semantic approval remains pending.
 4. **Stage 5D - Natural-language adapter:** model translates questions to the structured contract; backend returns blockers or clarification requests instead of accepting raw SQL.
 5. **Stage 5E - Benchmark harness:** EDS local evaluations plus separately approved AdventureWorks and Chinook packs with expected questions, plans, and answers.
 6. **Stage 5F - User experience:** query interface, result tables/charts, evidence view, saved analyses, feedback, and role-aware governance.

@@ -38,6 +38,23 @@ Do not use this focused test command to execute EDS, benchmark, external, or
 production databases. Real dataset execution requires its own explicit data-use
 approval and reviewed plan.
 
+## Semantic Catalog Validation
+
+Stage 5C tests use schema-only temporary DuckDB fixtures. They verify physical
+table/column resolution, numeric measure compatibility, approved relationship
+paths, accent-insensitive term lookup, ambiguity preservation, blocked-catalog
+resolution, idempotency, input preservation, and non-overwrite behavior:
+
+```powershell
+$env:PYTHONPATH = "src"
+$env:PYTHONDONTWRITEBYTECODE = "1"
+.\.venv\Scripts\python.exe -m pytest -p no:cacheprovider tests\analytics_semantic_catalog_test.py
+```
+
+The focused tests do not read table rows, approve semantics, or invoke an AI
+model. Do not point this command at EDS or benchmark data without separate data
+authorization.
+
 ## Benchmark Conversion Validation
 
 Use the restricted converter only for a locally approved SQL sample whose
