@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
+from .analytics_query_execution import AnalyticsExecutionLimits, run_analytics_query_execution
 from .analytics_query_plan import run_analytics_query_plan
 from .approval_spreadsheet import run_approval_spreadsheet
 from .benchmark_sql_conversion import run_benchmark_sql_conversion
@@ -63,6 +64,30 @@ def build_parser() -> argparse.ArgumentParser:
         default=Path("outputs/analytics_query_plan"),
         help="New or byte-identical directory for local dry-run query-plan artifacts.",
     )
+
+    analytics_query_execute = subparsers.add_parser(
+        "analytics-query-execute",
+        help="Execute an exact reviewed analytics plan against local DuckDB with hard limits.",
+    )
+    analytics_query_execute.add_argument("--request", type=Path, required=True)
+    analytics_query_execute.add_argument("--database", type=Path, required=True)
+    analytics_query_execute.add_argument(
+        "--relationships",
+        type=Path,
+        default=Path("config/data_model/approved_relationships.yml"),
+    )
+    analytics_query_execute.add_argument("--plan", type=Path, required=True)
+    analytics_query_execute.add_argument(
+        "--output",
+        type=Path,
+        default=Path("outputs/analytics_query_execution"),
+    )
+    analytics_query_execute.add_argument("--max-rows", type=int, default=10_000)
+    analytics_query_execute.add_argument("--max-result-bytes", type=int, default=10_000_000)
+    analytics_query_execute.add_argument("--max-runtime-seconds", type=int, default=30)
+    analytics_query_execute.add_argument("--memory-limit-mb", type=int, default=512)
+    analytics_query_execute.add_argument("--threads", type=int, default=2)
+    analytics_query_execute.add_argument("--max-temp-mb", type=int, default=1_024)
 
     benchmark_convert_sql = subparsers.add_parser(
         "benchmark-convert-sql",
@@ -537,6 +562,33 @@ def main() -> None:
         print(f"Blockers CSV: {result.blockers_path}")
         print(f"Report: {result.report_path}")
         print("Dry-run only. No SQL was executed and no database or external system was modified.")
+        return
+
+    if args.command == "analytics-query-execute":
+        result = run_analytics_query_execution(
+            args.request,
+            args.database,
+            args.relationships,
+            args.plan,
+            args.output,
+            AnalyticsExecutionLimits(
+                max_rows=args.max_rows,
+                max_result_bytes=args.max_result_bytes,
+                max_runtime_seconds=args.max_runtime_seconds,
+                memory_limit_mb=args.memory_limit_mb,
+                threads=args.threads,
+                max_temp_mb=args.max_temp_mb,
+            ),
+        )
+        print("Controlled analytics query execution complete")
+        print(f"Status: {result.status}")
+        print(f"Rows: {result.row_count}")
+        print(f"Blockers: {result.blocker_count}")
+        print(f"Elapsed seconds: {result.elapsed_seconds:.3f}")
+        print(f"Outputs changed: {result.outputs_changed}")
+        print(f"Manifest: {result.manifest_path}")
+        print(f"Result: {result.result_path or 'not written'}")
+        print("DuckDB was opened read-only; no raw SQL or external access was accepted.")
         return
 
     if args.command == "benchmark-convert-sql":

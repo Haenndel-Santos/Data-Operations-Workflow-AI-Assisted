@@ -6,7 +6,10 @@
 
 `src/data_ops_lab/cli.py` separately dispatches ERP modeling and human-review commands. These commands are explicit and testable, but they do not yet share dependency resolution, checkpoint state, or resume behavior. Step 3E.4 provides a command-local decision digest; Step 3E.5 adds a deterministic ready/blocked materialization checkpoint; Step 3E.6 binds that complete snapshot to applied state in a dry-run promotion plan. None is yet shared orchestrator infrastructure.
 
-Stage 5A separately introduces a dry-run analytics query planner. Its structured-request boundary is designed for a future natural-language adapter, but it currently performs no AI call or SQL execution and is not yet coordinated by `workflow.py`.
+Stage 5A separately introduces a dry-run analytics query planner. Stage 5B adds
+an explicit controlled executor that requires exact plan revalidation and
+produces bounded local result evidence. Neither analytics module performs an AI
+call or is yet coordinated by `workflow.py`.
 
 ## Responsibility
 
@@ -47,4 +50,4 @@ Each step requires contract, unit, integration, workflow, and regression coverag
 
 No orchestrator feature may treat `pending_review`, a valid-but-blocked workbook, or `ready_for_canonical_state_review` as approval. Product Step 3E.4 contains the explicitly replaced 15-approved/13-rejected state, Step 3E.5 produced a complete validated local preview, and Step 3E.6 produced only a hash-bound dry-run promotion plan. No downstream stage may bypass the applied digest, restore excluded identities, consume stale blocked outputs, apply canonical state, or import/synchronize the preview without a separate authorized contract.
 
-No future AI adapter may submit raw model-generated SQL. It must produce the versioned structured analytics request, and cross-table plans must continue to require approved relationships. `ready_for_execution_review` is not execution authorization.
+No future AI adapter may submit raw model-generated SQL. It must produce the versioned structured analytics request, and cross-table plans must continue to require approved relationships. `ready_for_execution_review` is not execution authorization; Stage 5B runs only through its separate explicit entrypoint after exact plan revalidation.

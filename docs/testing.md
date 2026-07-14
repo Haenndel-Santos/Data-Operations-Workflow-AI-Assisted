@@ -21,6 +21,23 @@ Remove-Item Env:PYTHONPATH
 
 Repairing the editable install is a separate environment change and should be performed only when explicitly approved.
 
+## Controlled Analytics Execution Validation
+
+Stage 5B tests use temporary synthetic DuckDB files only. They verify exact
+plan matching, read-only preservation, parameter privacy, approved joins,
+database/request drift blocking, resource limits, no-row diagnostics,
+idempotency, and non-overwrite behavior:
+
+```powershell
+$env:PYTHONPATH = "src"
+$env:PYTHONDONTWRITEBYTECODE = "1"
+.\.venv\Scripts\python.exe -m pytest -p no:cacheprovider tests\analytics_query_execution_test.py tests\analytics_query_plan_test.py
+```
+
+Do not use this focused test command to execute EDS, benchmark, external, or
+production databases. Real dataset execution requires its own explicit data-use
+approval and reviewed plan.
+
 ## Benchmark Conversion Validation
 
 Use the restricted converter only for a locally approved SQL sample whose

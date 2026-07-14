@@ -35,7 +35,13 @@ Stage 5A provides `analytics-query-plan`, a dry-run command that:
 - Excludes question text and filter values from generated evidence.
 - Produces a ready/blocked plan without executing SQL.
 
-Execution, natural-language translation, result narration, and external database access are not part of Stage 5A.
+Stage 5B adds `analytics-query-execute`. It recompiles the structured request,
+requires an exact reviewed Stage 5A plan, revalidates catalog and approved
+relationships, and executes only against local DuckDB in read-only mode. It
+enforces runtime, memory, thread, temporary-storage, row, and result-byte limits;
+disables external access and extension autoload; and writes a result manifest,
+control totals, blockers, diagnostics, and CSV only on success. Natural-language
+translation, result narration, and external database access remain unimplemented.
 
 ## Request Contract
 
@@ -76,7 +82,7 @@ Supported aggregates are `count`, `count_distinct`, `sum`, `avg`, `min`, and `ma
 - Filter values stay in memory as parameters and are not copied into plan files.
 - Candidate relationships are not sufficient for joins; human-approved relationships are required.
 - A ready plan is not execution authorization.
-- Future execution must use read-only connections, time/row limits, cancellation, result-size controls, and an audit record.
+- Controlled execution uses read-only connections, interruption, resource and result limits, input-drift checks, and an audit manifest.
 
 ## Scale And Memory Strategy
 
@@ -128,7 +134,7 @@ Calling all dataset use "training" would hide important differences. The initial
 ## Roadmap
 
 1. **Stage 5A - Safe query planning:** structured request, catalog validation, approved joins, parameterized SQL, dry-run evidence. Implemented.
-2. **Stage 5B - Controlled local execution:** read-only DuckDB executor, timeout/resource limits, result manifest, control totals, and no-result diagnostics.
+2. **Stage 5B - Controlled local execution:** read-only DuckDB executor, timeout/resource limits, result manifest, control totals, and no-result diagnostics. Implemented.
 3. **Stage 5C - Semantic catalog:** business names, synonyms, measures, dimensions, relationship paths, ambiguity scores, and dataset-specific domain packs.
 4. **Stage 5D - Natural-language adapter:** model translates questions to the structured contract; backend returns blockers or clarification requests instead of accepting raw SQL.
 5. **Stage 5E - Benchmark harness:** EDS local evaluations plus separately approved AdventureWorks and Chinook packs with expected questions, plans, and answers.

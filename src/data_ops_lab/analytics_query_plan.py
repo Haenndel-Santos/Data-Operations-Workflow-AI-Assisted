@@ -729,6 +729,7 @@ def build_plan(
     relationships = read_yaml_mapping(relationships_path, blockers, "relationships")
     catalog = load_catalog(database_path, blockers)
     compiled = compile_request(request, catalog, relationships, blockers) if catalog else None
+    database_stat = database_path.stat() if database_path.is_file() else None
     status = (
         "ready_for_execution_review"
         if compiled is not None and not blockers
@@ -743,6 +744,8 @@ def build_plan(
                 file_sha256(relationships_path) if relationships_path.is_file() else ""
             ),
             "catalog_sha256": catalog_digest(catalog) if catalog else "",
+            "database_size_bytes": database_stat.st_size if database_stat else 0,
+            "database_modified_ns": database_stat.st_mtime_ns if database_stat else 0,
         },
         "catalog": {
             "tables": len(catalog),
@@ -806,6 +809,10 @@ def render_report(plan: dict[str, Any]) -> str:
     return "\n".join(lines) + "\n"
 
 
+def plan_content(plan: dict[str, Any]) -> str:
+    return yaml.safe_dump(plan, sort_keys=False, allow_unicode=False)
+
+
 def write_outputs(output_dir: Path, contents: dict[str, str]) -> bool:
     existing = (
         {
@@ -841,7 +848,7 @@ def run_analytics_query_plan(
 ) -> AnalyticsQueryPlanResult:
     plan, blockers, compiled = build_plan(request_path, database_path, relationships_path)
     contents = {
-        PLAN_NAME: yaml.safe_dump(plan, sort_keys=False, allow_unicode=False),
+        PLAN_NAME: plan_content(plan),
         BLOCKERS_NAME: csv_content(blockers),
         REPORT_NAME: render_report(plan),
     }

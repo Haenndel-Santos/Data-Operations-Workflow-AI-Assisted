@@ -167,3 +167,15 @@
 **Reason:** A temporary local restore bridge preserves the backup's relational metadata and enables a later reproducible export without making SQL Server an application dependency or weakening relationship governance.
 
 **Impact:** `AdventureWorks2025` is locally available as a read-only database with 71 tables, 20 views, 90 declared foreign keys, and 760,167 aggregate rows. Export, schema review, relationship approval, benchmark acceptance, model training, and external upload remain pending. The separate `DATAOPSLAB` Evaluation instance is stopped and is not a project dependency.
+
+## 2026-07-14 - Reviewed Plans Are Recompiled Before Execution
+
+**Decision:** Keep query planning and execution as separate Stage 5A/5B modules. Stage 5B must recompile the structured request, exactly match the reviewed plan including catalog and database-file fingerprint, reopen DuckDB read-only, and enforce explicit resource and result budgets before returning data.
+
+**Context:** Stage 5A intentionally omits filter values from persisted plans. A later process therefore cannot safely execute from plan YAML alone, and accepting SQL from the plan or caller would reopen the raw-SQL boundary.
+
+**Alternatives:** Persist private parameter values in the plan; accept SQL plus parameters directly; execute immediately during planning; trust a reviewed plan after request, approval, catalog, or database drift.
+
+**Reason:** Deterministic recompilation preserves parameter privacy and the structured-request allowlist while exact comparison protects the human-reviewed evidence. Read-only mode, disabled external access, interruption, isolated temporary spill, and bounded rows/bytes keep execution local and fail closed.
+
+**Impact:** `analytics-query-execute` can produce a hash-bound CSV and audit manifest or blockers without partial results. Byte-identical reruns reuse evidence and divergent reruns are refused; row order still follows SQL semantics and requires explicit `order_by` when it matters. The command does not authorize EDS use, candidate relationships, external databases, natural-language translation, or result narration. Database drift uses size and nanosecond modification time for efficiency; cryptographic dataset snapshot identity remains future work.

@@ -602,3 +602,49 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 - Do not treat the 90 declared foreign keys as approved relationships.
 - Do not use AdventureWorks for benchmark evaluation or model training until the separate governance gates are completed.
 - Do not connect to external databases or query private EDS data.
+
+## 2026-07-14 - Codex - Stage 5B controlled analytics execution
+
+### Initial Context
+
+- Branch: `main`
+- Initial commit: `cd2f94c`
+- Initial worktree: clean; branch was 10 commits ahead of `origin/main`
+- Objective: resume backend optimization from Stage 5A without using EDS or benchmark data
+
+### Work Performed
+
+- Added the separate `analytics_query_execution` version-1 contract and `analytics-query-execute` CLI command.
+- Recompiled every request at execution time and required an exact match with the reviewed Stage 5A plan, including request, relationship, catalog, database-size, and database-modification fingerprints.
+- Opened DuckDB only with `read_only=True`; disabled external access, extension installation, and extension autoload; isolated temporary spill outside the database.
+- Enforced bounded runtime with interruption, memory, threads, temporary spill, result rows, and result bytes.
+- Added hash-bound execution manifest, blockers, report, CSV-on-success, control totals, no-row diagnostics, drift rejection, byte-identical reuse, and non-overwrite behavior.
+- Preserved parameter privacy in metadata; result CSV remains generated data and may contain selected values by design.
+
+### Validation
+
+- Focused planning/execution tests: 15 passed in 3.68 seconds.
+- Full offline suite: 64 passed in 7.58 seconds.
+- Python compilation: passed.
+- Documentation: 21 internal links checked, 0 broken.
+- Tests used temporary synthetic DuckDB databases only and verified source/database/plan preservation, request and database drift blocking, runtime interruption, real row/byte limits, empty results, private-parameter exclusion, and byte-stable reruns.
+- No EDS query, benchmark execution, SQL Server start, external database, model API, migration, import, synchronization, or approved-relationship change was performed.
+
+### State For Next Agent
+
+- Analytics Stage 5A planning and Stage 5B controlled local execution are implemented as separate modules.
+- The executor accepts no raw SQL and does not bypass the existing approved-relationship registry.
+- Database drift uses size and nanosecond modification time for efficiency; cryptographic immutable dataset-package identity is still pending.
+- Stage 5C semantic catalog, natural-language translation, result narration, and benchmark harness remain unimplemented.
+
+### Next Logical Steps
+
+1. Define Stage 5C semantic-catalog contracts with synthetic fixtures: business names, synonyms, measures, dimensions, relationship paths, and ambiguity handling.
+2. Measure the highest-memory Pandas pipeline stages and select one evidence-backed DuckDB pushdown refactor.
+3. Keep AdventureWorks export/review, EDS execution, and Product canonical apply as separate approval tracks.
+
+### Do Not Do Yet
+
+- Do not execute EDS or benchmark datasets merely because Stage 5B exists.
+- Do not accept raw model-generated SQL or candidate relationships.
+- Do not treat a successful result as semantic correctness or benchmark approval.

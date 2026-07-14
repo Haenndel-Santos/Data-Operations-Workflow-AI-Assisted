@@ -6,11 +6,11 @@ Turn local operational spreadsheets into validated analytical datasets and an ap
 
 ## Current Stage
 
-Three active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI analytics Stage 5A provides safe structured query planning with no SQL execution; and benchmark onboarding provides restricted Northwind/Pubs conversion plus a verified read-only AdventureWorks 2025 restore pending export and dataset approval.
+Three active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI analytics Stage 5B provides bounded read-only DuckDB execution after exact Stage 5A plan revalidation; and benchmark onboarding remains pending dataset export/review and approval.
 
 ## Last Completed Milestone
 
-On 2026-07-14, the local AdventureWorks backup was proven byte-identical to Microsoft's official release, restored to SQL Server 2025 Developer CU6, set to `READ_ONLY`, and validated with `RESTORE VERIFYONLY` and `DBCC CHECKDB`. The database contains 71 tables, 20 views, 90 declared foreign keys, and 760,167 aggregate table rows. No DuckDB/Parquet export or relationship approval was performed.
+On 2026-07-14, Stage 5B added a fail-closed local DuckDB executor. It recompiles the structured request, requires an exact reviewed plan, revalidates catalog and approved relationships, detects ordinary input/database drift, disables external access and extension autoload, enforces resource/result limits, and writes hash-bound non-overwriting evidence without exposing parameter values in metadata.
 
 ## Current Capabilities
 
@@ -29,15 +29,17 @@ On 2026-07-14, the local AdventureWorks backup was proven byte-identical to Micr
 - Generate conceptual schema and business-flow documentation.
 - Compile bounded structured analytical requests against a local DuckDB catalog without executing SQL.
 - Reject raw SQL, unapproved joins, unknown schema references, unsafe limits, and malformed relationship registries.
+- Execute an exact reviewed structured plan against local DuckDB with read-only, timeout, memory, thread, temporary-storage, row, and byte controls.
+- Produce hash-bound result CSV, manifest control totals, blockers, and explicit no-row diagnostics without partial output on failure or divergent overwrite.
 - Inventory local benchmark sources with hashes, provenance/license status, and separate use approvals.
 - Convert supported T-SQL samples to deterministic DuckDB/Parquet artifacts while ignoring operational SQL and retaining foreign keys as pending candidates.
 - Restore and integrity-check the official AdventureWorks 2025 backup in an isolated local read-only SQL Server database.
 
 ## Test Status
 
-- Automated suite: 56 tests passed offline on 2026-07-14; latest run completed in 9.09 seconds.
+- Automated suite: 64 tests passed offline on 2026-07-14; latest run completed in 7.58 seconds.
 - All 12 project-local skills passed the official skill validator on 2026-07-13.
-- Internal link check: 20 checked, 0 broken on 2026-07-14.
+- Internal link check: 21 checked, 0 broken on 2026-07-14.
 - Main suite is offline and uses temporary directories for generated test artifacts.
 - Documentation link checker is available at `scripts/check_internal_links.py`.
 - The relocated `.venv` has a stale editable-install path; use the `PYTHONPATH=src` command in `docs/testing.md` until environment repair is explicitly approved.
@@ -52,7 +54,8 @@ On 2026-07-14, the local AdventureWorks backup was proven byte-identical to Micr
 - Conflicted line extracts must not be promoted to approved relationships.
 - The current orchestrator does not yet expose module discovery, dependency resolution, checkpoints, resume, or dry-run as shared infrastructure.
 - Several core pipeline stages still load whole Parquet tables into Pandas; larger-than-memory operation requires DuckDB pushdown and streaming refactors.
-- The natural-language adapter, controlled executor, semantic catalog, result validator, and benchmark question/answer harness are not implemented yet.
+- The natural-language adapter, semantic catalog, result narration/validation, and benchmark question/answer harness are not implemented yet.
+- Plan-to-execution database drift uses size and nanosecond modification time rather than a full database content hash; immutable dataset-package identity remains future evidence work.
 - Exact download provenance and licensing remain unconfirmed for Northwind, Pubs, and Contoso; local conversion or restoration is not benchmark, training, publication, or upload approval.
 - AdventureWorks now has a compatible local restore runtime, but the SQL Server-to-DuckDB/Parquet export is not implemented; the Contoso recipe references external data and was not executed.
 - A second SQL Server 2025 Evaluation instance (`DATAOPSLAB`) remains installed but stopped; project work should use the default Developer instance only when an explicitly authorized restore/export task requires it.
@@ -68,12 +71,12 @@ On 2026-07-14, the local AdventureWorks backup was proven byte-identical to Micr
 
 ## Next Logical Milestone
 
-Implement a fail-closed, read-only SQL Server-to-DuckDB/Parquet export for AdventureWorks and validate it first with controlled fixtures, then review its schema and declared relationships without promoting them. In parallel, confirm Northwind/Pubs provenance and define Stage 5B against synthetic fixtures. Keep Product canonical apply separate and do not query EDS private data.
+Define Stage 5C semantic-catalog contracts for business names, synonyms, measures, dimensions, relationship paths, and ambiguity handling, using synthetic fixtures first. Separately, profile the highest-memory Pandas stages before selecting one measured DuckDB pushdown refactor. Keep Product canonical apply, AdventureWorks export/review, and EDS execution separate.
 
 ## Last Verified Commit
 
-`a13f9c7` (`feat(benchmarks): add safe local dataset conversion`)
+`cd2f94c` (`docs(benchmarks): record AdventureWorks validation`)
 
 ## Last Updated
 
-2026-07-14 by Codex after official AdventureWorks restore and integrity validation.
+2026-07-14 by Codex after Stage 5B controlled local analytics execution.

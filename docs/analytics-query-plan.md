@@ -24,6 +24,11 @@ The module compiles a limited structured request into a parameterized analytical
 
 The returned Python result retains parameters in memory so a future separately authorized executor can use the exact validated plan. The CLI prints only status and artifact paths.
 
+The plan source also records the DuckDB file size and nanosecond modification
+time. Stage 5B uses these values with the catalog and input hashes to reject
+ordinary database drift between review and execution without hashing an entire
+large database file.
+
 ## Inputs
 
 - A version-1 YAML request following [the AI analytics backend contract](ai-analytics-backend.md).
@@ -35,7 +40,8 @@ The returned Python result retains parameters in memory so a future separately a
 - `ready_for_execution_review`: catalog resolution, relationship governance, operations, limits, aliases, and parameter types are valid.
 - `blocked`: at least one input, catalog, relationship, or request-contract check failed; SQL is omitted.
 
-Neither status authorizes execution. Stage 5B must define a separate execution contract.
+Neither status authorizes execution by itself. Stage 5B is a separate explicit
+command and contract; see [Controlled Analytics Query Execution](analytics-query-execution.md).
 
 ## Command
 
