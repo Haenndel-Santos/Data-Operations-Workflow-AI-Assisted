@@ -153,6 +153,13 @@ $env:PYTHONPATH = "src"
 .\.venv\Scripts\python -m data_ops_lab apply-product-refnr-decisions --workbook "outputs\<run-id>\product_refnr_human_review_shortlist_validated.xlsx"
 ```
 
+To validate and generate the local Product materialization preview from applied state:
+
+```powershell
+$env:PYTHONPATH = "src"
+.\.venv\Scripts\python -m data_ops_lab product-materialization-preview --workbook "outputs\<run-id>\product_refnr_human_review_shortlist_validated.xlsx" --output "outputs\<run-id>\step3e5_product_materialization"
+```
+
 To generate the conceptual main database schema overview:
 
 ```powershell
@@ -231,4 +238,5 @@ DuckDB is a good fit for this project because it supports local analytical workf
 - [Testing](docs/testing.md)
 - [Orchestrator](docs/orchestrator.md)
 - [Step 3E.4 Product application contract](docs/product-refnr-application.md)
+- [Product materialization preview contract](docs/product-materialization.md)
 - [Agent handoff history](docs/agent-handoff.md)

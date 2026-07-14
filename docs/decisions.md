@@ -95,3 +95,15 @@
 **Reason:** The separate minimal state had already passed contract, preservation, privacy, rejection, and idempotency tests and matched the authoritative human decisions.
 
 **Impact:** Product reconciliation state is now versioned and authoritative for downstream Product modeling. Rejected records map to logical exclusion and receive no target Product identity. Raw data, review workbooks, `approved_keys.yml`, and `approved_relationships.yml` remain unchanged.
+
+## 2026-07-14 - Product Materialization Fails Closed
+
+**Decision:** Product materialization v1 generates a local preview only when every retained exception has materializable source evidence. Exclusion takes precedence for repeated source identifiers, technical IDs are deterministic UUID5 values bound to the applied digest and source hashes, and no partial preview is written when blockers exist.
+
+**Context:** Several review issues can reference the same source row, and applied human approval does not by itself create missing source values. The real applied state includes three approved `Product_ref.nr` rows that are completely empty.
+
+**Alternatives:** Generate arbitrary identities for empty rows; preserve approvals but omit blocked rows from an otherwise partial preview; infer references from row position; overwrite prior generated evidence.
+
+**Reason:** Those alternatives would silently override human decisions, invent Product records, or create an apparently complete but incomplete target model.
+
+**Impact:** `product-materialization-preview` validates exact applied state, source-row range, same-row conflict evidence, corrected references, exclusions, IDs, and output idempotency. The real run is blocked pending human clarification for three issue IDs and produced no Product preview.

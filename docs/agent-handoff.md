@@ -249,3 +249,68 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 .\.venv\Scripts\python.exe -m data_ops_lab apply-product-refnr-decisions --workbook outputs\019f21a4-daf0-7272-b2a7-09b4f0e2c75b\product_refnr_human_review_shortlist_validated.xlsx --output outputs\019f21a4-daf0-7272-b2a7-09b4f0e2c75b\step3e4_product_application --apply
 .\.venv\Scripts\python.exe -m pytest -p no:cacheprovider
 ```
+
+## 2026-07-14 - Codex - Product materialization validation blocked
+
+### Initial Context
+
+- Branch: `main`
+- Initial commit: `668db5f`
+- Initial worktree: clean; branch was four commits ahead of `origin/main`
+- Stage found: Step 3E.4 applied; read-only Product materialization was next
+- Objective received: proceed with the next documented milestone
+
+### Work Performed
+
+- Added the Product materialization v1 contract, specialized module, CLI command, and offline tests.
+- Reused applied-state validation and the existing Product reconciliation module.
+- Implemented exclusion precedence, exact same-row conflict resolution, deterministic source-bound UUID5 IDs, lineage, exclusions, manifests, blockers, and non-overwrite idempotency.
+- Ran the real materialization command against the applied state and current private sources.
+
+### Decisions
+
+- Materialization must fail closed when an approved row has no materializable source content.
+- No partial Product preview may be generated while blockers exist.
+- The applied state remains unchanged; resolving the three empty rows requires a new explicit human decision or corrected source evidence.
+
+### Validation
+
+- Focused tests: 5 passed.
+- Full offline suite: 38 passed in 3.75 seconds.
+- Documentation: 12 internal links checked, 0 broken.
+- Real source counts: 1,734 original Product rows and 1,739 Product_ref.nr rows.
+- Real result: `blocked`, 10 exclusion identifiers preserved, 3 blockers, 0 preview rows written.
+- Blockers: `UNMATCHED_REFNR_006`, `UNMATCHED_REFNR_008`, and `UNMATCHED_REFNR_013`; each authoritative source row is completely empty.
+- All protected source, review, state, key, and relationship files retained their hashes.
+- Repeated blocked run: `outputs_changed=False`; blocker artifacts retained their hashes.
+
+### State For Next Agent
+
+- Branch: `main`
+- Final commit: the commit containing this handoff entry; verify with `git log -1`.
+- Current stage: Step 3E.5 blocked pending human decision on three empty approved records.
+- Contract: `docs/product-materialization.md`.
+- Local report: `outputs/019f21a4-daf0-7272-b2a7-09b4f0e2c75b/step3e5_product_materialization/product_materialization_report.md`.
+- No Product preview, database, import, migration, or external synchronization was produced.
+
+### Next Logical Steps
+
+1. Ask the human owner whether the three empty rows are invalid/rejected or whether corrected source evidence exists.
+2. If rejected, update the review and applied state through the existing explicit contracts; do not hand-edit the state.
+3. Rerun materialization and validate the complete preview, lineage, exclusions, references, and deterministic IDs.
+
+### Do Not Do Yet
+
+- Do not generate technical Product identities for the three empty rows.
+- Do not silently remove the rows from an otherwise partial preview.
+- Do not change the applied state without explicit human authority.
+- Do not run migrations, imports, database writes, or external synchronization.
+
+### Useful Commands
+
+```powershell
+$env:PYTHONPATH = "src"
+$env:PYTHONDONTWRITEBYTECODE = "1"
+.\.venv\Scripts\python.exe -m data_ops_lab product-materialization-preview --workbook outputs\019f21a4-daf0-7272-b2a7-09b4f0e2c75b\product_refnr_human_review_shortlist_validated.xlsx --output outputs\019f21a4-daf0-7272-b2a7-09b4f0e2c75b\step3e5_product_materialization
+.\.venv\Scripts\python.exe -m pytest -p no:cacheprovider
+```

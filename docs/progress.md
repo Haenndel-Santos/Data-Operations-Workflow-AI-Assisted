@@ -6,11 +6,11 @@ Turn local operational spreadsheets into validated analytical datasets and an ap
 
 ## Current Stage
 
-Stage 3E.4 complete: the approved Product reconciliation state is versioned locally. The next Product milestone is a read-only materialization contract that consumes this state without changing raw sources.
+Stage 3E.5 blocked validation: the read-only Product materialization module and contract are implemented, but the real preview is blocked by three approved decisions whose `Product_ref.nr` source rows are completely empty.
 
 ## Last Completed Milestone
 
-On 2026-07-13, the user explicitly approved the documented Step 3E.4 representation. `config/data_model/product_reconciliation_state.yml` was created from the validated workbook with digest `f2a7f0bdf338d8733ce03d4b82bfe0056e7e06d47ad157b36a059a9e1c4c0183`: 28 decisions, 18 approvals, and 10 `exclude_from_target_product_model` actions. A second application returned `state_changed=False` and preserved the exact state hash.
+On 2026-07-14, Product materialization v1 was implemented and validated offline. A real run consumed the applied state and recomputed reconciliation from 1,734 original Product rows and 1,739 authoritative rows. It preserved 10 logical exclusions but correctly withheld the preview because `UNMATCHED_REFNR_006`, `UNMATCHED_REFNR_008`, and `UNMATCHED_REFNR_013` point to completely empty approved source rows. Only deterministic blocker, manifest, and report artifacts were generated.
 
 ## Current Capabilities
 
@@ -22,13 +22,15 @@ On 2026-07-13, the user explicitly approved the documented Step 3E.4 representat
 - Reconcile Product references, validate staged human decisions, and persist explicitly approved Product reconciliation state.
 - Produce a clean, validated Product review workbook and a revalidated Step 3E.4 application plan.
 - Apply Product reconciliation state only through an explicit, idempotent, reversible command.
+- Validate applied Product state and build deterministic local Product preview, lineage, exclusion, manifest, and blocker artifacts.
+- Fail closed without a partial preview when approved decisions lack materializable source evidence.
 - Generate conceptual schema and business-flow documentation.
 
 ## Test Status
 
-- Automated suite: 33 tests passed offline on 2026-07-13; latest run completed in 3.56 seconds.
+- Automated suite: 38 tests passed offline on 2026-07-14; latest run completed in 3.75 seconds.
 - All 12 project-local skills passed the official skill validator on 2026-07-13.
-- Internal link check: 11 checked, 0 broken on 2026-07-13.
+- Internal link check: 12 checked, 0 broken on 2026-07-14.
 - Main suite is offline and uses temporary directories for generated test artifacts.
 - Documentation link checker is available at `scripts/check_internal_links.py`.
 - The relocated `.venv` has a stale editable-install path; use the `PYTHONPATH=src` command in `docs/testing.md` until environment repair is explicitly approved.
@@ -38,6 +40,7 @@ On 2026-07-13, the user explicitly approved the documented Step 3E.4 representat
 
 - Reports under `outputs/originaldatabase_analysis/` are stale and still show earlier Product blockers; use the 2026-07-13 validation path cited above.
 - `canonical_tables.yml` still describes the pre-application Product key candidate; downstream work must treat `product_reconciliation_state.yml` as the approved Product-specific contract until those representations are deliberately reconciled.
+- The applied review state contains three retained `Product_ref.nr` decisions with no source values at all; they cannot produce `product_ref_nr`, `part_nr_sku`, attributes, or a defensible target identity.
 - Organisation business-key selection and several document-flow relationships still need business context.
 - Conflicted line extracts must not be promoted to approved relationships.
 - The current orchestrator does not yet expose module discovery, dependency resolution, checkpoints, resume, or dry-run as shared infrastructure.
@@ -45,17 +48,17 @@ On 2026-07-13, the user explicitly approved the documented Step 3E.4 representat
 ## Active Blockers
 
 - `config/data_model/approved_keys.yml` and `config/data_model/approved_relationships.yml` remain empty by design.
-- No Product materialization module currently consumes `product_reconciliation_state.yml` to build the target Product dataset.
+- Product materialization is blocked by `UNMATCHED_REFNR_006`, `UNMATCHED_REFNR_008`, and `UNMATCHED_REFNR_013` until a human rejects those empty records or supplies corrected source evidence.
 - Broader canonical key and relationship approvals remain pending; the Product-specific state does not populate `approved_keys.yml` or `approved_relationships.yml`.
 
 ## Next Logical Milestone
 
-Define and review a read-only Product materialization contract that consumes `product_reconciliation_state.yml`, applies the 18 approved actions, excludes the 10 rejected items, generates technical `product_id` values only for retained records, and produces local validation artifacts before any database or import work.
+Obtain an explicit human decision for the three empty approved rows: either classify them as invalid/rejected Product records or provide corrected source evidence. Then regenerate and reapply the reviewed decision state through the existing contract and rerun `product-materialization-preview`. Do not generate identities for the empty rows by assumption.
 
 ## Last Verified Commit
 
-`4cfc336` (`feat(product): add reconciliation apply contract`)
+`668db5f` (`chore(product): apply approved reconciliation state`)
 
 ## Last Updated
 
-2026-07-13 by Codex after the explicitly approved Step 3E.4 state application.
+2026-07-14 by Codex after fail-closed Product materialization validation.

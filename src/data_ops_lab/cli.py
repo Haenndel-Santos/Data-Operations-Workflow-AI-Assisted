@@ -7,6 +7,7 @@ from .approval_spreadsheet import run_approval_spreadsheet
 from .business_flow_mapping import run_business_flow_mapping
 from .canonical_model import run_canonical_model_alignment
 from .human_review import run_human_review, validate_approval_template
+from .product_materialization import run_product_materialization
 from .product_reference_audit import run_product_reference_audit
 from .product_reference_final_decision import run_product_reference_final_decision
 from .product_reference_review_spreadsheet import run_product_reference_review_spreadsheet
@@ -349,6 +350,35 @@ def build_parser() -> argparse.ArgumentParser:
         help="Replace a different existing state after preserving a history copy. Requires --apply.",
     )
 
+    product_materialization = subparsers.add_parser(
+        "product-materialization-preview",
+        help="Build a read-only Product preview from applied reconciliation state, or report blockers.",
+    )
+    product_materialization.add_argument(
+        "--data-dir",
+        type=Path,
+        default=Path("originaldatabase"),
+        help="Directory containing read-only Product.xlsx and Product_ref.nr.xlsx sources.",
+    )
+    product_materialization.add_argument(
+        "--workbook",
+        type=Path,
+        required=True,
+        help="Validated Product final review workbook used by the applied state.",
+    )
+    product_materialization.add_argument(
+        "--state",
+        type=Path,
+        default=Path("config/data_model/product_reconciliation_state.yml"),
+        help="Applied Product reconciliation state.",
+    )
+    product_materialization.add_argument(
+        "--output",
+        type=Path,
+        default=Path("outputs/originaldatabase_analysis/step3e5_product_materialization"),
+        help="New or byte-identical output directory for local preview artifacts.",
+    )
+
     product_refnr_missing_notes_fix = subparsers.add_parser(
         "product-refnr-missing-notes-fix",
         help="Generate auxiliary spreadsheet for Product final review rows missing final_human_notes.",
@@ -627,6 +657,28 @@ def main() -> None:
         print(f"Plan CSV: {result.plan_csv_path}")
         print(f"Report: {result.report_path}")
         print("Raw sources, review workbooks, approved_keys.yml, and approved_relationships.yml were not modified.")
+        return
+
+    if args.command == "product-materialization-preview":
+        result = run_product_materialization(args.data_dir, args.workbook, args.state, args.output)
+        print("Product materialization validation complete")
+        print(f"Status: {result.status}")
+        print(f"Original Product rows: {result.original_rows}")
+        print(f"Product_ref.nr rows: {result.product_refnr_rows}")
+        print(f"Target preview rows: {result.target_rows}")
+        print(f"Excluded identifiers: {result.excluded_identifiers}")
+        print(f"Blockers: {result.blocker_count}")
+        print(f"Outputs changed: {result.outputs_changed}")
+        print(f"Manifest: {result.manifest_path}")
+        print(f"Report: {result.report_path}")
+        if result.preview_path:
+            print(f"Preview CSV: {result.preview_path}")
+            print(f"Lineage CSV: {result.lineage_path}")
+            print(f"Exclusions CSV: {result.exclusions_path}")
+        else:
+            print(f"Blockers CSV: {result.blockers_path}")
+            print("No Product preview was generated.")
+        print("No raw source, approved state, database, import, migration, or external system was modified.")
         return
 
     if args.command == "product-refnr-missing-notes-fix":
