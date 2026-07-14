@@ -63,6 +63,7 @@ On 2026-07-14, Stage 5F added a two-phase recorded local analytics session. Prep
 - Generate a pending execution-review template bound to exact preparation and plan hashes rather than self-approving a ready plan.
 - Resume only from a separately completed human review and preserve the last valid execution, presentation, or narration checkpoint on failure.
 - Reuse byte-identical nested stage evidence while refusing divergent session checkpoints and exposing no review bypass or network switch.
+- Maintain a versioned AI implementation roadmap with ordered phases, exit gates, quality targets, and explicit non-authorizations.
 - Inventory local benchmark sources with hashes, provenance/license status, and separate use approvals.
 - Convert supported T-SQL samples to deterministic DuckDB/Parquet artifacts while ignoring operational SQL and retaining foreign keys as pending candidates.
 - Restore and integrity-check the official AdventureWorks 2025 backup in an isolated local read-only SQL Server database.
@@ -71,7 +72,7 @@ On 2026-07-14, Stage 5F added a two-phase recorded local analytics session. Prep
 
 - Automated suite: 159 tests passed offline on 2026-07-14; latest run completed in 23.34 seconds.
 - All 12 project-local skills passed the official skill validator on 2026-07-13.
-- Internal link check: 57 checked, 0 broken on 2026-07-14.
+- Internal link check: 59 checked, 0 broken on 2026-07-14.
 - Main suite is offline and uses temporary directories for generated test artifacts.
 - Documentation link checker is available at `scripts/check_internal_links.py`.
 - The relocated `.venv` has a stale editable-install path; use the `PYTHONPATH=src` command in `docs/testing.md` until environment repair is explicitly approved.
@@ -113,4 +114,4 @@ Define a versioned declarative registry for the analytics-session modules and va
 
 ## Last Updated
 
-2026-07-14 by Codex after the two-phase recorded analytics-session checkpoint.
+2026-07-14 by Codex after formalizing the AI platform implementation roadmap.

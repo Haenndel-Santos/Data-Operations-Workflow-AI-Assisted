@@ -80,6 +80,7 @@ See `docs/testing.md` for current commands and environment notes.
 - `docs/architecture.md`: component and data-flow boundaries.
 - `docs/testing.md`: validation strategy and commands.
 - `docs/orchestrator.md`: current and target orchestration behavior.
+- `docs/ai-implementation-roadmap.md`: ordered implementation phases, exit gates, quality targets, and product-readiness path.
 - `docs/agent-handoff.md`: short chronological session history.
 - `CHANGELOG.md`: release-relevant or user-visible changes only.
 

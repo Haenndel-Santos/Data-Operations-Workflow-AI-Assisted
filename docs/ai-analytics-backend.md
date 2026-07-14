@@ -215,6 +215,10 @@ Calling all dataset use "training" would hide important differences. The initial
 
 ## Roadmap
 
+The detailed implementation sequence, exit gates, quality targets, and
+commercial-readiness path are maintained in
+[AI Platform Implementation Roadmap](ai-implementation-roadmap.md).
+
 1. **Stage 5A - Safe query planning:** structured request, catalog validation, approved joins, parameterized SQL, dry-run evidence. Implemented.
 2. **Stage 5B - Controlled local execution:** read-only DuckDB executor, timeout/resource limits, result manifest, control totals, and no-result diagnostics. Implemented.
 3. **Stage 5C - Semantic catalog:** business names, synonyms, measures, dimensions, relationship paths, ambiguity scores, and dataset-specific domain packs. Technical validation plus the human review/apply infrastructure are implemented; a concrete approved catalog remains pending.

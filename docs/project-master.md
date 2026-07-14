@@ -23,6 +23,9 @@ The package is organized as a Python application under `src/data_ops_lab/`:
 - `.codex/` contains project-specific domain rules, skills, and agent profiles.
 
 See `docs/architecture.md` and `docs/orchestrator.md` for boundaries and flow details.
+See `docs/ai-implementation-roadmap.md` for the ordered path from the current
+backend to approved datasets, live-model evaluation, governed UX, EDS pilot,
+and production readiness.
 
 ## Project Stages
 
