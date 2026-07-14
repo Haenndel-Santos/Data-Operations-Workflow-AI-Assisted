@@ -48,8 +48,16 @@ otherwise the command fails without overwriting them.
 | --- | --- | --- | --- |
 | Northwind | Converted: 13 tables, 3,308 rows | DuckDB, Parquet, 13 relationship candidates | Confirm exact source/license and review schema/relationships. |
 | Pubs | Converted: 11 tables, 255 rows | DuckDB, Parquet, 10 relationship candidates | Confirm source/license; assess two replacement characters; review schema/relationships. |
-| AdventureWorks 2025 | Raw `.bak` retained | SHA-256 and size recorded | Obtain a compatible SQL Server restore/export path and confirm exact source/license. |
+| AdventureWorks 2025 | Official backup restored locally as `READ_ONLY` | Exact release hash; `RESTORE VERIFYONLY` and `DBCC CHECKDB` passed; 71 tables, 20 views, 90 declared foreign keys, 760,167 aggregate rows | Implement a reproducible read-only DuckDB/Parquet export, then review schema, relationships, and benchmark use. |
 | Contoso warehouse recipe | Raw SQL/Markdown retained | Schema/load recipe only | Confirm source/license; acquire an authorized local data package without external execution. |
+
+The local AdventureWorks backup exactly matches Microsoft's official
+`AdventureWorks2025.bak` release (50,229,248 bytes; SHA-256
+`fa6a2a5d431ad88123f89b36b1f2c7e42ca4bdf6b293269a44df80f6de3738a5`).
+It is restored only in the local SQL Server 2025 Developer instance, database
+`AdventureWorks2025`, and was set to `READ_ONLY` immediately after restoration.
+The SQL Server restore is a temporary compatibility bridge; no derived export
+or relationship approval has been produced from it yet.
 
 ## Approval Boundary
 

@@ -155,3 +155,15 @@
 **Reason:** Restricted parsing produces reproducible DuckDB and Parquet evidence without executing untrusted SQL, connecting externally, or conflating local conversion with provenance, licensing, relationship, training, or publication approval.
 
 **Impact:** Northwind and Pubs are locally converted and hash-validated. AdventureWorks and Contoso remain raw-only. Exact source/license confirmation, schema review, relationship approval, and benchmark expected-answer design remain pending.
+
+## 2026-07-14 - SQL Server Is A Temporary Read-Only Restore Bridge
+
+**Decision:** Use the default local SQL Server 2025 Developer instance only as an explicitly authorized compatibility bridge for restoring and exporting public SQL Server sample backups. Set restored benchmark databases to read-only, keep SQL services manual, and retain DuckDB/Parquet as the target analytical formats.
+
+**Context:** The user installed SQL Server and authorized local configuration and AdventureWorks restoration. The supplied backup is byte-identical to Microsoft's official MIT-licensed `AdventureWorks2025.bak` release. `RESTORE VERIFYONLY`, restoration, read-only enforcement, and `DBCC CHECKDB` all succeeded on build `17.0.4055.5`.
+
+**Alternatives:** Depend permanently on SQL Server for analytics; execute the backup against an external server; leave the dataset blocked; treat declared foreign keys as approved relationships.
+
+**Reason:** A temporary local restore bridge preserves the backup's relational metadata and enables a later reproducible export without making SQL Server an application dependency or weakening relationship governance.
+
+**Impact:** `AdventureWorks2025` is locally available as a read-only database with 71 tables, 20 views, 90 declared foreign keys, and 760,167 aggregate rows. Export, schema review, relationship approval, benchmark acceptance, model training, and external upload remain pending. The separate `DATAOPSLAB` Evaluation instance is stopped and is not a project dependency.

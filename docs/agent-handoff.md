@@ -557,3 +557,48 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 - Do not restore the AdventureWorks backup, execute Contoso external loads, or connect to any external database without explicit authorization.
 - Do not treat parsed foreign keys as approved relationships.
 - Do not upload, publish, fine-tune on, or otherwise use the datasets beyond approved local storage/conversion.
+
+## 2026-07-14 - Codex - AdventureWorks local restore validation
+
+### Initial Context
+
+- Branch: `main`
+- Initial commit: `a13f9c7`
+- Initial worktree: clean; branch was nine commits ahead of `origin/main`
+- Objective: make the user-supplied AdventureWorks backup functional through an authorized local SQL Server installation without accessing external or production databases
+
+### Work Performed
+
+- Installed SQL Server command-line tools and SSMS, then applied SQL Server 2025 CU6 to build `17.0.4055.5`.
+- Configured SQL Server services for manual operation and disabled both SQL telemetry services; `SQLWriter` was left unchanged.
+- Verified that the local 50,229,248-byte backup exactly matches Microsoft's official `AdventureWorks2025.bak` SHA-256 `fa6a2a5d431ad88123f89b36b1f2c7e42ca4bdf6b293269a44df80f6de3738a5` and recorded its MIT license source.
+- Ran `RESTORE VERIFYONLY`, restored `AdventureWorks2025` to the default local Developer instance, immediately set it to `READ_ONLY`, and ran metadata-only validation plus `DBCC CHECKDB`.
+- Updated project state and benchmark governance documentation. Raw data and database files remain ignored or outside the repository.
+
+### Validation
+
+- SQL Server: `Standard Developer Edition (64-bit)`, version `17.0.4055.5`.
+- AdventureWorks: online, read-only, compatibility level 170; 6 user schemas, 71 tables, 20 views, 90 declared foreign keys, and 760,167 aggregate rows.
+- `RESTORE VERIFYONLY`: passed. `DBCC CHECKDB`: passed with no reported errors.
+- Full offline suite: 56 passed in 9.09 seconds.
+- Documentation: 20 internal links checked, 0 broken; benchmark inventory YAML loaded successfully.
+- Final service state: both SQL Server instances, both agents, and SQL Browser stopped; database services remain manual and telemetry services remain disabled. `SQLWriter` was unchanged.
+- No external database, private EDS data, migration, synchronization, model API, or relationship promotion was used.
+
+### State For Next Agent
+
+- AdventureWorks is restored and validated, but no DuckDB/Parquet export or benchmark approval exists.
+- The default `MSSQLSERVER` instance is the authorized temporary restore bridge; the separate `DATAOPSLAB` Evaluation instance remains stopped and is not a project dependency.
+- All SQL services should remain stopped between explicitly authorized restore/export tasks.
+
+### Next Logical Steps
+
+1. Implement a fail-closed, read-only SQL Server-to-DuckDB/Parquet exporter with synthetic or controlled validation first.
+2. Export AdventureWorks to ignored derived storage and verify table counts, hashes, types, nullability, and declared relationship candidates.
+3. Review the schema, relationships, expected questions, and control totals before any benchmark-use approval.
+
+### Do Not Do Yet
+
+- Do not treat the 90 declared foreign keys as approved relationships.
+- Do not use AdventureWorks for benchmark evaluation or model training until the separate governance gates are completed.
+- Do not connect to external databases or query private EDS data.

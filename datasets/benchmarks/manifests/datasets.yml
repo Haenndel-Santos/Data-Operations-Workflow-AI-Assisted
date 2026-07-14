@@ -14,18 +14,32 @@ governance:
     remain separate approval decisions after provenance and license review.
 datasets:
   - id: adventureworks_2025
-    status: conversion_blocked_runtime_unavailable
+    status: restored_local_read_only_pending_export_and_review
     intended_role: relational_oltp_benchmark_candidate
-    provenance: user_supplied_local_download_origin_unverified
-    license: pending_exact_source_confirmation
+    provenance: verified_exact_match_official_microsoft_release
+    authoritative_source: https://github.com/Microsoft/sql-server-samples/releases/download/adventureworks/AdventureWorks2025.bak
+    license: MIT
+    license_source: https://github.com/microsoft/sql-server-samples/blob/master/license.txt
     sources:
       - path: datasets/benchmarks/raw/adventureworks/AdventureWorks2025.bak
         format: sql_server_backup
         bytes: 50229248
         sha256: fa6a2a5d431ad88123f89b36b1f2c7e42ca4bdf6b293269a44df80f6de3738a5
     processing:
-      action: retained_raw_only
-      reason: No compatible local SQL Server restore runtime is available.
+      action: restored_local_read_only
+      local_instance: MSSQLSERVER
+      runtime: SQL Server 2025 Standard Developer CU6
+      runtime_build: 17.0.4055.5
+      database: AdventureWorks2025
+      read_only: true
+      restore_verifyonly: passed
+      dbcc_checkdb: passed
+      user_schemas: 6
+      tables: 71
+      views: 20
+      declared_foreign_keys: 90
+      aggregate_rows: 760167
+      derived_export_status: pending
       external_connection_used: false
   - id: northwind
     status: converted_local_pending_dataset_review

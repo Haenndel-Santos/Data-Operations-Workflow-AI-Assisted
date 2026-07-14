@@ -6,11 +6,11 @@ Turn local operational spreadsheets into validated analytical datasets and an ap
 
 ## Current Stage
 
-Three active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI analytics Stage 5A provides safe structured query planning with no SQL execution; and benchmark onboarding now provides governed local storage plus restricted Northwind/Pubs conversion pending dataset approval.
+Three active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI analytics Stage 5A provides safe structured query planning with no SQL execution; and benchmark onboarding provides restricted Northwind/Pubs conversion plus a verified read-only AdventureWorks 2025 restore pending export and dataset approval.
 
 ## Last Completed Milestone
 
-On 2026-07-14, benchmark onboarding moved user-supplied samples into ignored raw storage, recorded checksums and approval boundaries, and converted Northwind and Pubs to local DuckDB and Zstandard-compressed Parquet. Conversion parses only table definitions and local insert rows; it does not execute source SQL or connect externally.
+On 2026-07-14, the local AdventureWorks backup was proven byte-identical to Microsoft's official release, restored to SQL Server 2025 Developer CU6, set to `READ_ONLY`, and validated with `RESTORE VERIFYONLY` and `DBCC CHECKDB`. The database contains 71 tables, 20 views, 90 declared foreign keys, and 760,167 aggregate table rows. No DuckDB/Parquet export or relationship approval was performed.
 
 ## Current Capabilities
 
@@ -31,10 +31,11 @@ On 2026-07-14, benchmark onboarding moved user-supplied samples into ignored raw
 - Reject raw SQL, unapproved joins, unknown schema references, unsafe limits, and malformed relationship registries.
 - Inventory local benchmark sources with hashes, provenance/license status, and separate use approvals.
 - Convert supported T-SQL samples to deterministic DuckDB/Parquet artifacts while ignoring operational SQL and retaining foreign keys as pending candidates.
+- Restore and integrity-check the official AdventureWorks 2025 backup in an isolated local read-only SQL Server database.
 
 ## Test Status
 
-- Automated suite: 56 tests passed offline on 2026-07-14; latest run completed in 5.24 seconds.
+- Automated suite: 56 tests passed offline on 2026-07-14; latest run completed in 9.09 seconds.
 - All 12 project-local skills passed the official skill validator on 2026-07-13.
 - Internal link check: 20 checked, 0 broken on 2026-07-14.
 - Main suite is offline and uses temporary directories for generated test artifacts.
@@ -52,8 +53,9 @@ On 2026-07-14, benchmark onboarding moved user-supplied samples into ignored raw
 - The current orchestrator does not yet expose module discovery, dependency resolution, checkpoints, resume, or dry-run as shared infrastructure.
 - Several core pipeline stages still load whole Parquet tables into Pandas; larger-than-memory operation requires DuckDB pushdown and streaming refactors.
 - The natural-language adapter, controlled executor, semantic catalog, result validator, and benchmark question/answer harness are not implemented yet.
-- Exact download provenance and licensing for the user-supplied benchmark files remain unconfirmed; local conversion is not benchmark, training, publication, or upload approval.
-- AdventureWorks cannot be converted locally without a compatible SQL Server restore/export runtime; the Contoso recipe references external data and was not executed.
+- Exact download provenance and licensing remain unconfirmed for Northwind, Pubs, and Contoso; local conversion or restoration is not benchmark, training, publication, or upload approval.
+- AdventureWorks now has a compatible local restore runtime, but the SQL Server-to-DuckDB/Parquet export is not implemented; the Contoso recipe references external data and was not executed.
+- A second SQL Server 2025 Evaluation instance (`DATAOPSLAB`) remains installed but stopped; project work should use the default Developer instance only when an explicitly authorized restore/export task requires it.
 
 ## Active Blockers
 
@@ -62,15 +64,16 @@ On 2026-07-14, benchmark onboarding moved user-supplied samples into ignored raw
 - No explicit apply contract or approved versioned representation exists yet for the candidate canonical Product snapshot.
 - EDS cross-table analytics remain blocked because `approved_relationships.yml` is intentionally empty.
 - Northwind and Pubs are converted but remain pending provenance, license, schema, relationship, and benchmark-use approval.
+- AdventureWorks is restored and validated but remains pending reproducible export, schema review, relationship approval, and benchmark-use approval.
 
 ## Next Logical Milestone
 
-Confirm exact benchmark provenance/licensing and review Northwind/Pubs schema and relationship candidates before accepting either pack. In parallel, define Stage 5B with read-only enforcement, timeout/resource/result limits, control totals, and auditable result manifests against synthetic fixtures. Keep Product canonical apply separate and do not query EDS private data.
+Implement a fail-closed, read-only SQL Server-to-DuckDB/Parquet export for AdventureWorks and validate it first with controlled fixtures, then review its schema and declared relationships without promoting them. In parallel, confirm Northwind/Pubs provenance and define Stage 5B against synthetic fixtures. Keep Product canonical apply separate and do not query EDS private data.
 
 ## Last Verified Commit
 
-`fb56fb9` (`feat(analytics): add safe query planning foundation`)
+`a13f9c7` (`feat(benchmarks): add safe local dataset conversion`)
 
 ## Last Updated
 
-2026-07-14 by Codex after governed local benchmark onboarding and conversion.
+2026-07-14 by Codex after official AdventureWorks restore and integrity validation.

@@ -103,10 +103,12 @@ The local benchmark area now contains user-supplied Northwind, Pubs,
 AdventureWorks 2025, and a Contoso warehouse load recipe. Northwind and Pubs
 have reproducible DuckDB/Parquet conversions, but their exact download origins
 and licenses remain unconfirmed and all extracted relationships remain
-`pending_review`. AdventureWorks is retained as a `.bak` because no compatible
-SQL Server restore runtime is available. Contoso is retained as schema/load
-evidence only because its rows are external. No remote source was connected or
-downloaded during conversion.
+`pending_review`. AdventureWorks exactly matches Microsoft's official MIT-licensed
+2025 backup and is restored in a local SQL Server 2025 Developer instance as a
+read-only database. Restore verification and `DBCC CHECKDB` passed; a
+reproducible DuckDB/Parquet export and relationship review remain pending.
+Contoso is retained as schema/load evidence only because its rows are external.
+No external database was connected during onboarding or validation.
 
 AdventureWorksDW2019 and Chinook remain candidate benchmark packs for broader
 dimensional and media-commerce coverage. Every pack still requires an
