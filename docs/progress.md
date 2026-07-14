@@ -6,11 +6,11 @@ Turn local operational spreadsheets into validated analytical datasets and an ap
 
 ## Current Stage
 
-Three active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI analytics has Stage 5A-5D governed planning/execution/translation plus a synthetic Stage 5E exact-answer harness but no real approved catalog or live provider; and benchmark onboarding remains pending dataset export/review and approval.
+Three active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI analytics has Stage 5A-5D governed planning/execution/translation plus synthetic Stage 5E answer evaluation and dry-run dataset-backed binding validation, but no real approved catalog, approved benchmark pack, dataset-backed execution, or live provider; and benchmark onboarding remains pending dataset export/review and approval.
 
 ## Last Completed Milestone
 
-On 2026-07-14, Stage 5E added a versioned synthetic expected-answer pack and offline harness. Five cases cover an approved two-table join, grouped and filtered aggregates, no rows, and a null filter through the real Stage 5D, 5A, and 5B entrypoints. Exact expected requests gate planning; exact CSV and row/column/null controls gate success. Runtime DuckDB databases and case artifacts are discarded; no live model, network, external database, or real data was used.
+On 2026-07-14, Stage 5E added a dry-run dataset-backed benchmark validator. It requires a verified local DuckDB manifest, exact artifact identity, approved semantic and relationship hashes, a candidate expected-answer pack, and a separate human approval bound to every source by SHA-256. Expected results use typed exact comparison by default or reviewed per-column numeric tolerance. The database is hashed as an opaque file but never opened or queried; no real dataset, provider, network, external database, or execution was used.
 
 ## Current Capabilities
 
@@ -45,15 +45,18 @@ On 2026-07-14, Stage 5E added a versioned synthetic expected-answer pack and off
 - Materialize bounded temporary DuckDB fixtures from structured allowlisted synthetic tables, types, and values without accepting setup SQL.
 - Require an exact versioned request before Stage 5A planning and Stage 5B execution in synthetic expected-answer evaluation.
 - Compare exact ordered CSV output plus row, column, null, pipeline, and request controls across grouped, filtered, no-row, null-filter, and approved-join cases.
+- Validate a version-1 dataset-backed benchmark package without opening its DuckDB artifact or reading its catalog, tables, or rows.
+- Bind dataset identity, approved semantics, approved relationships, candidate pack, and separate human approval by SHA-256.
+- Validate bounded typed expected answers with exact comparison or explicit per-column numeric tolerances while refusing live-provider, upload, and training authority.
 - Inventory local benchmark sources with hashes, provenance/license status, and separate use approvals.
 - Convert supported T-SQL samples to deterministic DuckDB/Parquet artifacts while ignoring operational SQL and retaining foreign keys as pending candidates.
 - Restore and integrity-check the official AdventureWorks 2025 backup in an isolated local read-only SQL Server database.
 
 ## Test Status
 
-- Automated suite: 112 tests passed offline on 2026-07-14; latest run completed in 17.95 seconds.
+- Automated suite: 121 tests passed offline on 2026-07-14; latest run completed in 17.06 seconds.
 - All 12 project-local skills passed the official skill validator on 2026-07-13.
-- Internal link check: 37 checked, 0 broken on 2026-07-14.
+- Internal link check: 41 checked, 0 broken on 2026-07-14.
 - Main suite is offline and uses temporary directories for generated test artifacts.
 - Documentation link checker is available at `scripts/check_internal_links.py`.
 - The relocated `.venv` has a stale editable-install path; use the `PYTHONPATH=src` command in `docs/testing.md` until environment repair is explicitly approved.
@@ -69,8 +72,8 @@ On 2026-07-14, Stage 5E added a versioned synthetic expected-answer pack and off
 - The current orchestrator does not yet expose module discovery, dependency resolution, checkpoints, resume, or dry-run as shared infrastructure.
 - Several core pipeline stages still load whole Parquet tables into Pandas; larger-than-memory operation requires DuckDB pushdown and streaming refactors.
 - No concrete semantic catalog has completed human review or been applied; Stage 5D therefore remains operationally blocked for real datasets.
-- A live model provider, result narration, immutable dataset-package identity, and dataset-backed question/answer harness are not implemented yet. Synthetic Stage 5D/5E packs validate backend contracts only and are not live-model or real-dataset quality evidence.
-- Plan-to-execution database drift uses size and nanosecond modification time rather than a full database content hash; immutable dataset-package identity remains future evidence work.
+- A live model provider, result narration, approved real benchmark pack, and dataset-backed execution are not implemented yet. Synthetic Stage 5D/5E packs and the dataset-binding dry-run validate backend contracts only and are not live-model or real-dataset quality evidence.
+- Stage 5B plan-to-execution drift still uses size and nanosecond modification time. The new dataset-backed package contract adds a full database SHA-256 before future evaluation, but no execution runner consumes that authority yet.
 - Exact download provenance and licensing remain unconfirmed for Northwind, Pubs, and Contoso; local conversion or restoration is not benchmark, training, publication, or upload approval.
 - AdventureWorks now has a compatible local restore runtime, but the SQL Server-to-DuckDB/Parquet export is not implemented; the Contoso recipe references external data and was not executed.
 - A second SQL Server 2025 Evaluation instance (`DATAOPSLAB`) remains installed but stopped; project work should use the default Developer instance only when an explicitly authorized restore/export task requires it.
@@ -87,12 +90,12 @@ On 2026-07-14, Stage 5E added a versioned synthetic expected-answer pack and off
 
 ## Next Logical Milestone
 
-Define the dataset-backed Stage 5E pack contract around an immutable local dataset manifest, cryptographic dataset identity, approved semantic/relationship hashes, explicit benchmark-use approval, expected requests, and exact or declared numeric tolerances. Do not export/use AdventureWorks or EDS merely to implement the contract. Keep live-provider selection, narration, Product canonical apply, and external/database work separate. In parallel, profile the highest-memory Pandas stages before selecting one measured DuckDB pushdown refactor.
+Add a hash-bound benchmark review-preparation workflow that produces a pending human review from a candidate dataset manifest and expected-answer pack, followed by explicit approval validation. Test it only with temporary synthetic data before connecting it to dataset-backed execution. Do not export/query AdventureWorks or use EDS for this implementation step. Keep live-provider selection, narration, Product canonical apply, and external/database work separate. In parallel, profile the highest-memory Pandas stages before selecting one measured DuckDB pushdown refactor.
 
 ## Last Verified Commit
 
-`6bf0ac9` (`feat(analytics): add translation evaluation pack`)
+`3f0edab` (`feat(analytics): add expected answer harness`)
 
 ## Last Updated
 
-2026-07-14 by Codex after the synthetic Stage 5E expected-answer checkpoint.
+2026-07-14 by Codex after the dataset-backed Stage 5E dry-run contract checkpoint.

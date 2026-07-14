@@ -198,6 +198,16 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 
 This executes only a temporary synthetic DuckDB database after exact request and plan gates. It does not use a live model or real dataset.
 
+To validate immutable dataset-backed benchmark bindings without opening or querying the database:
+
+```powershell
+$env:PYTHONPATH = "src"
+$env:PYTHONDONTWRITEBYTECODE = "1"
+.\.venv\Scripts\python.exe -m data_ops_lab analytics-dataset-benchmark-validate --dataset-manifest "<manifest.yml>" --database "<dataset.duckdb>" --semantic-state "<semantic.yml>" --relationships "<relationships.yml>" --pack "<pack.yml>" --approval "<approval.yml>" --output "outputs\<run-id>\analytics_dataset_benchmark_validation"
+```
+
+This is a hash-bound dry-run only. Current EDS and benchmark datasets do not yet meet its approval prerequisites.
+
 To convert an approved local T-SQL sample into DuckDB and compressed Parquet
 without executing operational SQL:
 
@@ -297,5 +307,6 @@ DuckDB is a good fit for this project because it supports local analytical workf
 - [Analytics natural-language translation contract](docs/analytics-nl-translation.md)
 - [Analytics translation evaluation contract](docs/analytics-translation-evaluation.md)
 - [Analytics expected-answer evaluation contract](docs/analytics-answer-evaluation.md)
+- [Dataset-backed benchmark validation contract](docs/analytics-dataset-benchmark.md)
 - [Benchmark dataset onboarding contract](docs/benchmark-datasets.md)
 - [Agent handoff history](docs/agent-handoff.md)

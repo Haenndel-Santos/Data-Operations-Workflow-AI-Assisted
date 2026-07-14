@@ -4,6 +4,7 @@ import argparse
 from pathlib import Path
 
 from .analytics_answer_evaluation import run_analytics_answer_evaluation
+from .analytics_dataset_benchmark import run_analytics_dataset_benchmark_validation
 from .analytics_nl_translation import (
     RecordedSemanticIntentProvider,
     run_analytics_nl_translation,
@@ -230,6 +231,22 @@ def build_parser() -> argparse.ArgumentParser:
         "--output",
         type=Path,
         default=Path("outputs/analytics_answer_evaluation"),
+    )
+
+    analytics_dataset_benchmark = subparsers.add_parser(
+        "analytics-dataset-benchmark-validate",
+        help="Validate immutable dataset and benchmark-pack bindings without opening the database.",
+    )
+    analytics_dataset_benchmark.add_argument("--dataset-manifest", type=Path, required=True)
+    analytics_dataset_benchmark.add_argument("--database", type=Path, required=True)
+    analytics_dataset_benchmark.add_argument("--semantic-state", type=Path, required=True)
+    analytics_dataset_benchmark.add_argument("--relationships", type=Path, required=True)
+    analytics_dataset_benchmark.add_argument("--pack", type=Path, required=True)
+    analytics_dataset_benchmark.add_argument("--approval", type=Path, required=True)
+    analytics_dataset_benchmark.add_argument(
+        "--output",
+        type=Path,
+        default=Path("outputs/analytics_dataset_benchmark_validation"),
     )
 
     benchmark_convert_sql = subparsers.add_parser(
@@ -850,6 +867,28 @@ def main() -> None:
         print(f"Outputs changed: {result.outputs_changed}")
         print(f"Manifest: {result.manifest_path}")
         print("Temporary synthetic DuckDB only. No live model, network, or external database was used.")
+        return
+
+    if args.command == "analytics-dataset-benchmark-validate":
+        result = run_analytics_dataset_benchmark_validation(
+            args.dataset_manifest,
+            args.database,
+            args.semantic_state,
+            args.relationships,
+            args.pack,
+            args.approval,
+            args.output,
+        )
+        print("Dataset-backed benchmark contract validation complete")
+        print(f"Status: {result.status}")
+        print(f"Cases: {result.case_count}")
+        print(f"Exact comparisons: {result.exact_case_count}")
+        print(f"Numeric tolerances: {result.tolerance_case_count}")
+        print(f"Approved relationships: {result.relationship_count}")
+        print(f"Blockers: {result.blocker_count}")
+        print(f"Outputs changed: {result.outputs_changed}")
+        print(f"Manifest: {result.manifest_path}")
+        print("Dry-run only. The database was hashed but never opened or queried.")
         return
 
     if args.command == "benchmark-convert-sql":

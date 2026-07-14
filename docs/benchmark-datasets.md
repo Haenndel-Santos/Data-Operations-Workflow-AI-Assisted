@@ -67,6 +67,14 @@ upload, publication, and model-parameter training. Future evaluation should
 first define expected questions, approved plans/results, control totals, and
 privacy/licensing evidence.
 
+The downstream
+[dataset-backed benchmark contract](analytics-dataset-benchmark.md) is a strict
+gate, not an approval shortcut. It requires a verified immutable dataset
+manifest, approved semantic and relationship hashes, a candidate expected-answer
+pack, and a separate hash-bound human approval. The validator hashes the DuckDB
+artifact as an opaque file and does not open it, query it, or grant benchmark,
+upload, provider, publication, or training authority.
+
 ## Validation
 
 Focused converter tests use temporary synthetic scripts and verify restricted

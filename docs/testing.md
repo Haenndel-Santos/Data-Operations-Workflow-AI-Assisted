@@ -147,6 +147,25 @@ temporary synthetic DuckDB files. They do not use EDS, benchmark data, project
 databases, SQL Server, a model API, network access, migrations, imports, sync,
 or narration.
 
+## Dataset-Backed Benchmark Contract
+
+Stage 5E dataset-contract tests create only temporary synthetic DuckDB files.
+The validator hashes each database as an opaque file and never opens it or reads
+its catalog, tables, or rows. Tests cover immutable hash bindings, provenance
+and license gates, separate human approval, exact and numeric-tolerance policy,
+input preservation, idempotency, divergent-evidence refusal, and CLI shape:
+
+```powershell
+$env:PYTHONPATH = "src"
+$env:PYTHONDONTWRITEBYTECODE = "1"
+.\.venv\Scripts\python.exe -m pytest -p no:cacheprovider tests\analytics_dataset_benchmark_test.py
+```
+
+Do not substitute EDS, AdventureWorks, Northwind, Pubs, or another real dataset
+for the temporary test fixture. Validating a real package requires its own
+reviewed manifest, semantic state, relationships, pack, and approval; execution
+is a later, separate capability.
+
 ## Benchmark Conversion Validation
 
 Use the restricted converter only for a locally approved SQL sample whose

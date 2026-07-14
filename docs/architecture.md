@@ -27,6 +27,7 @@ CLI
      -> exact plan revalidation
      -> controlled read-only execution and result evidence
      -> synthetic exact-answer and control-total evaluation
+     -> immutable dataset-backed benchmark validation (dry-run)
 
   -> public benchmark onboarding
      -> ignored immutable raw source
@@ -51,6 +52,7 @@ CLI
 | Analytics semantic-catalog module | Validate business terms, fields, measures, paths, and ambiguity against physical metadata | Metadata only; approved relationships only; never self-approve semantics or resolve ambiguity silently. |
 | Analytics translation-evaluation module | Replay synthetic translation, clarification, rejection, timeout, and failure cases through Stage 5D | Offline in-memory providers only; evidence omits questions/responses and is not live-model quality evidence. |
 | Analytics answer-evaluation module | Chain synthetic recorded translation through exact request, Stage 5A plan, Stage 5B execution, and expected-result controls | Temporary allowlisted DuckDB only; no setup SQL, real data, narration, or persisted case artifacts. |
+| Dataset benchmark-validation module | Bind immutable DuckDB, semantics, relationships, expected answers, tolerances, and separate approval by SHA-256 | Hash opaque local files only; never open/query the database or infer approval from conversion manifests. |
 | Benchmark SQL conversion module | Parse local sample T-SQL table definitions and rows into DuckDB and Parquet | Never execute source SQL or external operations; output remains unapproved benchmark evidence. |
 | `datasets/benchmarks/` | Separate ignored raw/derived data from versioned inventories and contracts | Dataset presence or conversion is not approval for training, upload, or relationship promotion. |
 | `config/data_model/` | Version candidate state, domain mappings, and approvals | Keep candidate and approved files separate. |
@@ -74,4 +76,4 @@ Modeling decisions use distinct states such as candidate, pending review, approv
 - No shared dependency graph, checkpoint, resume, or dry-run engine.
 - CLI stage dispatch and the default workflow are not yet unified under one orchestration contract.
 - Some generated summaries become stale when later review steps run; consolidated state must cite the newest validation evidence.
-- Semantic governance, Stage 5D translation evaluation, and a synthetic Stage 5E exact-answer harness exist. No real semantic registry is approved yet; live model-provider integration, result narration, and dataset-backed question/answer evaluation are not implemented.
+- Semantic governance, Stage 5D translation evaluation, a synthetic Stage 5E exact-answer harness, and dataset-backed dry-run binding validation exist. No real semantic registry or benchmark pack is approved yet; live model-provider integration, result narration, and dataset-backed execution are not implemented.

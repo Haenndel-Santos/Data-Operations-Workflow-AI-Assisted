@@ -122,3 +122,7 @@ The command uses a temporary local DuckDB database and performs read-only
 analytical queries against that synthetic database. It uses no live model,
 network, external database, production data, migration, import, sync, or result
 narration.
+
+Dataset-backed packs require immutable artifact and approval validation before
+they can reuse these execution boundaries. See
+[Dataset-Backed Benchmark Validation](analytics-dataset-benchmark.md).

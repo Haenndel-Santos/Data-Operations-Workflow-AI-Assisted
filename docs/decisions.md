@@ -241,3 +241,30 @@
 **Alternatives:** Execute every schema-valid provider response; store setup SQL in the pack; compare unordered result sets; bypass Stage 5A review artifacts; call a narrator before validating results; begin with EDS or an unapproved benchmark.
 
 **Impact:** `analytics-answer-evaluate` covers grouped, filtered, no-row, and null-filter synthetic cases with fixed conservative limits. Input packs contain synthetic case content, while generated evaluation evidence omits it and runtime databases/results are discarded. The harness is not approval for real datasets, live providers, benchmark relationships, business answers, or narration.
+
+## 2026-07-14 - Dataset Benchmarks Require Separate Hash-Bound Approval
+
+**Decision:** Before any dataset-backed Stage 5E execution, require a verified
+immutable local DuckDB manifest, approved semantic-state and relationship
+hashes, a candidate pack containing reviewed expected requests/results, and a
+separate human approval bound to every source by SHA-256. Exact comparison is
+the default; numeric tolerance must be explicit, finite, typed, and reviewed per
+numeric result column.
+
+**Rationale:** Local availability or successful conversion does not establish
+provenance, license, semantic correctness, relationship authority, expected
+answer authority, or data-use consent. Keeping these authorities separate makes
+drift visible and prevents a dataset manifest or generated pack from approving
+itself.
+
+**Alternatives:** Treat converted datasets as approved benchmarks; store approval
+inside the candidate pack; use filenames or modification times as identity;
+allow global floating-point tolerance; inspect or query the database during the
+binding step; let offline approval authorize live providers, upload, or model
+training.
+
+**Impact:** `analytics-dataset-benchmark-validate` performs a dry-run contract
+check and hashes the database as an opaque file without opening or querying it.
+It may report `ready_for_offline_evaluation`, but it does not execute cases,
+approve a live provider, authorize external disclosure or training, or make any
+current EDS/public dataset an approved benchmark.

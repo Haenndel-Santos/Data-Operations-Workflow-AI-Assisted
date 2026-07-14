@@ -941,3 +941,51 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 - Do not export or query AdventureWorks, EDS, Northwind, or Pubs merely to implement the dataset-backed contract.
 - Do not treat synthetic pass rates as model, benchmark, or business-answer quality.
 - Do not add narration before deterministic result validation and evidence authority are explicit.
+
+## 2026-07-14 - Codex - Stage 5E dataset-backed binding contract
+
+### Initial Context
+
+- Branch: `main`
+- Initial commit: `3f0edab`
+- Initial worktree: clean and synchronized with `origin/main`
+- Objective: define the next dataset-backed Stage 5E safety boundary without opening, querying, exporting, or approving any real dataset
+
+### Work Performed
+
+- Added the `analytics_dataset_benchmark` version-1 dry-run contract and `analytics-dataset-benchmark-validate` CLI command.
+- Required a verified synthetic/public local DuckDB manifest with exact byte size, SHA-256, provenance source, license identifier, and approved semantic/relationship bindings.
+- Required a candidate pack bound to the manifest, database, semantic state, and relationship registry by SHA-256.
+- Added bounded recorded provider responses, exact Stage 5A expected requests, typed expected rows and controls, deterministic ordering for multi-row results, and exact or reviewed per-column numeric tolerance policy.
+- Required a separate human approval bound to the manifest, database, semantic state, relationships, and candidate pack. Offline approval cannot authorize a live provider, external upload, or model training.
+- Added timezone-aware ISO-8601 approval timestamps, bounded control-file sizes, strict version-1 fields, input preservation, exact idempotent reuse, and divergent-evidence refusal.
+- Hashed each DuckDB artifact once as an opaque local file with a before/after stability check. The validator creates no DuckDB connection and never opens a catalog, table, row, or query connection.
+- Persisted only source hashes, safe IDs, counts, controls, blockers, and a boundary report; questions, provider responses, expected requests/results, approval identity, and dataset content are omitted.
+- Updated the README, architecture, backend, benchmark, testing, decision, project-state, changelog, and contract documentation.
+
+### Validation
+
+- New dataset-contract tests: 9 passed in 1.79 seconds on the final focused run.
+- Final full offline suite: 121 passed in 17.06 seconds.
+- Python compilation: passed.
+- Documentation: 41 internal links checked, 0 broken.
+- Tests used only pytest temporary synthetic DuckDB files. No EDS, AdventureWorks, Northwind, Pubs, project database, SQL Server connection, live provider, network, credentials, migration, import, export, synchronization, narration, external upload, or model training was used.
+
+### State For Next Agent
+
+- Stage 5E can now determine whether independently reviewed dataset, semantic, relationship, pack, and approval artifacts are cryptographically aligned for a future offline evaluation.
+- `ready_for_offline_evaluation` is a contract state only. No dataset-backed evaluator currently consumes it or executes cases.
+- No real dataset currently meets the contract. Existing Northwind/Pubs conversion and AdventureWorks restoration do not grant benchmark-use, relationship, semantic, expected-answer, provider, upload, or training authority.
+- Stage 5B still uses size/mtime plan-to-execution drift checks; a future dataset-backed runner must additionally enforce the immutable SHA-256 authority validated here.
+
+### Next Logical Steps
+
+1. Add a pending benchmark-review preparation artifact bound to the exact candidate manifest and pack.
+2. Validate complete human decisions and produce the separate approval file without allowing the candidate pack to approve itself.
+3. Only after that governance path is tested, design a dataset-backed offline runner that rechecks every hash and preserves Stage 5A/5B controls.
+
+### Do Not Do Yet
+
+- Do not query, export, or approve EDS, AdventureWorks, Northwind, Pubs, or another real dataset merely to exercise this contract.
+- Do not treat `ready_for_offline_evaluation` as execution, business-answer correctness, live-model quality, or permission for upload/training.
+- Do not add a live provider, credentials, narration, or external connector before their separate authority and test boundaries exist.

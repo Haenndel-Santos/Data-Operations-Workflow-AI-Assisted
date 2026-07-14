@@ -84,9 +84,16 @@ Stage 5E now has a synthetic expected-answer foundation. A versioned pack
 materializes allowlisted rows into temporary DuckDB, requires the Stage 5D
 request to exactly match the expected request, runs Stage 5A and Stage 5B, and
 compares exact CSV output plus row, column, and null controls. Runtime artifacts
-are discarded and evaluator evidence omits case content. Dataset-backed
-benchmarking and result narration remain pending. See
+are discarded and evaluator evidence omits case content. See
 [Analytics Expected-Answer Evaluation](analytics-answer-evaluation.md).
+
+The dataset-backed Stage 5E dry-run validator now binds a verified local DuckDB
+artifact, approved semantic state, approved relationships, candidate benchmark
+pack, and separate human approval by SHA-256. It validates expected results and
+exact or explicitly bounded numeric comparison policies without opening or
+querying the database. No current real dataset satisfies this contract, and
+dataset-backed execution and result narration remain pending. See
+[Dataset-Backed Benchmark Validation](analytics-dataset-benchmark.md).
 
 ## Request Contract
 
@@ -182,7 +189,7 @@ Calling all dataset use "training" would hide important differences. The initial
 2. **Stage 5B - Controlled local execution:** read-only DuckDB executor, timeout/resource limits, result manifest, control totals, and no-result diagnostics. Implemented.
 3. **Stage 5C - Semantic catalog:** business names, synonyms, measures, dimensions, relationship paths, ambiguity scores, and dataset-specific domain packs. Technical validation plus the human review/apply infrastructure are implemented; a concrete approved catalog remains pending.
 4. **Stage 5D - Natural-language adapter:** deterministic approved-semantic compiler, provider-neutral translation boundary, and synthetic offline regression pack implemented. Live model-provider integration remains pending and unauthorized. Raw SQL is never accepted.
-5. **Stage 5E - Expected-answer harness:** synthetic exact request/result/control evaluation is implemented. EDS local evaluation and separately approved AdventureWorks/Chinook packs remain pending.
+5. **Stage 5E - Expected-answer harness:** synthetic exact request/result/control evaluation and dry-run immutable dataset/pack binding validation are implemented. Dataset-backed execution, EDS local evaluation, and separately approved public benchmark packs remain pending.
 6. **Stage 5F - User experience:** query interface, result tables/charts, evidence view, saved analyses, feedback, and role-aware governance.
 7. **Stage 5G - Optional data connectors:** separately authorized read-only database connectors with credential isolation and online tests outside the default suite.
 
