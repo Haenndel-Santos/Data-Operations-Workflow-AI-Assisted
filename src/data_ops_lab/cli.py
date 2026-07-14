@@ -18,6 +18,11 @@ from .analytics_nl_translation import (
 )
 from .analytics_query_execution import AnalyticsExecutionLimits, run_analytics_query_execution
 from .analytics_query_plan import run_analytics_query_plan
+from .analytics_result_narration import (
+    RecordedResultNarrationProvider,
+    run_analytics_result_narration,
+)
+from .analytics_result_presentation import run_analytics_result_presentation
 from .analytics_semantic_adapter import run_analytics_semantic_adapter
 from .analytics_semantic_approval import run_analytics_semantic_approval
 from .analytics_semantic_catalog import run_analytics_semantic_catalog
@@ -106,6 +111,45 @@ def build_parser() -> argparse.ArgumentParser:
     analytics_query_execute.add_argument("--memory-limit-mb", type=int, default=512)
     analytics_query_execute.add_argument("--threads", type=int, default=2)
     analytics_query_execute.add_argument("--max-temp-mb", type=int, default=1_024)
+
+    analytics_result_present = subparsers.add_parser(
+        "analytics-result-present",
+        help="Render validated Stage 5B evidence as a bounded deterministic local result.",
+    )
+    analytics_result_present.add_argument("--request", type=Path, required=True)
+    analytics_result_present.add_argument("--execution-manifest", type=Path, required=True)
+    analytics_result_present.add_argument("--result", type=Path, required=True)
+    analytics_result_present.add_argument(
+        "--output",
+        type=Path,
+        default=Path("outputs/analytics_result_presentation"),
+    )
+
+    analytics_result_narrate_recorded = subparsers.add_parser(
+        "analytics-result-narrate-recorded",
+        help="Validate a cited result narrative from an offline recorded response.",
+    )
+    analytics_result_narrate_recorded.add_argument(
+        "--presentation-manifest",
+        type=Path,
+        required=True,
+    )
+    analytics_result_narrate_recorded.add_argument("--facts", type=Path, required=True)
+    analytics_result_narrate_recorded.add_argument(
+        "--provider-response",
+        type=Path,
+        required=True,
+    )
+    analytics_result_narrate_recorded.add_argument(
+        "--output",
+        type=Path,
+        default=Path("outputs/analytics_result_narration"),
+    )
+    analytics_result_narrate_recorded.add_argument(
+        "--timeout-seconds",
+        type=int,
+        default=30,
+    )
 
     analytics_semantic_catalog = subparsers.add_parser(
         "analytics-semantic-catalog",
@@ -805,6 +849,43 @@ def main() -> None:
         print(f"Manifest: {result.manifest_path}")
         print(f"Result: {result.result_path or 'not written'}")
         print("DuckDB was opened read-only; no raw SQL or external access was accepted.")
+        return
+
+    if args.command == "analytics-result-present":
+        result = run_analytics_result_presentation(
+            args.request,
+            args.execution_manifest,
+            args.result,
+            args.output,
+        )
+        print("Deterministic analytics result presentation complete")
+        print(f"Status: {result.status}")
+        print(f"Rows: {result.row_count}")
+        print(f"Preview rows: {result.preview_row_count}")
+        print(f"Preview columns: {result.preview_column_count}")
+        print(f"Blockers: {result.blocker_count}")
+        print(f"Outputs changed: {result.outputs_changed}")
+        print(f"Presentation: {result.presentation_path}")
+        print(f"Facts: {result.facts_path or 'not written'}")
+        print("Validated Stage 5B evidence only; no database, query, provider, or network was used.")
+        return
+
+    if args.command == "analytics-result-narrate-recorded":
+        result = run_analytics_result_narration(
+            args.presentation_manifest,
+            args.facts,
+            args.output,
+            RecordedResultNarrationProvider(args.provider_response),
+            timeout_seconds=args.timeout_seconds,
+        )
+        print("Offline analytics result narration validation complete")
+        print(f"Status: {result.status}")
+        print(f"Provider called: {result.provider_called}")
+        print(f"Claims: {result.claim_count}")
+        print(f"Blockers: {result.blocker_count}")
+        print(f"Outputs changed: {result.outputs_changed}")
+        print(f"Narrative: {result.narrative_path or 'not written'}")
+        print("Recorded response only; facts remain authoritative and no query or network was used.")
         return
 
     if args.command == "analytics-semantic-catalog":

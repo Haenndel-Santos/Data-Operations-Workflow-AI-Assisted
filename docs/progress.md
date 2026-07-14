@@ -6,11 +6,11 @@ Turn local operational spreadsheets into validated analytical datasets and an ap
 
 ## Current Stage
 
-Three active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI analytics has Stage 5A-5D governed planning/execution/translation plus synthetic and approved-package Stage 5E evaluation, per-case benchmark review/approval, and immutable binding validation, but no real approved catalog, approved benchmark pack, live provider, or result narration; and benchmark onboarding remains pending dataset export/review and approval.
+Three active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI analytics has Stage 5A-5E governed planning, execution, translation, evaluation, deterministic result presentation, and recorded grounded narration, but no real approved catalog, approved benchmark pack, live provider, or user interface; and benchmark onboarding remains pending dataset export/review and approval.
 
 ## Last Completed Milestone
 
-On 2026-07-14, Stage 5E added approved dataset-backed offline evaluation. It validates the complete immutable package and generated approval, replays recorded Stage 5D responses, requires exact expected Stage 5A requests, rechecks all six authority hashes before every Stage 5B call, and compares fixed-limit read-only results exactly or with reviewed numeric tolerance. Tests cover completed, no-row, expected-failure, blocked-authority, and drift states using only temporary synthetic DuckDB. No real dataset, provider, network, upload, training, or narration was used.
+On 2026-07-14, the Stage 5F foundation added deterministic result presentation and recorded grounded narration. The renderer revalidates exact Stage 5B request/result hashes, execution controls, CSV shape, no-row state, and result limits before emitting a bounded local table and stable fact IDs. The narrator requires the exact presentation/facts binding, cited claims, unchanged numeric tokens, and mandatory row/no-row/preview controls; it cannot query data and remains non-authoritative. Tests use only temporary synthetic DuckDB and recorded responses. No real dataset, live provider, network, credentials, upload, or training was used.
 
 ## Current Capabilities
 
@@ -54,15 +54,20 @@ On 2026-07-14, Stage 5E added approved dataset-backed offline evaluation. It val
 - Execute an approved dataset-backed pack through recorded Stage 5D, exact request gating, Stage 5A planning, and Stage 5B read-only revalidation with fixed limits.
 - Recheck manifest, database, semantic, relationship, pack, and approval SHA-256 immediately before each query and discard evidence on drift.
 - Compare ordered typed results exactly by default or with per-column reviewed numeric tolerance while keeping expectation failures separate from contract blockers.
+- Revalidate completed Stage 5B evidence into a deterministic local Markdown result and a bounded facts package without reconnecting to DuckDB.
+- Preserve exact displayed CSV text, stable cell/control fact IDs, source hashes, explicit no-row diagnostics, and preview-truncation caveats.
+- Validate recorded result narration against the exact presentation manifest and facts SHA-256 before any provider call.
+- Require every narrative claim to cite supplied facts, preserve all cited numeric tokens exactly, and include row, no-row, and preview-truncation controls.
+- Reject SQL-like narration, unknown or missing citations, facts drift, implicit network providers, divergent outputs, and narrative authority over Stage 5B evidence.
 - Inventory local benchmark sources with hashes, provenance/license status, and separate use approvals.
 - Convert supported T-SQL samples to deterministic DuckDB/Parquet artifacts while ignoring operational SQL and retaining foreign keys as pending candidates.
 - Restore and integrity-check the official AdventureWorks 2025 backup in an isolated local read-only SQL Server database.
 
 ## Test Status
 
-- Automated suite: 138 tests passed offline on 2026-07-14; latest run completed in 18.43 seconds.
+- Automated suite: 151 tests passed offline on 2026-07-14; latest run completed in 21.72 seconds.
 - All 12 project-local skills passed the official skill validator on 2026-07-13.
-- Internal link check: 51 checked, 0 broken on 2026-07-14.
+- Internal link check: 55 checked, 0 broken on 2026-07-14.
 - Main suite is offline and uses temporary directories for generated test artifacts.
 - Documentation link checker is available at `scripts/check_internal_links.py`.
 - The relocated `.venv` has a stale editable-install path; use the `PYTHONPATH=src` command in `docs/testing.md` until environment repair is explicitly approved.
@@ -78,7 +83,7 @@ On 2026-07-14, Stage 5E added approved dataset-backed offline evaluation. It val
 - The current orchestrator does not yet expose module discovery, dependency resolution, checkpoints, resume, or dry-run as shared infrastructure.
 - Several core pipeline stages still load whole Parquet tables into Pandas; larger-than-memory operation requires DuckDB pushdown and streaming refactors.
 - No concrete semantic catalog has completed human review or been applied; Stage 5D therefore remains operationally blocked for real datasets.
-- A live model provider, result narration, approved real benchmark pack, and real dataset-backed evaluation are not implemented or authorized. Synthetic Stage 5D/5E packs and temporary dataset-backed tests validate backend contracts only and are not live-model or business-quality evidence.
+- A live model provider, approved real benchmark pack, real dataset-backed evaluation, and user interface are not implemented or authorized. Recorded narration proves grounding controls only; synthetic Stage 5D/5E packs and temporary dataset-backed tests are not live-model or business-quality evidence.
 - Stage 5B plan-to-execution drift still uses size and nanosecond modification time in ordinary queries. The dataset-backed evaluator additionally rechecks the complete database SHA-256 and every other authority hash before each Stage 5B call and after evaluation.
 - Exact download provenance and licensing remain unconfirmed for Northwind, Pubs, and Contoso; local conversion or restoration is not benchmark, training, publication, or upload approval.
 - AdventureWorks now has a compatible local restore runtime, but the SQL Server-to-DuckDB/Parquet export is not implemented; the Contoso recipe references external data and was not executed.
@@ -96,12 +101,12 @@ On 2026-07-14, Stage 5E added approved dataset-backed offline evaluation. It val
 
 ## Next Logical Milestone
 
-Define a grounded result-presentation and narration boundary that consumes only validated Stage 5B/evaluation evidence, preserves every numeric value and caveat, cites source/control hashes, and cannot issue or modify queries. Start with a deterministic offline renderer and recorded narrator tests; do not select a live provider, expose rows externally, or use EDS/public benchmarks merely to implement the contract. Keep Product canonical apply and external/database work separate. In parallel, profile the highest-memory Pandas stages before selecting one measured DuckDB pushdown refactor.
+Define a local analysis-session service contract that composes the existing translation, semantic adapter, Stage 5A, Stage 5B, presentation, and narration boundaries without duplicating their logic or weakening checkpoints. Start with recorded/offline providers, explicit artifact inputs, resumable status, and synthetic end-to-end tests; do not add a UI, select a live provider, expose rows externally, or use EDS/public benchmarks merely to exercise orchestration. Keep Product canonical apply and external/database work separate. In parallel, profile the highest-memory Pandas stages before selecting one measured DuckDB pushdown refactor.
 
 ## Last Verified Commit
 
-`8db6867` (`feat(analytics): add benchmark review approval`)
+`117f6f4` (`feat(analytics): add dataset benchmark execution`)
 
 ## Last Updated
 
-2026-07-14 by Codex after the approved dataset-backed offline evaluation checkpoint.
+2026-07-14 by Codex after the deterministic result presentation and recorded narration checkpoint.

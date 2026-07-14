@@ -1089,3 +1089,52 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 - Do not execute EDS, AdventureWorks, Northwind, Pubs, or another real dataset without its exact completed semantic, relationship, pack, review, and approval chain.
 - Do not send questions, rows, SQL, parameters, results, or approval identity to a live provider or network service.
 - Do not let narration recompute values, suppress caveats, alter controls, or become execution authority.
+
+## 2026-07-14 - Codex - Deterministic result presentation and recorded narration
+
+### Initial Context
+
+- Branch: `main`
+- Initial commit: `117f6f4`
+- Initial worktree: clean and synchronized with `origin/main`
+- Objective: implement the next documented result-presentation milestone without real data, a live provider, or network access
+
+### Work Performed
+
+- Added `analytics_result_presentation` and `analytics-result-present` to revalidate exact Stage 5B request/result hashes, reviewed-plan and read-only controls, CSV shape, result limits, non-truncation, and no-row state.
+- Added a bounded deterministic local preview of at most 100 rows, 20 columns, and 2,000 cells plus stable control/cell fact IDs, source hashes, and streaming full-result validation that retains only preview rows.
+- Kept question and preview values out of the control manifest; blocked output contains no result values.
+- Added `analytics_result_narration` and `analytics-result-narrate-recorded` with an exact presentation-manifest/facts binding and a provider-neutral Python protocol.
+- Required every claim to cite supplied facts, every numeric token to match cited values exactly, and row-count, no-row, and preview-truncation controls to be cited.
+- Rejected query language, code blocks, unknown/duplicate citations, unsupported response fields, facts drift, implicit network use, and divergent output replacement.
+- Escaped data/provider Markdown, rechecked input hashes during presentation and narration, preserved Stage 5B as numeric authority, and documented that mechanical grounding does not establish prose truth.
+- Added contracts, CLI examples, architecture/backend updates, a durable decision, current state, testing guidance, README links, and changelog entry.
+
+### Validation
+
+- Focused result presentation/narration tests: 13 passed in 3.74 seconds after final streaming and drift-control changes.
+- Final full offline suite: 151 passed in 21.72 seconds.
+- Python compilation: passed; generated `__pycache__` directories were removed afterward.
+- Diff whitespace check: passed; only expected Git line-ending notices were emitted.
+- Documentation: 55 internal links checked, 0 broken.
+- Tests covered normal/no-row/bounded-preview rendering, source preservation, tampered results, unsafe execution evidence, exact reuse, facts drift, numeric mutation, unknown citations, SQL rejection, network blocking, CLI shape, and divergent-evidence refusal.
+- No EDS, AdventureWorks, Northwind, Pubs, project database, SQL Server, live provider, network, credentials, real review/approval, export, migration, import, synchronization, upload, or training was used or changed.
+
+### State For Next Agent
+
+- A completed Stage 5B result can now become a deterministic local answer table and hash-bound facts package without another database connection.
+- Recorded narration can present cited facts but remains non-authoritative; no live provider or online disclosure policy exists.
+- No real semantic registry or benchmark pack is approved, so synthetic fixtures remain the only exercised end-to-end path.
+- The individual backend stages are governed but are not yet composed into one resumable analysis-session service.
+
+### Next Logical Steps
+
+1. Define a local analysis-session contract that coordinates existing stage entrypoints and records artifact/status checkpoints without duplicating business logic.
+2. Implement a recorded/offline happy path plus blocked/resume paths using temporary synthetic fixtures only.
+3. Keep live provider choice, UI work, real datasets, and external disclosure as separate later decisions.
+
+### Do Not Do Yet
+
+- Do not send questions, facts, rows, SQL, parameters, hashes, or approval identity to a live provider or network service.
+- Do not treat citation validation as proof that arbitrary narrative prose is semantically correct.
+- Do not query EDS or public benchmark data merely to test presentation or orchestration.

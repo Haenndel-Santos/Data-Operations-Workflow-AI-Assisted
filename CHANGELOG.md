@@ -19,6 +19,7 @@ All notable user-facing and release-relevant changes will be documented here.
 - Dry-run dataset-backed Stage 5E validation with cryptographic dataset, semantic, relationship, pack, and separate approval bindings.
 - Hash-bound per-case dataset benchmark review and explicit immutable approval generation without database access or execution.
 - Approved offline dataset-backed evaluation through recorded Stage 5D, exact Stage 5A request gates, Stage 5B read-only execution, and exact/tolerance metrics.
+- Hash-bound deterministic Stage 5B result presentation plus recorded grounded narration with mandatory citations and exact numeric preservation.
 - Controlled local DuckDB execution with exact plan revalidation, bounded resources/results, drift checks, and hash-bound non-overwriting evidence.
 - Review-ready semantic catalog validation with business terms, dimensions, measures, approved paths, and explicit ambiguity handling.
 - Governed local benchmark storage plus restricted T-SQL conversion to DuckDB and Zstandard-compressed Parquet for Northwind and Pubs.

@@ -26,6 +26,8 @@ CLI
      -> parameterized SELECT dry-run plan
      -> exact plan revalidation
      -> controlled read-only execution and result evidence
+     -> deterministic bounded result presentation and facts
+     -> cited recorded result narration
      -> synthetic exact-answer and control-total evaluation
      -> hash-bound benchmark human review and approval
      -> immutable dataset-backed benchmark validation (dry-run)
@@ -51,6 +53,8 @@ CLI
 | Product canonical promotion module | Validate the complete Product snapshot and produce a hash-bound dry-run plan | Report readiness only; never apply canonical state or copy private row values. |
 | Analytics query-plan module | Compile a bounded structured request against a local DuckDB catalog | Never accept raw SQL, execute queries, expose filter values, or use unapproved joins. |
 | Analytics query-execution module | Revalidate and execute an exact reviewed plan with bounded local resources | Read-only DuckDB only; disable external access; fail closed without partial results. |
+| Analytics result-presentation module | Revalidate Stage 5B evidence and render bounded local facts and Markdown | Stage 5B remains numeric authority; no query, database connection, recomputation, network, or divergent overwrite. |
+| Analytics result-narration module | Validate cited prose against exact deterministic facts | Exact numeric grounding and required controls; narration is non-authoritative and the CLI is recorded/offline only. |
 | Analytics semantic-catalog module | Validate business terms, fields, measures, paths, and ambiguity against physical metadata | Metadata only; approved relationships only; never self-approve semantics or resolve ambiguity silently. |
 | Analytics translation-evaluation module | Replay synthetic translation, clarification, rejection, timeout, and failure cases through Stage 5D | Offline in-memory providers only; evidence omits questions/responses and is not live-model quality evidence. |
 | Analytics answer-evaluation module | Chain synthetic recorded translation through exact request, Stage 5A plan, Stage 5B execution, and expected-result controls | Temporary allowlisted DuckDB only; no setup SQL, real data, narration, or persisted case artifacts. |
@@ -80,4 +84,4 @@ Modeling decisions use distinct states such as candidate, pending review, approv
 - No shared dependency graph, checkpoint, resume, or dry-run engine.
 - CLI stage dispatch and the default workflow are not yet unified under one orchestration contract.
 - Some generated summaries become stale when later review steps run; consolidated state must cite the newest validation evidence.
-- Semantic governance, Stage 5D translation evaluation, a synthetic Stage 5E exact-answer harness, dataset benchmark review/approval, dry-run binding validation, and approved offline dataset-backed execution exist. No real semantic registry or benchmark pack is approved yet; live model-provider integration and result narration are not implemented.
+- Semantic governance, Stage 5D translation evaluation, a synthetic Stage 5E exact-answer harness, dataset benchmark review/approval, dry-run binding validation, approved offline dataset-backed execution, deterministic result presentation, and recorded narration validation exist. No real semantic registry or benchmark pack is approved yet; live model-provider integration and a user interface are not implemented.

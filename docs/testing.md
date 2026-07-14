@@ -221,6 +221,24 @@ benchmark outputs by comparing manifest counts and SHA-256 values across the
 DuckDB database and each Parquet file. Do not run `.bak` restore, external load,
 import, migration, or synchronization commands as part of the offline suite.
 
+## Deterministic Result Presentation And Narration
+
+Result presentation tests create only temporary synthetic DuckDB and Stage 5A/
+5B evidence. They verify request/result hash bindings, execution controls,
+bounded previews, no-row diagnostics, escaped local Markdown, exact reuse,
+input preservation, facts drift, mandatory citations, numeric grounding, SQL
+rejection, network blocking, and divergent-output refusal:
+
+```powershell
+$env:PYTHONPATH = "src"
+$env:PYTHONDONTWRITEBYTECODE = "1"
+.\.venv\Scripts\python.exe -m pytest -p no:cacheprovider tests\analytics_result_presentation_test.py
+```
+
+The focused suite uses a recorded YAML narrator only. It does not use real data,
+a live model, network, credentials, external databases, imports, migrations,
+sync, upload, or training.
+
 ## Validation Levels
 
 1. Unit tests for parsers, transformations, rules, and isolated decisions.

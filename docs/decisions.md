@@ -316,3 +316,27 @@ unapproved public dataset.
 case artifacts are temporary and persistent evidence omits content. The
 implementation proves the controlled executor on synthetic fixtures only; no
 real dataset, provider, upload, training, or narration is authorized.
+
+## 2026-07-14 - Result Facts Remain Authority Over Narration
+
+**Decision:** Revalidate exact Stage 5B evidence into a bounded deterministic
+facts package before any explanation step. Require every narration claim to
+cite supplied fact IDs, preserve cited numeric tokens exactly, and include row,
+no-row, and preview-truncation controls. Keep narration non-authoritative and
+provide only a recorded offline CLI provider.
+
+**Rationale:** User-facing prose is useful only after result integrity is fixed.
+Separating deterministic facts from narrative text prevents a model from
+becoming query or numeric authority and makes omitted caveats, altered values,
+source drift, and unsupported citations mechanically visible.
+
+**Alternatives:** Send raw database access or SQL to a narrator; let prose
+recalculate aggregates; accept uncited answers; persist all result rows in a
+control manifest; select a live provider before defining the grounding
+contract; treat fluent prose as evidence.
+
+**Impact:** `analytics-result-present` creates a hash-bound local preview and
+facts package without database access. `analytics-result-narrate-recorded`
+validates exact presentation/facts bindings and cited recorded prose without
+network access. The Stage 5B CSV remains authoritative; semantic truth beyond
+mechanical citations still requires human or benchmark evaluation.

@@ -225,6 +225,20 @@ After an exact package and review have produced a valid approval, the offline ev
 
 This command runs fixed-limit read-only queries with recorded responses only. No current real project dataset meets its prerequisites.
 
+To render a completed Stage 5B result deterministically and validate a recorded
+cited narrative:
+
+```powershell
+$env:PYTHONPATH = "src"
+$env:PYTHONDONTWRITEBYTECODE = "1"
+.\.venv\Scripts\python.exe -m data_ops_lab analytics-result-present --request "<request.yml>" --execution-manifest "<analytics_query_execution.yml>" --result "<analytics_query_result.csv>" --output "outputs\<run-id>\analytics_result_presentation"
+.\.venv\Scripts\python.exe -m data_ops_lab analytics-result-narrate-recorded --presentation-manifest "outputs\<run-id>\analytics_result_presentation\analytics_result_presentation.yml" --facts "outputs\<run-id>\analytics_result_presentation\analytics_result_facts.yml" --provider-response "<recorded_narration.yml>" --output "outputs\<run-id>\analytics_result_narration"
+```
+
+The renderer never reconnects to the database. The narrator is recorded and
+offline, requires exact fact citations, cannot execute SQL, and never replaces
+the Stage 5B result as numeric authority.
+
 To convert an approved local T-SQL sample into DuckDB and compressed Parquet
 without executing operational SQL:
 
@@ -294,7 +308,7 @@ DuckDB is a good fit for this project because it supports local analytical workf
 ## Next Extensions
 
 - Add an explicitly authorized live intent-translation provider behind the governed semantic boundary.
-- Add a Streamlit UI for upload, profiling, and validation review.
+- Add a governed UI for questions, result tables, evidence, and validation review.
 - Add Tableau workbook screenshots as a final portfolio artifact.
 - Add richer validation checks for totals before and after joins.
 - Add pytest coverage for each module.
@@ -327,5 +341,7 @@ DuckDB is a good fit for this project because it supports local analytical workf
 - [Dataset-backed benchmark validation contract](docs/analytics-dataset-benchmark.md)
 - [Dataset benchmark review and approval contract](docs/analytics-dataset-benchmark-review.md)
 - [Dataset-backed offline benchmark evaluation contract](docs/analytics-dataset-benchmark-evaluation.md)
+- [Deterministic analytics result presentation contract](docs/analytics-result-presentation.md)
+- [Grounded analytics result narration contract](docs/analytics-result-narration.md)
 - [Benchmark dataset onboarding contract](docs/benchmark-datasets.md)
 - [Agent handoff history](docs/agent-handoff.md)

@@ -16,7 +16,8 @@ User question
   -> deterministic parameterized SELECT compiler
   -> cost/safety review
   -> read-only DuckDB execution
-  -> result validation and explanation
+  -> deterministic result validation and presentation
+  -> grounded cited explanation
   -> auditable answer package
 ```
 
@@ -40,8 +41,8 @@ requires an exact reviewed Stage 5A plan, revalidates catalog and approved
 relationships, and executes only against local DuckDB in read-only mode. It
 enforces runtime, memory, thread, temporary-storage, row, and result-byte limits;
 disables external access and extension autoload; and writes a result manifest,
-control totals, blockers, diagnostics, and CSV only on success. Live-provider
-translation, result narration, and external database access remain unimplemented.
+control totals, blockers, diagnostics, and CSV only on success. External
+database access remains unimplemented.
 
 Stage 5C adds `analytics-semantic-catalog`. It validates candidate business
 names, synonyms, dimensions, measures, and multi-hop relationship paths against
@@ -91,8 +92,8 @@ The dataset-backed Stage 5E dry-run validator now binds a verified local DuckDB
 artifact, approved semantic state, approved relationships, candidate benchmark
 pack, and separate human approval by SHA-256. It validates expected results and
 exact or explicitly bounded numeric comparison policies without opening or
-querying the database. No current real dataset satisfies this contract, and
-dataset-backed execution and result narration remain pending. See
+querying the database. No current real dataset satisfies this contract; only
+temporary synthetic packages have exercised dataset-backed execution. See
 [Dataset-Backed Benchmark Validation](analytics-dataset-benchmark.md).
 
 The companion benchmark governance workflow prepares a pending hash-bound
@@ -107,6 +108,16 @@ Stage 5B fixed-limit read-only execution before exact or reviewed numeric
 comparison. Persistent evidence omits case content and results. It is tested
 only with temporary synthetic datasets; no real benchmark is approved. See
 [Dataset-Backed Offline Benchmark Evaluation](analytics-dataset-benchmark-evaluation.md).
+
+The result-presentation boundary revalidates exact Stage 5B request/result
+hashes and controls, then writes a deterministic local table and bounded fact
+IDs with bounded-memory CSV streaming, without connecting to a database or
+changing values. A separate narration
+boundary accepts only that hash-bound facts package, requires citations for
+every claim, preserves numeric tokens exactly, and requires row/no-row/preview
+controls. Its concrete provider is recorded and offline; narration remains
+non-authoritative. See [Deterministic Result Presentation](analytics-result-presentation.md)
+and [Grounded Result Narration](analytics-result-narration.md).
 
 ## Request Contract
 
@@ -203,7 +214,7 @@ Calling all dataset use "training" would hide important differences. The initial
 3. **Stage 5C - Semantic catalog:** business names, synonyms, measures, dimensions, relationship paths, ambiguity scores, and dataset-specific domain packs. Technical validation plus the human review/apply infrastructure are implemented; a concrete approved catalog remains pending.
 4. **Stage 5D - Natural-language adapter:** deterministic approved-semantic compiler, provider-neutral translation boundary, and synthetic offline regression pack implemented. Live model-provider integration remains pending and unauthorized. Raw SQL is never accepted.
 5. **Stage 5E - Expected-answer harness:** synthetic evaluation, per-case benchmark review/approval, dry-run immutable binding validation, and approved offline dataset-backed execution are implemented. EDS local evaluation and separately approved public benchmark packs remain pending.
-6. **Stage 5F - User experience:** query interface, result tables/charts, evidence view, saved analyses, feedback, and role-aware governance.
+6. **Stage 5F - User experience:** deterministic result tables and recorded cited narration contracts are implemented. Query UI, charts, evidence navigation, saved analyses, feedback, and role-aware governance remain pending.
 7. **Stage 5G - Optional data connectors:** separately authorized read-only database connectors with credential isolation and online tests outside the default suite.
 
 ## Success Measures
