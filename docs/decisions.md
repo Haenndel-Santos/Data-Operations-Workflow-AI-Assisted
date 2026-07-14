@@ -386,3 +386,25 @@ generic concurrency, partial runs, or review completion.
 evidence for 8 modules, 2 workflow phases, and 5 stages. Dynamic execution,
 concurrency, network access, review auto-approval, and registry coverage of the
 non-analytics pipelines remain disabled or pending.
+
+## 2026-07-14 - Optimize Schema Candidates Only After Synthetic Measurement
+
+**Decision:** Establish an isolated synthetic before/after baseline, then route
+the measured schema/key output path through Arrow metadata and local DuckDB
+aggregations while preserving the exact existing schema, candidate-key, and
+candidate-relationship contract. Keep the legacy DataFrame functions callable.
+
+**Rationale:** The original path loaded every Parquet table at once and built
+Python sets for cross-table overlap. The fixed 3-table workload identified it
+as both the peak-memory and dominant-runtime stage. Pushdown reduces retained
+DataFrames without changing candidate authority or requiring real data.
+
+**Alternatives:** Optimize an unmeasured stage; set performance thresholds from
+one machine; use EDS or public benchmarks; rewrite all profiling/cleaning/schema
+logic together; change key expectations to match a faster implementation.
+
+**Impact:** Exact equivalence tests cover nulls, NaN, empty tables, repeated
+line references, and PK/FK candidates. On identical synthetic inputs, schema
+peak process memory fell from 184,971,264 to 134,606,848 bytes and runtime fell
+from 35.096404 to 0.353394 seconds. Outputs remain candidates; no approved key,
+relationship, data, or source file changed.

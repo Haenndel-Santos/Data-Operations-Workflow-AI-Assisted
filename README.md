@@ -263,6 +263,20 @@ dependencies, workflow order, failure policies, tests, and the human execution
 gate, while dynamic execution, concurrency, network, and auto-approval remain
 disabled.
 
+To measure the current Pandas-heavy stages with generated synthetic Parquet
+only:
+
+```powershell
+$env:PYTHONPATH = "src"
+$env:PYTHONDONTWRITEBYTECODE = "1"
+.\.venv\Scripts\python.exe -m data_ops_lab pipeline-performance-baseline --rows-per-table 50000 --table-count 3 --output "outputs\<run-id>\pipeline_performance_baseline"
+```
+
+The harness accepts no real input path, runs each stage in an isolated process,
+and records runtime, peak process/Python memory, input footprint, outputs, and
+temporary storage. See the measured Phase 1 result before using it to select a
+refactor.
+
 To convert an approved local T-SQL sample into DuckDB and compressed Parquet
 without executing operational SQL:
 
@@ -352,6 +366,7 @@ DuckDB is a good fit for this project because it supports local analytical workf
 - [Testing](docs/testing.md)
 - [Orchestrator](docs/orchestrator.md)
 - [Analytics module registry contract](docs/analytics-module-registry.md)
+- [Synthetic pipeline performance baseline](docs/performance-baseline.md)
 - [Step 3E.4 Product application contract](docs/product-refnr-application.md)
 - [Product materialization preview contract](docs/product-materialization.md)
 - [Product canonical promotion plan contract](docs/product-canonical-promotion.md)

@@ -35,6 +35,7 @@ from .business_flow_mapping import run_business_flow_mapping
 from .canonical_model import run_canonical_model_alignment
 from .human_review import run_human_review, validate_approval_template
 from .module_registry import run_module_registry_validation
+from .performance_baseline import run_performance_baseline
 from .product_canonical_promotion import run_product_canonical_promotion
 from .product_materialization import run_product_materialization
 from .product_reference_audit import run_product_reference_audit
@@ -82,6 +83,32 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         default=Path("outputs/analytics_module_registry_validation"),
         help="New or byte-identical directory for dry-run registry validation evidence.",
+    )
+
+    pipeline_performance_baseline = subparsers.add_parser(
+        "pipeline-performance-baseline",
+        help="Measure Pandas-heavy pipeline stages with generated synthetic Parquet only.",
+    )
+    pipeline_performance_baseline.add_argument(
+        "--rows-per-table",
+        type=int,
+        default=50_000,
+    )
+    pipeline_performance_baseline.add_argument(
+        "--table-count",
+        type=int,
+        default=3,
+    )
+    pipeline_performance_baseline.add_argument(
+        "--stage-timeout-seconds",
+        type=int,
+        default=120,
+    )
+    pipeline_performance_baseline.add_argument(
+        "--output",
+        type=Path,
+        default=Path("outputs/pipeline_performance_baseline"),
+        help="New or empty directory for run-specific synthetic measurement evidence.",
     )
 
     analytics_query_plan = subparsers.add_parser(
@@ -887,6 +914,23 @@ def main() -> None:
         print(f"Blockers CSV: {result.blockers_path}")
         print(f"Report: {result.report_path}")
         print("Dry-run only. Entrypoints were inspected statically and no workflow was executed.")
+        return
+
+    if args.command == "pipeline-performance-baseline":
+        result = run_performance_baseline(
+            args.output,
+            rows_per_table=args.rows_per_table,
+            table_count=args.table_count,
+            stage_timeout_seconds=args.stage_timeout_seconds,
+        )
+        print("Synthetic pipeline performance baseline complete")
+        print(f"Status: {result.status}")
+        print(f"Stages completed: {result.completed_stage_count}/{result.stage_count}")
+        print(f"Highest-memory stage: {result.highest_memory_stage or 'unavailable'}")
+        print(f"Manifest: {result.manifest_path}")
+        print(f"Metrics: {result.metrics_path}")
+        print(f"Report: {result.report_path}")
+        print("Generated synthetic Parquet only; no real dataset, database, provider, or network was used.")
         return
 
     if args.command == "analytics-query-plan":

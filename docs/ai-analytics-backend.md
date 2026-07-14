@@ -183,6 +183,14 @@ Excel should remain an onboarding format, not the large-scale analytical storage
 5. Persist reusable local metadata and invalidate it by source/catalog hashes.
 6. Add memory, runtime, row-count, and join-fanout budgets before enabling query execution.
 
+The first measured scale increment is complete. A generated synthetic Parquet
+harness records runtime, Peak Working Set/`ru_maxrss`, Python allocation, input
+footprint, output bytes, and temporary storage in isolated processes. The
+schema/key stage now uses Arrow metadata plus local DuckDB aggregation and
+candidate-overlap pushdown while preserving exact legacy outputs. On the
+50,000-row x 3-table workload, its peak process memory fell 27.23% and runtime
+fell 98.99%. See [Synthetic Pipeline Performance Baseline](performance-baseline.md).
+
 This architecture supports datasets larger than available RAM more effectively than a DataFrame-only pipeline. Actual limits remain dependent on file format, query shape, disk throughput, and available temporary storage.
 
 ## Dataset And Model Strategy

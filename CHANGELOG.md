@@ -24,6 +24,9 @@ All notable user-facing and release-relevant changes will be documented here.
 - Versioned static analytics module-registry validation for exact entrypoint
   signatures, dependencies, cycles, workflow order, tests, failure policies,
   capabilities, and human execution gates without dynamic dispatch.
+- Reproducible synthetic performance baselines for Pandas-heavy stages, plus
+  measured Arrow/DuckDB schema and candidate-key pushdown with exact legacy
+  output compatibility.
 - Controlled local DuckDB execution with exact plan revalidation, bounded resources/results, drift checks, and hash-bound non-overwriting evidence.
 - Review-ready semantic catalog validation with business terms, dimensions, measures, approved paths, and explicit ambiguity handling.
 - Governed local benchmark storage plus restricted T-SQL conversion to DuckDB and Zstandard-compressed Parquet for Northwind and Pubs.

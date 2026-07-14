@@ -51,6 +51,8 @@ CLI
 | Analytics module registry | Describe and statically validate current session contracts and workflow order | No dynamic import, dispatch, execution, network, concurrency, or auto-approval. |
 | Analytics session module | Coordinate the recorded analytics stages through an exact human plan-review checkpoint | Two separate immutable phases; reuse stage entrypoints; never self-approve or bypass blockers. |
 | Conversion/profile/clean/schema modules | Transform and describe local data | Never modify raw input files. |
+| Synthetic performance harness | Measure selected Pandas-heavy stages in isolated processes over generated Parquet | No external input, production threshold, dataset authority, or persistent synthetic rows. |
+| Schema/key inference | Produce schema plus candidate PK/FK evidence from Parquet metadata and local DuckDB aggregates | Preserve candidate status and output compatibility; never promote relationships or keys. |
 | Validation/SQL/export/documentation modules | Validate and publish analytical artifacts | Generated output is not approval evidence by itself. |
 | ERP modeling/review modules | Produce candidates, review workbooks, and validation reports | Do not write approved model files unless an apply contract is explicitly authorized. |
 | Product materialization module | Validate applied Product decisions and generate local preview/lineage artifacts | Fail closed without partial preview when approved source evidence is missing. |

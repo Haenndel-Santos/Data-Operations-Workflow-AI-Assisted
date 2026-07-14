@@ -6,11 +6,11 @@ Turn local operational spreadsheets into validated analytical datasets and an ap
 
 ## Current Stage
 
-Three active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI analytics has Stage 5A-5F governed planning, execution, translation, evaluation, deterministic presentation, recorded grounded narration, a two-phase local session coordinator, and a validated static module registry, but no real approved catalog, approved benchmark pack, live provider, dynamic dispatch, or user interface; and benchmark onboarding remains pending dataset export/review and approval.
+Three active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases 0-1 now have a validated static session registry plus measured synthetic scale evidence and one contract-preserving DuckDB pushdown, while Stage 5A-5F governed analytics still lacks a real approved catalog, approved benchmark pack, live provider, dynamic dispatch, or user interface; and benchmark onboarding remains pending dataset selection/export/review and approval.
 
 ## Last Completed Milestone
 
-On 2026-07-14, AI roadmap Phase 0 added a versioned registry for the 8 modules, 2 immutable phases, and 5 stages used by the recorded analytics session. The validator statically inspects entrypoint source and exact signatures, declared tests, dependencies, cycles, workflow order, failure policies, capabilities, and the separate human execution gate without importing or calling registered entrypoints. Dynamic execution, concurrency, network, and review auto-approval remain disabled. Validation used no dataset, database, provider, credentials, upload, or training.
+On 2026-07-14, AI roadmap Phase 1 added an isolated synthetic performance harness and optimized the measured schema/key bottleneck with Arrow metadata and local DuckDB pushdown. On identical 3-table/50,000-row inputs, schema peak process memory fell from 184,971,264 to 134,606,848 bytes (-27.23%) and runtime from 35.096404 to 0.353394 seconds (-98.99%). Exact equivalence tests preserve schema, nullability, empty-table behavior, primary-key candidates, repeated line references, and candidate relationships. No real dataset, approved state, provider, network, external database, upload, or training was used.
 
 ## Current Capabilities
 
@@ -66,6 +66,12 @@ On 2026-07-14, AI roadmap Phase 0 added a versioned registry for the 8 modules, 
 - Statically validate the versioned analytics-session module registry, exact
   entrypoint parameters, test files, dependency closure, cycles, stage order,
   fail-closed policies, and non-automatic human execution gate.
+- Generate deterministic synthetic Parquet and measure profiler, cleaner,
+  schema/key, and relationship-validation runtime, peak process/Python memory,
+  input footprint, outputs, and temporary storage in isolated processes.
+- Infer schema, nullability, uniqueness, PK candidates, and eligible FK overlap
+  through Arrow metadata and local DuckDB pushdown without full-table Pandas
+  loads or changing candidate/approved separation.
 - Maintain a versioned AI implementation roadmap with ordered phases, exit gates, quality targets, and explicit non-authorizations.
 - Inventory local benchmark sources with hashes, provenance/license status, and separate use approvals.
 - Convert supported T-SQL samples to deterministic DuckDB/Parquet artifacts while ignoring operational SQL and retaining foreign keys as pending candidates.
@@ -73,7 +79,7 @@ On 2026-07-14, AI roadmap Phase 0 added a versioned registry for the 8 modules, 
 
 ## Test Status
 
-- Automated suite: 165 tests passed offline on 2026-07-14; latest run completed in 23.15 seconds.
+- Automated suite: 173 tests passed offline on 2026-07-14; latest run completed in 26.18 seconds.
 - All 12 project-local skills passed the official skill validator on 2026-07-13.
 - Internal link check: 59 checked, 0 broken on 2026-07-14.
 - Main suite is offline and uses temporary directories for generated test artifacts.
@@ -89,7 +95,7 @@ On 2026-07-14, AI roadmap Phase 0 added a versioned registry for the 8 modules, 
 - Organisation business-key selection and several document-flow relationships still need business context.
 - Conflicted line extracts must not be promoted to approved relationships.
 - The recorded analytics session now has a validated static registry and narrow checkpoints/resume semantics, but registry-driven dispatch and generic partial-run/dry-run infrastructure remain deliberately absent.
-- Several core pipeline stages still load whole Parquet tables into Pandas; larger-than-memory operation requires DuckDB pushdown and streaming refactors.
+- Cleaning is now the highest-memory measured synthetic stage and still loads a full Parquet table into Pandas before writing Parquet and CSV; any bounded-batch refactor must preserve type-detection and exact output contracts.
 - No concrete semantic catalog has completed human review or been applied; Stage 5D therefore remains operationally blocked for real datasets.
 - A live model provider, approved real benchmark pack, real dataset-backed evaluation, and user interface are not implemented or authorized. Recorded narration proves grounding controls only; synthetic Stage 5D/5E packs and temporary dataset-backed tests are not live-model or business-quality evidence.
 - Stage 5B plan-to-execution drift still uses size and nanosecond modification time in ordinary queries. The dataset-backed evaluator additionally rechecks the complete database SHA-256 and every other authority hash before each Stage 5B call and after evaluation.
@@ -109,12 +115,12 @@ On 2026-07-14, AI roadmap Phase 0 added a versioned registry for the 8 modules, 
 
 ## Next Logical Milestone
 
-Begin AI roadmap Phase 1 by adding a reproducible synthetic performance harness that measures peak process memory, runtime, scanned/input bytes, output size, and temporary storage for selected Pandas-heavy stages. Establish baselines first, then choose one measured bottleneck for a contract-preserving DuckDB pushdown or bounded-batch refactor. Do not use EDS/public benchmark data, add a dependency, or claim an optimization without before/after evidence. Keep dynamic registry execution, Product canonical apply, and external/database work separate.
+AI roadmap Phase 2 requires a human selection of the first reference dataset and explicit confirmation of authoritative source, version, license, checksum, permitted local benchmark use, and relationship-review scope. Northwind is the recommended first small commercial dataset, but its current local copy remains pending exact provenance/license approval; Chinook would require separately authorized acquisition. Until that strategic authority exists, do not query or promote existing benchmark assets. A separate safe engineering option is another measured Phase 1 increment for cleaning, using only the synthetic harness and exact type/output equivalence tests.
 
 ## Last Verified Commit
 
-`a53be58` (`docs(analytics): add AI implementation roadmap`)
+`3951d7f` (`feat(orchestrator): validate analytics module registry`)
 
 ## Last Updated
 
-2026-07-14 by Codex after completing static module-registry validation for AI roadmap Phase 0.
+2026-07-14 by Codex after completing the measured schema/key pushdown for AI roadmap Phase 1.

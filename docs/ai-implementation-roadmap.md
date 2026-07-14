@@ -24,11 +24,14 @@ As of 2026-07-14, the project has:
 - a two-phase local session that stops for exact human plan review;
 - a versioned static module registry for those session phases with dynamic
   execution, concurrency, network, and review auto-approval disabled;
-- 165 passing offline tests and no approved real semantic registry, live model
+- 173 passing offline tests and no approved real semantic registry, live model
   provider, production UI, or authorized real benchmark execution.
 
 Phase 0 passed its exit gate on 2026-07-14 through static validation only.
-Phase 1 measured scale and memory work is the next active phase.
+Phase 1 also passed its exit gate with an isolated synthetic baseline and an
+exact-contract schema/key DuckDB pushdown: peak process memory fell 27.23% and
+runtime fell 98.99% on the fixed 3-table workload. Phase 2 now requires explicit
+reference-dataset provenance, license, schema, relationship, and use decisions.
 
 ## Target Architecture
 

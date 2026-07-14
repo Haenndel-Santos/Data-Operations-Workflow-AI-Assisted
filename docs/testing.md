@@ -272,6 +272,25 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 The validator does not import or call declared entrypoints, execute a workflow,
 open a database, use a provider, or authorize data and review state.
 
+## Synthetic Performance And Schema Pushdown
+
+The performance harness tests generate small temporary Parquet tables and run
+the profiler, cleaner, schema, and relationship validator in isolated child
+processes. Schema pushdown tests compare the optimized output exactly with the
+legacy Pandas contract, including nulls, NaN, empty tables, repeated line
+references, key candidates, and relationship candidates:
+
+```powershell
+$env:PYTHONPATH = "src"
+$env:PYTHONDONTWRITEBYTECODE = "1"
+.\.venv\Scripts\python.exe -m pytest -p no:cacheprovider tests\performance_baseline_test.py tests\schema_pushdown_test.py tests\smoke_test.py
+```
+
+The harness has no external input/database argument and uses no EDS, benchmark
+dataset, provider, network, credential, or approved state. Performance values
+are environment-specific evidence; contract assertions, not speed thresholds,
+belong in the default suite.
+
 ## Validation Levels
 
 1. Unit tests for parsers, transformations, rules, and isolated decisions.

@@ -19,6 +19,9 @@ The package is organized as a Python application under `src/data_ops_lab/`:
 - The analytics backend is evolving from fixed SQL suggestions toward validated structured requests, semantic context, and controlled read-only execution.
 - The recorded analytics session has a versioned, statically validated module
   registry; dynamic dispatch remains disabled.
+- A synthetic isolated-process baseline measures Pandas-heavy stages, and
+  schema/key inference now pushes metadata, null, uniqueness, and candidate
+  overlap work into local DuckDB without changing candidate/approval state.
 - Benchmark onboarding stores raw public samples outside Git, records provenance/checksums, and converts supported local T-SQL rows to DuckDB and compressed Parquet without executing the source scripts.
 - `config/data_model/` stores versioned candidates, business rules, canonical mappings, and separate approved files.
 - `tests/` protects workflow behavior and preservation of source/approved files.

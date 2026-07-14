@@ -1267,3 +1267,77 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
   reviewed execution contract and compatibility tests exist.
 - Do not use EDS, public benchmark datasets, external providers, or databases
   merely to produce performance measurements.
+
+## 2026-07-14 - Codex - AI roadmap Phase 1 measured schema pushdown
+
+### Initial Context
+
+- Branch: `main`
+- Initial commit: `3951d7f`
+- Initial worktree: clean; branch was one local commit ahead of `origin/main`.
+- Objective: establish reproducible scale evidence and improve one measured
+  Pandas-heavy bottleneck without changing schema/key candidate contracts.
+
+### Work Performed
+
+- Added `pipeline-performance-baseline`, which generates bounded deterministic
+  synthetic Parquet and measures profiling, cleaning, schema/key inference, and
+  relationship validation in isolated child processes.
+- Recorded runtime, Windows Peak Working Set/POSIX `ru_maxrss`, peak Python
+  allocation, unique input footprint, output bytes, and temporary storage with
+  environment and source hashes.
+- Accepted no external input/database path and deleted synthetic rows after
+  measurement; run-specific evidence refuses overwrite.
+- Measured schema as the initial highest-memory and dominant-runtime stage.
+- Replaced full-table Pandas loading in `write_schema_outputs` with Arrow schema
+  metadata and local single-threaded DuckDB aggregates/semi joins over
+  parameterized Parquet paths.
+- Preserved the existing DataFrame functions for compatibility and kept all
+  inferred keys/relationships as candidates only.
+- Added exact equivalence tests covering physical/semantic types, nullability,
+  NaN, empty tables, uniqueness, repeated line references, primary-key
+  candidates, relationship candidates, input preservation, and absence of
+  `pd.read_parquet` on the optimized output path.
+
+### Measured Evidence
+
+- Workload: 3 generated tables x 50,000 rows x 6 columns; 1,461,441 input
+  bytes; identical per-file SHA-256 before and after.
+- Schema peak process memory: 184,971,264 -> 134,606,848 bytes (-27.23%).
+- Schema peak Python allocation: 16,773,488 -> 2,256,049 bytes (-86.55%).
+- Schema runtime: 35.096404 -> 0.353394 seconds (-98.99%; 99.31x faster).
+- Schema output size: 7,282 bytes before and after.
+- Generated local evidence: `outputs/phase1_synthetic_baseline_before/` and
+  `outputs/phase1_synthetic_baseline_after/` (ignored, not versioned).
+
+### Validation
+
+- Focused performance harness tests: 6 passed in 4.06 seconds.
+- Focused schema equivalence plus workflow smoke tests: 3 passed in 1.36 seconds.
+- Full offline suite: 173 passed in 26.18 seconds.
+- No EDS, public benchmark rows, SQL Server, project database, provider,
+  network, credential, approved state, external system, upload, or training was
+  used or changed.
+
+### State For Next Agent
+
+- AI roadmap Phase 1 passed its exit gate: baseline evidence exists and one
+  measured bottleneck improved without contract regression.
+- Cleaning is now the highest-memory stage in the fixed synthetic workload and
+  remains a candidate for a separate measured bounded-batch increment.
+- Phase 2 cannot complete until a human selects the first reference dataset and
+  confirms source, version, license, checksum, local benchmark use, and
+  relationship-review scope.
+
+### Next Logical Step
+
+- Obtain the missing Phase 2 reference-dataset authority. Northwind is the
+  recommended first small commercial dataset, but its current local source and
+  license remain pending exact confirmation.
+
+### Do Not Do Yet
+
+- Do not treat local Northwind/Pubs/AdventureWorks presence as provenance,
+  license, relationship, semantic, or benchmark-use approval.
+- Do not change candidate outputs or test expectations to claim a performance
+  improvement.
