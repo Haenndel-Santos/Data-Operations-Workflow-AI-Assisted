@@ -1,0 +1,105 @@
+version: 1
+dataset: northwind
+role: small_commercial_oltp_reference
+source:
+  local_path: datasets/benchmarks/raw/northwind/instnwnd.sql
+  bytes: 1049720
+  sha256: 3cc62b3fca6d244a47dbde698b809331e4f85988a0685b2b370717d431e94871
+  provenance_status: verified_exact_official_copy
+  official:
+    repository: microsoft/sql-server-samples
+    path: samples/databases/northwind-pubs/instnwnd.sql
+    commit: 2f85f3724ee45776a5183ed34d064488a6e1dc53
+    blob_sha: ae61e5631d7f03029ec15213ce672b45ceb7e629
+    permalink: https://github.com/microsoft/sql-server-samples/blob/2f85f3724ee45776a5183ed34d064488a6e1dc53/samples/databases/northwind-pubs/instnwnd.sql
+  alternate_verified_copy:
+    local_path: datasets/benchmarks/raw/northwind/instnwnd (Azure SQL Database).sql
+    bytes: 1049643
+    sha256: 0722013fb25c4f7f9d3d6050bc76845568b465edd6f6848e1cb1e02094ee1cc5
+    official_path: samples/databases/northwind-pubs/instnwnd (Azure SQL Database).sql
+    official_commit: 2f85f3724ee45776a5183ed34d064488a6e1dc53
+    official_blob_sha: f9121728b14864f1ed3dda42bc741db10d88d30b
+    official_permalink: https://github.com/microsoft/sql-server-samples/blob/2f85f3724ee45776a5183ed34d064488a6e1dc53/samples/databases/northwind-pubs/instnwnd%20(Azure%20SQL%20Database).sql
+license:
+  status: verified
+  spdx: MIT
+  copyright_holder: Microsoft Corporation
+  commit: 4693087abebd7e835f9ee46d005dcdaa03092a40
+  blob_sha: 9d333bb098c152c0983042ca77f16ac0c8999441
+  permalink: https://github.com/microsoft/sql-server-samples/blob/4693087abebd7e835f9ee46d005dcdaa03092a40/license.txt
+conversion:
+  procedure: benchmark-convert-sql
+  manifest_path: datasets/benchmarks/derived/northwind/conversion_manifest.yml
+  manifest_sha256: 04acc0f4d5c01ce43e77a4d00eab204d14f39fbab378d59beb57ed683bc5184e
+  reproduction:
+    method: independent_restricted_parse_and_materialization
+    manifest_path: outputs/benchmarks/northwind-phase2-repro/conversion_manifest.yml
+    database_binary_hash_expected_to_differ: true
+    equivalence_authority:
+    - source_sha256
+    - conversion_contract
+    - normalized_schema
+    - table_row_counts
+    - parquet_sha256
+    - relationship_candidate_sha256
+    - conversion_report_sha256
+schema:
+  status: technically_reviewed
+  expected_primary_keys: 13
+  primary_keys:
+  - table: categories
+    columns: [category_id]
+    evidence: source_declared_primary_key
+  - table: customer_customer_demo
+    columns: [customer_id, customer_type_id]
+    evidence: source_declared_primary_key
+  - table: customer_demographics
+    columns: [customer_type_id]
+    evidence: source_declared_primary_key
+  - table: customers
+    columns: [customer_id]
+    evidence: source_declared_primary_key
+  - table: employee_territories
+    columns: [employee_id, territory_id]
+    evidence: source_declared_primary_key
+  - table: employees
+    columns: [employee_id]
+    evidence: source_declared_primary_key
+  - table: order_details
+    columns: [order_id, product_id]
+    evidence: source_declared_primary_key
+  - table: orders
+    columns: [order_id]
+    evidence: source_declared_primary_key
+  - table: products
+    columns: [product_id]
+    evidence: source_declared_primary_key
+  - table: region
+    columns: [region_id]
+    evidence: source_declared_primary_key
+  - table: shippers
+    columns: [shipper_id]
+    evidence: source_declared_primary_key
+  - table: suppliers
+    columns: [supplier_id]
+    evidence: source_declared_primary_key
+  - table: territories
+    columns: [territory_id]
+    evidence: source_declared_primary_key
+relationships:
+  expected_candidates: 13
+  status: pending_human_review
+  authority_rule: technical_validity_does_not_approve_relationships
+benchmark_use:
+  status: approved
+  approved_by: project_owner
+  approved_at: 2026-07-15T00:28:23.4144841+02:00
+  authorization_reference: explicit_phase_2_authorization_in_project_session_2026-07-15
+  scopes:
+    local_conversion: approved
+    local_profiling: approved
+    local_benchmark_design: approved
+    local_offline_evaluation: approved
+    external_upload: not_authorized
+    model_parameter_training: not_authorized
+    publication: not_authorized

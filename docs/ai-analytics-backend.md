@@ -203,9 +203,12 @@ EDS is the first private domain implementation and the strongest source of real 
 
 The local benchmark area now contains user-supplied Northwind, Pubs,
 AdventureWorks 2025, and a Contoso warehouse load recipe. Northwind and Pubs
-have reproducible DuckDB/Parquet conversions, but their exact download origins
-and licenses remain unconfirmed and all extracted relationships remain
-`pending_review`. AdventureWorks exactly matches Microsoft's official MIT-licensed
+have reproducible DuckDB/Parquet conversions. Northwind is now byte-matched to
+Microsoft's official source, MIT-license verified, independently reproduced,
+and read-only validated across 13 declared PKs and 13 FK candidates. Its local
+benchmark scope is approved, but all exact relationship decisions remain
+`pending_review`. Pubs still requires exact source/license and relationship
+review. AdventureWorks exactly matches Microsoft's official MIT-licensed
 2025 backup and is restored in a local SQL Server 2025 Developer instance as a
 read-only database. Restore verification and `DBCC CHECKDB` passed; a
 reproducible DuckDB/Parquet export and relationship review remain pending.
@@ -217,6 +220,8 @@ dimensional and media-commerce coverage. Every pack still requires an
 authoritative source, version, license, checksum, expected schema, reviewed
 relationships, and reproducible import procedure before benchmark approval.
 See [Benchmark Datasets](benchmark-datasets.md).
+The reusable Phase 2 gate is documented in
+[Reference Dataset Validation](reference-dataset-validation.md).
 
 ### Learning Stages
 

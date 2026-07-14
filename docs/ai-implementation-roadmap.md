@@ -32,6 +32,10 @@ Phase 1 also passed its exit gate with an isolated synthetic baseline and an
 exact-contract schema/key DuckDB pushdown: peak process memory fell 27.23% and
 runtime fell 98.99% on the fixed 3-table workload. Phase 2 now requires explicit
 reference-dataset provenance, license, schema, relationship, and use decisions.
+Northwind has since passed provenance, MIT-license, checksum, independent
+conversion, schema/key, relationship-integrity, and local-use gates. Phase 2
+remains open because all 13 exact relationship candidates still require human
+accept/reject decisions before Northwind can enter semantic modeling.
 
 ## Target Architecture
 

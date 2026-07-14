@@ -39,7 +39,10 @@ CLI
      -> ignored immutable raw source
      -> restricted T-SQL parsing
      -> local DuckDB and Parquet artifacts
-     -> versioned checksums and pending relationship candidates
+     -> versioned provenance, license, checksums, and permitted uses
+     -> independent conversion equivalence
+     -> read-only schema/key/relationship validation
+     -> separate exact human relationship review
 ```
 
 ## Boundaries
@@ -68,6 +71,7 @@ CLI
 | Dataset benchmark-validation module | Bind immutable DuckDB, semantics, relationships, expected answers, tolerances, and separate approval by SHA-256 | Hash opaque local files only; never open/query the database or infer approval from conversion manifests. |
 | Dataset benchmark-evaluation module | Replay an approved pack through recorded Stage 5D, exact request gating, Stage 5A, Stage 5B, and typed comparison | Recheck every authority hash before each query; fixed read-only limits; no live provider, network, persisted rows, or real dataset by default. |
 | Benchmark SQL conversion module | Parse local sample T-SQL table definitions and rows into DuckDB and Parquet | Never execute source SQL or external operations; output remains unapproved benchmark evidence. |
+| Reference dataset-validation module | Bind official provenance/license, current and reproduced conversions, read-only key/relationship evidence, use scopes, and a separate exact review | Technical validity never approves relationships; preflight blockers prevent database access; external/upload/training scopes stay closed. |
 | `datasets/benchmarks/` | Separate ignored raw/derived data from versioned inventories and contracts | Dataset presence or conversion is not approval for training, upload, or relationship promotion. |
 | `config/data_model/` | Version candidate state, domain mappings, and approvals | Keep candidate and approved files separate. |
 | `originaldatabase/` | Private source exports | Read only; excluded from Git. |

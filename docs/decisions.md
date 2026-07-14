@@ -408,3 +408,33 @@ line references, and PK/FK candidates. On identical synthetic inputs, schema
 peak process memory fell from 184,971,264 to 134,606,848 bytes and runtime fell
 from 35.096404 to 0.353394 seconds. Outputs remain candidates; no approved key,
 relationship, data, or source file changed.
+
+## 2026-07-15 - Reference Dataset Evidence Does Not Approve Relationships
+
+**Decision:** Validate a reference dataset through fixed official provenance,
+license, source/artifact hashes, independent conversion equivalence, read-only
+schema/key/relationship profiling, and explicit permitted-use scopes. Keep the
+exact relationship review as a separate human-authored artifact bound to both
+the reference-manifest and candidate hashes.
+
+**Rationale:** An official foreign-key declaration plus zero observed orphans is
+strong technical evidence, but it is not a human modeling decision. Empty
+tables can also produce zero-orphan results without positive row coverage.
+Separating evidence from authority lets Phase 2 progress without turning a
+successful profile, broad workflow authorization, or generated review template
+into silent relationship promotion.
+
+**Alternatives:** Treat every declared FK as approved; infer approval from the
+project owner's general implementation authorization; require identical DuckDB
+binary hashes across independent conversions; skip database profiling and trust
+only conversion metadata; combine local benchmark scope with upload/training
+permission.
+
+**Impact:** `reference-dataset-validate` fails closed on provenance, license,
+artifact, reproduction, scope, schema, key, relationship, and exact-review
+drift. It opens DuckDB only read-only after preflight, emits immutable technical
+evidence and a pending review, and reports `ready_for_semantic_modeling` only
+after every exact candidate is accepted or rejected by a completed review.
+Northwind is now `ready_for_relationship_review`; no relationship was promoted,
+and external upload, publication, and model-parameter training remain not
+authorized.

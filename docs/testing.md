@@ -221,6 +221,27 @@ benchmark outputs by comparing manifest counts and SHA-256 values across the
 DuckDB database and each Parquet file. Do not run `.bak` restore, external load,
 import, migration, or synchronization commands as part of the offline suite.
 
+## Reference Dataset Validation
+
+The focused suite builds two independent restricted conversions from temporary
+synthetic SQL. It verifies provenance/license/use preflight, conversion
+equivalence, read-only schema profiling, primary-key null/duplicate checks,
+foreign-key orphan/target-uniqueness checks, pending versus completed exact
+human review, preflight refusal before database access, idempotency,
+non-overwrite behavior, input preservation, and CLI shape:
+
+```powershell
+$env:PYTHONPATH = "src"
+$env:PYTHONDONTWRITEBYTECODE = "1"
+.\.venv\Scripts\python.exe -m pytest -p no:cacheprovider tests\reference_dataset_validation_test.py
+.\.venv\Scripts\python.exe -m data_ops_lab reference-dataset-validate --manifest "datasets\benchmarks\manifests\northwind.reference.yml" --output "outputs\benchmarks\northwind-phase2-validation"
+```
+
+The default test suite uses no public dataset, network, external database,
+credential, upload, publication, or model training. The real command is an
+authorized local Phase 2 validation: it opens only the hash-bound Northwind
+DuckDB in read-only mode and does not approve its pending relationships.
+
 ## Deterministic Result Presentation And Narration
 
 Result presentation tests create only temporary synthetic DuckDB and Stage 5A/

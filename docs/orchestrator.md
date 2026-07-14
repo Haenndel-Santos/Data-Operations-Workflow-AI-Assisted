@@ -22,6 +22,11 @@ and workflow dependencies, cycles, capabilities, test files, stage order,
 failure policies, and the human execution gate, then writes dry-run evidence.
 It cannot dispatch or execute a module.
 
+`reference-dataset-validate` remains a separate explicit Phase 2 entrypoint. It
+orders provenance/license/use preflight before any read-only DuckDB profiling
+and stops at `ready_for_relationship_review` without an exact completed human
+review. It is not yet part of the declarative analytics-session registry.
+
 ## Responsibility
 
 The orchestrator may discover, validate, select, order, execute, record, recover, and summarize module work. It must not duplicate specialized module logic, hide failures, mutate inputs, or promote unapproved decisions.
@@ -76,3 +81,8 @@ preparation manifest and plan hashes. It cannot auto-approve its own output.
 A `valid` module registry is not execution authority. Registry controls require
 dynamic execution, concurrency, network, and review auto-approval to remain
 disabled, and the validator has no execution or apply mode.
+
+`ready_for_relationship_review` is likewise not relationship authority. A
+future semantic-catalog workflow may consume only the accepted subset from a
+completed exact relationship review that revalidates as
+`ready_for_semantic_modeling`.

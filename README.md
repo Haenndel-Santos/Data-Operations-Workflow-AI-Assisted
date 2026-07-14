@@ -286,7 +286,17 @@ $env:PYTHONPATH = "src"
 ```
 
 Raw and derived benchmark data remain local and outside Git. The versioned
-inventory records checksums, provenance gaps, and approval boundaries.
+inventory records checksums, provenance, and approval boundaries. To validate
+Northwind's exact source/license, independent conversion, schema, declared
+keys, relationship evidence, and separate review state:
+
+```powershell
+$env:PYTHONPATH = "src"
+.\.venv\Scripts\python.exe -m data_ops_lab reference-dataset-validate --manifest "datasets\benchmarks\manifests\northwind.reference.yml" --output "outputs\benchmarks\northwind-phase2-validation"
+```
+
+This command profiles only the bound local DuckDB in read-only mode. It emits a
+pending relationship review and does not approve relationships automatically.
 
 To generate the conceptual main database schema overview:
 
@@ -386,4 +396,5 @@ DuckDB is a good fit for this project because it supports local analytical workf
 - [Grounded analytics result narration contract](docs/analytics-result-narration.md)
 - [Local analytics session contract](docs/analytics-session.md)
 - [Benchmark dataset onboarding contract](docs/benchmark-datasets.md)
+- [Reference dataset validation and relationship-review contract](docs/reference-dataset-validation.md)
 - [Agent handoff history](docs/agent-handoff.md)

@@ -1341,3 +1341,102 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
   license, relationship, semantic, or benchmark-use approval.
 - Do not change candidate outputs or test expectations to claim a performance
   improvement.
+
+## 2026-07-15 - Codex - AI roadmap Phase 2 Northwind reference validation
+
+### Initial Context
+
+- Branch: `main` at `e8c12a1`, two local commits ahead of `origin/main`.
+- Initial worktree: clean; ignored Northwind raw/derived assets were preserved.
+- The project owner explicitly selected the recommended Northwind dataset and
+  authorized the local Phase 2 provenance, licensing, conversion, profiling,
+  benchmark-design, and offline-evaluation work.
+- General implementation authority was not treated as approval of relationship
+  candidates that had not yet been presented with exact evidence.
+
+### Work Performed
+
+- Verified both local Northwind SQL files byte-for-byte against Microsoft's
+  official `microsoft/sql-server-samples` repository at commit
+  `2f85f3724ee45776a5183ed34d064488a6e1dc53`.
+- Fixed the applicable repository license to MIT at license commit
+  `4693087abebd7e835f9ee46d005dcdaa03092a40`.
+- Re-ran the restricted SQL conversion independently under
+  `outputs/benchmarks/northwind-phase2-repro/` without overwriting the current
+  derived package.
+- Confirmed exact equivalence for source/conversion contract, normalized schema,
+  table counts, all 13 Parquet hashes, all 13 relationship candidates, and the
+  conversion report. The independently created DuckDB binary has a different
+  physical hash and matches its own manifest, so binary identity remains
+  package-specific rather than the cross-run equivalence rule.
+- Added `reference-dataset-validate`, which fails closed on provenance, license,
+  artifact, reproduction, use-scope, schema, key, relationship, and completed-
+  review drift; preflight blockers prevent DuckDB access.
+- Added immutable read-only technical evidence, a separate exact pending review,
+  completed-review validation, idempotent reuse, and divergent-output refusal.
+- Added the versioned Northwind reference manifest and recorded approved local
+  conversion/profiling/benchmark-design/offline-evaluation scopes while keeping
+  external upload, publication, and model-parameter training not authorized.
+- Updated inventory, architecture, testing, roadmap, backend, project state,
+  durable decision, README, changelog, and the dedicated contract document.
+
+### Northwind Evidence
+
+- Canonical source: 1,049,720 bytes; SHA-256
+  `3cc62b3fca6d244a47dbde698b809331e4f85988a0685b2b370717d431e94871`;
+  exact official match.
+- Alternate Azure SQL script: 1,049,643 bytes; SHA-256
+  `0722013fb25c4f7f9d3d6050bc76845568b465edd6f6848e1cb1e02094ee1cc5`;
+  exact official match.
+- Current conversion: 13 tables, 3,308 rows, 13 PK declarations, and 13 FK
+  candidates.
+- Primary keys: 13/13 with zero null-key rows and duplicate groups.
+- Relationships: 13/13 with zero orphans and unique targets; 11 have positive
+  source-row coverage.
+- The two `customer_customer_demo` candidates have no positive coverage because
+  their candidate source/target tables are empty; this remains visible in the
+  review template.
+- Versioned reference-manifest SHA-256:
+  `c9107a35ae24d7065f53af8e1de264cbf3d2ad5c234f9c8d32cdcfb806b50592`.
+- Generated validation evidence SHA-256:
+  `2107eec61b57f3cb170370e361e515130013fe7953c26f586da267a3469ac701`.
+- Generated pending review SHA-256:
+  `5bbd7da188245aa316a5c1095385f79ffc68f503081a00db58ab50bceb33fd08`.
+
+### Validation
+
+- Focused reference/conversion tests: 12 passed in 2.65 seconds.
+- Full offline suite: 180 passed in 27.66 seconds.
+- Real Northwind validation: `ready_for_relationship_review`, zero blockers,
+  and a repeated run reported `Outputs changed: False`.
+- Documentation: 69 internal links checked, zero broken.
+- Diff whitespace check: passed; only expected Git line-ending notices appeared.
+- No source/approved file was modified, no source SQL was executed, and no
+  external database, credential, provider, upload, publication, or model
+  training was used.
+
+### State For Next Agent
+
+- AI roadmap Phase 2 is technically complete for Northwind up to the mandatory
+  exact relationship authority gate.
+- Generated pending review:
+  `outputs/benchmarks/northwind-phase2-validation/relationship_review.yml`.
+- No relationship is approved yet; the derived converter candidates remain
+  `pending_review` and versioned global approved registries were not changed.
+- Northwind may not enter real semantic catalog work until the completed review
+  revalidates as `ready_for_semantic_modeling`.
+
+### Next Logical Step
+
+- Have the project owner accept or reject all 13 exact candidates, including
+  explicit consideration of the two no-positive-coverage candidates. Record
+  reviewer, ISO-8601 time, and notes for each decision, then run
+  `reference-dataset-validate --review` into a new output directory.
+
+### Do Not Do Yet
+
+- Do not infer relationship approval from source declarations, zero orphans,
+  local benchmark-use authorization, or this technical validation.
+- Do not start the Northwind semantic catalog, expected-answer pack, real
+  dataset-backed evaluator, live provider, upload, publication, or model
+  training before their exact downstream gates are satisfied.

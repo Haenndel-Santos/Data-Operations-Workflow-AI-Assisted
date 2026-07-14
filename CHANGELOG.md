@@ -30,3 +30,6 @@ All notable user-facing and release-relevant changes will be documented here.
 - Controlled local DuckDB execution with exact plan revalidation, bounded resources/results, drift checks, and hash-bound non-overwriting evidence.
 - Review-ready semantic catalog validation with business terms, dimensions, measures, approved paths, and explicit ambiguity handling.
 - Governed local benchmark storage plus restricted T-SQL conversion to DuckDB and Zstandard-compressed Parquet for Northwind and Pubs.
+- Reference-dataset validation with fixed provenance/license evidence,
+  independent conversion equivalence, read-only PK/FK profiling, explicit use
+  scopes, and a separate exact human relationship-review gate.

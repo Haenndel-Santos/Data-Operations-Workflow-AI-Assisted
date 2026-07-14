@@ -48,6 +48,7 @@ from .product_refnr_final_review_validation import run_validate_product_refnr_fi
 from .product_refnr_human_review import run_product_refnr_human_review
 from .product_refnr_missing_notes_fix import run_product_refnr_missing_notes_fix
 from .product_refnr_reconciliation import run_product_refnr_reconciliation
+from .reference_dataset_validation import run_reference_dataset_validation
 from .schema_overview import run_schema_overview
 from .serial_aware_review import run_serial_aware_review
 from .serial_rules import run_serial_rules
@@ -459,6 +460,28 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         required=True,
         help="New or verified-identical local derived dataset directory.",
+    )
+
+    reference_dataset_validate = subparsers.add_parser(
+        "reference-dataset-validate",
+        help="Validate provenance, reproducibility, schema, keys, and relationship-review state for a local reference dataset.",
+    )
+    reference_dataset_validate.add_argument(
+        "--manifest",
+        type=Path,
+        required=True,
+        help="Versioned reference-dataset onboarding manifest.",
+    )
+    reference_dataset_validate.add_argument(
+        "--review",
+        type=Path,
+        help="Optional completed relationship review bound to the exact manifest and candidates.",
+    )
+    reference_dataset_validate.add_argument(
+        "--output",
+        type=Path,
+        required=True,
+        help="New or verified-identical local validation evidence directory.",
     )
 
     onboard = subparsers.add_parser("source-onboard", help="Run Step 3 source onboarding and candidate modeling.")
@@ -1262,6 +1285,26 @@ def main() -> None:
         print(f"Manifest: {result.manifest_path}")
         print(f"Parquet directory: {result.output_dir / 'parquet'}")
         print("No source file, external database, credential, or remote system was modified.")
+        return
+
+    if args.command == "reference-dataset-validate":
+        result = run_reference_dataset_validation(
+            args.manifest,
+            args.output,
+            review_path=args.review,
+        )
+        print("Reference dataset validation complete")
+        print(f"Status: {result.status}")
+        print(f"Blockers: {result.blocker_count}")
+        print(f"Tables: {result.table_count}")
+        print(f"Rows: {result.row_count}")
+        print(f"Primary keys: {result.primary_key_count}")
+        print(f"Relationship candidates: {result.relationship_count}")
+        print(f"Approved relationships: {result.approved_relationship_count}")
+        print(f"Outputs changed: {result.outputs_changed}")
+        print(f"Manifest: {result.manifest_path}")
+        print(f"Relationship review: {result.review_path}")
+        print("DuckDB profiling was read-only; relationship decisions were not automated.")
         return
 
     if args.command == "source-onboard":

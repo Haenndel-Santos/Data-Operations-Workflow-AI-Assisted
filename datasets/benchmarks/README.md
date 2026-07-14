@@ -17,3 +17,9 @@ operational statements.
 
 Dataset presence does not imply approval for model training, publication, or
 upload. Those uses require confirmed provenance, licensing, and human approval.
+
+Versioned reference manifests bind verified provenance and licenses to exact
+local conversion artifacts and permitted uses. `reference-dataset-validate`
+then checks an independent reproduction, profiles DuckDB read-only, and emits a
+separate pending relationship review. Technical validity never approves a
+relationship.

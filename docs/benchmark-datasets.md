@@ -19,6 +19,8 @@ authorization for model-parameter training.
 The authoritative local inventory is
 [`datasets.yml`](../datasets/benchmarks/manifests/datasets.yml). The storage
 layout is summarized in the [benchmark README](../datasets/benchmarks/README.md).
+The provenance, reproduction, schema, relationship, and permitted-use gate is
+defined in [Reference Dataset Validation](reference-dataset-validation.md).
 
 ## Safe SQL Conversion
 
@@ -46,7 +48,7 @@ otherwise the command fails without overwriting them.
 
 | Dataset | Local state | Evidence | Remaining gate |
 | --- | --- | --- | --- |
-| Northwind | Converted: 13 tables, 3,308 rows | DuckDB, Parquet, 13 relationship candidates | Confirm exact source/license and review schema/relationships. |
+| Northwind | `ready_for_relationship_review` | Exact official Microsoft copies; MIT; independent conversion; 13/13 PKs and 13/13 FKs technically valid | Human accept/reject review for all 13 exact relationships. |
 | Pubs | Converted: 11 tables, 255 rows | DuckDB, Parquet, 10 relationship candidates | Confirm source/license; assess two replacement characters; review schema/relationships. |
 | AdventureWorks 2025 | Official backup restored locally as `READ_ONLY` | Exact release hash; `RESTORE VERIFYONLY` and `DBCC CHECKDB` passed; 71 tables, 20 views, 90 declared foreign keys, 760,167 aggregate rows | Implement a reproducible read-only DuckDB/Parquet export, then review schema, relationships, and benchmark use. |
 | Contoso warehouse recipe | Raw SQL/Markdown retained | Schema/load recipe only | Confirm source/license; acquire an authorized local data package without external execution. |
@@ -59,13 +61,29 @@ It is restored only in the local SQL Server 2025 Developer instance, database
 The SQL Server restore is a temporary compatibility bridge; no derived export
 or relationship approval has been produced from it yet.
 
-## Approval Boundary
+## Northwind Phase 2 Boundary
 
-The user authorized relocation and efficient local conversion. The following
-remain unapproved: benchmark acceptance, relationship promotion, external
-upload, publication, and model-parameter training. Future evaluation should
-first define expected questions, approved plans/results, control totals, and
-privacy/licensing evidence.
+Both local Northwind scripts are byte-identical to their official Microsoft
+`sql-server-samples` files at commit
+`2f85f3724ee45776a5183ed34d064488a6e1dc53`, and the repository license is MIT.
+The canonical source remains unchanged at SHA-256
+`3cc62b3fca6d244a47dbde698b809331e4f85988a0685b2b370717d431e94871`.
+
+An independent restricted conversion reproduced the exact schema, 13 table
+counts, all 13 Parquet hashes, all 13 relationship candidates, and the report.
+Read-only profiling found zero null/duplicate violations across 13 declared
+primary keys and zero orphans/non-unique targets across all 13 declared foreign
+keys. Eleven relationships have positive source-row coverage. The two
+`customer_customer_demo` relations remain evidence-limited because their source
+table is empty.
+
+The project owner authorized local conversion, profiling, benchmark design, and
+offline evaluation on 2026-07-15. Relationship promotion is still pending one
+explicit accept/reject decision per exact candidate. External upload,
+publication, and model-parameter training remain not authorized. The exact
+versioned authority is
+[`northwind.reference.yml`](../datasets/benchmarks/manifests/northwind.reference.yml),
+and generated technical evidence remains under ignored `outputs/benchmarks/`.
 
 The downstream
 [dataset-backed benchmark contract](analytics-dataset-benchmark.md) is a strict
@@ -81,3 +99,6 @@ Focused converter tests use temporary synthetic scripts and verify restricted
 statement handling, identity generation, idempotency, source-change refusal,
 and cleanup after failure. The real Northwind/Pubs conversion was additionally
 checked by comparing every manifest count and SHA-256 across DuckDB and Parquet.
+Reference-dataset tests use synthetic temporary databases and cover valid
+pending review, completed exact review, orphan and duplicate-key blockers,
+preflight refusal before database access, immutable evidence, and CLI shape.

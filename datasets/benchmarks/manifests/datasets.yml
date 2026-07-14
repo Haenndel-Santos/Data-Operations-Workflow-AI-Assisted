@@ -1,6 +1,6 @@
 version: 1
 status: inventoried_local_sources
-last_verified: 2026-07-14
+last_verified: 2026-07-15
 governance:
   raw_sources_read_only: true
   local_storage_and_conversion_approved: true
@@ -9,9 +9,10 @@ governance:
   model_parameter_training_approved: false
   external_upload_approved: false
   note: >-
-    The user authorized local relocation and efficient-format conversion. Dataset
-    evaluation, relationship promotion, model training, publication, and upload
-    remain separate approval decisions after provenance and license review.
+    These booleans are global defaults, not per-dataset authority. Northwind now
+    has explicit local profiling, benchmark-design, and offline-evaluation scope
+    in its reference manifest. Relationship promotion, model training,
+    publication, and upload remain separate decisions.
 datasets:
   - id: adventureworks_2025
     status: restored_local_read_only_pending_export_and_review
@@ -42,10 +43,13 @@ datasets:
       derived_export_status: pending
       external_connection_used: false
   - id: northwind
-    status: converted_local_pending_dataset_review
-    intended_role: relational_oltp_benchmark_candidate
-    provenance: user_supplied_local_download_origin_unverified
-    license: pending_exact_source_confirmation
+    status: ready_for_relationship_review
+    intended_role: small_commercial_oltp_reference
+    reference_manifest: datasets/benchmarks/manifests/northwind.reference.yml
+    provenance: verified_exact_official_microsoft_copy
+    authoritative_source: https://github.com/microsoft/sql-server-samples/blob/2f85f3724ee45776a5183ed34d064488a6e1dc53/samples/databases/northwind-pubs/instnwnd.sql
+    license: MIT
+    license_source: https://github.com/microsoft/sql-server-samples/blob/4693087abebd7e835f9ee46d005dcdaa03092a40/license.txt
     sources:
       - path: datasets/benchmarks/raw/northwind/instnwnd.sql
         role: canonical_conversion_source
@@ -63,11 +67,24 @@ datasets:
       tables: 13
       rows: 3308
       relationship_candidates: 13
+      primary_keys_validated: 13
+      relationships_technically_valid: 13
+      relationships_with_positive_row_coverage: 11
+      independent_reproduction: passed
+      relationship_review: pending
       formats:
         - duckdb
         - parquet_zstd
       ignored_sql: drop_alter_views_procedures_triggers_credentials_external_operations
       external_connection_used: false
+    permitted_uses:
+      local_conversion: approved
+      local_profiling: approved
+      local_benchmark_design: approved
+      local_offline_evaluation: approved
+      external_upload: not_authorized
+      model_parameter_training: not_authorized
+      publication: not_authorized
   - id: pubs
     status: converted_local_pending_dataset_review
     intended_role: relational_oltp_benchmark_candidate

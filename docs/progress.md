@@ -6,11 +6,11 @@ Turn local operational spreadsheets into validated analytical datasets and an ap
 
 ## Current Stage
 
-Three active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases 0-1 now have a validated static session registry plus measured synthetic scale evidence and one contract-preserving DuckDB pushdown, while Stage 5A-5F governed analytics still lacks a real approved catalog, approved benchmark pack, live provider, dynamic dispatch, or user interface; and benchmark onboarding remains pending dataset selection/export/review and approval.
+Three active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases 0-1 passed their gates; and Phase 2 Northwind onboarding is `ready_for_relationship_review` after exact provenance/license, independent conversion, schema/key/relationship integrity, and local-use validation. Stage 5A-5F governed analytics still lacks a real approved semantic catalog and expected-answer pack, live provider, dynamic dispatch, or user interface.
 
 ## Last Completed Milestone
 
-On 2026-07-14, AI roadmap Phase 1 added an isolated synthetic performance harness and optimized the measured schema/key bottleneck with Arrow metadata and local DuckDB pushdown. On identical 3-table/50,000-row inputs, schema peak process memory fell from 184,971,264 to 134,606,848 bytes (-27.23%) and runtime from 35.096404 to 0.353394 seconds (-98.99%). Exact equivalence tests preserve schema, nullability, empty-table behavior, primary-key candidates, repeated line references, and candidate relationships. No real dataset, approved state, provider, network, external database, upload, or training was used.
+On 2026-07-15, Phase 2 selected Northwind and added a fail-closed reference-dataset validator. Both local scripts were byte-matched to Microsoft's official `sql-server-samples` copies and the MIT license was fixed to immutable Git commits. An independent restricted conversion reproduced all 13 Parquets, schema/counts, relationship candidates, and report. Read-only profiling validated 13/13 source-declared primary keys and 13/13 FK candidates with zero orphans; 11 have positive source-row coverage and two empty-table candidates remain evidence-limited. Local profiling, benchmark design, and offline evaluation are approved, while all 13 relationship decisions remain pending and upload/publication/training remain not authorized.
 
 ## Current Capabilities
 
@@ -75,13 +75,20 @@ On 2026-07-14, AI roadmap Phase 1 added an isolated synthetic performance harnes
 - Maintain a versioned AI implementation roadmap with ordered phases, exit gates, quality targets, and explicit non-authorizations.
 - Inventory local benchmark sources with hashes, provenance/license status, and separate use approvals.
 - Convert supported T-SQL samples to deterministic DuckDB/Parquet artifacts while ignoring operational SQL and retaining foreign keys as pending candidates.
+- Validate exact reference-dataset provenance, SPDX license evidence, current
+  artifact hashes, independent conversion equivalence, read-only schema/counts,
+  declared primary keys, declared relationship integrity, and explicit use
+  scopes before generating a separate pending relationship review.
+- Require a completed review to bind the exact reference-manifest and candidate
+  hashes and accept or reject every relationship with reviewer/time/notes before
+  reporting `ready_for_semantic_modeling`.
 - Restore and integrity-check the official AdventureWorks 2025 backup in an isolated local read-only SQL Server database.
 
 ## Test Status
 
-- Automated suite: 173 tests passed offline on 2026-07-14; latest run completed in 26.18 seconds.
+- Automated suite: 180 tests passed offline on 2026-07-15; latest run completed in 27.66 seconds.
 - All 12 project-local skills passed the official skill validator on 2026-07-13.
-- Internal link check: 59 checked, 0 broken on 2026-07-14.
+- Internal link check: 69 checked, 0 broken on 2026-07-15.
 - Main suite is offline and uses temporary directories for generated test artifacts.
 - Documentation link checker is available at `scripts/check_internal_links.py`.
 - The relocated `.venv` has a stale editable-install path; use the `PYTHONPATH=src` command in `docs/testing.md` until environment repair is explicitly approved.
@@ -99,7 +106,8 @@ On 2026-07-14, AI roadmap Phase 1 added an isolated synthetic performance harnes
 - No concrete semantic catalog has completed human review or been applied; Stage 5D therefore remains operationally blocked for real datasets.
 - A live model provider, approved real benchmark pack, real dataset-backed evaluation, and user interface are not implemented or authorized. Recorded narration proves grounding controls only; synthetic Stage 5D/5E packs and temporary dataset-backed tests are not live-model or business-quality evidence.
 - Stage 5B plan-to-execution drift still uses size and nanosecond modification time in ordinary queries. The dataset-backed evaluator additionally rechecks the complete database SHA-256 and every other authority hash before each Stage 5B call and after evaluation.
-- Exact download provenance and licensing remain unconfirmed for Northwind, Pubs, and Contoso; local conversion or restoration is not benchmark, training, publication, or upload approval.
+- Exact download provenance and licensing remain unconfirmed for Pubs and Contoso. Northwind provenance and MIT licensing are verified, but its technical relationship evidence is not promotion authority.
+- Northwind's two `customer_customer_demo` relationships have source declarations and zero technical violations but no positive row coverage because the relevant candidate tables are empty; the human review must consider that limitation explicitly.
 - AdventureWorks now has a compatible local restore runtime, but the SQL Server-to-DuckDB/Parquet export is not implemented; the Contoso recipe references external data and was not executed.
 - A second SQL Server 2025 Evaluation instance (`DATAOPSLAB`) remains installed but stopped; project work should use the default Developer instance only when an explicitly authorized restore/export task requires it.
 
@@ -110,17 +118,17 @@ On 2026-07-14, AI roadmap Phase 1 added an isolated synthetic performance harnes
 - No explicit apply contract or approved versioned representation exists yet for the candidate canonical Product snapshot.
 - EDS cross-table analytics remain blocked because `approved_relationships.yml` is intentionally empty.
 - No applied `config/analytics/approved_semantic_catalog.yml` exists for a real authorized dataset.
-- Northwind and Pubs are converted but remain pending provenance, license, schema, relationship, and benchmark-use approval.
+- Northwind is technically `ready_for_relationship_review`; all 13 exact candidates remain pending accept/reject decisions. Pubs remains pending provenance, license, schema, relationship, and benchmark-use review.
 - AdventureWorks is restored and validated but remains pending reproducible export, schema review, relationship approval, and benchmark-use approval.
 
 ## Next Logical Milestone
 
-AI roadmap Phase 2 requires a human selection of the first reference dataset and explicit confirmation of authoritative source, version, license, checksum, permitted local benchmark use, and relationship-review scope. Northwind is the recommended first small commercial dataset, but its current local copy remains pending exact provenance/license approval; Chinook would require separately authorized acquisition. Until that strategic authority exists, do not query or promote existing benchmark assets. A separate safe engineering option is another measured Phase 1 increment for cleaning, using only the synthetic harness and exact type/output equivalence tests.
+Complete the exact Northwind relationship review generated at `outputs/benchmarks/northwind-phase2-validation/relationship_review.yml`. Every one of the 13 candidates must be accepted or rejected with reviewer, ISO-8601 time, and notes; the two empty-table candidates need explicit consideration. Revalidate the completed file into a new output directory. Only `ready_for_semantic_modeling` may begin the Phase 3 Northwind semantic catalog; it still does not authorize a dataset-backed expected-answer pack, live provider, upload, publication, or model training.
 
 ## Last Verified Commit
 
-`3951d7f` (`feat(orchestrator): validate analytics module registry`)
+`e8c12a1` (`perf(schema): push candidate inference into duckdb`)
 
 ## Last Updated
 
-2026-07-14 by Codex after completing the measured schema/key pushdown for AI roadmap Phase 1.
+2026-07-15 by Codex after preparing Northwind Phase 2 for exact relationship review.
