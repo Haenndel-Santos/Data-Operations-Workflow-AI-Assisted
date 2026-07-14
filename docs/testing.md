@@ -184,6 +184,25 @@ temporary fixture, proving that review, approval, and final binding validation
 do not connect to the database. No project approval path or real review file is
 written.
 
+## Dataset-Backed Offline Evaluation
+
+The dataset-backed executor tests use the same temporary synthetic package and
+a temporary generated approval. They cover exact comparison, numeric tolerance
+inside and outside bounds, no-row controls, expectation failure versus contract
+blocking, read-only connections, approval failure before database access,
+pre-query authority drift, idempotency, non-overwrite behavior, evidence
+minimization, and CLI limits:
+
+```powershell
+$env:PYTHONPATH = "src"
+$env:PYTHONDONTWRITEBYTECODE = "1"
+.\.venv\Scripts\python.exe -m pytest -p no:cacheprovider tests\analytics_dataset_benchmark_test.py
+```
+
+The test suite does not run this command against any project, EDS, SQL Server,
+or public benchmark database. Real execution requires the exact generated
+approval for that package and is not part of the default project state.
+
 ## Benchmark Conversion Validation
 
 Use the restricted converter only for a locally approved SQL sample whose

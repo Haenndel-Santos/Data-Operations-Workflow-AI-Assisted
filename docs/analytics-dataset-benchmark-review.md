@@ -41,6 +41,8 @@ them.
 4. Run approval in dry-run mode and inspect the proposed approval and blockers.
 5. Run again with `--apply` only after accepting the dry-run evidence.
 6. Supply the generated approval to `analytics-dataset-benchmark-validate`.
+7. Only after readiness is confirmed, run the separately controlled
+   [Dataset-Backed Offline Benchmark Evaluation](analytics-dataset-benchmark-evaluation.md).
 
 Review preparation fails if the candidate contract already has blockers. Any
 source change after preparation blocks approval.
@@ -96,6 +98,8 @@ different existing file is never overwritten, and no replacement flag exists.
   training, import, migration, synchronization, or narration is used.
 - Review preparation never approves anything.
 - Approval does not execute benchmark cases or establish answer correctness.
+- Dataset-backed execution remains a separate command with its own hash
+  rechecks, request gate, read-only controls, and evidence.
 - Questions, provider responses, expected rows, and review notes are omitted
   from approval evidence.
 - Existing review, approval, and generated evidence are protected from

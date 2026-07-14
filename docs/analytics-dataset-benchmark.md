@@ -119,8 +119,10 @@ expanding into disclosure or training authority.
 - `blocked`: any identity, hash, provenance, license, semantic, relationship,
   expected-answer, comparison, or approval check failed.
 
-Readiness is evidence for a future separately implemented offline evaluator. It
-does not execute or authorize live-provider evaluation.
+Readiness is consumed by the separately implemented
+[Dataset-Backed Offline Benchmark Evaluation](analytics-dataset-benchmark-evaluation.md).
+This validation command itself does not execute cases or authorize live-provider
+evaluation.
 
 ## Evidence
 

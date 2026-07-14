@@ -291,3 +291,28 @@ execution.
 `analytics-dataset-benchmark-approval` validates it in dry-run by default.
 `--apply` writes only an explicit immutable approval path. No current real
 dataset was reviewed or approved, and dataset-backed execution remains absent.
+
+## 2026-07-14 - Dataset Evaluation Reuses Governed Planning And Execution
+
+**Decision:** Execute an approved dataset-backed pack only by replaying recorded
+Stage 5D responses, requiring exact reviewed Stage 5A requests, rebuilding plans
+with Stage 5A, rechecking every immutable authority hash immediately before
+Stage 5B, and using Stage 5B fixed-limit read-only execution. Compare exact
+results by default and apply numeric tolerance only to explicitly reviewed
+columns.
+
+**Rationale:** Approval should not create a second query engine or turn expected
+answers into SQL authority. Reusing the existing stages preserves semantic,
+relationship, catalog, parameterization, drift, resource, and external-access
+controls while making dataset-backed results measurable.
+
+**Alternatives:** Execute SQL stored in the pack; skip exact request comparison;
+trust an earlier hash check; compare every number approximately; persist actual
+rows or SQL in evaluator evidence; use a live provider; begin with EDS or an
+unapproved public dataset.
+
+**Impact:** `analytics-dataset-benchmark-evaluate` reports `passed`, expectation
+`failed`, or contract `blocked` with separate exact/tolerance metrics. Runtime
+case artifacts are temporary and persistent evidence omits content. The
+implementation proves the controlled executor on synthetic fixtures only; no
+real dataset, provider, upload, training, or narration is authorized.

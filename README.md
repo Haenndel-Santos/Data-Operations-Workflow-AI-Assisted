@@ -217,6 +217,14 @@ To prepare and validate the separate human review required by that contract:
 
 Approval validation is dry-run by default. Writing the approval requires `--apply`; it still does not execute benchmark queries or authorize provider, upload, or training use.
 
+After an exact package and review have produced a valid approval, the offline evaluator is:
+
+```powershell
+.\.venv\Scripts\python.exe -m data_ops_lab analytics-dataset-benchmark-evaluate --dataset-manifest "<manifest.yml>" --database "<dataset.duckdb>" --semantic-state "<semantic.yml>" --relationships "<relationships.yml>" --pack "<pack.yml>" --approval "<approval.yml>" --output "outputs\<run-id>\analytics_dataset_benchmark_evaluation"
+```
+
+This command runs fixed-limit read-only queries with recorded responses only. No current real project dataset meets its prerequisites.
+
 To convert an approved local T-SQL sample into DuckDB and compressed Parquet
 without executing operational SQL:
 
@@ -318,5 +326,6 @@ DuckDB is a good fit for this project because it supports local analytical workf
 - [Analytics expected-answer evaluation contract](docs/analytics-answer-evaluation.md)
 - [Dataset-backed benchmark validation contract](docs/analytics-dataset-benchmark.md)
 - [Dataset benchmark review and approval contract](docs/analytics-dataset-benchmark-review.md)
+- [Dataset-backed offline benchmark evaluation contract](docs/analytics-dataset-benchmark-evaluation.md)
 - [Benchmark dataset onboarding contract](docs/benchmark-datasets.md)
 - [Agent handoff history](docs/agent-handoff.md)

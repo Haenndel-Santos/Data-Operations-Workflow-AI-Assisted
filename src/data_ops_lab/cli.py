@@ -5,6 +5,9 @@ from pathlib import Path
 
 from .analytics_answer_evaluation import run_analytics_answer_evaluation
 from .analytics_dataset_benchmark import run_analytics_dataset_benchmark_validation
+from .analytics_dataset_benchmark_evaluation import (
+    run_analytics_dataset_benchmark_evaluation,
+)
 from .analytics_dataset_benchmark_review import (
     run_analytics_dataset_benchmark_approval,
     run_analytics_dataset_benchmark_review,
@@ -285,6 +288,22 @@ def build_parser() -> argparse.ArgumentParser:
         default=Path("outputs/analytics_dataset_benchmark_approval"),
     )
     analytics_dataset_benchmark_approval.add_argument("--apply", action="store_true")
+
+    analytics_dataset_benchmark_evaluate = subparsers.add_parser(
+        "analytics-dataset-benchmark-evaluate",
+        help="Run an approved dataset-backed benchmark through the governed offline pipeline.",
+    )
+    analytics_dataset_benchmark_evaluate.add_argument("--dataset-manifest", type=Path, required=True)
+    analytics_dataset_benchmark_evaluate.add_argument("--database", type=Path, required=True)
+    analytics_dataset_benchmark_evaluate.add_argument("--semantic-state", type=Path, required=True)
+    analytics_dataset_benchmark_evaluate.add_argument("--relationships", type=Path, required=True)
+    analytics_dataset_benchmark_evaluate.add_argument("--pack", type=Path, required=True)
+    analytics_dataset_benchmark_evaluate.add_argument("--approval", type=Path, required=True)
+    analytics_dataset_benchmark_evaluate.add_argument(
+        "--output",
+        type=Path,
+        default=Path("outputs/analytics_dataset_benchmark_evaluation"),
+    )
 
     benchmark_convert_sql = subparsers.add_parser(
         "benchmark-convert-sql",
@@ -965,6 +984,27 @@ def main() -> None:
         print(f"Plan: {result.plan_path}")
         print(f"Approval: {result.approval_path}")
         print("No database connection, query, live provider, network, upload, or training was used.")
+        return
+
+    if args.command == "analytics-dataset-benchmark-evaluate":
+        result = run_analytics_dataset_benchmark_evaluation(
+            args.dataset_manifest,
+            args.database,
+            args.semantic_state,
+            args.relationships,
+            args.pack,
+            args.approval,
+            args.output,
+        )
+        print("Dataset-backed offline benchmark evaluation complete")
+        print(f"Status: {result.status}")
+        print(f"Cases: {result.case_count}")
+        print(f"Passed: {result.passed_count}")
+        print(f"Failed: {result.failed_count}")
+        print(f"Contract blockers: {result.blocker_count}")
+        print(f"Outputs changed: {result.outputs_changed}")
+        print(f"Manifest: {result.manifest_path}")
+        print("Approved local DuckDB only; read-only queries, recorded responses, and no network.")
         return
 
     if args.command == "benchmark-convert-sql":

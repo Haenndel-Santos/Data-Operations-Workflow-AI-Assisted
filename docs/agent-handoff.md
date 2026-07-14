@@ -1039,3 +1039,53 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 - Do not query/export or create reviews/approvals for EDS, AdventureWorks, Northwind, Pubs, or another real dataset merely to exercise the runner.
 - Do not interpret generated approval as answer correctness, live-model quality, narration authority, external disclosure, or training permission.
 - Do not bypass immutable hash revalidation, exact request gates, approved relationships, or Stage 5B resource controls in dataset-backed execution.
+
+## 2026-07-14 - Codex - Stage 5E approved dataset-backed evaluation
+
+### Initial Context
+
+- Branch: `main`
+- Initial commit: `8db6867`
+- Initial worktree: clean and synchronized with `origin/main`
+- Objective: consume generated benchmark authority through the governed offline analytics pipeline without using any real dataset
+
+### Work Performed
+
+- Added `analytics_dataset_benchmark_evaluation` and the `analytics-dataset-benchmark-evaluate` CLI command.
+- Required the existing complete dataset-backed validation to reach `ready_for_offline_evaluation` before reading the candidate pack or opening DuckDB.
+- Replayed each approved recorded response through Stage 5D and required the generated request to exactly equal the reviewed Stage 5A request before planning.
+- Reused Stage 5A read-only catalog validation and Stage 5B exact plan revalidation, parameterized execution, drift controls, external-access restrictions, and read-only connection mode.
+- Rechecked manifest, DuckDB, semantic state, relationships, pack, and approval SHA-256 immediately before every Stage 5B call and after all cases; drift blocks queries or discards case evidence.
+- Added fixed limits of 10,000 rows, 10 MB results, 30 seconds, 512 MB memory, one thread, and 256 MB temporary storage with no CLI overrides.
+- Added exact ordered CSV/control comparison and per-column absolute/relative numeric tolerance using the reviewed expected value as the relative baseline.
+- Kept `passed`, expectation `failed`, and contract `blocked` distinct and reported overall, pipeline, request, result, control, exact, and tolerance metrics.
+- Kept question, response, request, plan, result, and case artifacts temporary; persistent evidence contains only hashes, safe IDs, case states, fixed controls, and metrics.
+- Added fail-closed handling for missing prerequisite blocker evidence, exact idempotent reuse, divergent-evidence refusal, CLI tests, and contract/state documentation.
+
+### Validation
+
+- Final focused dataset validation/review/approval/evaluation tests: 26 passed in 5.61 seconds.
+- Final full offline suite: 138 passed in 18.43 seconds.
+- Python compilation: passed.
+- Documentation: 51 internal links checked, 0 broken.
+- Tests covered exact pass/fail, numeric tolerance inside/outside bounds, completed/no-row execution, blocked approval before database access, read-only connection enforcement, pre-Stage-5B authority drift, input preservation, idempotency, evidence minimization, and non-overwrite behavior.
+- No EDS, AdventureWorks, Northwind, Pubs, project database, SQL Server connection, live provider, network, credentials, real review/approval, export, migration, import, synchronization, narration, upload, or training was used or changed.
+
+### State For Next Agent
+
+- Stage 5E now has synthetic contract evaluation and an end-to-end approved-package path from immutable manifest through human review, approval, binding validation, and controlled offline execution.
+- No real semantic registry or benchmark pack is approved, so the new executor has only synthetic temporary evidence and must not be pointed at current project datasets.
+- `passed` proves reviewed recorded cases only; it does not measure a live model or authorize narrative claims beyond exact result evidence.
+- Result narration and user-facing presentation remain absent.
+
+### Next Logical Steps
+
+1. Define a result-presentation contract that consumes validated Stage 5B/evaluation evidence without becoming query or numeric authority.
+2. Build a deterministic offline renderer with source/control citations, no-result diagnostics, and explicit caveats.
+3. Add a provider-neutral recorded narration boundary only after deterministic value preservation is tested; keep live provider selection separate.
+
+### Do Not Do Yet
+
+- Do not execute EDS, AdventureWorks, Northwind, Pubs, or another real dataset without its exact completed semantic, relationship, pack, review, and approval chain.
+- Do not send questions, rows, SQL, parameters, results, or approval identity to a live provider or network service.
+- Do not let narration recompute values, suppress caveats, alter controls, or become execution authority.

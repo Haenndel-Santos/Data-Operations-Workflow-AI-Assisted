@@ -101,6 +101,13 @@ default, and writes a separate immutable approval only with `--apply`. It never
 executes a case or authorizes live providers, upload, or model training. See
 [Dataset Benchmark Review And Approval](analytics-dataset-benchmark-review.md).
 
+The approved dataset-backed evaluator now rechecks every immutable authority,
+replays recorded Stage 5D responses, requires exact Stage 5A requests, and uses
+Stage 5B fixed-limit read-only execution before exact or reviewed numeric
+comparison. Persistent evidence omits case content and results. It is tested
+only with temporary synthetic datasets; no real benchmark is approved. See
+[Dataset-Backed Offline Benchmark Evaluation](analytics-dataset-benchmark-evaluation.md).
+
 ## Request Contract
 
 ```yaml
@@ -195,7 +202,7 @@ Calling all dataset use "training" would hide important differences. The initial
 2. **Stage 5B - Controlled local execution:** read-only DuckDB executor, timeout/resource limits, result manifest, control totals, and no-result diagnostics. Implemented.
 3. **Stage 5C - Semantic catalog:** business names, synonyms, measures, dimensions, relationship paths, ambiguity scores, and dataset-specific domain packs. Technical validation plus the human review/apply infrastructure are implemented; a concrete approved catalog remains pending.
 4. **Stage 5D - Natural-language adapter:** deterministic approved-semantic compiler, provider-neutral translation boundary, and synthetic offline regression pack implemented. Live model-provider integration remains pending and unauthorized. Raw SQL is never accepted.
-5. **Stage 5E - Expected-answer harness:** synthetic exact request/result/control evaluation, per-case benchmark review/approval infrastructure, and dry-run immutable dataset/pack binding validation are implemented. Dataset-backed execution, EDS local evaluation, and separately approved public benchmark packs remain pending.
+5. **Stage 5E - Expected-answer harness:** synthetic evaluation, per-case benchmark review/approval, dry-run immutable binding validation, and approved offline dataset-backed execution are implemented. EDS local evaluation and separately approved public benchmark packs remain pending.
 6. **Stage 5F - User experience:** query interface, result tables/charts, evidence view, saved analyses, feedback, and role-aware governance.
 7. **Stage 5G - Optional data connectors:** separately authorized read-only database connectors with credential isolation and online tests outside the default suite.
 

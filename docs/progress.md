@@ -6,11 +6,11 @@ Turn local operational spreadsheets into validated analytical datasets and an ap
 
 ## Current Stage
 
-Three active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI analytics has Stage 5A-5D governed planning/execution/translation plus synthetic Stage 5E answer evaluation, per-case benchmark review/approval infrastructure, and dry-run dataset-backed binding validation, but no real approved catalog, approved benchmark pack, dataset-backed execution, or live provider; and benchmark onboarding remains pending dataset export/review and approval.
+Three active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI analytics has Stage 5A-5D governed planning/execution/translation plus synthetic and approved-package Stage 5E evaluation, per-case benchmark review/approval, and immutable binding validation, but no real approved catalog, approved benchmark pack, live provider, or result narration; and benchmark onboarding remains pending dataset export/review and approval.
 
 ## Last Completed Milestone
 
-On 2026-07-14, Stage 5E added hash-bound benchmark review preparation and explicit approval generation. The pending review lists every case and requires human decisions for the recorded response, expected request, expected result, comparison policy, and bounded use scopes. Approval is dry-run by default, requires explicit `--apply`, writes only a user-supplied immutable path, and carries the review hash plus normalized decision digest. No real review, approval, dataset connection, query, provider, network, upload, or training was used.
+On 2026-07-14, Stage 5E added approved dataset-backed offline evaluation. It validates the complete immutable package and generated approval, replays recorded Stage 5D responses, requires exact expected Stage 5A requests, rechecks all six authority hashes before every Stage 5B call, and compares fixed-limit read-only results exactly or with reviewed numeric tolerance. Tests cover completed, no-row, expected-failure, blocked-authority, and drift states using only temporary synthetic DuckDB. No real dataset, provider, network, upload, training, or narration was used.
 
 ## Current Capabilities
 
@@ -51,15 +51,18 @@ On 2026-07-14, Stage 5E added hash-bound benchmark review preparation and explic
 - Prepare a pending per-case benchmark review bound to dataset, semantic, relationship, and pack hashes without duplicating case content into evidence.
 - Validate complete human case and scope decisions in dry-run mode and generate a separate approval only with explicit apply authority.
 - Refuse pending, rejected, missing, duplicate, unknown, drifted, scope-expanding, or divergent review/approval state without partial authority writes.
+- Execute an approved dataset-backed pack through recorded Stage 5D, exact request gating, Stage 5A planning, and Stage 5B read-only revalidation with fixed limits.
+- Recheck manifest, database, semantic, relationship, pack, and approval SHA-256 immediately before each query and discard evidence on drift.
+- Compare ordered typed results exactly by default or with per-column reviewed numeric tolerance while keeping expectation failures separate from contract blockers.
 - Inventory local benchmark sources with hashes, provenance/license status, and separate use approvals.
 - Convert supported T-SQL samples to deterministic DuckDB/Parquet artifacts while ignoring operational SQL and retaining foreign keys as pending candidates.
 - Restore and integrity-check the official AdventureWorks 2025 backup in an isolated local read-only SQL Server database.
 
 ## Test Status
 
-- Automated suite: 131 tests passed offline on 2026-07-14; latest run completed in 16.59 seconds.
+- Automated suite: 138 tests passed offline on 2026-07-14; latest run completed in 18.43 seconds.
 - All 12 project-local skills passed the official skill validator on 2026-07-13.
-- Internal link check: 45 checked, 0 broken on 2026-07-14.
+- Internal link check: 51 checked, 0 broken on 2026-07-14.
 - Main suite is offline and uses temporary directories for generated test artifacts.
 - Documentation link checker is available at `scripts/check_internal_links.py`.
 - The relocated `.venv` has a stale editable-install path; use the `PYTHONPATH=src` command in `docs/testing.md` until environment repair is explicitly approved.
@@ -75,8 +78,8 @@ On 2026-07-14, Stage 5E added hash-bound benchmark review preparation and explic
 - The current orchestrator does not yet expose module discovery, dependency resolution, checkpoints, resume, or dry-run as shared infrastructure.
 - Several core pipeline stages still load whole Parquet tables into Pandas; larger-than-memory operation requires DuckDB pushdown and streaming refactors.
 - No concrete semantic catalog has completed human review or been applied; Stage 5D therefore remains operationally blocked for real datasets.
-- A live model provider, result narration, approved real benchmark pack, and dataset-backed execution are not implemented yet. Synthetic Stage 5D/5E packs and the dataset-binding dry-run validate backend contracts only and are not live-model or real-dataset quality evidence.
-- Stage 5B plan-to-execution drift still uses size and nanosecond modification time. The new dataset-backed package contract adds a full database SHA-256 before future evaluation, but no execution runner consumes that authority yet.
+- A live model provider, result narration, approved real benchmark pack, and real dataset-backed evaluation are not implemented or authorized. Synthetic Stage 5D/5E packs and temporary dataset-backed tests validate backend contracts only and are not live-model or business-quality evidence.
+- Stage 5B plan-to-execution drift still uses size and nanosecond modification time in ordinary queries. The dataset-backed evaluator additionally rechecks the complete database SHA-256 and every other authority hash before each Stage 5B call and after evaluation.
 - Exact download provenance and licensing remain unconfirmed for Northwind, Pubs, and Contoso; local conversion or restoration is not benchmark, training, publication, or upload approval.
 - AdventureWorks now has a compatible local restore runtime, but the SQL Server-to-DuckDB/Parquet export is not implemented; the Contoso recipe references external data and was not executed.
 - A second SQL Server 2025 Evaluation instance (`DATAOPSLAB`) remains installed but stopped; project work should use the default Developer instance only when an explicitly authorized restore/export task requires it.
@@ -93,12 +96,12 @@ On 2026-07-14, Stage 5E added hash-bound benchmark review preparation and explic
 
 ## Next Logical Milestone
 
-Design and implement the dataset-backed offline evaluator that consumes a valid generated approval, rechecks every immutable hash, replays recorded Stage 5D responses, preserves exact Stage 5A request gating and Stage 5B read-only controls, and applies exact or reviewed numeric comparison. Test only with temporary synthetic data first. Do not export/query AdventureWorks or use EDS merely to implement the runner. Keep live-provider selection, narration, Product canonical apply, and external/database work separate. In parallel, profile the highest-memory Pandas stages before selecting one measured DuckDB pushdown refactor.
+Define a grounded result-presentation and narration boundary that consumes only validated Stage 5B/evaluation evidence, preserves every numeric value and caveat, cites source/control hashes, and cannot issue or modify queries. Start with a deterministic offline renderer and recorded narrator tests; do not select a live provider, expose rows externally, or use EDS/public benchmarks merely to implement the contract. Keep Product canonical apply and external/database work separate. In parallel, profile the highest-memory Pandas stages before selecting one measured DuckDB pushdown refactor.
 
 ## Last Verified Commit
 
-`7144863` (`feat(analytics): add dataset benchmark validation`)
+`8db6867` (`feat(analytics): add benchmark review approval`)
 
 ## Last Updated
 
-2026-07-14 by Codex after the dataset benchmark review and approval checkpoint.
+2026-07-14 by Codex after the approved dataset-backed offline evaluation checkpoint.

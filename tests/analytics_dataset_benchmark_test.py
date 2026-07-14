@@ -8,9 +8,14 @@ import duckdb
 import pytest
 import yaml
 
+import data_ops_lab.analytics_dataset_benchmark_evaluation as dataset_evaluation
 from data_ops_lab.analytics_dataset_benchmark import (
     AnalyticsDatasetBenchmarkResult,
     run_analytics_dataset_benchmark_validation,
+)
+from data_ops_lab.analytics_dataset_benchmark_evaluation import (
+    AnalyticsDatasetBenchmarkEvaluationResult,
+    run_analytics_dataset_benchmark_evaluation,
 )
 from data_ops_lab.analytics_dataset_benchmark_review import (
     CASE_REVIEW_FIELDS,
@@ -95,9 +100,13 @@ def build_fixture(tmp_path: Path) -> dict[str, Path]:
     )
     with duckdb.connect(str(paths["database"])) as connection:
         connection.execute(
-            "create table synthetic_orders(order_id integer, order_amount decimal(18,2))"
+            "create table synthetic_orders("
+            "order_id integer, order_amount decimal(18,2), order_status varchar)"
         )
-        connection.execute("insert into synthetic_orders values (1, 10.50), (2, 27.25)")
+        connection.execute(
+            "insert into synthetic_orders values "
+            "(1, 10.50, 'open'), (2, 27.25, 'closed')"
+        )
     semantic_hash = file_sha256(paths["semantic"])
     relationships_hash = file_sha256(paths["relationships"])
     database_hash = file_sha256(paths["database"])
@@ -254,7 +263,7 @@ def prepare_benchmark_review(paths: dict[str, Path], review_path: Path) -> Path:
         paths["pack"],
         review_path,
     )
-    assert result.case_count == 2
+    assert result.case_count == len(read_yaml(paths["pack"])["cases"])
     return result.review_path
 
 
@@ -274,6 +283,79 @@ def complete_benchmark_review(review_path: Path) -> dict:
         row["notes"] = "Reviewed against the exact synthetic pack."
     write_yaml(review_path, review)
     return review
+
+
+def generate_benchmark_approval(paths: dict[str, Path], root: Path) -> Path:
+    review_path = prepare_benchmark_review(paths, root / "review.yml")
+    complete_benchmark_review(review_path)
+    approval_path = root / "generated_approval.yml"
+    result = run_analytics_dataset_benchmark_approval(
+        paths["manifest"],
+        paths["database"],
+        paths["semantic"],
+        paths["relationships"],
+        paths["pack"],
+        review_path,
+        root / "approval_evidence",
+        approval_path,
+        apply=True,
+    )
+    assert result.status == "ready_for_apply"
+    assert result.approval_changed is True
+    return approval_path
+
+
+def add_no_rows_case(paths: dict[str, Path]) -> None:
+    pack = read_yaml(paths["pack"])
+    pack["cases"].append(
+        {
+            "id": "missing_status_no_rows",
+            "question": "Which missing synthetic statuses have orders?",
+            "provider_response": {
+                "version": 1,
+                "from": "sales orders",
+                "dimensions": [{"term": "order status", "alias": "status"}],
+                "metrics": [{"term": "order count", "alias": "orders"}],
+                "filters": [
+                    {"term": "order status", "operator": "eq", "value": "missing"}
+                ],
+                "order_by": [{"field": "status", "direction": "asc"}],
+                "limit": 20,
+            },
+            "expected_request": {
+                "version": 1,
+                "question": "Which missing synthetic statuses have orders?",
+                "from": "synthetic_orders",
+                "joins": [],
+                "dimensions": [
+                    {"column": "synthetic_orders.order_status", "alias": "status"}
+                ],
+                "metrics": [{"function": "count", "column": "*", "alias": "orders"}],
+                "filters": [
+                    {
+                        "column": "synthetic_orders.order_status",
+                        "operator": "eq",
+                        "value": "missing",
+                    }
+                ],
+                "order_by": [{"field": "status", "direction": "asc"}],
+                "limit": 20,
+            },
+            "expected_result": {
+                "status": "completed_no_rows",
+                "columns": [
+                    {"name": "status", "type": "string"},
+                    {"name": "orders", "type": "integer"},
+                ],
+                "rows": [],
+                "row_count": 0,
+                "column_count": 2,
+                "null_cells": 0,
+            },
+            "comparison": {"mode": "exact", "tolerances": []},
+        }
+    )
+    write_yaml(paths["pack"], pack)
 
 
 def test_hash_bound_dataset_pack_is_ready_without_opening_database(
@@ -783,3 +865,224 @@ def test_benchmark_review_and_approval_cli_contracts() -> None:
     assert approval.approval_output == Path("approval.yml")
     assert not hasattr(review, "allow_network")
     assert not hasattr(approval, "replace_existing")
+
+
+def run_dataset_evaluation(
+    paths: dict[str, Path],
+    approval_path: Path,
+    output_dir: Path,
+) -> AnalyticsDatasetBenchmarkEvaluationResult:
+    return run_analytics_dataset_benchmark_evaluation(
+        paths["manifest"],
+        paths["database"],
+        paths["semantic"],
+        paths["relationships"],
+        paths["pack"],
+        approval_path,
+        output_dir,
+    )
+
+
+def test_approved_dataset_evaluation_passes_exact_tolerance_and_no_rows_read_only(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    paths = build_fixture(tmp_path)
+    add_no_rows_case(paths)
+    approval_path = generate_benchmark_approval(paths, tmp_path / "authority")
+    protected = {
+        path: file_sha256(path)
+        for path in (
+            paths["manifest"],
+            paths["database"],
+            paths["semantic"],
+            paths["relationships"],
+            paths["pack"],
+            approval_path,
+        )
+    }
+    original_connect = duckdb.connect
+    connections: list[bool] = []
+
+    def guarded_connect(*args: object, **kwargs: object) -> duckdb.DuckDBPyConnection:
+        connections.append(kwargs.get("read_only") is True)
+        assert kwargs.get("read_only") is True
+        return original_connect(*args, **kwargs)
+
+    monkeypatch.setattr(duckdb, "connect", guarded_connect)
+    output_dir = tmp_path / "evaluation"
+    first = run_dataset_evaluation(paths, approval_path, output_dir)
+    initial = output_bytes(output_dir)
+    second = run_dataset_evaluation(paths, approval_path, output_dir)
+    manifest = read_yaml(first.manifest_path)
+    cases = list(csv.DictReader(first.cases_path.open(newline="", encoding="utf-8")))
+    persisted = "\n".join(
+        path.read_text(encoding="utf-8")
+        for path in output_dir.iterdir()
+        if path.is_file()
+    )
+
+    assert first.status == "passed"
+    assert first.case_count == 3
+    assert first.passed_count == 3
+    assert first.blocker_count == 0
+    assert second.outputs_changed is False
+    assert initial == output_bytes(output_dir)
+    assert connections and all(connections)
+    assert {row["comparison_mode"] for row in cases} == {"exact", "numeric_tolerance"}
+    assert {row["execution_status"] for row in cases} == {
+        "completed",
+        "completed_no_rows",
+    }
+    assert all(row["authority_rechecked"] == "True" for row in cases)
+    assert manifest["controls"]["database_mode"] == "read_only"
+    assert manifest["metrics"]["numeric_tolerance_accuracy"]["rate"] == 1.0
+    assert "Which missing synthetic statuses have orders?" not in persisted
+    assert "37.75" not in persisted
+    assert "select " not in persisted.lower()
+    assert all(file_sha256(path) == digest for path, digest in protected.items())
+
+
+def test_invalid_approval_blocks_before_any_database_connection(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    paths = build_fixture(tmp_path)
+    approval = read_yaml(paths["approval"])
+    approval.pop("review_evidence")
+    write_yaml(paths["approval"], approval)
+    monkeypatch.setattr(
+        duckdb,
+        "connect",
+        lambda *args, **kwargs: pytest.fail("blocked authority opened DuckDB"),
+    )
+
+    result = run_dataset_evaluation(paths, paths["approval"], tmp_path / "evaluation")
+
+    assert result.status == "blocked"
+    assert result.case_count == 0
+    assert "invalid_benchmark_review_evidence" in blocker_types(result)
+
+
+def test_dataset_evaluation_reports_expectation_failure_without_contract_blocker(
+    tmp_path: Path,
+) -> None:
+    paths = build_fixture(tmp_path)
+    pack = read_yaml(paths["pack"])
+    pack["cases"][0]["expected_result"]["rows"] = [[3]]
+    pack["cases"][1]["expected_result"]["rows"] = [["37.76"]]
+    write_yaml(paths["pack"], pack)
+    approval_path = generate_benchmark_approval(paths, tmp_path / "authority")
+
+    result = run_dataset_evaluation(paths, approval_path, tmp_path / "evaluation")
+    cases = {
+        row["case_id"]: row
+        for row in csv.DictReader(result.cases_path.open(newline="", encoding="utf-8"))
+    }
+
+    assert result.status == "failed"
+    assert result.blocker_count == 0
+    assert result.passed_count == 1
+    assert cases["exact_order_count"]["result_match"] == "False"
+    assert cases["tolerant_total_amount"]["result_match"] == "True"
+
+
+def test_dataset_evaluation_rejects_value_outside_reviewed_tolerance(tmp_path: Path) -> None:
+    paths = build_fixture(tmp_path)
+    pack = read_yaml(paths["pack"])
+    pack["cases"][1]["expected_result"]["rows"] = [["37.77"]]
+    write_yaml(paths["pack"], pack)
+    approval_path = generate_benchmark_approval(paths, tmp_path / "authority")
+
+    result = run_dataset_evaluation(paths, approval_path, tmp_path / "evaluation")
+    cases = {
+        row["case_id"]: row
+        for row in csv.DictReader(result.cases_path.open(newline="", encoding="utf-8"))
+    }
+
+    assert result.status == "failed"
+    assert result.blocker_count == 0
+    assert cases["exact_order_count"]["result_match"] == "True"
+    assert cases["tolerant_total_amount"]["result_match"] == "False"
+
+
+def test_authority_drift_after_planning_blocks_stage_5b_query(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    paths = build_fixture(tmp_path)
+    approval_path = generate_benchmark_approval(paths, tmp_path / "authority")
+    real_hash = dataset_evaluation.file_sha256
+    calls = 0
+
+    def drifting_hash(path: Path) -> str:
+        nonlocal calls
+        calls += 1
+        if calls == 7:
+            paths["pack"].write_text(
+                paths["pack"].read_text(encoding="utf-8") + "\n",
+                encoding="utf-8",
+            )
+        return real_hash(path)
+
+    monkeypatch.setattr(dataset_evaluation, "file_sha256", drifting_hash)
+    monkeypatch.setattr(
+        dataset_evaluation,
+        "run_analytics_query_execution",
+        lambda *args, **kwargs: pytest.fail("authority drift reached Stage 5B"),
+    )
+
+    result = run_dataset_evaluation(paths, approval_path, tmp_path / "evaluation")
+
+    assert result.status == "blocked"
+    assert result.case_count == 0
+    assert "dataset_benchmark_authority_changed_before_query" in blocker_types(result)
+
+
+def test_different_dataset_evaluation_evidence_is_not_overwritten(tmp_path: Path) -> None:
+    paths = build_fixture(tmp_path)
+    approval_path = generate_benchmark_approval(paths, tmp_path / "authority")
+    output_dir = tmp_path / "evaluation"
+    first = run_dataset_evaluation(paths, approval_path, output_dir)
+    first.report_path.write_text("different\n", encoding="utf-8")
+    protected = output_bytes(output_dir)
+
+    with pytest.raises(ValueError, match="existing evidence was not overwritten"):
+        run_dataset_evaluation(paths, approval_path, output_dir)
+
+    assert protected == output_bytes(output_dir)
+
+
+def test_dataset_benchmark_evaluation_cli_has_fixed_offline_boundary() -> None:
+    args = build_parser().parse_args(
+        [
+            "analytics-dataset-benchmark-evaluate",
+            "--dataset-manifest",
+            "manifest.yml",
+            "--database",
+            "dataset.duckdb",
+            "--semantic-state",
+            "semantic.yml",
+            "--relationships",
+            "relationships.yml",
+            "--pack",
+            "pack.yml",
+            "--approval",
+            "approval.yml",
+            "--output",
+            "evidence",
+        ]
+    )
+
+    assert args.command == "analytics-dataset-benchmark-evaluate"
+    assert args.approval == Path("approval.yml")
+    assert args.output == Path("evidence")
+    for name in (
+        "provider",
+        "allow_network",
+        "sql",
+        "max_rows",
+        "memory_limit_mb",
+        "threads",
+    ):
+        assert not hasattr(args, name)
