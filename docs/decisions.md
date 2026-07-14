@@ -107,3 +107,15 @@
 **Reason:** Those alternatives would silently override human decisions, invent Product records, or create an apparently complete but incomplete target model.
 
 **Impact:** `product-materialization-preview` validates exact applied state, source-row range, same-row conflict evidence, corrected references, exclusions, IDs, and output idempotency. The real run is blocked pending human clarification for three issue IDs and produced no Product preview.
+
+## 2026-07-14 - Empty Product RefNr Rows Are Invalid
+
+**Decision:** Classify `UNMATCHED_REFNR_006`, `UNMATCHED_REFNR_008`, and `UNMATCHED_REFNR_013` as `rejected`. Exclude `refnr_row_1731`, `refnr_row_1733`, and `refnr_row_1739` from the target Product model and do not assign Product identities to those empty records.
+
+**Context:** The authoritative `Product_ref.nr` rows are completely empty, so the prior approvals could not supply a corrected reference, business reference, attributes, or defensible identity. The human owner explicitly instructed Codex to proceed with treating the rows as invalid.
+
+**Alternatives:** Supply corrected source evidence; generate arbitrary identities; omit the rows without changing the approved decision state.
+
+**Reason:** Explicit human authority resolves the conflict without inventing data. Rejection uses the existing reviewed decision and application contracts and remains auditable and reversible.
+
+**Impact:** The applied state now contains 28 decisions, 15 approved and 13 rejected, with digest `4f14e2cb265d9729263ab5bd572a41365f4bbbceec7e007d930b539faa5fe260`. The prior state is preserved under `config/data_model/history/`. Product materialization is no longer blocked and produces a 1,733-row local preview with 13 exclusions.

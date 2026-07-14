@@ -43,4 +43,4 @@ Each step requires contract, unit, integration, workflow, and regression coverag
 
 ## Current Safety Gate
 
-No orchestrator feature may treat `pending_review` or a valid-but-blocked review workbook as approval. The Product Step 3E.4 state is explicitly applied, but Step 3E.5 is blocked by three approved decisions without source content. No downstream stage may generate identities for those rows, consume a partial preview, or continue until the human decision state and evidence are reconciled.
+No orchestrator feature may treat `pending_review` or a valid-but-blocked review workbook as approval. Product Step 3E.4 now contains the explicitly replaced 15-approved/13-rejected state, and Step 3E.5 has produced a complete validated local preview after the empty records were rejected. No downstream stage may bypass the applied digest, restore excluded identities, consume stale blocked outputs, or import/synchronize the preview without a separate authorized contract.

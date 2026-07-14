@@ -26,7 +26,7 @@ See `docs/architecture.md` and `docs/orchestrator.md` for boundaries and flow de
 
 1. **Core analytical pipeline:** implemented for local CSV/XLSX conversion, profiling, cleaning, schema/key detection, relationship validation, DuckDB, Tableau export, and documentation.
 2. **ERP source onboarding and candidate modeling:** implemented; versioned candidates remain `pending_review`.
-3. **Human review and Product reconciliation:** active. Step 3E.4 state is applied, while Step 3E.5 materialization is blocked by three approved but empty authoritative rows requiring a new human decision or corrected evidence.
+3. **Human review and Product reconciliation:** active. Step 3E.4 contains the explicitly replaced Product state, and Step 3E.5 has produced a complete validated local Product preview after the three empty authoritative records were rejected.
 4. **Approved canonical model:** pending. Product has an approved reconciliation contract, while `approved_keys.yml` and `approved_relationships.yml` remain intentionally empty.
 5. **Migration/import execution:** not started and not authorized until approvals and safeguards exist.
 6. **Optional product extensions:** OpenAI SQL assistance, UI, richer BI artifacts, and performance work remain future options, not current priorities.

@@ -79,4 +79,4 @@ This command is local preview validation only. It does not connect to a database
 
 ## Current Validation Checkpoint
 
-The 2026-07-14 run against the applied Product state is blocked. Three approved `Product_ref.nr` source rows are completely empty and cannot satisfy `apply_corrected_product_ref_nr`: `UNMATCHED_REFNR_006`, `UNMATCHED_REFNR_008`, and `UNMATCHED_REFNR_013`. The module generated blockers, manifest, and report only; no partial Product preview was written.
+The 2026-07-14 rerun against decision digest `4f14e2cb265d9729263ab5bd572a41365f4bbbceec7e007d930b539faa5fe260` is `ready_for_local_preview`. The human owner rejected the three completely empty `Product_ref.nr` records, so the module generated a complete preview with 1,733 rows, 13 exclusions, 1,733 unique and filled `product_id` values, no empty or duplicate `product_ref_nr` values, and zero blockers. Excluded identifiers are absent from lineage. A repeated run returned `outputs_changed=False` and preserved every output hash.

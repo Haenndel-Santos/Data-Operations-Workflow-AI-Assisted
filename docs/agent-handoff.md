@@ -314,3 +314,68 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 .\.venv\Scripts\python.exe -m data_ops_lab product-materialization-preview --workbook outputs\019f21a4-daf0-7272-b2a7-09b4f0e2c75b\product_refnr_human_review_shortlist_validated.xlsx --output outputs\019f21a4-daf0-7272-b2a7-09b4f0e2c75b\step3e5_product_materialization
 .\.venv\Scripts\python.exe -m pytest -p no:cacheprovider
 ```
+
+## 2026-07-14 - Codex - Empty Product rows rejected and preview completed
+
+### Initial Context
+
+- Branch: `main`
+- Initial commit: `7d41fb3`
+- Initial worktree: clean; branch was five commits ahead of `origin/main`
+- Stage found: Step 3E.5 blocked by three approved but completely empty `Product_ref.nr` rows
+- Objective received: proceed and treat the empty records as invalid
+
+### Work Performed
+
+- Created a new review workbook without changing the prior validated workbook and set `UNMATCHED_REFNR_006`, `UNMATCHED_REFNR_008`, and `UNMATCHED_REFNR_013` to `rejected` in every review occurrence.
+- Validated all 28 final decisions and visually inspected all six workbook sheets before and after validation.
+- Replaced the applied Product reconciliation state through the existing explicit command and preserved the previous state in versioned history.
+- Generated and structurally validated a complete local Product preview, lineage, exclusions, manifest, and report.
+- Repeated state application and materialization to verify byte-stable idempotency.
+
+### Decisions
+
+- The three completely empty `Product_ref.nr` rows are invalid target Product records and receive no Product identity.
+- Decision digest `4f14e2cb265d9729263ab5bd572a41365f4bbbceec7e007d930b539faa5fe260` supersedes the prior applied digest.
+- The generated preview remains local evidence only; no database, import, migration, or synchronization is authorized.
+
+### Validation
+
+- Review validation: 28 valid decisions, 15 approved, 13 rejected, no pending or inconsistent rows.
+- Applied state SHA-256: `45CE926042BE43261128B869E301E47511FCBFD5EF449741289A427A5BEEA5C7`.
+- Previous state backup SHA-256: `7E4E3CF407675B885BBBFD4812FADA03C31D492CD54D0A649315D3E84FBFAD73`.
+- Materialization: `ready_for_local_preview`, 1,733 preview rows, 13 exclusions, zero blockers.
+- Preview integrity: 1,733 unique filled `product_id` values, zero empty or duplicate `product_ref_nr` values, and no excluded identifiers in lineage.
+- Repeated application: `state_changed=False`; repeated materialization: `outputs_changed=False`; all compared hashes unchanged.
+- Full offline suite: 38 passed in 4.14 seconds.
+- Documentation: 12 internal links checked, 0 broken.
+
+### State For Next Agent
+
+- Branch: `main`
+- Final commit: the commit containing this handoff entry; verify with `git log -1`.
+- Current stage: Step 3E.5 complete with a validated local Product preview.
+- Applied state: `config/data_model/product_reconciliation_state.yml`.
+- Local review: `outputs/019f21a4-daf0-7272-b2a7-09b4f0e2c75b/step3e5_empty_rows_rejected/product_refnr_human_review_shortlist_validated.xlsx`.
+- Local materialization report: `outputs/019f21a4-daf0-7272-b2a7-09b4f0e2c75b/step3e5_product_materialization_resolved/product_materialization_report.md`.
+
+### Next Logical Steps
+
+1. Review the completed local Product preview and exclusion evidence.
+2. Define an explicit offline consumption or promotion contract for the canonical Product model.
+3. Keep broader key and relationship approvals separate until business context is available.
+
+### Do Not Do Yet
+
+- Do not restore identities for rejected records or consume stale blocked outputs.
+- Do not edit raw Product sources or prior validated review workbooks.
+- Do not run migrations, imports, database writes, or external synchronization.
+
+### Useful Commands
+
+```powershell
+$env:PYTHONPATH = "src"
+$env:PYTHONDONTWRITEBYTECODE = "1"
+.\.venv\Scripts\python.exe -m data_ops_lab product-materialization-preview --workbook outputs\019f21a4-daf0-7272-b2a7-09b4f0e2c75b\step3e5_empty_rows_rejected\product_refnr_human_review_shortlist_validated.xlsx --output outputs\019f21a4-daf0-7272-b2a7-09b4f0e2c75b\step3e5_product_materialization_resolved
+.\.venv\Scripts\python.exe -m pytest -p no:cacheprovider
+```

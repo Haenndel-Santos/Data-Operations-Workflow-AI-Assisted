@@ -6,7 +6,7 @@ Step 3E.4 converts a clean Product final-review workbook into an auditable appli
 
 ## Applied Checkpoint
 
-The user explicitly approved this representation on 2026-07-13. `config/data_model/product_reconciliation_state.yml` is applied with decision digest `f2a7f0bdf338d8733ce03d4b82bfe0056e7e06d47ad157b36a059a9e1c4c0183`: 28 decisions, 18 approvals, and 10 logical target-model exclusions. An immediate reapplication was idempotent and did not rewrite the state.
+The user explicitly authorized a replacement decision set on 2026-07-14 after classifying three empty `Product_ref.nr` rows as invalid. `config/data_model/product_reconciliation_state.yml` is applied with decision digest `4f14e2cb265d9729263ab5bd572a41365f4bbbceec7e007d930b539faa5fe260`: 28 decisions, 15 approvals, and 13 logical target-model exclusions. The replaced state was preserved in `config/data_model/history/`, and an immediate reapplication was idempotent and did not rewrite the state.
 
 ## Inputs
 

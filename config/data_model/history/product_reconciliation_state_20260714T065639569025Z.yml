@@ -1,8 +1,8 @@
 version: 1
 status: applied
 source:
-  workbook_sha256: 9e9f224b3edb0ea644831608769f978faa0d5b946a3089bc10c28aa15af9db32
-  decision_digest: 4f14e2cb265d9729263ab5bd572a41365f4bbbceec7e007d930b539faa5fe260
+  workbook_sha256: 112a0c6c43a1b0fe50b4d0b81a8a1c672c9f6cfff57abdfa6d0a42d7c2f34ad8
+  decision_digest: f2a7f0bdf338d8733ce03d4b82bfe0056e7e06d47ad157b36a059a9e1c4c0183
 model_contract:
   table: product
   primary_key: product_id
@@ -13,8 +13,8 @@ model_contract:
   rejected_action: exclude_from_target_product_model
 counts:
   total: 28
-  approved: 15
-  rejected: 13
+  approved: 18
+  rejected: 10
 decisions:
 - review_id: REVIEW_002
   issue_id: CONFLICT_002
@@ -54,8 +54,8 @@ decisions:
 - review_id: REVIEW_016
   issue_id: UNMATCHED_REFNR_006
   issue_type: unmatched_product_refnr
-  decision: rejected
-  action: exclude_from_target_product_model
+  decision: approved_use_corrected_product_ref_nr
+  action: apply_corrected_product_ref_nr
 - review_id: REVIEW_017
   issue_id: UNMATCHED_REFNR_007
   issue_type: unmatched_product_refnr
@@ -64,8 +64,8 @@ decisions:
 - review_id: REVIEW_018
   issue_id: UNMATCHED_REFNR_008
   issue_type: unmatched_product_refnr
-  decision: rejected
-  action: exclude_from_target_product_model
+  decision: approved_use_corrected_product_ref_nr
+  action: apply_corrected_product_ref_nr
 - review_id: REVIEW_019
   issue_id: UNMATCHED_REFNR_009
   issue_type: unmatched_product_refnr
@@ -89,8 +89,8 @@ decisions:
 - review_id: REVIEW_023
   issue_id: UNMATCHED_REFNR_013
   issue_type: unmatched_product_refnr
-  decision: rejected
-  action: exclude_from_target_product_model
+  decision: approved_use_corrected_product_ref_nr
+  action: apply_corrected_product_ref_nr
 - review_id: REVIEW_024
   issue_id: UNMATCHED_REFNR_014
   issue_type: unmatched_product_refnr
