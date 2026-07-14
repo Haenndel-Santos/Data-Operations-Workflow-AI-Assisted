@@ -14,6 +14,7 @@ CLI
      -> canonical/Product reconciliation -> final review validation
      -> explicitly approved Product reconciliation state
      -> read-only Product materialization preview or blocker checkpoint
+     -> hash-bound dry-run canonical Product promotion plan
      -> schema and business-flow documentation
 ```
 
@@ -27,6 +28,7 @@ CLI
 | Validation/SQL/export/documentation modules | Validate and publish analytical artifacts | Generated output is not approval evidence by itself. |
 | ERP modeling/review modules | Produce candidates, review workbooks, and validation reports | Do not write approved model files unless an apply contract is explicitly authorized. |
 | Product materialization module | Validate applied Product decisions and generate local preview/lineage artifacts | Fail closed without partial preview when approved source evidence is missing. |
+| Product canonical promotion module | Validate the complete Product snapshot and produce a hash-bound dry-run plan | Report readiness only; never apply canonical state or copy private row values. |
 | `config/data_model/` | Version candidate state, domain mappings, and approvals | Keep candidate and approved files separate. |
 | `originaldatabase/` | Private source exports | Read only; excluded from Git. |
 | `outputs/` | Reproducible generated artifacts | Excluded from Git; do not hand-edit. |
@@ -40,7 +42,7 @@ Formal module manifests are not yet implemented. Before adding dynamic orchestra
 
 ## State Model
 
-Modeling decisions use distinct states such as candidate, pending review, approved, rejected, blocked, and conflicting. Key and relationship approvals live in `approved_keys.yml` and `approved_relationships.yml`; both are currently empty. Product-specific reconciliation state lives separately in `product_reconciliation_state.yml`. Human review reports can establish readiness but must not silently apply state.
+Modeling decisions use distinct states such as candidate, pending review, approved, rejected, blocked, and conflicting. Key and relationship approvals live in `approved_keys.yml` and `approved_relationships.yml`; both are currently empty. Product-specific reconciliation state lives separately in `product_reconciliation_state.yml`. Human review and promotion-plan reports can establish readiness but must not silently apply state.
 
 ## Current Gaps
 

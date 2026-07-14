@@ -6,11 +6,11 @@ Turn local operational spreadsheets into validated analytical datasets and an ap
 
 ## Current Stage
 
-Stage 3E.5 complete: the read-only Product materialization contract has produced and validated a deterministic local preview after the human owner rejected the three empty `Product_ref.nr` records.
+Stage 3E.6 dry-run complete: the complete Product materialization snapshot is hash-bound to applied reconciliation state and is `ready_for_canonical_state_review`. No canonical state has been applied.
 
 ## Last Completed Milestone
 
-On 2026-07-14, the human owner classified `UNMATCHED_REFNR_006`, `UNMATCHED_REFNR_008`, and `UNMATCHED_REFNR_013` as invalid. The new validated decision set contains 28 decisions, 15 approved and 13 rejected, with digest `4f14e2cb265d9729263ab5bd572a41365f4bbbceec7e007d930b539faa5fe260`. Step 3E.4 replaced the applied state reversibly, and Step 3E.5 generated a complete local preview of 1,733 Product rows with 13 exclusions, 1,733 unique technical IDs, no empty or duplicate corrected references, and no blockers.
+On 2026-07-14, Step 3E.6 validated the complete Step 3E.5 package against applied decision digest `4f14e2cb265d9729263ab5bd572a41365f4bbbceec7e007d930b539faa5fe260`. The dry-run plan records 1,733 candidate Product rows, 13 exclusions, and zero blockers without copying private row values. A repeated run returned `outputs_changed=False` and preserved all output and protected-state hashes.
 
 ## Current Capabilities
 
@@ -23,15 +23,16 @@ On 2026-07-14, the human owner classified `UNMATCHED_REFNR_006`, `UNMATCHED_REFN
 - Produce a clean, validated Product review workbook and a revalidated Step 3E.4 application plan.
 - Apply Product reconciliation state only through an explicit, idempotent, reversible command.
 - Validate applied Product state and build deterministic local Product preview, lineage, exclusion, manifest, and blocker artifacts.
+- Validate a complete Product snapshot against applied state and produce a hash-bound dry-run canonical promotion plan.
 - Fail closed without a partial preview when approved decisions lack materializable source evidence.
 - Replace an applied Product decision set only with explicit authority while preserving the prior state in versioned history.
 - Generate conceptual schema and business-flow documentation.
 
 ## Test Status
 
-- Automated suite: 38 tests passed offline on 2026-07-14; latest run completed in 4.14 seconds.
+- Automated suite: 43 tests passed offline on 2026-07-14; latest run completed in 3.92 seconds.
 - All 12 project-local skills passed the official skill validator on 2026-07-13.
-- Internal link check: 12 checked, 0 broken on 2026-07-14.
+- Internal link check: 13 checked, 0 broken on 2026-07-14.
 - Main suite is offline and uses temporary directories for generated test artifacts.
 - Documentation link checker is available at `scripts/check_internal_links.py`.
 - The relocated `.venv` has a stale editable-install path; use the `PYTHONPATH=src` command in `docs/testing.md` until environment repair is explicitly approved.
@@ -41,6 +42,7 @@ On 2026-07-14, the human owner classified `UNMATCHED_REFNR_006`, `UNMATCHED_REFN
 
 - Reports under `outputs/originaldatabase_analysis/` are stale and still show earlier Product blockers; use the 2026-07-14 resolved materialization report under `outputs/019f21a4-daf0-7272-b2a7-09b4f0e2c75b/step3e5_product_materialization_resolved/`.
 - `canonical_tables.yml` still describes the pre-application Product key candidate; downstream work must treat `product_reconciliation_state.yml` as the approved Product-specific contract until those representations are deliberately reconciled.
+- `ready_for_canonical_state_review` is dry-run evidence only; it is not approval to apply a Product snapshot or change `canonical_tables.yml`.
 - Organisation business-key selection and several document-flow relationships still need business context.
 - Conflicted line extracts must not be promoted to approved relationships.
 - The current orchestrator does not yet expose module discovery, dependency resolution, checkpoints, resume, or dry-run as shared infrastructure.
@@ -49,15 +51,16 @@ On 2026-07-14, the human owner classified `UNMATCHED_REFNR_006`, `UNMATCHED_REFN
 
 - `config/data_model/approved_keys.yml` and `config/data_model/approved_relationships.yml` remain empty by design.
 - Broader canonical key and relationship approvals remain pending; the Product-specific state does not populate `approved_keys.yml` or `approved_relationships.yml`.
+- No explicit apply contract or approved versioned representation exists yet for the candidate canonical Product snapshot.
 
 ## Next Logical Milestone
 
-Review the completed local Product preview and define the next explicit, offline consumption or promotion contract for the canonical Product model. Do not import, migrate, synchronize, or connect the preview to an external database without separate authorization.
+Review the Step 3E.6 plan and decide how an applied minimal canonical Product state should be represented without versioning private Product rows. Define and authorize a separate apply contract before changing canonical configuration. Do not import, migrate, synchronize, or connect the preview to an external database.
 
 ## Last Verified Commit
 
-`7d41fb3` (`feat(product): add fail-closed materialization preview`)
+`4e3fb60` (`chore(product): reject empty records and complete preview`)
 
 ## Last Updated
 
-2026-07-14 by Codex after resolving the empty-row decisions and validating the complete local Product preview.
+2026-07-14 by Codex after validating the hash-bound Step 3E.6 dry-run promotion plan.

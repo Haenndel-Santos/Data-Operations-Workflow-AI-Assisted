@@ -7,6 +7,7 @@ from .approval_spreadsheet import run_approval_spreadsheet
 from .business_flow_mapping import run_business_flow_mapping
 from .canonical_model import run_canonical_model_alignment
 from .human_review import run_human_review, validate_approval_template
+from .product_canonical_promotion import run_product_canonical_promotion
 from .product_materialization import run_product_materialization
 from .product_reference_audit import run_product_reference_audit
 from .product_reference_final_decision import run_product_reference_final_decision
@@ -379,6 +380,29 @@ def build_parser() -> argparse.ArgumentParser:
         help="New or byte-identical output directory for local preview artifacts.",
     )
 
+    product_canonical_promotion = subparsers.add_parser(
+        "product-canonical-promotion-plan",
+        help="Validate Step 3E.5 artifacts and build a dry-run canonical Product promotion plan.",
+    )
+    product_canonical_promotion.add_argument(
+        "--materialization",
+        type=Path,
+        default=Path("outputs/originaldatabase_analysis/step3e5_product_materialization"),
+        help="Directory containing the complete Step 3E.5 materialization package.",
+    )
+    product_canonical_promotion.add_argument(
+        "--state",
+        type=Path,
+        default=Path("config/data_model/product_reconciliation_state.yml"),
+        help="Applied Product reconciliation state bound to the materialization package.",
+    )
+    product_canonical_promotion.add_argument(
+        "--output",
+        type=Path,
+        default=Path("outputs/originaldatabase_analysis/step3e6_product_canonical_promotion"),
+        help="New or byte-identical output directory for the dry-run promotion plan.",
+    )
+
     product_refnr_missing_notes_fix = subparsers.add_parser(
         "product-refnr-missing-notes-fix",
         help="Generate auxiliary spreadsheet for Product final review rows missing final_human_notes.",
@@ -679,6 +703,20 @@ def main() -> None:
             print(f"Blockers CSV: {result.blockers_path}")
             print("No Product preview was generated.")
         print("No raw source, approved state, database, import, migration, or external system was modified.")
+        return
+
+    if args.command == "product-canonical-promotion-plan":
+        result = run_product_canonical_promotion(args.materialization, args.state, args.output)
+        print("Product canonical promotion plan validation complete")
+        print(f"Status: {result.status}")
+        print(f"Candidate canonical Product rows: {result.target_rows}")
+        print(f"Excluded identifiers: {result.excluded_identifiers}")
+        print(f"Blockers: {result.blocker_count}")
+        print(f"Outputs changed: {result.outputs_changed}")
+        print(f"Plan: {result.plan_path}")
+        print(f"Blockers CSV: {result.blockers_path}")
+        print(f"Report: {result.report_path}")
+        print("Dry-run only. No canonical state, database, import, migration, or external system was modified.")
         return
 
     if args.command == "product-refnr-missing-notes-fix":

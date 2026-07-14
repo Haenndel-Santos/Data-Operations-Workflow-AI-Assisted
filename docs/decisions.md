@@ -119,3 +119,15 @@
 **Reason:** Explicit human authority resolves the conflict without inventing data. Rejection uses the existing reviewed decision and application contracts and remains auditable and reversible.
 
 **Impact:** The applied state now contains 28 decisions, 15 approved and 13 rejected, with digest `4f14e2cb265d9729263ab5bd572a41365f4bbbceec7e007d930b539faa5fe260`. The prior state is preserved under `config/data_model/history/`. Product materialization is no longer blocked and produces a 1,733-row local preview with 13 exclusions.
+
+## 2026-07-14 - Canonical Product Promotion Is Hash-Bound And Dry-Run First
+
+**Decision:** Require a local, hash-bound promotion plan before any canonical Product state can be proposed for application. Step 3E.6 validates the complete Step 3E.5 package against applied reconciliation state and has no apply mode.
+
+**Context:** The resolved Product preview is complete, but it contains private row values and does not itself define how canonical state should be versioned or applied.
+
+**Alternatives:** Treat the preview as approved canonical state; copy Product rows directly into versioned configuration; mutate `canonical_tables.yml`; add database import behavior to the promotion check.
+
+**Reason:** A separate dry-run checkpoint proves snapshot integrity and preserves the human approval boundary without exposing private values or combining model governance with operational writes.
+
+**Impact:** `product-canonical-promotion-plan` records artifact hashes, schema, counts, and validation results only. The real plan is `ready_for_canonical_state_review` with 1,733 candidate rows, 13 exclusions, and zero blockers. No canonical state, approved key, approved relationship, database, import, migration, or synchronization was changed.

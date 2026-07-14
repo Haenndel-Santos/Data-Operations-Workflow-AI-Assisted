@@ -379,3 +379,67 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 .\.venv\Scripts\python.exe -m data_ops_lab product-materialization-preview --workbook outputs\019f21a4-daf0-7272-b2a7-09b4f0e2c75b\step3e5_empty_rows_rejected\product_refnr_human_review_shortlist_validated.xlsx --output outputs\019f21a4-daf0-7272-b2a7-09b4f0e2c75b\step3e5_product_materialization_resolved
 .\.venv\Scripts\python.exe -m pytest -p no:cacheprovider
 ```
+
+## 2026-07-14 - Codex - Step 3E.6 canonical promotion dry-run
+
+### Initial Context
+
+- Branch: `main`
+- Initial commit: `4e3fb60`
+- Initial worktree: clean; branch was six commits ahead of `origin/main`
+- Stage found: Step 3E.5 complete with a validated local Product preview
+- Objective received: continue with the next project steps
+
+### Work Performed
+
+- Added an explicit Step 3E.6 dry-run module contract and CLI command with no apply option.
+- Validated all six Step 3E.5 artifacts against the applied reconciliation digest, workbook hash, model contract, manifest, technical IDs, lineage, exclusions, references, and counts.
+- Added fail-closed blockers, private-value exclusion, deterministic non-overwrite behavior, and tests for drift and malformed manifests.
+- Ran the real resolved Product package twice and verified byte-stable idempotency.
+
+### Decisions
+
+- Canonical Product promotion requires a hash-bound dry-run checkpoint before any apply contract can be considered.
+- `ready_for_canonical_state_review` is not canonical approval and does not authorize a configuration or database write.
+- Versioned Step 3E.6 evidence contains hashes, schema, counts, and validation only; Product row values remain in ignored local outputs.
+
+### Validation
+
+- Real status: `ready_for_canonical_state_review`, 1,733 candidate rows, 13 exclusions, zero blockers.
+- Repeated real run: `outputs_changed=False`.
+- Plan SHA-256: `B919946919ED3C9A908A5B72A0AD3FF0C7A5BB1FDBBC78D05181AC1DA42E7A6B`.
+- Private preview values found in Step 3E.6 outputs: zero.
+- Applied state, `canonical_tables.yml`, approved keys, and approved relationships retained their prior hashes.
+- Focused tests: 5 passed in 1.00 seconds.
+- Full offline suite: 43 passed in 3.92 seconds.
+- Documentation: 13 internal links checked, 0 broken.
+
+### State For Next Agent
+
+- Branch: `main`
+- Final commit: the commit containing this handoff entry; verify with `git log -1`.
+- Current stage: Step 3E.6 dry-run complete; canonical Product state remains unapplied.
+- Contract: `docs/product-canonical-promotion.md`.
+- Local plan: `outputs/019f21a4-daf0-7272-b2a7-09b4f0e2c75b/step3e6_product_canonical_promotion/product_canonical_promotion_plan.yml`.
+- Applied Product reconciliation state remains `config/data_model/product_reconciliation_state.yml`.
+
+### Next Logical Steps
+
+1. Review the Step 3E.6 plan and approval boundary.
+2. Decide how a minimal applied canonical Product state should be represented without versioning private rows.
+3. Define, test, and explicitly authorize a separate apply contract before changing canonical configuration.
+
+### Do Not Do Yet
+
+- Do not treat dry-run readiness as approval or edit `canonical_tables.yml` directly.
+- Do not copy private Product rows into versioned files.
+- Do not run migrations, imports, database writes, or external synchronization.
+
+### Useful Commands
+
+```powershell
+$env:PYTHONPATH = "src"
+$env:PYTHONDONTWRITEBYTECODE = "1"
+.\.venv\Scripts\python.exe -m data_ops_lab product-canonical-promotion-plan --materialization outputs\019f21a4-daf0-7272-b2a7-09b4f0e2c75b\step3e5_product_materialization_resolved --state config\data_model\product_reconciliation_state.yml --output outputs\019f21a4-daf0-7272-b2a7-09b4f0e2c75b\step3e6_product_canonical_promotion
+.\.venv\Scripts\python.exe -m pytest -p no:cacheprovider
+```

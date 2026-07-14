@@ -160,6 +160,15 @@ $env:PYTHONPATH = "src"
 .\.venv\Scripts\python -m data_ops_lab product-materialization-preview --workbook "outputs\<run-id>\product_refnr_human_review_shortlist_validated.xlsx" --output "outputs\<run-id>\step3e5_product_materialization"
 ```
 
+To validate the complete preview and generate a dry-run canonical Product promotion plan:
+
+```powershell
+$env:PYTHONPATH = "src"
+.\.venv\Scripts\python -m data_ops_lab product-canonical-promotion-plan --materialization "outputs\<run-id>\step3e5_product_materialization" --output "outputs\<run-id>\step3e6_product_canonical_promotion"
+```
+
+This command has no apply mode and does not write canonical state or connect to a database.
+
 To generate the conceptual main database schema overview:
 
 ```powershell
@@ -239,4 +248,5 @@ DuckDB is a good fit for this project because it supports local analytical workf
 - [Orchestrator](docs/orchestrator.md)
 - [Step 3E.4 Product application contract](docs/product-refnr-application.md)
 - [Product materialization preview contract](docs/product-materialization.md)
+- [Product canonical promotion plan contract](docs/product-canonical-promotion.md)
 - [Agent handoff history](docs/agent-handoff.md)

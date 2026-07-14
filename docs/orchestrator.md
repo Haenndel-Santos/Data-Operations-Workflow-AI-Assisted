@@ -4,7 +4,7 @@
 
 `src/data_ops_lab/workflow.py` contains the fixed default analytical sequence. It converts inputs, profiles and cleans staging data, infers schema/keys, validates relationships, generates SQL, builds DuckDB, exports Tableau files, writes documentation, and returns `WorkflowResult`.
 
-`src/data_ops_lab/cli.py` separately dispatches ERP modeling and human-review commands. These commands are explicit and testable, but they do not yet share dependency resolution, checkpoint state, or resume behavior. Step 3E.4 provides a command-local decision digest; Step 3E.5 adds a deterministic ready/blocked materialization checkpoint. Neither is yet shared orchestrator infrastructure.
+`src/data_ops_lab/cli.py` separately dispatches ERP modeling and human-review commands. These commands are explicit and testable, but they do not yet share dependency resolution, checkpoint state, or resume behavior. Step 3E.4 provides a command-local decision digest; Step 3E.5 adds a deterministic ready/blocked materialization checkpoint; Step 3E.6 binds that complete snapshot to applied state in a dry-run promotion plan. None is yet shared orchestrator infrastructure.
 
 ## Responsibility
 
@@ -43,4 +43,4 @@ Each step requires contract, unit, integration, workflow, and regression coverag
 
 ## Current Safety Gate
 
-No orchestrator feature may treat `pending_review` or a valid-but-blocked review workbook as approval. Product Step 3E.4 now contains the explicitly replaced 15-approved/13-rejected state, and Step 3E.5 has produced a complete validated local preview after the empty records were rejected. No downstream stage may bypass the applied digest, restore excluded identities, consume stale blocked outputs, or import/synchronize the preview without a separate authorized contract.
+No orchestrator feature may treat `pending_review`, a valid-but-blocked workbook, or `ready_for_canonical_state_review` as approval. Product Step 3E.4 contains the explicitly replaced 15-approved/13-rejected state, Step 3E.5 produced a complete validated local preview, and Step 3E.6 produced only a hash-bound dry-run promotion plan. No downstream stage may bypass the applied digest, restore excluded identities, consume stale blocked outputs, apply canonical state, or import/synchronize the preview without a separate authorized contract.
