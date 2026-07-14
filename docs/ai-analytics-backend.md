@@ -58,6 +58,14 @@ clarification points or resolve to an exact candidate selected by a human.
 No real semantic catalog has been approved, so Stage 5D remains operationally
 blocked. See [Analytics Semantic Review And Approval](analytics-semantic-approval.md).
 
+Stage 5D now provides `analytics-semantic-adapter`, an offline deterministic
+compiler for a supplied version-1 semantic intent. It requires applied approved
+semantic state, copies aggregates/columns/paths only from that state, preserves
+ambiguities as clarification requests, rejects raw SQL and physical joins, and
+emits the existing Stage 5A request. Model-provider integration and direct
+free-text interpretation remain unimplemented. See
+[Analytics Semantic Adapter](analytics-semantic-adapter.md).
+
 ## Request Contract
 
 ```yaml
@@ -151,7 +159,7 @@ Calling all dataset use "training" would hide important differences. The initial
 1. **Stage 5A - Safe query planning:** structured request, catalog validation, approved joins, parameterized SQL, dry-run evidence. Implemented.
 2. **Stage 5B - Controlled local execution:** read-only DuckDB executor, timeout/resource limits, result manifest, control totals, and no-result diagnostics. Implemented.
 3. **Stage 5C - Semantic catalog:** business names, synonyms, measures, dimensions, relationship paths, ambiguity scores, and dataset-specific domain packs. Technical validation plus the human review/apply infrastructure are implemented; a concrete approved catalog remains pending.
-4. **Stage 5D - Natural-language adapter:** model translates questions to the structured contract; backend returns blockers or clarification requests instead of accepting raw SQL.
+4. **Stage 5D - Natural-language adapter:** deterministic approved-semantic intent compiler and clarification boundary implemented; model-provider translation from free text remains pending. Raw SQL is never accepted.
 5. **Stage 5E - Benchmark harness:** EDS local evaluations plus separately approved AdventureWorks and Chinook packs with expected questions, plans, and answers.
 6. **Stage 5F - User experience:** query interface, result tables/charts, evidence view, saved analyses, feedback, and role-aware governance.
 7. **Stage 5G - Optional data connectors:** separately authorized read-only database connectors with credential isolation and online tests outside the default suite.

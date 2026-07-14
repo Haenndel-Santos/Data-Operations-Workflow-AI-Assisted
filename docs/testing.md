@@ -72,6 +72,25 @@ The test applies state only inside pytest temporary directories. It does not
 read EDS or benchmark data, connect to DuckDB or SQL Server, or write the real
 `config/analytics/` directory.
 
+## Semantic Intent Adapter
+
+Stage 5D tests use a synthetic approved semantic registry, structured intent,
+and a schema-only temporary DuckDB database. They verify approved resolution,
+human ambiguity resolution, clarification preservation, raw-SQL and physical-
+join rejection, approval enforcement, relationship-path expansion, filter and
+order validation, exact reuse, source preservation, and compatibility with the
+Stage 5A planner:
+
+```powershell
+$env:PYTHONPATH = "src"
+$env:PYTHONDONTWRITEBYTECODE = "1"
+.\.venv\Scripts\python.exe -m pytest -p no:cacheprovider tests\analytics_semantic_adapter_test.py
+```
+
+The adapter test never calls a model or external service, reads table rows, or
+writes the real semantic registry. The temporary Stage 5A integration opens
+only the test DuckDB catalog in read-only mode.
+
 ## Benchmark Conversion Validation
 
 Use the restricted converter only for a locally approved SQL sample whose

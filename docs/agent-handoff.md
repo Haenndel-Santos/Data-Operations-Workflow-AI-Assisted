@@ -744,3 +744,52 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 - Do not apply an EDS or benchmark semantic registry without concrete completed human review and dataset-use authorization.
 - Do not let Stage 5D consume `ready_for_semantic_review`; it must require applied approved state.
 - Do not infer ambiguous targets, accept raw model SQL, start SQL Server, or execute EDS/benchmark queries.
+
+## 2026-07-14 - Codex - Stage 5D offline semantic-intent compiler
+
+### Initial Context
+
+- Branch: `main`
+- Initial commit: `bb06440`
+- Initial worktree: clean; branch was 13 commits ahead of `origin/main`
+- Objective: begin Stage 5D through the approved deterministic boundary without model, database, or real-data access
+
+### Work Performed
+
+- Added the `analytics_semantic_adapter` version-1 contract and `analytics-semantic-adapter` CLI command.
+- Required applied version-1 semantic state with human approval fingerprints and explicit adapter authorization.
+- Resolved semantic table, dimension, measure, filter, and relationship-path terms through the approved term index.
+- Copied measure functions, physical columns, and relationship hops only from approved semantic entities.
+- Preserved unresolved ambiguity as candidate-rich clarification evidence instead of narrowing by field context.
+- Rejected raw SQL, physical joins, unknown terms, semantic-kind mismatches, unselected tables, malformed filters, unsafe limits, duplicate aliases, and invalid order fields.
+- Produced a Stage 5A-compatible `analytics_request.yml` only when no blockers or clarifications remain.
+- Added hash-bound manifest, blockers, optional clarifications, report, exact reuse, divergent-output refusal, CLI integration, documentation, and privacy boundaries.
+
+### Validation
+
+- New Stage 5D tests: 8 passed in 1.24 seconds on the final focused run.
+- Integrated Stage 5A/5C/5D tests: 29 passed in 2.90 seconds.
+- Full offline suite: 86 passed in 8.94 seconds.
+- Python compilation: passed.
+- Documentation: 28 internal links checked, 0 broken.
+- One integration test generated a request from synthetic approved semantics and compiled it with Stage 5A against a schema-only temporary DuckDB database and temporary approved relationship registry.
+- No model API, network service, EDS/benchmark data, table row, project DuckDB, SQL Server connection, migration, import, synchronization, real semantic state, or default output directory was used or changed.
+
+### State For Next Agent
+
+- Stage 5D now has the deterministic semantic authorization/compiler boundary, but it does not translate free text by itself or call a model.
+- `ready_for_query_plan` means only that Stage 5D produced the version-1 request; Stage 5A live-catalog planning and Stage 5B reviewed execution remain mandatory.
+- Questions and filter values persist only in the generated local request. Manifest, report, and blockers omit them; clarification evidence contains the ambiguous term and approved candidates.
+- The real repository still has no `config/analytics/approved_semantic_catalog.yml`, so real Stage 5D use remains blocked.
+
+### Next Logical Steps
+
+1. Define a provider-neutral free-text translation interface and response schema with an offline fake provider.
+2. Minimize model context to approved semantic metadata and document explicit consent, secrets, retention, timeout, and error boundaries before any live API use.
+3. Feed every provider response through the implemented Stage 5D compiler; never accept provider SQL or physical mappings.
+
+### Do Not Do Yet
+
+- Do not configure or call a live model provider without explicit authorization and credential/privacy controls.
+- Do not fabricate or apply a real semantic registry merely to unblock Stage 5D.
+- Do not bypass Stage 5A/5B, auto-select ambiguous terms, start SQL Server, or execute EDS/benchmark queries.

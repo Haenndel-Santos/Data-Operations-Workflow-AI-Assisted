@@ -70,4 +70,4 @@ Modeling decisions use distinct states such as candidate, pending review, approv
 - No shared dependency graph, checkpoint, resume, or dry-run engine.
 - CLI stage dispatch and the default workflow are not yet unified under one orchestration contract.
 - Some generated summaries become stale when later review steps run; consolidated state must cite the newest validation evidence.
-- Semantic catalog validation and explicit human review/application contracts exist. No real semantic registry is approved yet; the natural-language adapter, result narration, and benchmark question/answer harness are not implemented.
+- Semantic catalog validation, explicit human review/application, and the offline Stage 5D semantic-intent compiler exist. No real semantic registry is approved yet; model-provider free-text translation, result narration, and the benchmark question/answer harness are not implemented.

@@ -5,6 +5,7 @@ from pathlib import Path
 
 from .analytics_query_execution import AnalyticsExecutionLimits, run_analytics_query_execution
 from .analytics_query_plan import run_analytics_query_plan
+from .analytics_semantic_adapter import run_analytics_semantic_adapter
 from .analytics_semantic_approval import run_analytics_semantic_approval
 from .analytics_semantic_catalog import run_analytics_semantic_catalog
 from .analytics_semantic_review import run_analytics_semantic_review
@@ -138,6 +139,22 @@ def build_parser() -> argparse.ArgumentParser:
     )
     analytics_semantic_approval.add_argument("--apply", action="store_true")
     analytics_semantic_approval.add_argument("--replace-existing", action="store_true")
+
+    analytics_semantic_adapter = subparsers.add_parser(
+        "analytics-semantic-adapter",
+        help="Compile structured semantic intent into a governed Stage 5A analytics request.",
+    )
+    analytics_semantic_adapter.add_argument("--intent", type=Path, required=True)
+    analytics_semantic_adapter.add_argument(
+        "--semantic-state",
+        type=Path,
+        default=Path("config/analytics/approved_semantic_catalog.yml"),
+    )
+    analytics_semantic_adapter.add_argument(
+        "--output",
+        type=Path,
+        default=Path("outputs/analytics_semantic_adapter"),
+    )
 
     benchmark_convert_sql = subparsers.add_parser(
         "benchmark-convert-sql",
@@ -687,6 +704,22 @@ def main() -> None:
         print(f"Plan: {result.plan_path}")
         print(f"State: {result.state_path}")
         print("No data rows, SQL, database connection, model API, import, or sync was used.")
+        return
+
+    if args.command == "analytics-semantic-adapter":
+        result = run_analytics_semantic_adapter(
+            args.intent,
+            args.semantic_state,
+            args.output,
+        )
+        print("Analytics semantic intent compilation complete")
+        print(f"Status: {result.status}")
+        print(f"Blockers: {result.blocker_count}")
+        print(f"Clarifications: {result.clarification_count}")
+        print(f"Outputs changed: {result.outputs_changed}")
+        print(f"Request: {result.request_path or 'not written'}")
+        print(f"Clarifications file: {result.clarifications_path or 'not written'}")
+        print("No raw SQL, model API, database connection, query, import, or sync was used.")
         return
 
     if args.command == "benchmark-convert-sql":

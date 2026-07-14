@@ -201,3 +201,13 @@
 **Alternatives:** Treat technical validation as approval; approve the catalog as one opaque unit; silently omit rejected entities; infer ambiguity resolution; overwrite the existing registry.
 
 **Impact:** The review template grants no authority. Pending, rejected, missing, duplicate, malformed, or stale decisions block application. A human may preserve an ambiguity for clarification or select one exact candidate. Approved state never promotes candidate physical relationships. No real catalog is approved merely because the contract exists.
+
+## 2026-07-14 - Stage 5D Compiles Approved Semantic Intent Without SQL
+
+**Decision:** Implement Stage 5D first as a deterministic offline compiler for a supplied structured semantic intent. Require applied approved semantic state, resolve every term through its approved term index, copy aggregates and physical mappings only from approved entities, and expand only approved semantic relationship paths. Emit the existing Stage 5A request or separate clarification/blocker evidence.
+
+**Rationale:** Free-text model invocation and deterministic authorization are different responsibilities. Establishing the local compiler first makes provider output testable, prevents a model from choosing SQL, aggregates, columns, or joins, and preserves Stage 5A/5B as the physical planning and execution boundaries.
+
+**Alternatives:** Call an LLM and execute its SQL; let the model emit physical Stage 5A fields directly; infer an ambiguous target from field context; merge semantic translation into query planning; wait for a UI before defining the boundary.
+
+**Impact:** `analytics-semantic-adapter` accepts no raw SQL or physical joins, uses no model API or database, and never auto-selects ambiguity. `ready_for_query_plan` still requires Stage 5A live-catalog and relationship validation. Questions and filter values persist only in the local generated request; control evidence omits them. No real dataset becomes authorized by this implementation.
