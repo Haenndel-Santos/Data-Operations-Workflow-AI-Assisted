@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
+from .analytics_answer_evaluation import run_analytics_answer_evaluation
 from .analytics_nl_translation import (
     RecordedSemanticIntentProvider,
     run_analytics_nl_translation,
@@ -209,6 +210,26 @@ def build_parser() -> argparse.ArgumentParser:
         "--output",
         type=Path,
         default=Path("outputs/analytics_translation_evaluation"),
+    )
+
+    analytics_answer_evaluate = subparsers.add_parser(
+        "analytics-answer-evaluate",
+        help="Run a synthetic offline expected-answer evaluation through Stages 5D, 5A, and 5B.",
+    )
+    analytics_answer_evaluate.add_argument(
+        "--pack",
+        type=Path,
+        required=True,
+    )
+    analytics_answer_evaluate.add_argument(
+        "--semantic-state",
+        type=Path,
+        required=True,
+    )
+    analytics_answer_evaluate.add_argument(
+        "--output",
+        type=Path,
+        default=Path("outputs/analytics_answer_evaluation"),
     )
 
     benchmark_convert_sql = subparsers.add_parser(
@@ -812,6 +833,23 @@ def main() -> None:
         print(f"Outputs changed: {result.outputs_changed}")
         print(f"Manifest: {result.manifest_path}")
         print("Synthetic offline providers only. No network, model API, database, or query was used.")
+        return
+
+    if args.command == "analytics-answer-evaluate":
+        result = run_analytics_answer_evaluation(
+            args.pack,
+            args.semantic_state,
+            args.output,
+        )
+        print("Synthetic expected-answer evaluation complete")
+        print(f"Status: {result.status}")
+        print(f"Cases: {result.case_count}")
+        print(f"Passed: {result.passed_count}")
+        print(f"Failed: {result.failed_count}")
+        print(f"Contract blockers: {result.blocker_count}")
+        print(f"Outputs changed: {result.outputs_changed}")
+        print(f"Manifest: {result.manifest_path}")
+        print("Temporary synthetic DuckDB only. No live model, network, or external database was used.")
         return
 
     if args.command == "benchmark-convert-sql":

@@ -188,6 +188,16 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 
 This validates deterministic translation safety and acceptance behavior only; it does not call or benchmark a live model.
 
+To run the synthetic Stage 5E expected-answer pack through Stages 5D, 5A, and 5B:
+
+```powershell
+$env:PYTHONPATH = "src"
+$env:PYTHONDONTWRITEBYTECODE = "1"
+.\.venv\Scripts\python.exe -m data_ops_lab analytics-answer-evaluate --pack "tests\fixtures\analytics_answer_evaluation\answer_evaluation_pack.yml" --semantic-state "tests\fixtures\analytics_answer_evaluation\approved_semantic_catalog.yml" --output "outputs\<run-id>\analytics_answer_evaluation"
+```
+
+This executes only a temporary synthetic DuckDB database after exact request and plan gates. It does not use a live model or real dataset.
+
 To convert an approved local T-SQL sample into DuckDB and compressed Parquet
 without executing operational SQL:
 
@@ -286,5 +296,6 @@ DuckDB is a good fit for this project because it supports local analytical workf
 - [Analytics semantic adapter contract](docs/analytics-semantic-adapter.md)
 - [Analytics natural-language translation contract](docs/analytics-nl-translation.md)
 - [Analytics translation evaluation contract](docs/analytics-translation-evaluation.md)
+- [Analytics expected-answer evaluation contract](docs/analytics-answer-evaluation.md)
 - [Benchmark dataset onboarding contract](docs/benchmark-datasets.md)
 - [Agent handoff history](docs/agent-handoff.md)

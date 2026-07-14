@@ -1,0 +1,265 @@
+version: 1
+pack_id: synthetic_stage5e_v1
+description: Synthetic offline expected-answer pack for the governed analytics pipeline.
+dataset:
+  tables:
+    - name: synthetic_orders
+      columns:
+        - name: order_id
+          type: integer
+          nullable: false
+        - name: order_status
+          type: varchar
+          nullable: true
+        - name: order_amount
+          type: decimal_18_2
+          nullable: true
+      rows:
+        - [1, open, "10.50"]
+        - [2, open, "20.00"]
+        - [3, closed, "7.25"]
+        - [4, null, null]
+    - name: synthetic_order_lines
+      columns:
+        - name: line_id
+          type: integer
+          nullable: false
+        - name: order_id
+          type: integer
+          nullable: false
+        - name: line_amount
+          type: decimal_18_2
+          nullable: false
+      rows:
+        - [10, 1, "5.00"]
+        - [11, 1, "5.50"]
+        - [12, 2, "20.00"]
+        - [13, 3, "7.25"]
+approved_relationships:
+  - source_table: synthetic_orders
+    source_column: order_id
+    target_table: synthetic_order_lines
+    target_column: order_id
+cases:
+  - id: approved_join_total
+    category: approved_join
+    question: What is the line total for each order status?
+    provider_response:
+      version: 1
+      from: sales orders
+      relationship_paths:
+        - orders to lines
+      dimensions:
+        - term: order status
+          alias: status
+      metrics:
+        - term: total line amount
+          alias: line_total
+      order_by:
+        - field: line_total
+          direction: desc
+      limit: 20
+    expected_request:
+      version: 1
+      question: What is the line total for each order status?
+      from: synthetic_orders
+      joins:
+        - source_table: synthetic_orders
+          source_column: order_id
+          target_table: synthetic_order_lines
+          target_column: order_id
+          kind: left
+      dimensions:
+        - column: synthetic_orders.order_status
+          alias: status
+      metrics:
+        - function: sum
+          column: synthetic_order_lines.line_amount
+          alias: line_total
+      filters: []
+      order_by:
+        - field: line_total
+          direction: desc
+      limit: 20
+    expected_result:
+      status: completed
+      columns: [status, line_total]
+      rows:
+        - [open, "30.50"]
+        - [closed, "7.25"]
+        - [null, null]
+      row_count: 3
+      column_count: 2
+      null_cells: 2
+
+  - id: count_by_status
+    category: grouped_aggregate
+    question: How many orders are in each status?
+    provider_response:
+      version: 1
+      from: sales orders
+      dimensions:
+        - term: order status
+          alias: status
+      metrics:
+        - term: order count
+          alias: orders
+      order_by:
+        - field: orders
+          direction: desc
+        - field: status
+          direction: asc
+      limit: 20
+    expected_request:
+      version: 1
+      question: How many orders are in each status?
+      from: synthetic_orders
+      joins: []
+      dimensions:
+        - column: synthetic_orders.order_status
+          alias: status
+      metrics:
+        - function: count
+          column: '*'
+          alias: orders
+      filters: []
+      order_by:
+        - field: orders
+          direction: desc
+        - field: status
+          direction: asc
+      limit: 20
+    expected_result:
+      status: completed
+      columns: [status, orders]
+      rows:
+        - [open, 2]
+        - [closed, 1]
+        - [null, 1]
+      row_count: 3
+      column_count: 2
+      null_cells: 1
+
+  - id: filtered_total_amount
+    category: filtered_aggregate
+    question: What is the total amount for open orders?
+    provider_response:
+      version: 1
+      from: sales orders
+      metrics:
+        - term: total order amount
+          alias: total_amount
+      filters:
+        - term: order status
+          operator: eq
+          value: open
+      limit: 20
+    expected_request:
+      version: 1
+      question: What is the total amount for open orders?
+      from: synthetic_orders
+      joins: []
+      dimensions: []
+      metrics:
+        - function: sum
+          column: synthetic_orders.order_amount
+          alias: total_amount
+      filters:
+        - column: synthetic_orders.order_status
+          operator: eq
+          value: open
+      order_by: []
+      limit: 20
+    expected_result:
+      status: completed
+      columns: [total_amount]
+      rows:
+        - ["30.50"]
+      row_count: 1
+      column_count: 1
+      null_cells: 0
+
+  - id: filtered_no_rows
+    category: no_rows
+    question: Which unavailable statuses have orders?
+    provider_response:
+      version: 1
+      from: sales orders
+      dimensions:
+        - term: order status
+          alias: status
+      metrics:
+        - term: order count
+          alias: orders
+      filters:
+        - term: order status
+          operator: eq
+          value: unavailable
+      order_by:
+        - field: status
+          direction: asc
+      limit: 20
+    expected_request:
+      version: 1
+      question: Which unavailable statuses have orders?
+      from: synthetic_orders
+      joins: []
+      dimensions:
+        - column: synthetic_orders.order_status
+          alias: status
+      metrics:
+        - function: count
+          column: '*'
+          alias: orders
+      filters:
+        - column: synthetic_orders.order_status
+          operator: eq
+          value: unavailable
+      order_by:
+        - field: status
+          direction: asc
+      limit: 20
+    expected_result:
+      status: completed_no_rows
+      columns: [status, orders]
+      rows: []
+      row_count: 0
+      column_count: 2
+      null_cells: 0
+
+  - id: null_status_count
+    category: null_filter
+    question: How many orders have no status?
+    provider_response:
+      version: 1
+      from: sales orders
+      metrics:
+        - term: order count
+          alias: orders
+      filters:
+        - term: order status
+          operator: is_null
+      limit: 20
+    expected_request:
+      version: 1
+      question: How many orders have no status?
+      from: synthetic_orders
+      joins: []
+      dimensions: []
+      metrics:
+        - function: count
+          column: '*'
+          alias: orders
+      filters:
+        - column: synthetic_orders.order_status
+          operator: is_null
+      order_by: []
+      limit: 20
+    expected_result:
+      status: completed
+      columns: [orders]
+      rows:
+        - [1]
+      row_count: 1
+      column_count: 1
+      null_cells: 0

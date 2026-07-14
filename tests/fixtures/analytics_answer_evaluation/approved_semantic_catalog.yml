@@ -1,0 +1,148 @@
+version: 1
+status: approved
+source:
+  compiled_semantic_catalog_sha256: synthetic-answer-compiled-hash
+  candidate_semantic_catalog_sha256: synthetic-answer-candidate-hash
+  relationships_sha256: synthetic-answer-relationships-hash
+  physical_catalog_sha256: synthetic-answer-physical-hash
+  review_sha256: synthetic-answer-review-hash
+  decision_digest: synthetic-answer-decision-hash
+approval:
+  semantic_definitions_approved: true
+  adapter_use_authorized: true
+  candidate_relationships_accepted: false
+  approved_by: synthetic-answer-reviewer
+  approved_at: "2026-07-14T16:00:00+00:00"
+  requires_clarification: false
+dataset:
+  id: synthetic_sales_dataset
+  name: Synthetic Sales Dataset
+  description: Synthetic metadata for offline expected-answer evaluation.
+  synonyms: []
+catalog: {}
+tables:
+  - id: sales_orders
+    source_table: synthetic_orders
+    name: Sales Orders
+    description: Synthetic orders used only inside temporary tests.
+    synonyms:
+      - orders
+  - id: order_lines
+    source_table: synthetic_order_lines
+    name: Order Lines
+    description: Synthetic order lines used only inside temporary tests.
+    synonyms:
+      - lines
+dimensions:
+  - id: order_status
+    table_id: sales_orders
+    source_table: synthetic_orders
+    source_column: order_status
+    source_type: VARCHAR
+    name: Order Status
+    description: Synthetic order status.
+    synonyms:
+      - status
+measures:
+  - id: order_count
+    table_id: sales_orders
+    source_table: synthetic_orders
+    source_column: '*'
+    source_type: ROW_COUNT
+    function: count
+    name: Order Count
+    description: Number of synthetic orders.
+    synonyms:
+      - orders count
+  - id: total_order_amount
+    table_id: sales_orders
+    source_table: synthetic_orders
+    source_column: order_amount
+    source_type: DECIMAL(18,2)
+    function: sum
+    name: Total Order Amount
+    description: Sum of synthetic order amounts.
+    synonyms:
+      - total amount
+  - id: total_line_amount
+    table_id: order_lines
+    source_table: synthetic_order_lines
+    source_column: line_amount
+    source_type: DECIMAL(18,2)
+    function: sum
+    name: Total Line Amount
+    description: Sum of synthetic order-line amounts.
+    synonyms:
+      - line total
+relationship_paths:
+  - id: orders_to_lines
+    name: Orders To Lines
+    description: Approved synthetic path from orders to order lines.
+    synonyms:
+      - order lines path
+    hops:
+      - source_table_id: sales_orders
+        source_table: synthetic_orders
+        source_column: order_id
+        target_table_id: order_lines
+        target_table: synthetic_order_lines
+        target_column: order_id
+        kind: left
+term_index:
+  - term: order count
+    status: resolved
+    candidate_count: 1
+    ambiguity_score: 0.0
+    requires_clarification: false
+    targets:
+      - kind: measure
+        id: order_count
+        name: Order Count
+  - term: order status
+    status: resolved
+    candidate_count: 1
+    ambiguity_score: 0.0
+    requires_clarification: false
+    targets:
+      - kind: dimension
+        id: order_status
+        name: Order Status
+  - term: orders to lines
+    status: resolved
+    candidate_count: 1
+    ambiguity_score: 0.0
+    requires_clarification: false
+    targets:
+      - kind: relationship_path
+        id: orders_to_lines
+        name: Orders To Lines
+  - term: sales orders
+    status: resolved
+    candidate_count: 1
+    ambiguity_score: 0.0
+    requires_clarification: false
+    targets:
+      - kind: table
+        id: sales_orders
+        name: Sales Orders
+  - term: total order amount
+    status: resolved
+    candidate_count: 1
+    ambiguity_score: 0.0
+    requires_clarification: false
+    targets:
+      - kind: measure
+        id: total_order_amount
+        name: Total Order Amount
+  - term: total line amount
+    status: resolved
+    candidate_count: 1
+    ambiguity_score: 0.0
+    requires_clarification: false
+    targets:
+      - kind: measure
+        id: total_line_amount
+        name: Total Line Amount
+ambiguities: []
+ambiguity_decisions: []
+entity_decisions: []

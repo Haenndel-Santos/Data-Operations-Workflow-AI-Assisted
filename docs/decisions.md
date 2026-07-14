@@ -231,3 +231,13 @@
 **Alternatives:** Select a live provider before defining metrics; compare generated YAML as text; accept fuzzy intent similarity; persist prompts and responses in reports; treat successful recorded cases as proof of model quality.
 
 **Impact:** `analytics-translation-evaluate` distinguishes `passed`, expectation `failed`, and contract `blocked` states and covers exact/equivalent intents, clarification, hallucination, unsafe output, timeout, and failure. It measures deterministic backend behavior only. Live-provider choice, credentials, cost, retention, online testing, and dataset-backed expected answers remain separate authorization and implementation decisions.
+
+## 2026-07-14 - Expected Requests Gate Synthetic Answer Execution
+
+**Decision:** Build the initial Stage 5E expected-answer harness from a versioned synthetic pack. Materialize DuckDB only from structured allowlisted types and values, require the Stage 5D request to exactly match the expected request before planning, then require normal Stage 5A planning and Stage 5B revalidation before comparing exact CSV and control totals.
+
+**Rationale:** An answer benchmark must measure the complete governed pipeline without turning generated intent into execution authority. The exact expected request catches semantic translation drift before SQL planning, while the existing planner and executor preserve catalog, relationship, raw-SQL, resource, and read-only controls.
+
+**Alternatives:** Execute every schema-valid provider response; store setup SQL in the pack; compare unordered result sets; bypass Stage 5A review artifacts; call a narrator before validating results; begin with EDS or an unapproved benchmark.
+
+**Impact:** `analytics-answer-evaluate` covers grouped, filtered, no-row, and null-filter synthetic cases with fixed conservative limits. Input packs contain synthetic case content, while generated evaluation evidence omits it and runtime databases/results are discarded. The harness is not approval for real datasets, live providers, benchmark relationships, business answers, or narration.

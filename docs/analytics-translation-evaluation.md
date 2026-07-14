@@ -98,3 +98,6 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 This command uses no network, model API, database, query, migration, import, or
 synchronization. Live-provider evaluation requires a separate provider,
 credential, privacy, retention, cost, and online-test decision.
+
+Exact synthetic query results are evaluated by the next offline boundary. See
+[Analytics Expected-Answer Evaluation](analytics-answer-evaluation.md).

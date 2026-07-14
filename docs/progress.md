@@ -6,11 +6,11 @@ Turn local operational spreadsheets into validated analytical datasets and an ap
 
 ## Current Stage
 
-Three active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI analytics Stage 5D has deterministic semantic compilation, a provider-neutral offline translation boundary, and a synthetic regression evaluator but no real approved catalog or live provider; and benchmark onboarding remains pending dataset export/review and approval.
+Three active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI analytics has Stage 5A-5D governed planning/execution/translation plus a synthetic Stage 5E exact-answer harness but no real approved catalog or live provider; and benchmark onboarding remains pending dataset export/review and approval.
 
 ## Last Completed Milestone
 
-On 2026-07-14, Stage 5D added a versioned synthetic translation evaluation pack and offline harness. Seven cases measure exact/equivalent semantic intent acceptance, clarification, hallucinated-term rejection, unsafe SQL rejection, timeout, and sanitized provider failure through the real translation and semantic-adapter boundaries. Persistent evaluation evidence omits questions, responses, filter values, and physical mappings; no model API, network, database, or query was used.
+On 2026-07-14, Stage 5E added a versioned synthetic expected-answer pack and offline harness. Five cases cover an approved two-table join, grouped and filtered aggregates, no rows, and a null filter through the real Stage 5D, 5A, and 5B entrypoints. Exact expected requests gate planning; exact CSV and row/column/null controls gate success. Runtime DuckDB databases and case artifacts are discarded; no live model, network, external database, or real data was used.
 
 ## Current Capabilities
 
@@ -42,15 +42,18 @@ On 2026-07-14, Stage 5D added a versioned synthetic translation evaluation pack 
 - Reproduce provider behavior offline from recorded responses and block network providers unless explicitly authorized per invocation.
 - Evaluate Stage 5D offline with governed exact/equivalent intent, clarification, hallucination, unsafe-output, timeout, and provider-failure expectations.
 - Report separate status, semantic-intent, blocker, clarification, and overall metrics without persisting questions or provider responses.
+- Materialize bounded temporary DuckDB fixtures from structured allowlisted synthetic tables, types, and values without accepting setup SQL.
+- Require an exact versioned request before Stage 5A planning and Stage 5B execution in synthetic expected-answer evaluation.
+- Compare exact ordered CSV output plus row, column, null, pipeline, and request controls across grouped, filtered, no-row, null-filter, and approved-join cases.
 - Inventory local benchmark sources with hashes, provenance/license status, and separate use approvals.
 - Convert supported T-SQL samples to deterministic DuckDB/Parquet artifacts while ignoring operational SQL and retaining foreign keys as pending candidates.
 - Restore and integrity-check the official AdventureWorks 2025 backup in an isolated local read-only SQL Server database.
 
 ## Test Status
 
-- Automated suite: 104 tests passed offline on 2026-07-14; latest run completed in 10.77 seconds.
+- Automated suite: 112 tests passed offline on 2026-07-14; latest run completed in 17.95 seconds.
 - All 12 project-local skills passed the official skill validator on 2026-07-13.
-- Internal link check: 34 checked, 0 broken on 2026-07-14.
+- Internal link check: 37 checked, 0 broken on 2026-07-14.
 - Main suite is offline and uses temporary directories for generated test artifacts.
 - Documentation link checker is available at `scripts/check_internal_links.py`.
 - The relocated `.venv` has a stale editable-install path; use the `PYTHONPATH=src` command in `docs/testing.md` until environment repair is explicitly approved.
@@ -66,7 +69,7 @@ On 2026-07-14, Stage 5D added a versioned synthetic translation evaluation pack 
 - The current orchestrator does not yet expose module discovery, dependency resolution, checkpoints, resume, or dry-run as shared infrastructure.
 - Several core pipeline stages still load whole Parquet tables into Pandas; larger-than-memory operation requires DuckDB pushdown and streaming refactors.
 - No concrete semantic catalog has completed human review or been applied; Stage 5D therefore remains operationally blocked for real datasets.
-- A live model provider, result narration/validation, and dataset-backed question/answer harness are not implemented yet. The synthetic translation pack validates backend contracts only and is not model-quality evidence.
+- A live model provider, result narration, immutable dataset-package identity, and dataset-backed question/answer harness are not implemented yet. Synthetic Stage 5D/5E packs validate backend contracts only and are not live-model or real-dataset quality evidence.
 - Plan-to-execution database drift uses size and nanosecond modification time rather than a full database content hash; immutable dataset-package identity remains future evidence work.
 - Exact download provenance and licensing remain unconfirmed for Northwind, Pubs, and Contoso; local conversion or restoration is not benchmark, training, publication, or upload approval.
 - AdventureWorks now has a compatible local restore runtime, but the SQL Server-to-DuckDB/Parquet export is not implemented; the Contoso recipe references external data and was not executed.
@@ -84,12 +87,12 @@ On 2026-07-14, Stage 5D added a versioned synthetic translation evaluation pack 
 
 ## Next Logical Milestone
 
-Define a synthetic Stage 5E expected-answer harness that chains recorded translation, semantic compilation, reviewed planning, controlled execution against temporary DuckDB data, and exact result controls without narration or a live model. Keep live-provider selection, credentials, cost, retention, network authorization, real dataset approval, Product canonical apply, AdventureWorks export/review, and EDS execution separate. In parallel, profile the highest-memory Pandas stages before selecting one measured DuckDB pushdown refactor.
+Define the dataset-backed Stage 5E pack contract around an immutable local dataset manifest, cryptographic dataset identity, approved semantic/relationship hashes, explicit benchmark-use approval, expected requests, and exact or declared numeric tolerances. Do not export/use AdventureWorks or EDS merely to implement the contract. Keep live-provider selection, narration, Product canonical apply, and external/database work separate. In parallel, profile the highest-memory Pandas stages before selecting one measured DuckDB pushdown refactor.
 
 ## Last Verified Commit
 
-`ff80715` (`feat(analytics): add offline translation boundary`)
+`6bf0ac9` (`feat(analytics): add translation evaluation pack`)
 
 ## Last Updated
 
-2026-07-14 by Codex after the Stage 5D synthetic translation evaluation checkpoint.
+2026-07-14 by Codex after the synthetic Stage 5E expected-answer checkpoint.

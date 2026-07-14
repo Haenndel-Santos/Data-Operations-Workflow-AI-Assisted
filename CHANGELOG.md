@@ -15,6 +15,7 @@ All notable user-facing and release-relevant changes will be documented here.
 - Offline Stage 5D semantic-intent compilation with approved-term resolution, clarification evidence, and Stage 5A request output.
 - Provider-neutral Stage 5D translation boundary with minimized semantic context, recorded offline responses, and explicit network opt-in.
 - Synthetic offline Stage 5D translation evaluation with exact/equivalent intent, clarification, unsafe-output, hallucination, timeout, and failure cases.
+- Synthetic Stage 5E expected-answer evaluation through exact request gating, Stage 5A planning, Stage 5B execution, and CSV/control-total comparison.
 - Controlled local DuckDB execution with exact plan revalidation, bounded resources/results, drift checks, and hash-bound non-overwriting evidence.
 - Review-ready semantic catalog validation with business terms, dimensions, measures, approved paths, and explicit ambiguity handling.
 - Governed local benchmark storage plus restricted T-SQL conversion to DuckDB and Zstandard-compressed Parquet for Northwind and Pubs.

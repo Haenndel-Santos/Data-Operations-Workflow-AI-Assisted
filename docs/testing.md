@@ -128,6 +128,25 @@ The synthetic pack measures deterministic backend regression behavior only. It
 does not call a model or support conclusions about live-model quality, latency,
 cost, or privacy.
 
+## Synthetic Expected-Answer Evaluation
+
+Stage 5E tests create temporary DuckDB data from a structured allowlisted pack,
+then run the actual recorded translation, semantic adapter, Stage 5A planner,
+and Stage 5B executor. They verify exact request gating, grouped/filtered/null
+approved joins, no-row results, CSV and control-total comparison, fixed limits, input and
+evidence preservation, setup-SQL/type rejection, idempotency, and CLI shape:
+
+```powershell
+$env:PYTHONPATH = "src"
+$env:PYTHONDONTWRITEBYTECODE = "1"
+.\.venv\Scripts\python.exe -m pytest -p no:cacheprovider tests\analytics_answer_evaluation_test.py
+```
+
+The tests execute analytical SELECT queries only against pytest or harness
+temporary synthetic DuckDB files. They do not use EDS, benchmark data, project
+databases, SQL Server, a model API, network access, migrations, imports, sync,
+or narration.
+
 ## Benchmark Conversion Validation
 
 Use the restricted converter only for a locally approved SQL sample whose

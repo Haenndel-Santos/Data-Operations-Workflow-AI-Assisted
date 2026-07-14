@@ -890,3 +890,54 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 - Do not install a model SDK, request credentials, enable network access, or claim model quality from the synthetic pack.
 - Do not use EDS or benchmark rows until the corresponding semantic, relationship, provenance, license, and data-use approvals exist.
 - Do not bypass reviewed Stage 5A plans or Stage 5B resource and drift controls in a future end-to-end harness.
+
+## 2026-07-14 - Codex - Stage 5E synthetic expected-answer harness
+
+### Initial Context
+
+- Branch: `main`
+- Initial commit: `6bf0ac9`
+- Initial worktree: clean and synchronized with `origin/main`
+- Objective: chain the existing offline analytics boundaries through exact synthetic answer validation without a live provider or real dataset
+
+### Work Performed
+
+- Added the `analytics_answer_evaluation` version-1 contract and `analytics-answer-evaluate` CLI command.
+- Added a versioned synthetic semantic registry and answer pack with two temporary tables and one explicitly approved synthetic relationship.
+- Added five cases covering an approved `LEFT JOIN`, grouped aggregate, filtered decimal aggregate, no-row result, and `is_null` filter.
+- Materialized temporary DuckDB only from validated lowercase identifiers, fixed allowlisted types, bounded rows, generated DDL, and parameterized values; pack-supplied setup SQL is rejected.
+- Replayed recorded responses through Stage 5D and required the generated physical request to exactly equal the versioned expected request before planning or execution.
+- Reused Stage 5A for catalog/relationship validation and Stage 5B for exact plan revalidation, read-only execution, and fixed resource limits.
+- Compared exact ordered CSV plus row, column, null, request, pipeline, and control states.
+- Added separate `passed`, expectation `failed`, and contract `blocked` outcomes, hash-bound source evidence, exact idempotent reuse, and divergent-output refusal.
+- Kept runtime question/response/request/plan/database/result artifacts temporary; persistent evidence contains only source hashes, limits, case IDs/states, and metrics.
+- Added contract, architecture, testing, decision, roadmap, README, and changelog documentation.
+
+### Validation
+
+- New Stage 5E tests: 8 passed in 6.09 seconds on the final focused run.
+- Integrated Stage 5A/5B/5D/5E tests: 49 passed in 9.57 seconds before the final approved-join fixture extension; the final focused join-inclusive run passed all 8 Stage 5E tests.
+- Final full offline suite after the join and input-limit hardening: 112 passed in 17.95 seconds.
+- Python compilation: passed.
+- Documentation: 37 internal links checked, 0 broken.
+- CLI smoke test: 5/5 cases passed; four summary artifacts were written and no DuckDB artifact persisted.
+- No live model, API key, endpoint, network service, EDS/benchmark data, project database, SQL Server connection, migration, import, synchronization, or narration was used.
+
+### State For Next Agent
+
+- Stage 5E now proves exact end-to-end behavior on synthetic single-table and approved-join cases.
+- The versioned expected request is the pre-execution synthetic gate; a merely schema-valid provider response is never sufficient.
+- The input pack intentionally contains synthetic case content, while generated evaluation evidence omits that content.
+- Dataset-backed evaluation remains blocked by immutable dataset identity, provenance/use approval, semantic approval, and reviewed relationship requirements.
+
+### Next Logical Steps
+
+1. Define a dataset-backed Stage 5E contract that references an immutable local dataset manifest rather than embedding rows.
+2. Bind benchmark packs to cryptographic dataset, semantic-state, and approved-relationship hashes plus explicit benchmark-use authority.
+3. Define exact comparison by default and narrowly typed numeric tolerance only where the reviewed benchmark requires it.
+
+### Do Not Do Yet
+
+- Do not export or query AdventureWorks, EDS, Northwind, or Pubs merely to implement the dataset-backed contract.
+- Do not treat synthetic pass rates as model, benchmark, or business-answer quality.
+- Do not add narration before deterministic result validation and evidence authority are explicit.

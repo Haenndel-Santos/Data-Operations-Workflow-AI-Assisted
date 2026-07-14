@@ -26,6 +26,7 @@ CLI
      -> parameterized SELECT dry-run plan
      -> exact plan revalidation
      -> controlled read-only execution and result evidence
+     -> synthetic exact-answer and control-total evaluation
 
   -> public benchmark onboarding
      -> ignored immutable raw source
@@ -49,6 +50,7 @@ CLI
 | Analytics query-execution module | Revalidate and execute an exact reviewed plan with bounded local resources | Read-only DuckDB only; disable external access; fail closed without partial results. |
 | Analytics semantic-catalog module | Validate business terms, fields, measures, paths, and ambiguity against physical metadata | Metadata only; approved relationships only; never self-approve semantics or resolve ambiguity silently. |
 | Analytics translation-evaluation module | Replay synthetic translation, clarification, rejection, timeout, and failure cases through Stage 5D | Offline in-memory providers only; evidence omits questions/responses and is not live-model quality evidence. |
+| Analytics answer-evaluation module | Chain synthetic recorded translation through exact request, Stage 5A plan, Stage 5B execution, and expected-result controls | Temporary allowlisted DuckDB only; no setup SQL, real data, narration, or persisted case artifacts. |
 | Benchmark SQL conversion module | Parse local sample T-SQL table definitions and rows into DuckDB and Parquet | Never execute source SQL or external operations; output remains unapproved benchmark evidence. |
 | `datasets/benchmarks/` | Separate ignored raw/derived data from versioned inventories and contracts | Dataset presence or conversion is not approval for training, upload, or relationship promotion. |
 | `config/data_model/` | Version candidate state, domain mappings, and approvals | Keep candidate and approved files separate. |
@@ -72,4 +74,4 @@ Modeling decisions use distinct states such as candidate, pending review, approv
 - No shared dependency graph, checkpoint, resume, or dry-run engine.
 - CLI stage dispatch and the default workflow are not yet unified under one orchestration contract.
 - Some generated summaries become stale when later review steps run; consolidated state must cite the newest validation evidence.
-- Semantic catalog validation, explicit human review/application, the Stage 5D semantic-intent compiler, provider-neutral translation boundary, and synthetic regression pack exist. No real semantic registry is approved yet; live model-provider integration, result narration, and the dataset-backed question/answer harness are not implemented.
+- Semantic governance, Stage 5D translation evaluation, and a synthetic Stage 5E exact-answer harness exist. No real semantic registry is approved yet; live model-provider integration, result narration, and dataset-backed question/answer evaluation are not implemented.

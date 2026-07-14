@@ -80,6 +80,14 @@ clarification accuracy without persisting questions or responses. This is
 offline contract-regression evidence, not a live-model benchmark. See
 [Analytics Translation Evaluation](analytics-translation-evaluation.md).
 
+Stage 5E now has a synthetic expected-answer foundation. A versioned pack
+materializes allowlisted rows into temporary DuckDB, requires the Stage 5D
+request to exactly match the expected request, runs Stage 5A and Stage 5B, and
+compares exact CSV output plus row, column, and null controls. Runtime artifacts
+are discarded and evaluator evidence omits case content. Dataset-backed
+benchmarking and result narration remain pending. See
+[Analytics Expected-Answer Evaluation](analytics-answer-evaluation.md).
+
 ## Request Contract
 
 ```yaml
@@ -174,7 +182,7 @@ Calling all dataset use "training" would hide important differences. The initial
 2. **Stage 5B - Controlled local execution:** read-only DuckDB executor, timeout/resource limits, result manifest, control totals, and no-result diagnostics. Implemented.
 3. **Stage 5C - Semantic catalog:** business names, synonyms, measures, dimensions, relationship paths, ambiguity scores, and dataset-specific domain packs. Technical validation plus the human review/apply infrastructure are implemented; a concrete approved catalog remains pending.
 4. **Stage 5D - Natural-language adapter:** deterministic approved-semantic compiler, provider-neutral translation boundary, and synthetic offline regression pack implemented. Live model-provider integration remains pending and unauthorized. Raw SQL is never accepted.
-5. **Stage 5E - Benchmark harness:** EDS local evaluations plus separately approved AdventureWorks and Chinook packs with expected questions, plans, and answers.
+5. **Stage 5E - Expected-answer harness:** synthetic exact request/result/control evaluation is implemented. EDS local evaluation and separately approved AdventureWorks/Chinook packs remain pending.
 6. **Stage 5F - User experience:** query interface, result tables/charts, evidence view, saved analyses, feedback, and role-aware governance.
 7. **Stage 5G - Optional data connectors:** separately authorized read-only database connectors with credential isolation and online tests outside the default suite.
 
