@@ -66,6 +66,13 @@ emits the existing Stage 5A request. Model-provider integration and direct
 free-text interpretation remain unimplemented. See
 [Analytics Semantic Adapter](analytics-semantic-adapter.md).
 
+The provider-neutral translation boundary is now implemented with prompt
+minimization, strict response validation, sanitized timeout/failure handling,
+explicit network opt-in, and mandatory Stage 5D adapter chaining. The only
+concrete provider reads a recorded local YAML response and uses no model or
+network. A live model provider remains unimplemented and unauthorized. See
+[Analytics Natural-Language Translation](analytics-nl-translation.md).
+
 ## Request Contract
 
 ```yaml
@@ -159,7 +166,7 @@ Calling all dataset use "training" would hide important differences. The initial
 1. **Stage 5A - Safe query planning:** structured request, catalog validation, approved joins, parameterized SQL, dry-run evidence. Implemented.
 2. **Stage 5B - Controlled local execution:** read-only DuckDB executor, timeout/resource limits, result manifest, control totals, and no-result diagnostics. Implemented.
 3. **Stage 5C - Semantic catalog:** business names, synonyms, measures, dimensions, relationship paths, ambiguity scores, and dataset-specific domain packs. Technical validation plus the human review/apply infrastructure are implemented; a concrete approved catalog remains pending.
-4. **Stage 5D - Natural-language adapter:** deterministic approved-semantic intent compiler and clarification boundary implemented; model-provider translation from free text remains pending. Raw SQL is never accepted.
+4. **Stage 5D - Natural-language adapter:** deterministic approved-semantic compiler plus provider-neutral, offline-tested free-text translation boundary implemented. Live model-provider integration remains pending and unauthorized. Raw SQL is never accepted.
 5. **Stage 5E - Benchmark harness:** EDS local evaluations plus separately approved AdventureWorks and Chinook packs with expected questions, plans, and answers.
 6. **Stage 5F - User experience:** query interface, result tables/charts, evidence view, saved analyses, feedback, and role-aware governance.
 7. **Stage 5G - Optional data connectors:** separately authorized read-only database connectors with credential isolation and online tests outside the default suite.

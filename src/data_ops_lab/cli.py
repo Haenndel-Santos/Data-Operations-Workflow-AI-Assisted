@@ -3,6 +3,10 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
+from .analytics_nl_translation import (
+    RecordedSemanticIntentProvider,
+    run_analytics_nl_translation,
+)
 from .analytics_query_execution import AnalyticsExecutionLimits, run_analytics_query_execution
 from .analytics_query_plan import run_analytics_query_plan
 from .analytics_semantic_adapter import run_analytics_semantic_adapter
@@ -154,6 +158,36 @@ def build_parser() -> argparse.ArgumentParser:
         "--output",
         type=Path,
         default=Path("outputs/analytics_semantic_adapter"),
+    )
+
+    analytics_nl_translate_recorded = subparsers.add_parser(
+        "analytics-nl-translate-recorded",
+        help="Translate a local question through an offline recorded provider response.",
+    )
+    analytics_nl_translate_recorded.add_argument(
+        "--question-file",
+        type=Path,
+        required=True,
+    )
+    analytics_nl_translate_recorded.add_argument(
+        "--semantic-state",
+        type=Path,
+        default=Path("config/analytics/approved_semantic_catalog.yml"),
+    )
+    analytics_nl_translate_recorded.add_argument(
+        "--provider-response",
+        type=Path,
+        required=True,
+    )
+    analytics_nl_translate_recorded.add_argument(
+        "--output",
+        type=Path,
+        default=Path("outputs/analytics_nl_translation"),
+    )
+    analytics_nl_translate_recorded.add_argument(
+        "--timeout-seconds",
+        type=int,
+        default=30,
     )
 
     benchmark_convert_sql = subparsers.add_parser(
@@ -720,6 +754,26 @@ def main() -> None:
         print(f"Request: {result.request_path or 'not written'}")
         print(f"Clarifications file: {result.clarifications_path or 'not written'}")
         print("No raw SQL, model API, database connection, query, import, or sync was used.")
+        return
+
+    if args.command == "analytics-nl-translate-recorded":
+        result = run_analytics_nl_translation(
+            args.question_file,
+            args.semantic_state,
+            args.output,
+            RecordedSemanticIntentProvider(args.provider_response),
+            timeout_seconds=args.timeout_seconds,
+        )
+        print("Offline natural-language translation validation complete")
+        print(f"Status: {result.status}")
+        print(f"Provider called: {result.provider_called}")
+        print(f"Blockers: {result.blocker_count}")
+        print(f"Clarifications: {result.clarification_count}")
+        print(f"Outputs changed: {result.outputs_changed}")
+        print(f"Intent: {result.intent_path or 'not written'}")
+        request_path = result.adapter_result.request_path if result.adapter_result else None
+        print(f"Stage 5A request: {request_path or 'not written'}")
+        print("Recorded offline response only. No network, model API, database, or query was used.")
         return
 
     if args.command == "benchmark-convert-sql":

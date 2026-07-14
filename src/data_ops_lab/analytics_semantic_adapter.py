@@ -212,7 +212,11 @@ def validate_approved_state(
     state: dict[str, Any],
     blockers: list[dict[str, str]],
 ) -> dict[str, dict[str, dict[str, Any]]]:
-    if state.get("version") != 1 or state.get("status") != "approved":
+    if (
+        isinstance(state.get("version"), bool)
+        or state.get("version") != 1
+        or state.get("status") != "approved"
+    ):
         add_blocker(
             blockers,
             "semantic_state_not_approved",
@@ -655,7 +659,7 @@ def compile_intent(
                 "The semantic intent contains a field outside the version-1 contract.",
                 field=key,
             )
-    if intent.get("version") != 1:
+    if isinstance(intent.get("version"), bool) or intent.get("version") != 1:
         add_blocker(
             blockers,
             "unsupported_intent_version",

@@ -91,6 +91,24 @@ The adapter test never calls a model or external service, reads table rows, or
 writes the real semantic registry. The temporary Stage 5A integration opens
 only the test DuckDB catalog in read-only mode.
 
+## Natural-Language Translation Boundary
+
+The provider-boundary tests use recorded and injected fake providers only. They
+verify prompt minimization, question authority, local evidence privacy, network
+opt-in, timeout/error sanitization, provider SQL/join rejection, ambiguity flow,
+approval enforcement, exact reuse, CLI shape, and the complete translation-to-
+semantic-adapter pipeline:
+
+```powershell
+$env:PYTHONPATH = "src"
+$env:PYTHONDONTWRITEBYTECODE = "1"
+.\.venv\Scripts\python.exe -m pytest -p no:cacheprovider tests\analytics_nl_translation_test.py
+```
+
+The network-provider test injects an in-memory fake object; it makes no network
+request. The default suite contains no live provider, credential, endpoint, or
+online test.
+
 ## Benchmark Conversion Validation
 
 Use the restricted converter only for a locally approved SQL sample whose

@@ -127,3 +127,7 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 The repository currently has no approved real semantic state, so the default
 command remains blocked for real datasets. Synthetic tests create approved
 state only inside pytest temporary directories.
+
+The upstream provider-neutral free-text boundary is documented in
+[Analytics Natural-Language Translation](analytics-nl-translation.md). Every
+accepted provider response still enters through this adapter contract.

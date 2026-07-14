@@ -211,3 +211,13 @@
 **Alternatives:** Call an LLM and execute its SQL; let the model emit physical Stage 5A fields directly; infer an ambiguous target from field context; merge semantic translation into query planning; wait for a UI before defining the boundary.
 
 **Impact:** `analytics-semantic-adapter` accepts no raw SQL or physical joins, uses no model API or database, and never auto-selects ambiguity. `ready_for_query_plan` still requires Stage 5A live-catalog and relationship validation. Questions and filter values persist only in the local generated request; control evidence omits them. No real dataset becomes authorized by this implementation.
+
+## 2026-07-14 - Model Translation Is Provider-Neutral, Minimized, And Opt-In
+
+**Decision:** Put model-provider translation behind a narrow injected protocol. Send only the local question, minimized approved semantic metadata, and the response contract. Require explicit per-invocation network opt-in, sanitize provider errors, avoid automatic retries, and pass every accepted response through the deterministic Stage 5D semantic adapter.
+
+**Rationale:** Provider choice, network disclosure, semantic authorization, and query execution are separate concerns. The project needs a testable translation boundary before credentials or a vendor SDK are introduced. Minimization reduces unnecessary disclosure, while recorded responses make the default suite deterministic and offline.
+
+**Alternatives:** Add an OpenAI-specific dependency immediately; send the complete approved state or database schema; let the provider replace the question; persist provider errors and prompts verbatim; retry automatically; treat schema-shaped provider output as authorized.
+
+**Impact:** `analytics-nl-translate-recorded` validates local recorded responses without inference or network access. Future live providers must implement the protocol, honor timeout, require explicit network authorization, and add isolated online tests. Physical mappings, approval identity, fingerprints, table rows, and databases are excluded from provider context. No live provider is currently implemented or authorized.

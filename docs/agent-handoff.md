@@ -793,3 +793,53 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 - Do not configure or call a live model provider without explicit authorization and credential/privacy controls.
 - Do not fabricate or apply a real semantic registry merely to unblock Stage 5D.
 - Do not bypass Stage 5A/5B, auto-select ambiguous terms, start SQL Server, or execute EDS/benchmark queries.
+
+## 2026-07-14 - Codex - Stage 5D provider-neutral translation boundary
+
+### Initial Context
+
+- Branch: `main`
+- Initial commit: `a6770d6`
+- Initial worktree: clean; branch was 14 commits ahead of `origin/main`
+- Objective: add the next Stage 5D free-text boundary without selecting or calling a live model provider
+
+### Work Performed
+
+- Added the `analytics_nl_translation` version-1 provider protocol and `analytics-nl-translate-recorded` CLI command.
+- Added a concrete recorded-response provider that reads local YAML and cannot use network access.
+- Built minimized provider context from approved semantic IDs, names, descriptions, synonyms, table ownership, semantic path endpoints, and unresolved candidates.
+- Excluded physical mappings, aggregate implementation, source/review fingerprints, approval identity, rows, and databases from provider context.
+- Kept the local question authoritative and rejected provider question replacement, SQL, physical joins, unknown fields, and invalid versions.
+- Required explicit per-invocation opt-in for any injected provider declaring network access; the recorded CLI exposes no network flag.
+- Added sanitized timeout/failure handling without automatic retries and bounded question, context, response, and timeout sizes.
+- Routed every accepted response through the existing deterministic Stage 5D semantic adapter and verified matching ready/clarification statuses.
+- Added hash-bound control evidence, local intent output, nested adapter evidence, exact reuse, divergent-output refusal, documentation, and shared-state updates.
+
+### Validation
+
+- New provider-boundary tests: 12 passed as part of the final focused run.
+- Focused translation/adapter tests: 20 passed in 1.91 seconds.
+- Full offline suite: 98 passed in 9.45 seconds.
+- Python compilation: passed.
+- Documentation: 31 internal links checked, 0 broken.
+- Tests used recorded or injected in-memory fake providers and temporary synthetic approved state only. The network opt-in test called an in-memory fake object and made no network request.
+- No model SDK, API key, endpoint, network service, real semantic state, EDS/benchmark data, table row, project database, SQL Server connection, migration, import, synchronization, or default output directory was used or changed.
+
+### State For Next Agent
+
+- Stage 5D now separates provider translation from deterministic semantic authorization and physical planning.
+- `analytics-nl-translate-recorded` validates reproducibility but does not infer an answer or call AI.
+- Future providers receive the local question and minimized approved semantic metadata only after explicit network authorization, then must return semantic intent without SQL or physical mappings.
+- Real use remains blocked because the repository has no applied real semantic registry and no authorized live provider.
+
+### Next Logical Steps
+
+1. Create a synthetic translation evaluation pack covering exact intents, equivalent intents, clarification, hallucination, unsafe output, and provider-failure cases.
+2. Define acceptance metrics and regression reporting before selecting a live provider.
+3. Treat provider choice, credentials, cost, retention, and online testing as a separate explicit authorization decision.
+
+### Do Not Do Yet
+
+- Do not install a model SDK, request credentials, or call a live provider without explicit authorization.
+- Do not send EDS, benchmark rows, physical schema, approval identities, or source fingerprints to a provider.
+- Do not use recorded responses as evidence of model quality or bypass semantic, Stage 5A, or Stage 5B validation.
