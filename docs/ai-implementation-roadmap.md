@@ -18,14 +18,16 @@ As of 2026-07-15, the project has:
 
 - governed Stage 5A planning and Stage 5B read-only DuckDB execution;
 - semantic review, approval, and Stage 5D deterministic adaptation;
-- provider-neutral translation with a recorded offline provider;
+- provider-neutral translation with recorded offline and explicit loopback
+  Ollama providers;
 - synthetic and separately approved dataset-backed Stage 5E evaluation;
 - deterministic result presentation and cited recorded narration;
 - a two-phase local session that stops for exact human plan review;
 - a versioned static module registry for those session phases with dynamic
   execution, concurrency, network, and review auto-approval disabled;
-- 181 passing offline tests, one approved real Northwind semantic registry, and
-  no live model provider, production UI, or authorized real benchmark execution.
+- 193 passing offline tests plus one skipped opt-in live test, one approved real
+  Northwind semantic registry, and no production UI or authorized real benchmark
+  expected-answer execution.
 
 Phase 0 passed its exit gate on 2026-07-14 through static validation only.
 Phase 1 also passed its exit gate with an isolated synthetic baseline and an
@@ -41,8 +43,11 @@ normalized terms with zero blockers or ambiguities. The separate 111-entity
 review was then completed and approved by the project owner, validated in dry-
 run mode, and applied idempotently. A real structured intent reached
 `ready_for_execution_review` without SQL execution. Phase 3 has passed for
-Northwind; Phase 4 remains pending a separately selected and governed live
-provider.
+Northwind. Phase 4 passed on 2026-07-15 after explicit project-owner selection
+of local Ollama `gpt-oss:20b`, loopback/proxy/credential/privacy constraints,
+bounded context/output/timeout, sanitized failure tests, zero hosted-token cost,
+offline mocks, and one isolated live smoke test. Phase 5 comparative evaluation
+and reviewed expected-answer authority remain pending.
 
 ## Target Architecture
 
@@ -135,6 +140,11 @@ benchmark questions, expected requests/results, and separate permitted uses.
 - Require explicit network authorization, bounded timeout, sanitized failures,
   retention/privacy review, cost limits, and separately labeled online tests.
 - Continue rejecting provider-generated SQL and physical joins.
+
+Completed for the local Ollama development provider on 2026-07-15. The recorded
+provider remains the offline default. Dynamic registry execution, external
+providers, live narration, concurrency, and any automatic query execution remain
+disabled.
 
 ### Phase 5 - Evaluation And Provider Selection
 

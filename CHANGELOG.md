@@ -14,6 +14,7 @@ All notable user-facing and release-relevant changes will be documented here.
 - Hash-bound semantic review preparation and explicit dry-run/apply approval contracts with protected versioned state.
 - Offline Stage 5D semantic-intent compilation with approved-term resolution, clarification evidence, and Stage 5A request output.
 - Provider-neutral Stage 5D translation boundary with minimized semantic context, recorded offline responses, and explicit network opt-in.
+- Explicit loopback-only Ollama `gpt-oss:20b` semantic provider with proxy exclusion, structured semantic-ID output, bounded local inference, offline mocks, and an isolated opt-in live smoke test.
 - Synthetic offline Stage 5D translation evaluation with exact/equivalent intent, clarification, unsafe-output, hallucination, timeout, and failure cases.
 - Synthetic Stage 5E expected-answer evaluation through exact request gating, Stage 5A planning, Stage 5B execution, and CSV/control-total comparison.
 - Dry-run dataset-backed Stage 5E validation with cryptographic dataset, semantic, relationship, pack, and separate approval bindings.

@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import csv
+import json
+import socket
 from pathlib import Path
 from typing import Any
 
@@ -13,6 +15,11 @@ from data_ops_lab.analytics_nl_translation import (
     run_analytics_nl_translation,
 )
 from data_ops_lab.cli import build_parser
+from data_ops_lab.ollama_provider import (
+    OllamaProviderError,
+    OllamaSemanticIntentProvider,
+    validate_loopback_endpoint,
+)
 from data_ops_lab.source_onboarding import file_sha256
 
 
@@ -189,6 +196,20 @@ class FailingProvider(CaptureProvider):
     ) -> dict[str, Any]:
         self.calls += 1
         raise self.error
+
+
+class FakeHttpResponse:
+    def __init__(self, payload: bytes) -> None:
+        self.payload = payload
+
+    def __enter__(self) -> FakeHttpResponse:
+        return self
+
+    def __exit__(self, *args: object) -> None:
+        return None
+
+    def read(self, size: int = -1) -> bytes:
+        return self.payload if size < 0 else self.payload[:size]
 
 
 def test_recorded_translation_runs_full_offline_adapter_pipeline(tmp_path: Path) -> None:
@@ -436,3 +457,196 @@ def test_translation_refuses_divergent_evidence_and_exposes_cli_contract(tmp_pat
     assert args.semantic_state == Path("approved.yml")
     assert args.provider_response == Path("response.yml")
     assert args.timeout_seconds == 15
+
+
+@pytest.mark.parametrize(
+    "endpoint",
+    [
+        "https://127.0.0.1:11434",
+        "http://localhost:11434",
+        "http://192.168.1.10:11434",
+        "http://127.0.0.1",
+        "http://user@127.0.0.1:11434",
+        "http://127.0.0.1:11434/api",
+        "http://127.0.0.1:11434?target=external",
+    ],
+)
+def test_ollama_endpoint_is_restricted_to_explicit_loopback_origin(endpoint: str) -> None:
+    with pytest.raises(ValueError, match="Ollama endpoint"):
+        validate_loopback_endpoint(endpoint)
+
+    assert validate_loopback_endpoint("http://127.0.0.1:11434/") == (
+        "http://127.0.0.1:11434"
+    )
+
+
+def test_ollama_provider_uses_minimized_loopback_request_and_full_adapter(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    question_path, state_path, _, output_dir = build_fixture(tmp_path)
+    captured: dict[str, Any] = {}
+
+    def fake_open(request: Any, timeout_seconds: int) -> FakeHttpResponse:
+        captured["url"] = request.full_url
+        captured["timeout_seconds"] = timeout_seconds
+        captured["body"] = json.loads(request.data.decode("utf-8"))
+        envelope = {"message": {"role": "assistant", "content": json.dumps(provider_response())}}
+        return FakeHttpResponse(json.dumps(envelope).encode("utf-8"))
+
+    monkeypatch.setattr("data_ops_lab.ollama_provider._open_without_proxy", fake_open)
+    provider = OllamaSemanticIntentProvider(
+        context_tokens=8_192,
+        max_output_tokens=512,
+    )
+    result = run_analytics_nl_translation(
+        question_path,
+        state_path,
+        output_dir,
+        provider,
+        timeout_seconds=19,
+        allow_network=True,
+    )
+
+    assert result.status == "ready_for_query_plan"
+    assert result.provider_called is True
+    assert captured["url"] == "http://127.0.0.1:11434/api/chat"
+    assert captured["timeout_seconds"] == 19
+    body = captured["body"]
+    assert body["model"] == "gpt-oss:20b"
+    assert body["stream"] is False
+    assert body["keep_alive"] == "2m"
+    assert body["options"] == {"temperature": 0, "num_ctx": 8_192, "num_predict": 512}
+    assert body["format"]["additionalProperties"] is False
+    assert body["format"]["properties"]["from"]["enum"] == ["sales_orders"]
+    assert body["format"]["properties"]["dimensions"]["items"]["properties"]["term"][
+        "enum"
+    ] == ["order_status"]
+    assert body["format"]["properties"]["metrics"]["items"]["properties"]["term"][
+        "enum"
+    ] == ["order_count"]
+    user_payload = json.loads(body["messages"][1]["content"])
+    serialized = json.dumps(user_payload, sort_keys=True)
+    assert user_payload["question"] == "How many open orders exist by status?"
+    assert "sql" in user_payload["response_contract"]["forbidden"]
+    assert "physical_orders_private" not in serialized
+    assert "private_status_column" not in serialized
+    assert "synthetic-reviewer" not in serialized
+    manifest = yaml.safe_load(result.manifest_path.read_text(encoding="utf-8"))
+    assert manifest["provider"]["name"] == "ollama:gpt-oss:20b"
+    assert manifest["provider"]["mode"] == "local_live"
+    assert manifest["provider"]["network_authorized"] is True
+
+
+def test_ollama_provider_is_not_called_without_explicit_opt_in(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    question_path, state_path, _, output_dir = build_fixture(tmp_path)
+    calls = 0
+
+    def unexpected_open(request: Any, timeout_seconds: int) -> FakeHttpResponse:
+        del request, timeout_seconds
+        nonlocal calls
+        calls += 1
+        raise AssertionError("Ollama must not be called without explicit network opt-in.")
+
+    monkeypatch.setattr("data_ops_lab.ollama_provider._open_without_proxy", unexpected_open)
+    result = run_analytics_nl_translation(
+        question_path,
+        state_path,
+        output_dir,
+        OllamaSemanticIntentProvider(),
+    )
+
+    assert result.status == "blocked"
+    assert result.provider_called is False
+    assert calls == 0
+    assert "network_provider_not_authorized" in blocker_types(result.blockers_path)
+
+
+def test_ollama_timeout_and_malformed_responses_are_sanitized(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    question_path, state_path, _, _ = build_fixture(tmp_path)
+
+    def timeout_open(request: Any, timeout_seconds: int) -> FakeHttpResponse:
+        del request, timeout_seconds
+        raise socket.timeout("private local runtime details")
+
+    monkeypatch.setattr("data_ops_lab.ollama_provider._open_without_proxy", timeout_open)
+    timed_out = run_analytics_nl_translation(
+        question_path,
+        state_path,
+        tmp_path / "timeout",
+        OllamaSemanticIntentProvider(),
+        allow_network=True,
+    )
+    assert "provider_timeout" in blocker_types(timed_out.blockers_path)
+    assert "private" not in timed_out.blockers_path.read_text(encoding="utf-8")
+
+    def malformed_open(request: Any, timeout_seconds: int) -> FakeHttpResponse:
+        del request, timeout_seconds
+        return FakeHttpResponse(b'{"message":{"content":"[]"}}')
+
+    monkeypatch.setattr("data_ops_lab.ollama_provider._open_without_proxy", malformed_open)
+    malformed = run_analytics_nl_translation(
+        question_path,
+        state_path,
+        tmp_path / "malformed",
+        OllamaSemanticIntentProvider(),
+        allow_network=True,
+    )
+    assert "provider_failure" in blocker_types(malformed.blockers_path)
+    assert malformed.intent_path is None
+
+
+def test_ollama_provider_configuration_and_cli_are_bounded() -> None:
+    with pytest.raises(ValueError, match="model name"):
+        OllamaSemanticIntentProvider(model="unsafe model name")
+    with pytest.raises(ValueError, match="context tokens"):
+        OllamaSemanticIntentProvider(context_tokens=512)
+    with pytest.raises(ValueError, match="output tokens"):
+        OllamaSemanticIntentProvider(max_output_tokens=0)
+
+    args = build_parser().parse_args(
+        [
+            "analytics-nl-translate-ollama",
+            "--question-file",
+            "question.txt",
+            "--endpoint",
+            "http://127.0.0.1:11434",
+            "--model",
+            "gpt-oss:20b",
+            "--context-tokens",
+            "8192",
+            "--max-output-tokens",
+            "512",
+            "--timeout-seconds",
+            "90",
+            "--allow-network",
+        ]
+    )
+    assert args.command == "analytics-nl-translate-ollama"
+    assert args.question_file == Path("question.txt")
+    assert args.endpoint == "http://127.0.0.1:11434"
+    assert args.model == "gpt-oss:20b"
+    assert args.context_tokens == 8_192
+    assert args.max_output_tokens == 512
+    assert args.timeout_seconds == 90
+    assert args.allow_network is True
+
+
+def test_ollama_provider_directly_rejects_non_object_semantic_json(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def malformed_open(request: Any, timeout_seconds: int) -> FakeHttpResponse:
+        del request, timeout_seconds
+        return FakeHttpResponse(b'{"message":{"content":"[]"}}')
+
+    monkeypatch.setattr("data_ops_lab.ollama_provider._open_without_proxy", malformed_open)
+    provider = OllamaSemanticIntentProvider()
+    prompt = SemanticTranslationPrompt("Question?", {"version": 1}, {"version": 1})
+    with pytest.raises(OllamaProviderError, match="JSON object"):
+        provider.translate(prompt, timeout_seconds=30)

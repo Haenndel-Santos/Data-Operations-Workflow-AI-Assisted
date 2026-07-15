@@ -1671,3 +1671,83 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
   or query-execution authority from semantic approval.
 - Do not execute the generated smoke plan; `ready_for_execution_review` remains
   a mandatory separate human checkpoint.
+
+## 2026-07-15 - Codex - Local Ollama provider and Phase 4 exit
+
+### Initial Context
+
+- Branch: `main` at `56d0363`; worktree clean and six local commits ahead of
+  `origin/main`.
+- Northwind had an applied approved semantic registry and deterministic/recorded
+  Stage 5D coverage, but no live model adapter or quality evidence.
+- The project owner selected the locally installed Ollama `gpt-oss:20b`, chose
+  English as the internal AI language, and explicitly approved the next Phase 4
+  implementation increment.
+- Measured workstation: Ryzen 9 5900X, 32 GB RAM, RTX 3070 Ti 8 GB. Ollama had
+  already demonstrated hybrid CPU/GPU inference.
+
+### Work Performed
+
+- Added `OllamaSemanticIntentProvider` using only the Python standard library.
+  It accepts literal `127.0.0.1`/`::1` HTTP origins with an explicit port,
+  rejects credentials/path/query/fragment/localhost/LAN/external endpoints, and
+  disables proxy routing.
+- Added bounded English semantic prompting, 8,192 default context tokens, 1,024
+  default output tokens, two-minute keep-alive, a 512 KB request limit, a 2 MB
+  HTTP response limit, supplied timeout, no retry, and sanitized error flow.
+- Constrained model output through dynamic JSON Schema enums: `from`, paths,
+  dimensions, measures, and filters can contain only approved semantic IDs of
+  the correct kind. Physical mappings, rows, SQL, approval identity,
+  fingerprints, and credentials remain outside the prompt.
+- Added the explicit `analytics-nl-translate-ollama` CLI with mandatory
+  `--allow-network` for the loopback socket. The recorded provider remains the
+  offline default and the public runner signature is unchanged.
+- Added offline endpoint, prompt minimization, schema, timeout, malformed
+  response, configuration, CLI, and full adapter tests. Added a separately
+  marked environment-gated local live test.
+- Updated the static registry capability without enabling registry execution,
+  concurrency, network, or review auto-approval.
+- Updated the contract, roadmap, current state, durable decisions,
+  architecture, backend, orchestrator, testing guide, README, and changelog.
+
+### Validation
+
+- Focused provider/registry suite: 30 passed, 1 live test skipped in 2.96
+  seconds before the live run.
+- The first live output incorrectly used a relationship-path ID in `from`; the
+  deterministic adapter blocked it with `semantic_kind_mismatch`. No intent,
+  plan, database access, or SQL execution occurred.
+- After constraining each field to approved IDs of its correct kind, the
+  isolated live Northwind smoke test passed in 18.82 seconds.
+- Live runtime at 8,192 context tokens: Ollama reported 57% CPU / 43% GPU;
+  approximately 7.4 GB of 8 GB VRAM was in use. This is single-request
+  development evidence only.
+- Full offline suite: 193 passed and 1 opt-in live test skipped in 32.86 seconds.
+- Internal links: 82 checked, zero broken.
+- No DuckDB connection, table-row read, SQL execution, external provider,
+  credential, API charge, upload, publication, training, migration, import, or
+  synchronization was used by the live provider smoke.
+
+### State For Next Agent
+
+- AI roadmap Phase 4 has passed for the selected local Ollama development
+  provider. The provider is additive, explicitly invoked, and cannot be
+  dispatched by the static module registry.
+- `gpt-oss:20b` can interpret the approved Northwind semantic catalog on the
+  current workstation, but one smoke question is not accuracy evidence.
+- The recorded provider remains required for deterministic offline regression.
+- Live narration, concurrency, external providers, automatic query execution,
+  dynamic dispatch, and UI remain unimplemented.
+
+### Next Logical Step
+
+- Begin Phase 5 by preparing a bounded English Northwind candidate pack with
+  expected semantic intents and deterministic expected answers. Generate a
+  separate per-case human review before any real dataset-backed evaluation.
+
+### Do Not Do Yet
+
+- Do not infer expected-answer approval or business quality from the live smoke.
+- Do not execute unreviewed benchmark cases, enable automatic query execution,
+  add live narration, connect an external provider, upload/publish data, or
+  fine-tune/train model parameters without their separate gates.

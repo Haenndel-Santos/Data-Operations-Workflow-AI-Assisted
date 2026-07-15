@@ -90,6 +90,12 @@ A `valid` module registry is not execution authority. Registry controls require
 dynamic execution, concurrency, network, and review auto-approval to remain
 disabled, and the validator has no execution or apply mode.
 
+The selected Ollama semantic provider is exposed through a separate explicit
+CLI and the existing injected provider contract. Its capability is declared in
+the registry, but the registry does not dispatch it: `network_enabled` and
+dynamic execution remain false. A live semantic response still passes through
+Stage 5D and stops before the existing human Stage 5A execution review.
+
 `ready_for_relationship_review` is likewise not relationship authority. A
 future semantic-catalog workflow may consume only the accepted subset from a
 completed exact relationship review that revalidates as

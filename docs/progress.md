@@ -6,11 +6,11 @@ Turn local operational spreadsheets into validated analytical datasets and an ap
 
 ## Current Stage
 
-Three active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases 0-3 passed their gates for Northwind; and Phase 4 is pending a separately selected and governed live provider. Stage 5A-5F governed analytics now has its first applied real semantic catalog but still lacks an approved real expected-answer pack, live provider, dynamic dispatch, or user interface.
+Three active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases 0-4 passed their gates for Northwind and the selected local Ollama development provider; and Phase 5 comparative evaluation is pending a reviewed real expected-answer pack. Stage 5A-5F governed analytics has its first applied real semantic catalog and loopback live intent provider but still lacks approved real answer evidence, dynamic dispatch, live narration, or a user interface.
 
 ## Last Completed Milestone
 
-On 2026-07-15, the project owner approved the complete 111-entity Northwind semantic package after reviewing its grouped definitions and material caveats. The separate completed review is bound to the exact compiled catalog. Dry-run approval returned `ready_for_apply` with zero blockers; explicit apply created `config/analytics/approved_semantic_catalog.yml`, and an identical rerun changed neither state nor evidence. A real structured intent then reached `ready_for_execution_review` through Stage 5D and Stage 5A without executing SQL. Upload, publication, live-provider use, model-parameter training, and benchmark expected answers remain not authorized.
+On 2026-07-15, the project owner selected the already installed local Ollama `gpt-oss:20b` model as the first live semantic provider and approved the bounded Phase 4 increment. The additive adapter accepts only literal loopback HTTP, disables proxies, requires explicit per-call socket authority, uses English prompts and kind-specific approved semantic IDs, bounds context/output/timeout, sanitizes failures, and never retries. Offline provider and registry suites passed, and one opt-in real Northwind question reached `ready_for_query_plan` through Stage 5D without opening DuckDB or executing SQL. The recorded provider remains the offline default. Expected-answer authority, live narration, external providers, upload, publication, model-parameter training, dynamic dispatch, and automatic query execution remain not authorized.
 
 ## Current Capabilities
 
@@ -40,6 +40,7 @@ On 2026-07-15, the project owner approved the complete 111-entity Northwind sema
 - Return explicit clarification evidence for ambiguous terms and reject model-supplied SQL, aggregates, columns, and physical joins.
 - Translate a local question through an injected provider contract while minimizing semantic context and preserving the authoritative question.
 - Reproduce provider behavior offline from recorded responses and block network providers unless explicitly authorized per invocation.
+- Translate one English question through local Ollama `gpt-oss:20b` with a literal loopback endpoint, proxy exclusion, no credentials, kind-specific semantic-ID JSON Schema, bounded inference, and deterministic Stage 5D validation.
 - Evaluate Stage 5D offline with governed exact/equivalent intent, clarification, hallucination, unsafe-output, timeout, and provider-failure expectations.
 - Report separate status, semantic-intent, blocker, clarification, and overall metrics without persisting questions or provider responses.
 - Materialize bounded temporary DuckDB fixtures from structured allowlisted synthetic tables, types, and values without accepting setup SQL.
@@ -96,7 +97,8 @@ On 2026-07-15, the project owner approved the complete 111-entity Northwind sema
 
 ## Test Status
 
-- Automated suite: 181 tests passed offline on 2026-07-15; latest run completed in 32.90 seconds.
+- Automated suite: 193 tests passed and 1 opt-in live-provider test skipped offline on 2026-07-15; latest run completed in 32.86 seconds.
+- Isolated local Ollama smoke test: 1 passed in 18.82 seconds on 2026-07-15 with an 8,192-token context; it used no database or SQL execution.
 - All 12 project-local skills passed the official skill validator on 2026-07-13.
 - Internal link check: 82 checked, 0 broken on 2026-07-15.
 - Main suite is offline and uses temporary directories for generated test artifacts.
@@ -114,7 +116,7 @@ On 2026-07-15, the project owner approved the complete 111-entity Northwind sema
 - The recorded analytics session now has a validated static registry and narrow checkpoints/resume semantics, but registry-driven dispatch and generic partial-run/dry-run infrastructure remain deliberately absent.
 - Cleaning is now the highest-memory measured synthetic stage and still loads a full Parquet table into Pandas before writing Parquet and CSV; any bounded-batch refactor must preserve type-detection and exact output contracts.
 - Northwind semantic state is approved and operational for deterministic local Stage 5D use, but its current catalog cannot express calculated revenue or a self-join employee-manager path; those remain explicit version-1 limitations.
-- A live model provider, approved real benchmark pack, real dataset-backed evaluation, and user interface are not implemented or authorized. Recorded narration proves grounding controls only; synthetic Stage 5D/5E packs and temporary dataset-backed tests are not live-model or business-quality evidence.
+- The local Ollama provider has only one passing contract smoke question. No reviewed real benchmark pack, comparative semantic/answer accuracy evidence, live narration provider, dynamic dispatch, concurrency evidence, or user interface exists yet. Recorded and synthetic packs remain contract evidence, not live-model or business-quality evidence.
 - Stage 5B plan-to-execution drift still uses size and nanosecond modification time in ordinary queries. The dataset-backed evaluator additionally rechecks the complete database SHA-256 and every other authority hash before each Stage 5B call and after evaluation.
 - Exact download provenance and licensing remain unconfirmed for Pubs and Contoso. Northwind provenance and MIT licensing are verified, but its technical relationship evidence is not promotion authority.
 - Northwind's two `customer_customer_demo` relationships were explicitly accepted as official structural relationships without positive row coverage; semantic modeling must retain that limitation instead of presenting them as row-validated.
@@ -127,17 +129,17 @@ On 2026-07-15, the project owner approved the complete 111-entity Northwind sema
 - Broader canonical key and relationship approvals remain pending; the Product-specific state does not populate `approved_keys.yml` or `approved_relationships.yml`.
 - No explicit apply contract or approved versioned representation exists yet for the candidate canonical Product snapshot.
 - EDS cross-table analytics remain blocked because `approved_relationships.yml` is intentionally empty.
-- Northwind is `semantic_catalog_approved` with 13 accepted exact relationships and 111 approved semantic entities. Its expected-answer pack and live-provider authority remain pending. Pubs remains pending provenance, license, schema, relationship, and benchmark-use review.
+- Northwind is `semantic_catalog_approved` with 13 accepted exact relationships and 111 approved semantic entities. Its local Ollama intent-provider boundary is implemented and explicitly opt-in; its expected-answer pack and Phase 5 quality authority remain pending. Pubs remains pending provenance, license, schema, relationship, and benchmark-use review.
 - AdventureWorks is restored and validated but remains pending reproducible export, schema review, relationship approval, and benchmark-use approval.
 
 ## Next Logical Milestone
 
-Begin Phase 4 only after selecting a concrete hosted or local provider and documenting its privacy/retention policy, credential boundary, timeout, cost ceiling, and online-test isolation. The existing recorded provider and approved Northwind semantics support offline development, but they do not determine the provider choice or authorize network disclosure. Do not create expected-answer authority, upload, publish, or train a model from the semantic approval.
+Begin Phase 5 by preparing a bounded English Northwind candidate pack with expected semantic intents and deterministic expected answers for separate per-case human review. Do not infer expected-answer approval from the provider smoke test, execute unreviewed cases, enable dynamic live-provider dispatch, add live narration, upload, publish, or train a model.
 
 ## Last Verified Commit
 
-`5c2bfb2` (`feat(analytics): prepare northwind semantic catalog`)
+`56d0363` (`feat(analytics): approve northwind semantic catalog`), the clean baseline before the Phase 4 provider increment.
 
 ## Last Updated
 
-2026-07-15 by Codex after applying the approved Northwind semantic catalog and closing Phase 3.
+2026-07-15 by Codex after implementing and smoke-testing the selected loopback Ollama provider and closing Phase 4.

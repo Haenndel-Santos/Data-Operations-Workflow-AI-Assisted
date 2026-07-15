@@ -188,6 +188,20 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 
 This validates deterministic translation safety and acceptance behavior only; it does not call or benchmark a live model.
 
+To run one explicitly authorized English question through the selected local
+Ollama `gpt-oss:20b` provider and the same deterministic Stage 5D boundary:
+
+```powershell
+$env:PYTHONPATH = "src"
+$env:PYTHONDONTWRITEBYTECODE = "1"
+.\.venv\Scripts\python.exe -m data_ops_lab analytics-nl-translate-ollama --question-file "outputs\<run-id>\question.txt" --semantic-state "config\analytics\approved_semantic_catalog.yml" --endpoint "http://127.0.0.1:11434" --model "gpt-oss:20b" --context-tokens 8192 --max-output-tokens 1024 --timeout-seconds 120 --allow-network --output "outputs\<run-id>\analytics_nl_translation_ollama"
+```
+
+The adapter accepts only a literal loopback origin, disables proxy routing,
+requires no credential, excludes database rows/SQL/physical mappings, and still
+stops before query execution. `--allow-network` authorizes only this local HTTP
+socket invocation; it does not permit an external provider.
+
 To run the synthetic Stage 5E expected-answer pack through Stages 5D, 5A, and 5B:
 
 ```powershell
@@ -381,7 +395,7 @@ DuckDB is a good fit for this project because it supports local analytical workf
 
 ## Next Extensions
 
-- Add an explicitly authorized live intent-translation provider behind the governed semantic boundary.
+- Build and approve the English Northwind expected-answer pack for comparative local-model evaluation.
 - Add a governed UI for questions, result tables, evidence, and validation review.
 - Add Tableau workbook screenshots as a final portfolio artifact.
 - Add richer validation checks for totals before and after joins.

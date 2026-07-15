@@ -93,11 +93,12 @@ only the test DuckDB catalog in read-only mode.
 
 ## Natural-Language Translation Boundary
 
-The provider-boundary tests use recorded and injected fake providers only. They
-verify prompt minimization, question authority, local evidence privacy, network
-opt-in, timeout/error sanitization, provider SQL/join rejection, ambiguity flow,
-approval enforcement, exact reuse, CLI shape, and the complete translation-to-
-semantic-adapter pipeline:
+The default provider-boundary tests use recorded responses, injected providers,
+and a mocked loopback HTTP transport. They verify prompt minimization, question
+authority, local evidence privacy, explicit socket opt-in, loopback-only endpoint
+validation, proxy exclusion, bounded structured output, timeout/error
+sanitization, provider SQL/join rejection, ambiguity flow, approval enforcement,
+exact reuse, CLI shape, and the complete translation-to-semantic-adapter pipeline:
 
 ```powershell
 $env:PYTHONPATH = "src"
@@ -105,9 +106,24 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 .\.venv\Scripts\python.exe -m pytest -p no:cacheprovider tests\analytics_nl_translation_test.py
 ```
 
-The network-provider test injects an in-memory fake object; it makes no network
-request. The default suite contains no live provider, credential, endpoint, or
-online test.
+The default suite makes no network request and requires no model, Ollama process,
+credential, external endpoint, or provider charge. The live local-provider test
+is collected but skipped unless explicitly enabled. To run only that smoke test
+against an already installed `gpt-oss:20b` model:
+
+```powershell
+$env:PYTHONPATH = "src"
+$env:PYTHONDONTWRITEBYTECODE = "1"
+$env:DATA_OPS_LAB_RUN_OLLAMA_LIVE = "1"
+.\.venv\Scripts\python.exe -m pytest -p no:cacheprovider tests\ollama_provider_live_test.py -vv
+Remove-Item Env:DATA_OPS_LAB_RUN_OLLAMA_LIVE
+```
+
+The live test sends one English Northwind question plus minimized approved
+semantic metadata to `http://127.0.0.1:11434`. It does not open DuckDB, read
+table rows, execute SQL, call an external provider, or authorize benchmark
+expected answers. Its result is availability/contract smoke evidence, not model
+accuracy evidence.
 
 ## Synthetic Translation Evaluation
 

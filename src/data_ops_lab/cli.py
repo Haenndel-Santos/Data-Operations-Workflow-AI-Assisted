@@ -16,6 +16,13 @@ from .analytics_nl_translation import (
     RecordedSemanticIntentProvider,
     run_analytics_nl_translation,
 )
+from .ollama_provider import (
+    DEFAULT_CONTEXT_TOKENS,
+    DEFAULT_MAX_OUTPUT_TOKENS,
+    DEFAULT_OLLAMA_ENDPOINT,
+    DEFAULT_OLLAMA_MODEL,
+    OllamaSemanticIntentProvider,
+)
 from .analytics_query_execution import AnalyticsExecutionLimits, run_analytics_query_execution
 from .analytics_query_plan import run_analytics_query_plan
 from .analytics_result_narration import (
@@ -333,6 +340,46 @@ def build_parser() -> argparse.ArgumentParser:
         "--timeout-seconds",
         type=int,
         default=30,
+    )
+
+    analytics_nl_translate_ollama = subparsers.add_parser(
+        "analytics-nl-translate-ollama",
+        help="Translate an English local question through an explicitly authorized loopback Ollama model.",
+    )
+    analytics_nl_translate_ollama.add_argument("--question-file", type=Path, required=True)
+    analytics_nl_translate_ollama.add_argument(
+        "--semantic-state",
+        type=Path,
+        default=Path("config/analytics/approved_semantic_catalog.yml"),
+    )
+    analytics_nl_translate_ollama.add_argument(
+        "--endpoint",
+        default=DEFAULT_OLLAMA_ENDPOINT,
+    )
+    analytics_nl_translate_ollama.add_argument(
+        "--model",
+        default=DEFAULT_OLLAMA_MODEL,
+    )
+    analytics_nl_translate_ollama.add_argument(
+        "--context-tokens",
+        type=int,
+        default=DEFAULT_CONTEXT_TOKENS,
+    )
+    analytics_nl_translate_ollama.add_argument(
+        "--max-output-tokens",
+        type=int,
+        default=DEFAULT_MAX_OUTPUT_TOKENS,
+    )
+    analytics_nl_translate_ollama.add_argument(
+        "--output",
+        type=Path,
+        default=Path("outputs/analytics_nl_translation_ollama"),
+    )
+    analytics_nl_translate_ollama.add_argument("--timeout-seconds", type=int, default=120)
+    analytics_nl_translate_ollama.add_argument(
+        "--allow-network",
+        action="store_true",
+        help="Authorize this invocation to use loopback HTTP for the local Ollama provider.",
     )
 
     analytics_translation_evaluate = subparsers.add_parser(
@@ -1155,6 +1202,33 @@ def main() -> None:
         request_path = result.adapter_result.request_path if result.adapter_result else None
         print(f"Stage 5A request: {request_path or 'not written'}")
         print("Recorded offline response only. No network, model API, database, or query was used.")
+        return
+
+    if args.command == "analytics-nl-translate-ollama":
+        provider = OllamaSemanticIntentProvider(
+            endpoint=args.endpoint,
+            model=args.model,
+            context_tokens=args.context_tokens,
+            max_output_tokens=args.max_output_tokens,
+        )
+        result = run_analytics_nl_translation(
+            args.question_file,
+            args.semantic_state,
+            args.output,
+            provider,
+            timeout_seconds=args.timeout_seconds,
+            allow_network=args.allow_network,
+        )
+        print("Local Ollama semantic translation complete")
+        print(f"Status: {result.status}")
+        print(f"Provider called: {result.provider_called}")
+        print(f"Blockers: {result.blocker_count}")
+        print(f"Clarifications: {result.clarification_count}")
+        print(f"Outputs changed: {result.outputs_changed}")
+        print(f"Intent: {result.intent_path or 'not written'}")
+        request_path = result.adapter_result.request_path if result.adapter_result else None
+        print(f"Stage 5A request: {request_path or 'not written'}")
+        print("Loopback Ollama only. No database connection, query, import, or sync was used.")
         return
 
     if args.command == "analytics-translation-evaluate":

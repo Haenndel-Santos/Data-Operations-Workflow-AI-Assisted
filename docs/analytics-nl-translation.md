@@ -5,7 +5,7 @@
 ```yaml
 name: analytics_nl_translation
 version: 1
-status: implemented_offline_provider_boundary
+status: implemented_recorded_and_local_live_provider_boundary
 entrypoint: data_ops_lab.analytics_nl_translation.run_analytics_nl_translation
 inputs:
   - local_utf8_question_file
@@ -31,10 +31,16 @@ semantic metadata, and the version-1 response contract. Its response is never
 trusted directly: accepted output must pass through `analytics_semantic_adapter`
 before a Stage 5A request can exist.
 
-The module defines a provider-neutral Python protocol. The only concrete
-provider currently implemented is `RecordedSemanticIntentProvider`, which reads
-a local YAML response and performs no network or model call. No model SDK,
-credential, endpoint, retry policy, or online provider is configured.
+The module defines a provider-neutral Python protocol. Two concrete providers
+are implemented:
+
+- `RecordedSemanticIntentProvider` reads a local YAML response and performs no
+  network or model call.
+- `OllamaSemanticIntentProvider` calls an explicitly authorized Ollama endpoint
+  on the literal loopback interface and returns schema-bounded semantic JSON.
+
+The Ollama adapter uses the Python standard library, requires no credential or
+vendor SDK, disables proxy routing, and never retries automatically.
 
 ## Provider Contract
 
@@ -55,9 +61,11 @@ The prompt contains:
 
 The provider must honor the supplied timeout and return one mapping. The runner
 catches timeout and provider failures, stores only a sanitized blocker, and does
-not retry automatically. A future network provider is not called unless its
-invocation explicitly sets `allow_network=True`. The recorded CLI intentionally
-has no network flag.
+not retry automatically. A provider that uses an HTTP socket is not called
+unless its invocation explicitly sets `allow_network=True`. The recorded CLI
+intentionally has no network flag. The Ollama CLI exposes that flag even though
+its endpoint is restricted to loopback, preserving the existing per-invocation
+authorization contract.
 
 Questions are capped at 16 KiB on disk and 4,000 characters after decoding.
 Minimized semantic context is capped at 4 MB, provider responses at 1 MB, and
@@ -137,6 +145,39 @@ question, filter values, or provider exception messages.
 Generated intents and requests may contain private business questions and
 values. Keep them local under `outputs/` and do not commit or upload them.
 
+The Ollama adapter accepts only `http://127.0.0.1:<port>` or
+`http://[::1]:<port>` origins with no credentials, path, query, or fragment.
+`localhost`, LAN addresses, HTTPS origins, and proxy forwarding are rejected.
+The adapter sends no database, rows, SQL, physical mappings, approval identity,
+credentials, or source fingerprints. Its API cost ceiling is zero because no
+hosted provider is called; local compute, memory, storage, and electricity
+remain operational costs. The model stays loaded for two minutes after a call.
+
+## Local Ollama Command
+
+The selected Phase 4 development provider is `gpt-oss:20b`, running through
+Ollama with English questions and semantic entity IDs in structured output:
+
+```powershell
+$env:PYTHONPATH = "src"
+$env:PYTHONDONTWRITEBYTECODE = "1"
+.\.venv\Scripts\python.exe -m data_ops_lab analytics-nl-translate-ollama `
+  --question-file "outputs/<run-id>/question.txt" `
+  --semantic-state "config/analytics/approved_semantic_catalog.yml" `
+  --endpoint "http://127.0.0.1:11434" `
+  --model "gpt-oss:20b" `
+  --context-tokens 8192 `
+  --max-output-tokens 1024 `
+  --timeout-seconds 120 `
+  --allow-network `
+  --output "outputs/<run-id>/analytics_nl_translation_ollama"
+```
+
+The default context and output limits were smoke-tested on the project owner's
+Ryzen 9 5900X, 32 GB RAM, and RTX 3070 Ti 8 GB workstation. Ollama used hybrid
+CPU/GPU inference. This is development evidence, not a concurrency or production
+capacity claim.
+
 ## Recorded Offline Command
 
 ```powershell
@@ -151,8 +192,9 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 ```
 
 This command validates a locally supplied recorded response. It does not infer
-the response itself. Real project use remains blocked because no real approved
-semantic registry exists.
+the response itself. Northwind now has an approved semantic registry, while a
+reviewed real expected-answer pack and comparative Phase 5 quality evidence
+remain pending.
 
 The synthetic regression harness reuses this exact boundary for governed
 acceptance and failure cases. See

@@ -21,15 +21,15 @@ modules:
     failure_policy: fail_closed_without_request
   - name: analytics_nl_translation
     version: 1
-    description: Translate a local question through a recorded provider boundary.
+    description: Translate a local question through a recorded or explicitly authorized loopback provider.
     status: implemented
     entrypoint: data_ops_lab.analytics_nl_translation.run_analytics_nl_translation
     inputs: [question_path, semantic_state_path, output_dir, provider, timeout_seconds, allow_network]
     outputs: [semantic_intent, nested_semantic_adapter_evidence]
     dependencies: [analytics_semantic_adapter]
-    capabilities: [recorded_translation, provider_boundary]
+    capabilities: [recorded_translation, local_ollama_translation, provider_boundary]
     workflows: [recorded_local_prepare]
-    validation: [prompt_minimization, provider_response_contract]
+    validation: [prompt_minimization, provider_response_contract, loopback_endpoint]
     tests: [tests/analytics_nl_translation_test.py]
     failure_policy: fail_closed_without_retry
   - name: analytics_query_plan

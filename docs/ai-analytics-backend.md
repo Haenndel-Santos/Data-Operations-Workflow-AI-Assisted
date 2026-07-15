@@ -60,8 +60,9 @@ The first real Northwind catalog compiles with 13 tables, 60 dimensions, 19
 measures, 18 approved paths, 339 terms, zero ambiguities, and zero blockers. Its
 separate 111-entity review is complete and the hash-bound approved registry is
 applied. A real structured intent passed Stage 5D and Stage 5A without execution;
-Northwind is no longer semantically blocked. A live provider and verified
-expected-answer pack remain separate. See
+Northwind is no longer semantically blocked. A local Ollama provider has now
+passed one separate English smoke question, while a reviewed expected-answer
+pack and comparative quality evidence remain separate. See
 [Northwind Semantic Catalog Review](northwind-semantic-review.md) and
 [Analytics Semantic Review And Approval](analytics-semantic-approval.md).
 
@@ -69,15 +70,18 @@ Stage 5D now provides `analytics-semantic-adapter`, an offline deterministic
 compiler for a supplied version-1 semantic intent. It requires applied approved
 semantic state, copies aggregates/columns/paths only from that state, preserves
 ambiguities as clarification requests, rejects raw SQL and physical joins, and
-emits the existing Stage 5A request. Model-provider integration and direct
-free-text interpretation remain unimplemented. See
+emits the existing Stage 5A request. Provider integration remains separate from
+this deterministic authority. See
 [Analytics Semantic Adapter](analytics-semantic-adapter.md).
 
 The provider-neutral translation boundary is now implemented with prompt
 minimization, strict response validation, sanitized timeout/failure handling,
-explicit network opt-in, and mandatory Stage 5D adapter chaining. The only
-concrete provider reads a recorded local YAML response and uses no model or
-network. A live model provider remains unimplemented and unauthorized. See
+explicit network opt-in, and mandatory Stage 5D adapter chaining. The recorded
+provider remains the offline regression default. The additive local provider
+calls Ollama `gpt-oss:20b` only through an explicit literal loopback endpoint,
+disables proxies, requires no credentials, bounds context/output/time, uses
+semantic-ID JSON Schema, and never retries. One isolated live smoke test passed;
+this is provider availability evidence, not model-quality evidence. See
 [Analytics Natural-Language Translation](analytics-nl-translation.md).
 
 The Stage 5D synthetic evaluation harness replays exact/equivalent intent,
@@ -248,8 +252,8 @@ commercial-readiness path are maintained in
 
 1. **Stage 5A - Safe query planning:** structured request, catalog validation, approved joins, parameterized SQL, dry-run evidence. Implemented.
 2. **Stage 5B - Controlled local execution:** read-only DuckDB executor, timeout/resource limits, result manifest, control totals, and no-result diagnostics. Implemented.
-3. **Stage 5C - Semantic catalog:** business names, synonyms, measures, dimensions, relationship paths, ambiguity scores, and dataset-specific domain packs. Technical validation plus the human review/apply infrastructure are implemented; a concrete approved catalog remains pending.
-4. **Stage 5D - Natural-language adapter:** deterministic approved-semantic compiler, provider-neutral translation boundary, and synthetic offline regression pack implemented. Live model-provider integration remains pending and unauthorized. Raw SQL is never accepted.
+3. **Stage 5C - Semantic catalog:** business names, synonyms, measures, dimensions, relationship paths, ambiguity scores, and dataset-specific domain packs. Technical validation and human review/apply infrastructure are implemented; Northwind is the first concrete approved catalog.
+4. **Stage 5D - Natural-language adapter:** deterministic approved-semantic compiler, provider-neutral translation boundary, synthetic offline regression pack, and an explicitly authorized loopback Ollama adapter are implemented. Comparative live-model evaluation remains pending. Raw SQL is never accepted.
 5. **Stage 5E - Expected-answer harness:** synthetic evaluation, per-case benchmark review/approval, dry-run immutable binding validation, and approved offline dataset-backed execution are implemented. EDS local evaluation and separately approved public benchmark packs remain pending.
 6. **Stage 5F - User experience:** deterministic result tables, recorded cited narration, and a two-phase local session coordinator are implemented. Query UI, charts, evidence navigation, saved analyses, feedback, and role-aware governance remain pending.
 7. **Stage 5G - Optional data connectors:** separately authorized read-only database connectors with credential isolation and online tests outside the default suite.

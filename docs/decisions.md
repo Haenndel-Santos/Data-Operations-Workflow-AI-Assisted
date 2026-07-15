@@ -466,3 +466,35 @@ catalog, approved relationships, completed review, and decision digest. A real
 structured intent reached Stage 5A `ready_for_execution_review` without SQL
 execution. Live-provider use, network disclosure, expected-answer authority,
 upload, publication, training, and database writes remain separate decisions.
+
+## 2026-07-15 - Select Loopback Ollama For The First Live Semantic Provider
+
+**Decision:** Use the project owner's local Ollama `gpt-oss:20b` runtime as the
+first live Stage 5D semantic-intent provider. Require a literal loopback HTTP
+origin, disable proxy routing, require explicit per-invocation socket authority,
+use English prompts and approved semantic entity IDs, bound context/output/time,
+sanitize failures, and preserve the recorded provider as the offline default.
+
+**Rationale:** The selected model is already installed and runs without an API
+credential or hosted-token charge on the available workstation. The existing
+provider-neutral boundary and deterministic semantic adapter can constrain its
+role to interpretation while keeping approved relationships, physical mapping,
+SQL planning, and execution authoritative in local code. Literal loopback
+validation plus proxy exclusion prevents an apparently local configuration from
+silently becoming external disclosure.
+
+**Alternatives:** Call a hosted OpenAI or Anthropic model; accept `localhost`, a
+LAN address, or arbitrary OpenAI-compatible base URL; add a vendor SDK; allow
+automatic retries; let the model emit physical SQL or joins; replace the
+recorded provider in the default suite; enable live model dispatch from the
+static module registry.
+
+**Impact:** `analytics-nl-translate-ollama` calls only
+`http://127.0.0.1:<port>` or `http://[::1]:<port>` after `--allow-network`, sends
+the minimized semantic context, and constrains each semantic field to approved
+IDs of the correct kind through JSON Schema. Offline tests mock the HTTP
+transport; an environment-gated live test passed one English Northwind question
+without DuckDB access or SQL execution. Phase 4 is complete for this local
+development boundary. Phase 5 model accuracy, reviewed expected answers, live
+narration, concurrency, external providers, upload, publication, training, and
+automatic execution remain separate decisions.
