@@ -1844,3 +1844,103 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
   exact gates.
 - Do not enable concurrency, dynamic dispatch, live narration, external
   providers, upload, publication, or model-parameter training.
+
+## 2026-07-15 - Codex - Northwind candidate-answer materialization
+
+### Initial Context
+
+- Branch: `main` at `e32e61c`; worktree clean and nine local commits ahead of
+  `origin/main`.
+- The project owner explicitly approved all 13 exact Northwind plans after
+  reviewing `docs/northwind-answer-benchmark-review.md`.
+- Authority remained limited to local read-only answer collection. The final
+  expected values, live provider, upload, training, publication, and narration
+  were not approved.
+
+### Work Performed
+
+- Versioned the completed exact-plan authority as
+  `datasets/benchmarks/manifests/northwind.answer-execution-review.yml`, with
+  all 13 plan hashes approved and every broader scope explicitly not
+  authorized.
+- Added `analytics_dataset_benchmark_materialization` and the
+  `analytics-dataset-benchmark-answer-materialize` CLI. It validates the exact
+  preparation/review authority before table-row access, resolves only bounded
+  preparation artifacts, executes cases sequentially through ordinary Stage
+  5B plan revalidation, and rechecks immutable sources before and after every
+  query.
+- Added typed CSV-to-pack conversion with schema, DuckDB-type, result-hash,
+  row/column/null, no-row, truncation, and ambiguous string-null checks. The
+  candidate pack is written only after the existing pack inspector reports no
+  blockers.
+- Hash-bound the persistent case CSV, blocker CSV, and report in the root
+  materialization manifest. Exact reuse is idempotent; partial, divergent, and
+  tampered evidence is preserved and refused.
+- Extended the dataset benchmark validator to accept both its legacy minimal
+  relationship registry and the existing governed registry projection, while
+  validating version, approval status, human-review authority hashes, local
+  scope, non-automatic approval, rejected IDs, and non-authorizations.
+- Added six materialization tests and one governed relationship-registry
+  compatibility test.
+- The first real run completed all 13 queries but correctly withheld the pack
+  because the old final validator rejected the governed registry's authority
+  metadata. That blocked evidence remains under
+  `outputs/benchmarks/northwind-phase5-answer-materialization-v1/`.
+- After the compatibility fix, the definitive hash-bound `v3` run completed all
+  13 cases with zero blockers and a byte-idempotent rerun. The versioned pack is
+  `datasets/benchmarks/manifests/northwind.answer-benchmark-pack.yml`.
+- Generated the separate pending final review under
+  `outputs/benchmarks/northwind-phase5-expected-answer-review-v1/` and added
+  `docs/northwind-expected-answer-review.md`. No final case was auto-approved.
+- Created feature commit `363547c` (`feat(benchmarks): materialize northwind
+  answer pack`).
+
+### Validation
+
+- Focused materialization suite: 6 passed in 2.68 seconds.
+- Focused materialization plus dataset benchmark suite: 32 passed in 7.63
+  seconds after the evidence-integrity test was added.
+- Final full offline suite: 206 passed and 1 opt-in live-provider test skipped
+  in 36.17 seconds.
+- Internal links: 101 checked, zero broken.
+- Definitive real materialization: `awaiting_final_review`, 13 cases, 13
+  completed, zero blockers; repeated run reported `Outputs changed: False`.
+- Candidate pack SHA-256:
+  `68d453860a0bf9841b86b4062ef1265e5876ba1724ed11dca23ce9eb70707683`.
+- Completed execution-review SHA-256:
+  `847426897e5c4c73eaf69d40dfe171ad04fb66a0105bb7e16d685d9fd0de83eb`.
+- Northwind DuckDB, approved semantic state, and approved relationships retained
+  their prior SHA-256 values.
+- No live Ollama call, external network, credential, upload, publication,
+  narration, model training, migration, import, synchronization, or database
+  write was used.
+
+### State For Next Agent
+
+- Phase 5 remains active at the second, final per-case expected-answer review
+  gate.
+- The candidate pack contains all questions, recorded semantic responses, exact
+  Stage 5A requests, typed expected rows, controls, ordering, and comparison
+  policies. It is `candidate_for_review`, not approved benchmark authority.
+- The pending form requires four decisions per case: recorded provider
+  response, expected request, expected result, and comparison policy. It also
+  requires bounded scope decisions, reviewer identity, timestamp, and notes.
+- The candidate pack and pending review are byte-idempotent against the current
+  source hashes.
+
+### Next Logical Step
+
+- Obtain explicit project-owner decisions for all 13 candidate cases using
+  `docs/northwind-expected-answer-review.md`. If fully approved, validate the
+  completed review in dry-run, explicitly generate the immutable benchmark
+  approval, and run the recorded offline dataset-backed evaluator before
+  designing any live-model comparison.
+
+### Do Not Do Yet
+
+- Do not treat successful Stage 5B collection as expected-answer approval.
+- Do not edit the generated pending form in place without explicit human
+  decisions or auto-approve any case.
+- Do not call Ollama for comparative evaluation, enable concurrency/dynamic
+  dispatch, add live narration, connect external providers, upload/publish
+  data, or train model parameters before their separate gates.

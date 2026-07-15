@@ -6,11 +6,11 @@ Turn local operational spreadsheets into validated analytical datasets and an ap
 
 ## Current Stage
 
-Three active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases 0-4 passed their gates for Northwind and the selected local Ollama development provider; and Phase 5 is active at the exact answer-collection plan-review gate. Stage 5A-5F governed analytics has its first applied real semantic catalog, loopback live intent provider, and a 13-case Northwind answer design, but still lacks collected or approved real answer evidence, comparative provider evidence, dynamic dispatch, live narration, or a user interface.
+Three active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases 0-4 passed their gates for Northwind and the selected local Ollama development provider; and Phase 5 is active at the final expected-answer pack-review gate. Stage 5A-5F governed analytics has its first applied real semantic catalog, loopback live intent provider, and a collected 13-case Northwind candidate answer pack, but still lacks approved real answer authority, comparative provider evidence, dynamic dispatch, live narration, or a user interface.
 
 ## Last Completed Milestone
 
-On 2026-07-15, Phase 5 began with a versioned public Northwind dataset manifest and bounded 13-case English answer design. The new preparation module validates immutable dataset, semantic, relationship, recorded-intent, output-shape, and comparison contracts, then reuses recorded Stage 5D and Stage 5A for every case. All 13 cases reached `ready_for_execution_review` with zero blockers, and an aggregate pending review was bound to the complete preparation manifest and every exact plan SHA-256. A byte-identical rerun changed nothing. Stage 5B was not called; no table rows, expected answers, live provider, network, upload, publication, training, or narration were used. The plans now require explicit human review before local read-only answer collection.
+On 2026-07-15, the project owner approved all 13 exact hash-bound Northwind plans for local read-only answer collection only. The completed review is versioned with live-provider, upload, training, and publication scopes explicitly not authorized. The new materializer validates the full authority before table-row access, rechecks immutable sources plus each request and plan around every case, and executes Stage 5B sequentially with fixed limits. All 13 cases completed; the definitive `v3` run reported zero blockers and was byte-idempotent. The candidate pack SHA-256 is `68d453860a0bf9841b86b4062ef1265e5876ba1724ed11dca23ce9eb70707683`. The first run is preserved as blocked evidence because the old final validator rejected legitimate governed relationship-registry metadata; compatibility was corrected and regression-tested before the successful new run. A separate 13-case final review template is pending. No Ollama call, external network, upload, training, publication, narration, or benchmark evaluation occurred.
 
 ## Current Capabilities
 
@@ -49,6 +49,12 @@ On 2026-07-15, Phase 5 began with a versioned public Northwind dataset manifest 
 - Validate a bounded versioned real-dataset answer design with exact dataset, semantic, relationship, recorded-intent, result-shape, typed-column, coverage, and comparison bindings.
 - Batch recorded Stage 5D and exact Stage 5A preparation into one immutable checkpoint and aggregate per-case execution-review template without Stage 5B, table-row access, or network use.
 - Refuse provider SQL, source drift, nondeterministic multi-row designs, output-alias drift, invalid tolerance policy, review auto-approval, and divergent preparation evidence.
+- Validate a completed aggregate execution review with exact source, scope, case, and plan hashes before any real answer query.
+- Execute approved real-dataset plans sequentially through ordinary Stage 5B revalidation with fixed read-only limits and authority checks before and after every case.
+- Convert result CSV into explicit benchmark comparison types only after validating hashes, schema, DuckDB types, row/column/null controls, no-row status, and truncation controls.
+- Write a candidate expected-answer pack only when every case completes and the complete pack passes the existing dataset benchmark contract.
+- Hash-bind persistent materialization case, blocker, and report evidence; refuse partial, divergent, or tampered reuse without overwriting it.
+- Accept the legacy minimal relationship registry and the validated governed projection carrying completed-review authority and non-authorization metadata.
 - Validate a version-1 dataset-backed benchmark package without opening its DuckDB artifact or reading its catalog, tables, or rows.
 - Bind dataset identity, approved semantics, approved relationships, candidate pack, and separate human approval by SHA-256.
 - Validate bounded typed expected answers with exact comparison or explicit per-column numeric tolerances while refusing live-provider, upload, and training authority.
@@ -100,10 +106,10 @@ On 2026-07-15, Phase 5 began with a versioned public Northwind dataset manifest 
 
 ## Test Status
 
-- Automated suite: 199 tests passed and 1 opt-in live-provider test skipped offline on 2026-07-15; latest run completed in 36.50 seconds.
+- Automated suite: 206 tests passed and 1 opt-in live-provider test skipped offline on 2026-07-15; latest run completed in 36.17 seconds.
 - Isolated local Ollama smoke test: 1 passed in 18.82 seconds on 2026-07-15 with an 8,192-token context; it used no database or SQL execution.
 - All 12 project-local skills passed the official skill validator on 2026-07-13.
-- Internal link check: 91 checked, 0 broken on 2026-07-15.
+- Internal link check: 101 checked, 0 broken on 2026-07-15.
 - Main suite is offline and uses temporary directories for generated test artifacts.
 - Documentation link checker is available at `scripts/check_internal_links.py`.
 - The relocated `.venv` has a stale editable-install path; use the `PYTHONPATH=src` command in `docs/testing.md` until environment repair is explicitly approved.
@@ -119,7 +125,7 @@ On 2026-07-15, Phase 5 began with a versioned public Northwind dataset manifest 
 - The recorded analytics session now has a validated static registry and narrow checkpoints/resume semantics, but registry-driven dispatch and generic partial-run/dry-run infrastructure remain deliberately absent.
 - Cleaning is now the highest-memory measured synthetic stage and still loads a full Parquet table into Pandas before writing Parquet and CSV; any bounded-batch refactor must preserve type-detection and exact output contracts.
 - Northwind semantic state is approved and operational for deterministic local Stage 5D use, but its current catalog cannot express calculated revenue or a self-join employee-manager path; those remain explicit version-1 limitations.
-- The local Ollama provider has only one passing contract smoke question. The 13 Northwind gold intents are recorded design authority, not 13 live-model passes. No reviewed real benchmark pack, comparative semantic/answer accuracy evidence, live narration provider, dynamic dispatch, concurrency evidence, or user interface exists yet.
+- The local Ollama provider has only one passing contract smoke question. The 13 Northwind gold intents are recorded design authority, not 13 live-model passes. The collected expected-answer pack remains candidate authority until its separate per-case review is complete; no comparative semantic/answer accuracy evidence, live narration provider, dynamic dispatch, concurrency evidence, or user interface exists yet.
 - Stage 5B plan-to-execution drift still uses size and nanosecond modification time in ordinary queries. The dataset-backed evaluator additionally rechecks the complete database SHA-256 and every other authority hash before each Stage 5B call and after evaluation.
 - Exact download provenance and licensing remain unconfirmed for Pubs and Contoso. Northwind provenance and MIT licensing are verified, but its technical relationship evidence is not promotion authority.
 - Northwind's two `customer_customer_demo` relationships were explicitly accepted as official structural relationships without positive row coverage; semantic modeling must retain that limitation instead of presenting them as row-validated.
@@ -132,17 +138,17 @@ On 2026-07-15, Phase 5 began with a versioned public Northwind dataset manifest 
 - Broader canonical key and relationship approvals remain pending; the Product-specific state does not populate `approved_keys.yml` or `approved_relationships.yml`.
 - No explicit apply contract or approved versioned representation exists yet for the candidate canonical Product snapshot.
 - EDS cross-table analytics remain blocked because `approved_relationships.yml` is intentionally empty.
-- Northwind is `semantic_catalog_approved` with 13 accepted exact relationships and 111 approved semantic entities. Its local Ollama intent-provider boundary is implemented and explicitly opt-in. Its 13 exact expected-answer collection plans are `awaiting_execution_review`; expected values, the final per-case pack review, and Phase 5 quality authority remain pending. Pubs remains pending provenance, license, schema, relationship, and benchmark-use review.
+- Northwind is `semantic_catalog_approved` with 13 accepted exact relationships and 111 approved semantic entities. Its local Ollama intent-provider boundary is implemented and explicitly opt-in. All 13 exact plans passed collection review and produced a contract-valid candidate answer pack, but every recorded response, exact request, expected result, and comparison policy still requires the separate final per-case review before approval or evaluation. Pubs remains pending provenance, license, schema, relationship, and benchmark-use review.
 - AdventureWorks is restored and validated but remains pending reproducible export, schema review, relationship approval, and benchmark-use approval.
 
 ## Next Logical Milestone
 
-Review the 13 exact Northwind plans in `docs/northwind-answer-benchmark-review.md` and the hash-bound pending review under `outputs/benchmarks/northwind-phase5-answer-preparation-v1/`. Only after explicit approval may the project validate a completed review and run sequential fixed-limit Stage 5B answer collection to materialize the candidate expected-answer pack. The collected values must then receive the existing separate per-case pack review before any offline or live comparative evaluation. Do not infer review from general Phase 5 authorization, execute the pending plans, enable dynamic live-provider dispatch, add live narration, upload, publish, or train a model.
+Review the complete candidate pack through `docs/northwind-expected-answer-review.md` and the pending form under `outputs/benchmarks/northwind-phase5-expected-answer-review-v1/`. Every case needs independent decisions for its recorded provider response, exact request, expected result, and comparison policy, plus bounded scope notes. Only after explicit completion may the project run approval dry-run/apply and the recorded offline evaluator. Live Ollama comparison remains a later separately controlled step. Do not infer final answer approval from successful query execution, call the live provider, enable dynamic dispatch, add live narration, upload, publish, or train a model.
 
 ## Last Verified Commit
 
-`c69dc4a` (`feat(benchmarks): prepare northwind answer plans`).
+`363547c` (`feat(benchmarks): materialize northwind answer pack`).
 
 ## Last Updated
 
-2026-07-15 by Codex after starting Phase 5 and stopping at the exact Northwind answer-collection plan-review gate.
+2026-07-15 by Codex after materializing the Northwind candidate answer pack and stopping at its separate final per-case human review gate.
