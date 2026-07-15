@@ -283,6 +283,12 @@ Only a reviewed invocation may add `--execute --allow-network`. The first
 Northwind development run passed 9/13, so provider selection remains open and
 requires a fresh holdout pack rather than further tuning against these cases.
 
+For an unattended, resource-guarded local stability run over that development
+pack, use the separate `analytics-ollama-soak` contract. It repeats sequential
+Ollama calls only, records GPU/RAM/latency/quality evidence, supports a `STOP`
+file, and uses no Codex or hosted-model API after launch. See
+[Local Ollama Overnight Soak](docs/analytics-ollama-soak.md).
+
 To render a completed Stage 5B result deterministically and validate a recorded
 cited narrative:
 
@@ -483,6 +489,7 @@ DuckDB is a good fit for this project because it supports local analytical workf
 - [Dataset benchmark review and approval contract](docs/analytics-dataset-benchmark-review.md)
 - [Dataset-backed offline benchmark evaluation contract](docs/analytics-dataset-benchmark-evaluation.md)
 - [Dataset-backed live Ollama benchmark evaluation contract](docs/analytics-dataset-benchmark-live-evaluation.md)
+- [Local Ollama overnight soak contract](docs/analytics-ollama-soak.md)
 - [Deterministic analytics result presentation contract](docs/analytics-result-presentation.md)
 - [Grounded analytics result narration contract](docs/analytics-result-narration.md)
 - [Local analytics session contract](docs/analytics-session.md)

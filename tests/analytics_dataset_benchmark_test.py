@@ -11,6 +11,7 @@ import yaml
 
 import data_ops_lab.analytics_dataset_benchmark_evaluation as dataset_evaluation
 import data_ops_lab.analytics_dataset_benchmark_live_evaluation as live_evaluation
+import data_ops_lab.analytics_ollama_soak as ollama_soak
 from data_ops_lab.analytics_dataset_benchmark import (
     AnalyticsDatasetBenchmarkResult,
     inspect_analytics_dataset_benchmark_candidate,
@@ -29,6 +30,7 @@ from data_ops_lab.analytics_dataset_benchmark_review import (
     run_analytics_dataset_benchmark_approval,
     run_analytics_dataset_benchmark_review,
 )
+from data_ops_lab.analytics_ollama_soak import run_analytics_ollama_soak
 from data_ops_lab.cli import build_parser
 from data_ops_lab.source_onboarding import file_sha256
 
@@ -1546,6 +1548,40 @@ def test_live_dataset_normalizes_alias_only_differences_before_execution(
     assert manifest["metrics"]["request_exact_accuracy"]["rate"] == 0.5
 
 
+def test_live_dataset_case_guard_stops_before_the_next_provider_call(
+    tmp_path: Path,
+) -> None:
+    paths = build_fixture(tmp_path)
+    approval_path = generate_benchmark_approval(paths, tmp_path / "authority")
+    provider = fake_live_provider(paths)
+    authorization = prepare_live_authorization(
+        paths, approval_path, provider, tmp_path / "live_authorization.yml"
+    )
+    guard_results = iter([None, "gpu_temperature_limit_reached"])
+
+    result = run_analytics_dataset_benchmark_live_evaluation(
+        paths["manifest"],
+        paths["database"],
+        paths["semantic"],
+        paths["relationships"],
+        paths["pack"],
+        approval_path,
+        authorization,
+        tmp_path / "live_evaluation",
+        provider,
+        timeout_seconds=120,
+        execute=True,
+        allow_network=True,
+        case_guard=lambda: next(guard_results),
+    )
+    cases = list(csv.DictReader(result.cases_path.open(newline="", encoding="utf-8")))
+
+    assert result.status == "failed"
+    assert result.provider_call_count == 1
+    assert cases[0]["passed"] == "True"
+    assert cases[1]["provider_outcome"] == "skipped_after_case_guard"
+
+
 @pytest.mark.parametrize(
     ("mutator", "allow_network", "expected_blocker"),
     [
@@ -1700,4 +1736,323 @@ def test_live_dataset_benchmark_cli_requires_separate_execute_and_loopback_flags
     assert args.allow_network is True
     assert args.live_authorization == Path("live.yml")
     for name in ("sql", "max_rows", "memory_limit_mb", "threads", "replace_existing"):
+        assert not hasattr(args, name)
+
+
+def soak_authorization_payload(
+    paths: dict[str, Path],
+    approval_path: Path,
+    live_authorization_path: Path,
+    provider: FakeLiveProvider,
+    *,
+    cooldown_seconds: int = 0,
+) -> dict:
+    return {
+        "version": 1,
+        "status": "approved_local_ollama_soak",
+        "source": {
+            "dataset_manifest_sha256": file_sha256(paths["manifest"]),
+            "database_sha256": file_sha256(paths["database"]),
+            "approved_semantic_state_sha256": file_sha256(paths["semantic"]),
+            "approved_relationships_sha256": file_sha256(paths["relationships"]),
+            "benchmark_pack_sha256": file_sha256(paths["pack"]),
+            "benchmark_approval_sha256": file_sha256(approval_path),
+            "live_authorization_sha256": file_sha256(live_authorization_path),
+        },
+        "provider": {
+            "name": provider.name,
+            "mode": provider.mode,
+            "endpoint": provider.endpoint,
+            "model": provider.model,
+            "context_tokens": provider.context_tokens,
+            "max_output_tokens": provider.max_output_tokens,
+            "timeout_seconds": 120,
+            "prompt_contract_version": provider.prompt_contract_version,
+        },
+        "execution": {
+            "duration_seconds": 60,
+            "max_cycles": 2,
+            "cooldown_seconds": cooldown_seconds,
+            "max_consecutive_cycle_errors": 2,
+            "provider_concurrency": 1,
+            "sequential_cycles": True,
+            "stop_file_name": "STOP",
+        },
+        "resource_limits": {
+            "max_gpu_temperature_c": 78,
+            "min_available_system_memory_mb": 6144,
+            "min_free_disk_mb": 20480,
+        },
+        "decision": ollama_soak.SOAK_DECISIONS,
+        "authorized_by": "synthetic-reviewer",
+        "authorized_at": "2026-07-15T17:07:00+02:00",
+        "notes": "Approved only for the bounded synthetic local soak test.",
+    }
+
+
+def prepare_soak_fixture(
+    tmp_path: Path,
+    *,
+    cooldown_seconds: int = 0,
+) -> tuple[dict[str, Path], Path, Path, Path, FakeLiveProvider]:
+    paths = build_fixture(tmp_path)
+    approval_path = generate_benchmark_approval(paths, tmp_path / "authority")
+    provider = fake_live_provider(paths)
+    live_authorization = prepare_live_authorization(
+        paths, approval_path, provider, tmp_path / "live_authorization.yml"
+    )
+    soak_authorization = tmp_path / "soak_authorization.yml"
+    write_yaml(
+        soak_authorization,
+        soak_authorization_payload(
+            paths,
+            approval_path,
+            live_authorization,
+            provider,
+            cooldown_seconds=cooldown_seconds,
+        ),
+    )
+    return paths, approval_path, live_authorization, soak_authorization, provider
+
+
+def good_soak_sample() -> dict[str, int | float | str]:
+    return {
+        "observed_at": "2026-07-15T17:07:00+00:00",
+        "system_total_memory_mb": 32000.0,
+        "system_available_memory_mb": 12000.0,
+        "gpu_total_memory_mb": 8192,
+        "gpu_used_memory_mb": 7000,
+        "gpu_temperature_c": 65,
+        "gpu_utilization_percent": 95,
+        "gpu_power_w": 220.0,
+        "disk_free_mb": 500000.0,
+    }
+
+
+def run_soak_fixture(
+    paths: dict[str, Path],
+    approval_path: Path,
+    live_authorization: Path,
+    soak_authorization: Path,
+    output_dir: Path,
+    provider: FakeLiveProvider,
+    *,
+    execute: bool,
+    allow_network: bool,
+    resource_sampler: object = None,
+    sleep_fn: object = None,
+):
+    kwargs = {}
+    if resource_sampler is not None:
+        kwargs["resource_sampler"] = resource_sampler
+    if sleep_fn is not None:
+        kwargs["sleep_fn"] = sleep_fn
+    return run_analytics_ollama_soak(
+        paths["manifest"],
+        paths["database"],
+        paths["semantic"],
+        paths["relationships"],
+        paths["pack"],
+        approval_path,
+        live_authorization,
+        soak_authorization,
+        output_dir,
+        provider,
+        timeout_seconds=120,
+        execute=execute,
+        allow_network=allow_network,
+        **kwargs,
+    )
+
+
+def test_ollama_soak_preflight_is_offline_and_does_not_open_duckdb(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    paths, approval, live_auth, soak_auth, provider = prepare_soak_fixture(tmp_path)
+    monkeypatch.setattr(
+        duckdb,
+        "connect",
+        lambda *args, **kwargs: pytest.fail("soak preflight opened DuckDB"),
+    )
+
+    result = run_soak_fixture(
+        paths,
+        approval,
+        live_auth,
+        soak_auth,
+        tmp_path / "soak_preflight",
+        provider,
+        execute=False,
+        allow_network=False,
+    )
+    manifest = read_yaml(result.manifest_path)
+
+    assert result.status == "ready_for_overnight_soak"
+    assert result.provider_call_count == 0
+    assert provider.calls == []
+    assert manifest["controls"]["provider_concurrency"] == 1
+    assert manifest["controls"]["codex_or_hosted_model_api_used_by_runtime"] is False
+
+
+def test_ollama_soak_runs_two_sequential_cycles_and_aggregates_safe_evidence(
+    tmp_path: Path,
+) -> None:
+    paths, approval, live_auth, soak_auth, provider = prepare_soak_fixture(tmp_path)
+
+    result = run_soak_fixture(
+        paths,
+        approval,
+        live_auth,
+        soak_auth,
+        tmp_path / "soak",
+        provider,
+        execute=True,
+        allow_network=True,
+        resource_sampler=good_soak_sample,
+    )
+    manifest = read_yaml(result.manifest_path)
+    cycles = list(csv.DictReader(result.cycles_path.open(newline="", encoding="utf-8")))
+    stability = list(csv.DictReader(result.cases_path.open(newline="", encoding="utf-8")))
+    persisted = "\n".join(
+        path.read_text(encoding="utf-8")
+        for path in result.output_dir.rglob("*")
+        if path.is_file()
+    )
+
+    assert result.status == "completed"
+    assert result.stop_reason == "maximum_cycles_reached"
+    assert result.cycle_count == 2
+    assert result.provider_call_count == 4
+    assert [row["status"] for row in cycles] == ["passed", "passed"]
+    assert manifest["counts"]["cases_evaluated"] == 4
+    assert manifest["counts"]["prompt_tokens"] == 1600
+    assert manifest["counts"]["max_gpu_temperature_c"] == 65
+    assert len(stability) == 2
+    assert all(row["observations"] == "2" for row in stability)
+    assert all(row["passed"] == "2" for row in stability)
+    assert "How many synthetic orders exist?" not in persisted
+    assert "select " not in persisted.lower()
+
+
+def test_ollama_soak_resource_guard_stops_before_provider(
+    tmp_path: Path,
+) -> None:
+    paths, approval, live_auth, soak_auth, provider = prepare_soak_fixture(tmp_path)
+
+    def hot_sample() -> dict[str, int | float | str]:
+        return {**good_soak_sample(), "gpu_temperature_c": 79}
+
+    result = run_soak_fixture(
+        paths,
+        approval,
+        live_auth,
+        soak_auth,
+        tmp_path / "soak",
+        provider,
+        execute=True,
+        allow_network=True,
+        resource_sampler=hot_sample,
+    )
+
+    assert result.status == "stopped_resource_guard"
+    assert result.stop_reason == "gpu_temperature_limit_reached"
+    assert result.cycle_count == 0
+    assert result.provider_call_count == 0
+    assert provider.calls == []
+
+
+def test_ollama_soak_stop_file_is_checked_during_cooldown(tmp_path: Path) -> None:
+    paths, approval, live_auth, soak_auth, provider = prepare_soak_fixture(
+        tmp_path, cooldown_seconds=5
+    )
+    output_dir = tmp_path / "soak"
+
+    def request_stop(_: float) -> None:
+        (output_dir / "STOP").touch()
+
+    result = run_soak_fixture(
+        paths,
+        approval,
+        live_auth,
+        soak_auth,
+        output_dir,
+        provider,
+        execute=True,
+        allow_network=True,
+        resource_sampler=good_soak_sample,
+        sleep_fn=request_stop,
+    )
+
+    assert result.status == "stopped_by_request"
+    assert result.stop_reason == "stop_file_detected"
+    assert result.cycle_count == 1
+    assert result.provider_call_count == 2
+
+
+def test_ollama_soak_rejects_scope_drift_before_provider(
+    tmp_path: Path,
+) -> None:
+    paths, approval, live_auth, soak_auth, provider = prepare_soak_fixture(tmp_path)
+    payload = read_yaml(soak_auth)
+    payload["execution"]["provider_concurrency"] = 2
+    write_yaml(soak_auth, payload)
+
+    result = run_soak_fixture(
+        paths,
+        approval,
+        live_auth,
+        soak_auth,
+        tmp_path / "soak",
+        provider,
+        execute=True,
+        allow_network=True,
+        resource_sampler=good_soak_sample,
+    )
+    manifest = read_yaml(result.manifest_path)
+    blocker_types = {row["blocker_type"] for row in manifest["contract_blockers"]}
+
+    assert result.status == "blocked"
+    assert result.provider_call_count == 0
+    assert "ollama_soak_parallel_or_stop_policy_invalid" in blocker_types
+    assert provider.calls == []
+
+
+def test_ollama_soak_cli_has_no_parallelism_or_resource_bypass_flags() -> None:
+    args = build_parser().parse_args(
+        [
+            "analytics-ollama-soak",
+            "--dataset-manifest",
+            "manifest.yml",
+            "--database",
+            "dataset.duckdb",
+            "--semantic-state",
+            "semantic.yml",
+            "--relationships",
+            "relationships.yml",
+            "--pack",
+            "pack.yml",
+            "--approval",
+            "approval.yml",
+            "--live-authorization",
+            "live.yml",
+            "--soak-authorization",
+            "soak.yml",
+            "--output",
+            "evidence",
+            "--execute",
+            "--allow-network",
+        ]
+    )
+
+    assert args.command == "analytics-ollama-soak"
+    assert args.execute is True
+    assert args.allow_network is True
+    for name in (
+        "provider_concurrency",
+        "duration_seconds",
+        "max_gpu_temperature_c",
+        "min_available_system_memory_mb",
+        "replace_existing",
+    ):
         assert not hasattr(args, name)

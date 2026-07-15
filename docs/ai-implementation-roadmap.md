@@ -54,11 +54,13 @@ Stage 5A produced 13 exact plans, the project owner approved bounded local read-
 only collection, and sequential Stage 5B produced the typed candidate pack. The
 owner then approved all four answer decisions for every case. Immutable approval
 and package validation passed with zero blockers, and the recorded offline
-  evaluator passed 13/13. A separately authorized loopback evaluation contract
-  then ran all 13 cases through `gpt-oss:20b`; 9/13 passed end to end and four
-  mismatches were blocked before query execution. Because general prompt and
-  alias behavior were refined against Northwind, this pack is now development
-  evidence rather than a holdout.
+evaluator passed 13/13. A separately authorized loopback evaluation contract
+then ran all 13 cases through `gpt-oss:20b`; 9/13 passed end to end and four
+mismatches were blocked before query execution. Because general prompt and
+alias behavior were refined against Northwind, this pack is now development
+evidence rather than a holdout. A separate bounded soak contract can repeat
+that development comparison for local stability/resource measurement without
+turning repetition into holdout or provider-selection evidence.
 
 ## Target Architecture
 

@@ -26,6 +26,7 @@ from .analytics_nl_translation import (
     RecordedSemanticIntentProvider,
     run_analytics_nl_translation,
 )
+from .analytics_ollama_soak import run_analytics_ollama_soak
 from .ollama_provider import (
     DEFAULT_CONTEXT_TOKENS,
     DEFAULT_MAX_OUTPUT_TOKENS,
@@ -606,6 +607,39 @@ def build_parser() -> argparse.ArgumentParser:
         "--allow-network",
         action="store_true",
         help="Authorize loopback HTTP for this live execution; invalid in dry-run mode.",
+    )
+
+    analytics_ollama_soak = subparsers.add_parser(
+        "analytics-ollama-soak",
+        help="Preflight or run a separately authorized bounded local Ollama overnight soak.",
+    )
+    analytics_ollama_soak.add_argument("--dataset-manifest", type=Path, required=True)
+    analytics_ollama_soak.add_argument("--database", type=Path, required=True)
+    analytics_ollama_soak.add_argument("--semantic-state", type=Path, required=True)
+    analytics_ollama_soak.add_argument("--relationships", type=Path, required=True)
+    analytics_ollama_soak.add_argument("--pack", type=Path, required=True)
+    analytics_ollama_soak.add_argument("--approval", type=Path, required=True)
+    analytics_ollama_soak.add_argument("--live-authorization", type=Path, required=True)
+    analytics_ollama_soak.add_argument("--soak-authorization", type=Path, required=True)
+    analytics_ollama_soak.add_argument("--endpoint", default=DEFAULT_OLLAMA_ENDPOINT)
+    analytics_ollama_soak.add_argument("--model", default=DEFAULT_OLLAMA_MODEL)
+    analytics_ollama_soak.add_argument(
+        "--context-tokens", type=int, default=DEFAULT_CONTEXT_TOKENS
+    )
+    analytics_ollama_soak.add_argument(
+        "--max-output-tokens", type=int, default=DEFAULT_MAX_OUTPUT_TOKENS
+    )
+    analytics_ollama_soak.add_argument("--timeout-seconds", type=int, default=120)
+    analytics_ollama_soak.add_argument("--output", type=Path, required=True)
+    analytics_ollama_soak.add_argument(
+        "--execute",
+        action="store_true",
+        help="Run the authorized bounded soak after successful offline preflight.",
+    )
+    analytics_ollama_soak.add_argument(
+        "--allow-network",
+        action="store_true",
+        help="Authorize literal-loopback Ollama HTTP for this invocation only.",
     )
 
     benchmark_convert_sql = subparsers.add_parser(
@@ -1543,6 +1577,39 @@ def main() -> None:
         print(f"Outputs changed: {result.outputs_changed}")
         print(f"Manifest: {result.manifest_path}")
         print("Loopback Ollama and approved local read-only DuckDB only; no external provider or upload.")
+        return
+
+    if args.command == "analytics-ollama-soak":
+        provider = OllamaSemanticIntentProvider(
+            endpoint=args.endpoint,
+            model=args.model,
+            context_tokens=args.context_tokens,
+            max_output_tokens=args.max_output_tokens,
+        )
+        result = run_analytics_ollama_soak(
+            args.dataset_manifest,
+            args.database,
+            args.semantic_state,
+            args.relationships,
+            args.pack,
+            args.approval,
+            args.live_authorization,
+            args.soak_authorization,
+            args.output,
+            provider,
+            timeout_seconds=args.timeout_seconds,
+            execute=args.execute,
+            allow_network=args.allow_network,
+        )
+        print("Local Ollama overnight soak complete")
+        print(f"Status: {result.status}")
+        print(f"Mode: {result.mode}")
+        print(f"Cycles: {result.cycle_count}")
+        print(f"Provider calls: {result.provider_call_count}")
+        print(f"Contract blockers: {result.blocker_count}")
+        print(f"Stop reason: {result.stop_reason or 'none'}")
+        print(f"Manifest: {result.manifest_path}")
+        print("Runtime is local Ollama plus read-only DuckDB; model-call concurrency is fixed at one.")
         return
 
     if args.command == "benchmark-convert-sql":

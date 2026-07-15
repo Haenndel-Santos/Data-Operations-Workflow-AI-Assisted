@@ -158,6 +158,14 @@ they are not a holdout; a fresh reviewed pack is required before provider
 selection. See
 [Dataset Benchmark Live Evaluation](analytics-dataset-benchmark-live-evaluation.md).
 
+A separate local endurance harness may repeat only that exact authorized
+development comparison. It fixes provider concurrency at one, checkpoints after
+every cycle, checks GPU temperature, GPU/RAM/disk availability and a `STOP` file
+between model cases, and stops on timeout or repeated technical errors. The
+runtime is local Python/Ollama/DuckDB and uses no Codex or hosted-model API after
+launch. Repetition is stability evidence, not holdout or provider-selection
+evidence. See [Local Ollama Overnight Soak](analytics-ollama-soak.md).
+
 The result-presentation boundary revalidates exact Stage 5B request/result
 hashes and controls, then writes a deterministic local table and bounded fact
 IDs with bounded-memory CSV streaming, without connecting to a database or

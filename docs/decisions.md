@@ -597,3 +597,34 @@ development set. Phase 5 provider selection requires thresholds fixed in
 advance and a fresh separately reviewed holdout. External providers, upload,
 training, narration, publication, concurrency, dynamic dispatch, and production
 use remain unapproved.
+
+## 2026-07-15 - Run Local Endurance Sequentially Under Resource Guards
+
+**Decision:** Permit one bounded unattended repetition of the already approved
+Northwind development comparison through local loopback Ollama and read-only
+DuckDB. Bind duration, maximum cycles, cooldown, provider concurrency, resource
+limits, technical-error threshold, and `STOP` behavior in a separate additive
+authorization. Fix model-call concurrency at one and checkpoint safe aggregate
+evidence after every cycle.
+
+**Rationale:** The installed 20B model is approximately 13 GB while the RTX 3070
+Ti has 8 GB VRAM. A canary used about 7.3 GB VRAM and split execution between
+CPU and GPU. Concurrent requests would add context/cache and system-memory
+pressure rather than provide useful parallel speedup. Sequential repetition
+still uses GPU tensor parallelism and can measure sustained quality variation,
+latency, tokens, memory, temperature, and failure behavior without a hosted API.
+
+**Alternatives:** Run two or more model requests concurrently; restart Ollama
+with experimental parallel settings; leave the process unbounded; train or
+fine-tune model parameters; use a hosted provider; run the default pytest suite
+in a loop; interpret repeated development cases as holdout evidence.
+
+**Impact:** `analytics-ollama-soak` is opt-in and standalone. Its first authority
+allows 12 hours or 96 cycles, a 45-second cooldown, maximum 78-degree GPU
+temperature, minimum 6,144 MB available RAM and 20,480 MB free disk, one
+provider call at a time, immediate timeout stop, and two consecutive technical
+errors. Resources and `STOP` are checked between model cases. The runtime uses
+no Codex or hosted-model API, but local electricity/hardware cost remains.
+Repeated Northwind results remain development stability evidence only; external
+providers, upload, training, narration, publication, dynamic dispatch, and
+production use stay unapproved.

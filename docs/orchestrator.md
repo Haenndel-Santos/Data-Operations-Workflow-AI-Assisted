@@ -111,6 +111,13 @@ cases concurrently, bypass Stage 5A/5B controls, narrate, publish, or train a
 model. A completed live comparison is evaluation evidence, not provider
 selection or production authority.
 
+The overnight Ollama soak is another explicit standalone command and is not a
+registry workflow. It may repeat only the exact authorized development pack,
+keeps model concurrency at one, and must stop on its bound duration/cycle,
+timeout, technical-error, resource, or `STOP` gate. Its checkpoints are
+stability evidence only and cannot approve a provider, holdout, training,
+production dispatch, or broader network use.
+
 `ready_for_relationship_review` is likewise not relationship authority. A
 future semantic-catalog workflow may consume only the accepted subset from a
 completed exact relationship review that revalidates as

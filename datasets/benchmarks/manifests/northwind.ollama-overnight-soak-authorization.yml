@@ -1,0 +1,45 @@
+version: 1
+status: approved_local_ollama_soak
+source:
+  dataset_manifest_sha256: a28082e46a3f142be58ae3d7078e95c91f21747835caa90f12c3e06a36a92393
+  database_sha256: 4195629326d6aa0a4f7556f6423902eb4b70c4dde11997a5e02fde133c012b76
+  approved_semantic_state_sha256: bc2daed705320ae344286cd4678645fe54844e11f8657e55c52e999e046f2d10
+  approved_relationships_sha256: b12b3f19d199c605fb9e88bfabacb8d1ca9369ba54aa91208d393f99de7efd72
+  benchmark_pack_sha256: 68d453860a0bf9841b86b4062ef1265e5876ba1724ed11dca23ce9eb70707683
+  benchmark_approval_sha256: b1ceda6e675448d3fc808d21af2a919c26de4f2016e7d68dfbb6b32b019016b0
+  live_authorization_sha256: a47ffac89f91eaa1e48a1024c5d206887e0c1a2e2269d7f1e6617d1d1e70ba81
+provider:
+  name: ollama:gpt-oss:20b
+  mode: local_live
+  endpoint: http://127.0.0.1:11434
+  model: gpt-oss:20b
+  context_tokens: 8192
+  max_output_tokens: 1024
+  timeout_seconds: 120
+  prompt_contract_version: ollama_semantic_intent_v2
+execution:
+  duration_seconds: 43200
+  max_cycles: 96
+  cooldown_seconds: 45
+  max_consecutive_cycle_errors: 2
+  provider_concurrency: 1
+  sequential_cycles: true
+  stop_file_name: STOP
+resource_limits:
+  max_gpu_temperature_c: 78
+  min_available_system_memory_mb: 6144
+  min_free_disk_mb: 20480
+decision:
+  local_loopback_overnight_soak_approved: true
+  local_read_only_benchmark_queries_approved: true
+  repeat_approved_development_pack_approved: true
+  parallel_provider_requests_approved: false
+  external_provider_approved: false
+  external_upload_approved: false
+  model_training_approved: false
+  narration_approved: false
+  publication_approved: false
+  production_use_approved: false
+authorized_by: project_owner
+authorized_at: '2026-07-15T17:07:00.2560505+02:00'
+notes: The project owner explicitly authorized a bounded unattended local overnight GPU and memory soak using only the already approved Northwind development pack, loopback Ollama, sequential model calls, read-only DuckDB, resource stop gates, and no Codex or hosted-model runtime.

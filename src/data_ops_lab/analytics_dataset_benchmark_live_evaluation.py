@@ -986,6 +986,7 @@ def run_analytics_dataset_benchmark_live_evaluation(
     execute: bool = False,
     allow_network: bool = False,
     resource_sampler: Callable[[], dict[str, Any]] | None = None,
+    case_guard: Callable[[], str | None] | None = None,
 ) -> AnalyticsDatasetBenchmarkLiveEvaluationResult:
     blockers: list[dict[str, str]] = []
     rows: list[dict[str, Any]] = []
@@ -1062,10 +1063,23 @@ def run_analytics_dataset_benchmark_live_evaluation(
         if execute and not blockers:
             cases = pack["cases"]
             timed_out = False
+            case_guard_stopped = False
             for index, case in enumerate(cases):
                 if timed_out:
                     rows.append(_empty_case_row(case, "skipped_after_provider_timeout"))
                     continue
+                if case_guard_stopped:
+                    rows.append(_empty_case_row(case, "skipped_after_case_guard"))
+                    continue
+                if case_guard is not None:
+                    try:
+                        guard_reason = case_guard()
+                    except Exception:
+                        guard_reason = "case_guard_failure"
+                    if guard_reason:
+                        case_guard_stopped = True
+                        rows.append(_empty_case_row(case, "skipped_after_case_guard"))
+                        continue
                 if not _hashes_match(source, paths):
                     add_blocker(
                         blockers,

@@ -293,6 +293,26 @@ queries, can consume several minutes and most of an 8 GB GPU, and writes only
 sanitized evidence. It does not authorize an external endpoint, upload,
 training, narration, publication, or reuse of a changed authorization.
 
+## Local Ollama Overnight Soak
+
+The soak tests use the same temporary synthetic benchmark package and injected
+fake live provider. They run no local or hosted model. They cover offline
+preflight, two sequential full-pipeline cycles, safe aggregate/case-stability
+evidence, per-case resource guards, `STOP` during cooldown, authority drift,
+concurrency refusal, content privacy, and a CLI without duration, resource, or
+parallelism bypass flags:
+
+```powershell
+$env:PYTHONPATH = "src"
+$env:PYTHONDONTWRITEBYTECODE = "1"
+.\.venv\Scripts\python.exe -m pytest -p no:cacheprovider tests\analytics_dataset_benchmark_test.py
+```
+
+The real soak is never part of pytest or the default suite. Run its dry-run
+first, then start the explicit CLI in a separate process only with the exact
+versioned soak authorization. The local process uses no Codex/hosted-model API,
+but it consumes electricity and sustained local CPU/GPU resources.
+
 ## Benchmark Conversion Validation
 
 Use the restricted converter only for a locally approved SQL sample whose
