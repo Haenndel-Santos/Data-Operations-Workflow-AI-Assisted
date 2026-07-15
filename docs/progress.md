@@ -6,11 +6,11 @@ Turn local operational spreadsheets into validated analytical datasets and an ap
 
 ## Current Stage
 
-Three active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases 0-1 passed their gates; and Phase 2 Northwind onboarding is `ready_for_relationship_review` after exact provenance/license, independent conversion, schema/key/relationship integrity, and local-use validation. Stage 5A-5F governed analytics still lacks a real approved semantic catalog and expected-answer pack, live provider, dynamic dispatch, or user interface.
+Three active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases 0-2 passed their gates for the first Northwind reference dataset; and Phase 3 may now prepare a Northwind semantic catalog for separate human review. Stage 5A-5F governed analytics still lacks an applied real semantic catalog and expected-answer pack, live provider, dynamic dispatch, or user interface.
 
 ## Last Completed Milestone
 
-On 2026-07-15, Phase 2 selected Northwind and added a fail-closed reference-dataset validator. Both local scripts were byte-matched to Microsoft's official `sql-server-samples` copies and the MIT license was fixed to immutable Git commits. An independent restricted conversion reproduced all 13 Parquets, schema/counts, relationship candidates, and report. Read-only profiling validated 13/13 source-declared primary keys and 13/13 FK candidates with zero orphans; 11 have positive source-row coverage and two empty-table candidates remain evidence-limited. Local profiling, benchmark design, and offline evaluation are approved, while all 13 relationship decisions remain pending and upload/publication/training remain not authorized.
+On 2026-07-15, the project owner accepted all 13 exact Northwind relationships after reviewing their meanings and local data location, explicitly including the two empty-table bridges and the immediate-manager hierarchy. The separate versioned review binds the exact reference/candidate hashes and revalidated as `ready_for_semantic_modeling` with zero blockers. A generated 13-relationship registry is derived only from that completed review; rejected decisions would remain excluded. Upload, publication, and model-parameter training remain not authorized.
 
 ## Current Capabilities
 
@@ -82,13 +82,16 @@ On 2026-07-15, Phase 2 selected Northwind and added a fail-closed reference-data
 - Require a completed review to bind the exact reference-manifest and candidate
   hashes and accept or reject every relationship with reviewer/time/notes before
   reporting `ready_for_semantic_modeling`.
+- Project accepted relationship decisions into a hash-bound local approved
+  registry only after completed-review validation; pending or rejected
+  decisions never enter the approved list.
 - Restore and integrity-check the official AdventureWorks 2025 backup in an isolated local read-only SQL Server database.
 
 ## Test Status
 
-- Automated suite: 180 tests passed offline on 2026-07-15; latest run completed in 27.66 seconds.
+- Automated suite: 181 tests passed offline on 2026-07-15; latest run completed in 36.19 seconds.
 - All 12 project-local skills passed the official skill validator on 2026-07-13.
-- Internal link check: 69 checked, 0 broken on 2026-07-15.
+- Internal link check: 70 checked, 0 broken on 2026-07-15.
 - Main suite is offline and uses temporary directories for generated test artifacts.
 - Documentation link checker is available at `scripts/check_internal_links.py`.
 - The relocated `.venv` has a stale editable-install path; use the `PYTHONPATH=src` command in `docs/testing.md` until environment repair is explicitly approved.
@@ -103,11 +106,11 @@ On 2026-07-15, Phase 2 selected Northwind and added a fail-closed reference-data
 - Conflicted line extracts must not be promoted to approved relationships.
 - The recorded analytics session now has a validated static registry and narrow checkpoints/resume semantics, but registry-driven dispatch and generic partial-run/dry-run infrastructure remain deliberately absent.
 - Cleaning is now the highest-memory measured synthetic stage and still loads a full Parquet table into Pandas before writing Parquet and CSV; any bounded-batch refactor must preserve type-detection and exact output contracts.
-- No concrete semantic catalog has completed human review or been applied; Stage 5D therefore remains operationally blocked for real datasets.
+- No concrete Northwind semantic catalog has completed human review or been applied; Stage 5D therefore remains operationally blocked for this real dataset despite its approved physical relationships.
 - A live model provider, approved real benchmark pack, real dataset-backed evaluation, and user interface are not implemented or authorized. Recorded narration proves grounding controls only; synthetic Stage 5D/5E packs and temporary dataset-backed tests are not live-model or business-quality evidence.
 - Stage 5B plan-to-execution drift still uses size and nanosecond modification time in ordinary queries. The dataset-backed evaluator additionally rechecks the complete database SHA-256 and every other authority hash before each Stage 5B call and after evaluation.
 - Exact download provenance and licensing remain unconfirmed for Pubs and Contoso. Northwind provenance and MIT licensing are verified, but its technical relationship evidence is not promotion authority.
-- Northwind's two `customer_customer_demo` relationships have source declarations and zero technical violations but no positive row coverage because the relevant candidate tables are empty; the human review must consider that limitation explicitly.
+- Northwind's two `customer_customer_demo` relationships were explicitly accepted as official structural relationships without positive row coverage; semantic modeling must retain that limitation instead of presenting them as row-validated.
 - AdventureWorks now has a compatible local restore runtime, but the SQL Server-to-DuckDB/Parquet export is not implemented; the Contoso recipe references external data and was not executed.
 - A second SQL Server 2025 Evaluation instance (`DATAOPSLAB`) remains installed but stopped; project work should use the default Developer instance only when an explicitly authorized restore/export task requires it.
 
@@ -118,12 +121,12 @@ On 2026-07-15, Phase 2 selected Northwind and added a fail-closed reference-data
 - No explicit apply contract or approved versioned representation exists yet for the candidate canonical Product snapshot.
 - EDS cross-table analytics remain blocked because `approved_relationships.yml` is intentionally empty.
 - No applied `config/analytics/approved_semantic_catalog.yml` exists for a real authorized dataset.
-- Northwind is technically `ready_for_relationship_review`; all 13 exact candidates remain pending accept/reject decisions. Pubs remains pending provenance, license, schema, relationship, and benchmark-use review.
+- Northwind is `ready_for_semantic_modeling` with 13 accepted exact relationships. Pubs remains pending provenance, license, schema, relationship, and benchmark-use review.
 - AdventureWorks is restored and validated but remains pending reproducible export, schema review, relationship approval, and benchmark-use approval.
 
 ## Next Logical Milestone
 
-Complete the exact Northwind relationship review generated at `outputs/benchmarks/northwind-phase2-validation/relationship_review.yml`. Every one of the 13 candidates must be accepted or rejected with reviewer, ISO-8601 time, and notes; the two empty-table candidates need explicit consideration. Revalidate the completed file into a new output directory. Only `ready_for_semantic_modeling` may begin the Phase 3 Northwind semantic catalog; it still does not authorize a dataset-backed expected-answer pack, live provider, upload, publication, or model training.
+Begin Phase 3 by preparing a bounded Northwind semantic catalog candidate over the approved physical relationships. Define table meanings/grains, dimensions, measures, synonyms, approved paths, ambiguities, currency/quantity/date semantics, and fanout caveats, then generate the existing separate semantic human review. Do not apply semantic state, create expected-answer authority, use a live provider, upload, publish, or train a model from candidate definitions.
 
 ## Last Verified Commit
 

@@ -25,7 +25,9 @@ It cannot dispatch or execute a module.
 `reference-dataset-validate` remains a separate explicit Phase 2 entrypoint. It
 orders provenance/license/use preflight before any read-only DuckDB profiling
 and stops at `ready_for_relationship_review` without an exact completed human
-review. It is not yet part of the declarative analytics-session registry.
+review. With a completed review it may report `ready_for_semantic_modeling` and
+derive an approved-relationship registry containing accepted decisions only.
+It is not yet part of the declarative analytics-session registry.
 
 ## Responsibility
 

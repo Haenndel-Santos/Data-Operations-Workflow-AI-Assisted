@@ -92,6 +92,14 @@ counts only. A completed review must:
 Completing a review requires a new validation output directory. Existing
 evidence is immutable and divergent content is never overwritten.
 
+Version 2 also writes `approved_relationships.yml`. Before a completed review,
+that registry is `pending_review` and contains no approved relationships. After
+an exact completed review passes, it contains only accepted relationships plus
+the reference-manifest, candidate, and completed-review hashes. It is a
+reproducible projection for semantic/query modules; the completed review remains
+the human authority. Rejected relationships remain identified separately and
+are never copied into the approved list.
+
 ## Command
 
 Prepare technical evidence and a pending relationship review:
@@ -116,8 +124,8 @@ authority into a new directory:
 
 ## Northwind Evidence
 
-The 2026-07-15 local run produced `ready_for_relationship_review` with zero
-blockers:
+The initial 2026-07-15 local run produced `ready_for_relationship_review` with
+zero blockers:
 
 - 13 tables and 3,308 rows matched the current and reproduced conversions;
 - all 13 Parquet artifacts were byte-identical across independent conversion;
@@ -128,7 +136,9 @@ blockers:
 - the two `customer_customer_demo` relationships had no positive row coverage
   because both involved candidate source/target tables contain zero rows.
 
-The project owner explicitly approved local conversion, profiling, benchmark
-design, and offline evaluation. The 13 relationship decisions remain pending;
-external upload, publication, and model-parameter training remain not
-authorized.
+The project owner subsequently accepted all 13 exact relationships, explicitly
+including the two empty-table bridges and the `employees.reports_to` immediate-
+manager hierarchy. The completed versioned review revalidated as
+`ready_for_semantic_modeling` with zero blockers and generated an approved
+13-relationship local registry. External upload, publication, and model-
+parameter training remain not authorized.

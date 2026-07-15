@@ -1304,6 +1304,7 @@ def main() -> None:
         print(f"Outputs changed: {result.outputs_changed}")
         print(f"Manifest: {result.manifest_path}")
         print(f"Relationship review: {result.review_path}")
+        print(f"Approved relationships: {result.approved_relationships_path}")
         print("DuckDB profiling was read-only; relationship decisions were not automated.")
         return
 

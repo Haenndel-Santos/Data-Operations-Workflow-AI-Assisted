@@ -43,9 +43,13 @@ datasets:
       derived_export_status: pending
       external_connection_used: false
   - id: northwind
-    status: ready_for_relationship_review
+    status: ready_for_semantic_modeling
     intended_role: small_commercial_oltp_reference
     reference_manifest: datasets/benchmarks/manifests/northwind.reference.yml
+    relationship_review: datasets/benchmarks/manifests/northwind.relationship-review.yml
+    relationship_review_sha256: b3131c460bcef79903324fafd07c4083c8018259cdc221847568d33862872f16
+    approved_relationship_registry: outputs/benchmarks/northwind-phase2-reviewed/approved_relationships.yml
+    approved_relationship_registry_sha256: b12b3f19d199c605fb9e88bfabacb8d1ca9369ba54aa91208d393f99de7efd72
     provenance: verified_exact_official_microsoft_copy
     authoritative_source: https://github.com/microsoft/sql-server-samples/blob/2f85f3724ee45776a5183ed34d064488a6e1dc53/samples/databases/northwind-pubs/instnwnd.sql
     license: MIT
@@ -71,7 +75,9 @@ datasets:
       relationships_technically_valid: 13
       relationships_with_positive_row_coverage: 11
       independent_reproduction: passed
-      relationship_review: pending
+      relationship_review: completed
+      relationships_accepted: 13
+      relationships_rejected: 0
       formats:
         - duckdb
         - parquet_zstd

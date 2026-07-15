@@ -206,9 +206,11 @@ AdventureWorks 2025, and a Contoso warehouse load recipe. Northwind and Pubs
 have reproducible DuckDB/Parquet conversions. Northwind is now byte-matched to
 Microsoft's official source, MIT-license verified, independently reproduced,
 and read-only validated across 13 declared PKs and 13 FK candidates. Its local
-benchmark scope is approved, but all exact relationship decisions remain
-`pending_review`. Pubs still requires exact source/license and relationship
-review. AdventureWorks exactly matches Microsoft's official MIT-licensed
+benchmark scope is approved, and a completed exact human review accepted all 13
+physical relationships, producing `ready_for_semantic_modeling`. Northwind
+semantics and expected answers remain separately unapproved. Pubs still
+requires exact source/license and relationship review. AdventureWorks exactly
+matches Microsoft's official MIT-licensed
 2025 backup and is restored in a local SQL Server 2025 Developer instance as a
 read-only database. Restore verification and `DBCC CHECKDB` passed; a
 reproducible DuckDB/Parquet export and relationship review remain pending.

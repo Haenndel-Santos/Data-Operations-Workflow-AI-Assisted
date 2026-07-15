@@ -435,6 +435,7 @@ artifact, reproduction, scope, schema, key, relationship, and exact-review
 drift. It opens DuckDB only read-only after preflight, emits immutable technical
 evidence and a pending review, and reports `ready_for_semantic_modeling` only
 after every exact candidate is accepted or rejected by a completed review.
-Northwind is now `ready_for_relationship_review`; no relationship was promoted,
-and external upload, publication, and model-parameter training remain not
-authorized.
+Northwind has now reached `ready_for_semantic_modeling` after the project owner
+accepted all 13 exact candidates. Version 2 derives an approved registry from
+that completed review while keeping the review as authority; external upload,
+publication, and model-parameter training remain not authorized.

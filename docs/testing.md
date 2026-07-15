@@ -240,7 +240,9 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 The default test suite uses no public dataset, network, external database,
 credential, upload, publication, or model training. The real command is an
 authorized local Phase 2 validation: it opens only the hash-bound Northwind
-DuckDB in read-only mode and does not approve its pending relationships.
+DuckDB in read-only mode and does not approve its pending relationships. A
+completed-review test also verifies that only accepted decisions enter the
+derived registry and that rejected decisions remain explicitly excluded.
 
 ## Deterministic Result Presentation And Narration
 

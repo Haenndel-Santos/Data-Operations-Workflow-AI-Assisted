@@ -1,0 +1,281 @@
+version: 1
+dataset: northwind
+status: completed
+source_manifest_sha256: c9107a35ae24d7065f53af8e1de264cbf3d2ad5c234f9c8d32cdcfb806b50592
+relationship_candidates_sha256: 11b0f289218e951db0fcf2e81e7fbe98c6a4d4b144654bc8078c7d1c5968eb2b
+scope:
+  local_offline_relationship_use: approved
+  external_upload: not_authorized
+  model_parameter_training: not_authorized
+  publication: not_authorized
+approval_context:
+  authority: project_owner
+  authorization_reference: explicit_relationship_review_approval_in_project_session_2026-07-15
+  approved_at: 2026-07-15T11:36:53.6971660+02:00
+  interpretation: >-
+    The project owner approved all 13 exact relationships after reviewing their
+    meanings and local database location, including the two empty-table
+    relationships and the immediate-manager hierarchy.
+decisions:
+- id: customer_customer_demo.customer_id->customers.customer_id
+  source_table: customer_customer_demo
+  source_column: customer_id
+  target_table: customers
+  target_column: customer_id
+  evidence: source_declared_foreign_key
+  technical_validation:
+    source_rows: 0
+    nonnull_source_rows: 0
+    null_source_rows: 0
+    orphan_rows: 0
+    target_duplicate_groups: 0
+    positive_coverage: false
+    valid: true
+  decision: accepted
+  reviewer: project_owner
+  reviewed_at: 2026-07-15T11:36:53.6971660+02:00
+  notes: >-
+    Accepted as the official Northwind customer-to-demographic bridge
+    relationship. Structural evidence is authoritative for this version; the
+    empty source table provides no positive observational coverage.
+- id: customer_customer_demo.customer_type_id->customer_demographics.customer_type_id
+  source_table: customer_customer_demo
+  source_column: customer_type_id
+  target_table: customer_demographics
+  target_column: customer_type_id
+  evidence: source_declared_foreign_key
+  technical_validation:
+    source_rows: 0
+    nonnull_source_rows: 0
+    null_source_rows: 0
+    orphan_rows: 0
+    target_duplicate_groups: 0
+    positive_coverage: false
+    valid: true
+  decision: accepted
+  reviewer: project_owner
+  reviewed_at: 2026-07-15T11:36:53.6971660+02:00
+  notes: >-
+    Accepted as the official Northwind demographic-type bridge relationship.
+    Structural evidence is authoritative for this version; the empty source
+    and target tables provide no positive observational coverage.
+- id: employee_territories.employee_id->employees.employee_id
+  source_table: employee_territories
+  source_column: employee_id
+  target_table: employees
+  target_column: employee_id
+  evidence: source_declared_foreign_key
+  technical_validation:
+    source_rows: 49
+    nonnull_source_rows: 49
+    null_source_rows: 0
+    orphan_rows: 0
+    target_duplicate_groups: 0
+    positive_coverage: true
+    valid: true
+  decision: accepted
+  reviewer: project_owner
+  reviewed_at: 2026-07-15T11:36:53.6971660+02:00
+  notes: >-
+    Accepted as the employee assignment side of the employee-territory bridge;
+    all 49 populated references resolve to unique employee targets.
+- id: employee_territories.territory_id->territories.territory_id
+  source_table: employee_territories
+  source_column: territory_id
+  target_table: territories
+  target_column: territory_id
+  evidence: source_declared_foreign_key
+  technical_validation:
+    source_rows: 49
+    nonnull_source_rows: 49
+    null_source_rows: 0
+    orphan_rows: 0
+    target_duplicate_groups: 0
+    positive_coverage: true
+    valid: true
+  decision: accepted
+  reviewer: project_owner
+  reviewed_at: 2026-07-15T11:36:53.6971660+02:00
+  notes: >-
+    Accepted as the territory assignment side of the employee-territory bridge;
+    all 49 populated references resolve to unique territory targets.
+- id: employees.reports_to->employees.employee_id
+  source_table: employees
+  source_column: reports_to
+  target_table: employees
+  target_column: employee_id
+  evidence: source_declared_foreign_key
+  technical_validation:
+    source_rows: 9
+    nonnull_source_rows: 8
+    null_source_rows: 1
+    orphan_rows: 0
+    target_duplicate_groups: 0
+    positive_coverage: true
+    valid: true
+  decision: accepted
+  reviewer: project_owner
+  reviewed_at: 2026-07-15T11:36:53.6971660+02:00
+  notes: >-
+    Accepted as the immediate-manager hierarchy. Eight employees reference a
+    valid manager and the single null is the expected hierarchy root.
+- id: order_details.order_id->orders.order_id
+  source_table: order_details
+  source_column: order_id
+  target_table: orders
+  target_column: order_id
+  evidence: source_declared_foreign_key
+  technical_validation:
+    source_rows: 2155
+    nonnull_source_rows: 2155
+    null_source_rows: 0
+    orphan_rows: 0
+    target_duplicate_groups: 0
+    positive_coverage: true
+    valid: true
+  decision: accepted
+  reviewer: project_owner
+  reviewed_at: 2026-07-15T11:36:53.6971660+02:00
+  notes: >-
+    Accepted as the order-line to order-header relationship; all 2,155 line
+    references resolve and parent-to-line joins may fan out by design.
+- id: order_details.product_id->products.product_id
+  source_table: order_details
+  source_column: product_id
+  target_table: products
+  target_column: product_id
+  evidence: source_declared_foreign_key
+  technical_validation:
+    source_rows: 2155
+    nonnull_source_rows: 2155
+    null_source_rows: 0
+    orphan_rows: 0
+    target_duplicate_groups: 0
+    positive_coverage: true
+    valid: true
+  decision: accepted
+  reviewer: project_owner
+  reviewed_at: 2026-07-15T11:36:53.6971660+02:00
+  notes: >-
+    Accepted as the order-line product relationship; all 2,155 populated
+    references resolve to unique product targets.
+- id: orders.customer_id->customers.customer_id
+  source_table: orders
+  source_column: customer_id
+  target_table: customers
+  target_column: customer_id
+  evidence: source_declared_foreign_key
+  technical_validation:
+    source_rows: 830
+    nonnull_source_rows: 830
+    null_source_rows: 0
+    orphan_rows: 0
+    target_duplicate_groups: 0
+    positive_coverage: true
+    valid: true
+  decision: accepted
+  reviewer: project_owner
+  reviewed_at: 2026-07-15T11:36:53.6971660+02:00
+  notes: >-
+    Accepted as the ordering-customer relationship; all 830 populated order
+    references resolve to unique customer targets.
+- id: orders.employee_id->employees.employee_id
+  source_table: orders
+  source_column: employee_id
+  target_table: employees
+  target_column: employee_id
+  evidence: source_declared_foreign_key
+  technical_validation:
+    source_rows: 830
+    nonnull_source_rows: 830
+    null_source_rows: 0
+    orphan_rows: 0
+    target_duplicate_groups: 0
+    positive_coverage: true
+    valid: true
+  decision: accepted
+  reviewer: project_owner
+  reviewed_at: 2026-07-15T11:36:53.6971660+02:00
+  notes: >-
+    Accepted as the employee responsible for an order; all 830 populated
+    references resolve to unique employee targets.
+- id: orders.ship_via->shippers.shipper_id
+  source_table: orders
+  source_column: ship_via
+  target_table: shippers
+  target_column: shipper_id
+  evidence: source_declared_foreign_key
+  technical_validation:
+    source_rows: 830
+    nonnull_source_rows: 830
+    null_source_rows: 0
+    orphan_rows: 0
+    target_duplicate_groups: 0
+    positive_coverage: true
+    valid: true
+  decision: accepted
+  reviewer: project_owner
+  reviewed_at: 2026-07-15T11:36:53.6971660+02:00
+  notes: >-
+    Accepted as the order carrier relationship; all 830 populated ship-via
+    references resolve to unique shipper targets.
+- id: products.category_id->categories.category_id
+  source_table: products
+  source_column: category_id
+  target_table: categories
+  target_column: category_id
+  evidence: source_declared_foreign_key
+  technical_validation:
+    source_rows: 77
+    nonnull_source_rows: 77
+    null_source_rows: 0
+    orphan_rows: 0
+    target_duplicate_groups: 0
+    positive_coverage: true
+    valid: true
+  decision: accepted
+  reviewer: project_owner
+  reviewed_at: 2026-07-15T11:36:53.6971660+02:00
+  notes: >-
+    Accepted as product classification by category; all 77 populated references
+    resolve to unique category targets.
+- id: products.supplier_id->suppliers.supplier_id
+  source_table: products
+  source_column: supplier_id
+  target_table: suppliers
+  target_column: supplier_id
+  evidence: source_declared_foreign_key
+  technical_validation:
+    source_rows: 77
+    nonnull_source_rows: 77
+    null_source_rows: 0
+    orphan_rows: 0
+    target_duplicate_groups: 0
+    positive_coverage: true
+    valid: true
+  decision: accepted
+  reviewer: project_owner
+  reviewed_at: 2026-07-15T11:36:53.6971660+02:00
+  notes: >-
+    Accepted as product sourcing by supplier; all 77 populated references
+    resolve to unique supplier targets.
+- id: territories.region_id->region.region_id
+  source_table: territories
+  source_column: region_id
+  target_table: region
+  target_column: region_id
+  evidence: source_declared_foreign_key
+  technical_validation:
+    source_rows: 53
+    nonnull_source_rows: 53
+    null_source_rows: 0
+    orphan_rows: 0
+    target_duplicate_groups: 0
+    positive_coverage: true
+    valid: true
+  decision: accepted
+  reviewer: project_owner
+  reviewed_at: 2026-07-15T11:36:53.6971660+02:00
+  notes: >-
+    Accepted as territory membership in a region; all 53 populated references
+    resolve to unique region targets.

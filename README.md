@@ -297,6 +297,12 @@ $env:PYTHONPATH = "src"
 
 This command profiles only the bound local DuckDB in read-only mode. It emits a
 pending relationship review and does not approve relationships automatically.
+After the separate versioned review is completed, the exact approved projection
+is reproduced with:
+
+```powershell
+.\.venv\Scripts\python.exe -m data_ops_lab reference-dataset-validate --manifest "datasets\benchmarks\manifests\northwind.reference.yml" --review "datasets\benchmarks\manifests\northwind.relationship-review.yml" --output "outputs\benchmarks\northwind-phase2-reviewed"
+```
 
 To generate the conceptual main database schema overview:
 

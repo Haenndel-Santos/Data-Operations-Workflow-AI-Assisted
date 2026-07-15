@@ -1440,3 +1440,70 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 - Do not start the Northwind semantic catalog, expected-answer pack, real
   dataset-backed evaluator, live provider, upload, publication, or model
   training before their exact downstream gates are satisfied.
+
+## 2026-07-15 - Codex - Northwind relationship approval and Phase 2 exit
+
+### Initial Context
+
+- Branch: `main` at `2bc3eb4`; worktree clean and three local commits ahead of
+  `origin/main`.
+- The project owner approved the exact Northwind relationship review after
+  receiving the database location, semantic interpretation, coverage, orphan,
+  hierarchy, bridge-table, and fanout caveats.
+- The approval was interpreted as acceptance of all 13 candidates, explicitly
+  including both empty-table bridges and `employees.reports_to` as the immediate
+  manager hierarchy.
+
+### Work Performed
+
+- Preserved the generated pending template under `outputs/` unchanged.
+- Added the separate versioned completed review at
+  `datasets/benchmarks/manifests/northwind.relationship-review.yml`, bound to
+  reference-manifest SHA-256
+  `c9107a35ae24d7065f53af8e1de264cbf3d2ad5c234f9c8d32cdcfb806b50592`
+  and candidate SHA-256
+  `11b0f289218e951db0fcf2e81e7fbe98c6a4d4b144654bc8078c7d1c5968eb2b`.
+- Recorded one accepted decision, reviewer, ISO-8601 time, and evidence-specific
+  notes for every exact relationship. The two empty-table decisions state that
+  their authority is structural and lacks positive row coverage.
+- Extended reference validation version 2 to generate
+  `approved_relationships.yml` only from a valid completed review. Pending and
+  rejected decisions cannot enter the approved list; rejected IDs remain
+  separate.
+- Revalidated into `outputs/benchmarks/northwind-phase2-reviewed/` and obtained
+  `ready_for_semantic_modeling`, zero blockers, 13 accepted relationships, and
+  zero rejected relationships.
+- Updated dataset inventory, roadmap, backend, architecture, project state,
+  testing, README, changelog, and the reference-dataset contract.
+
+### Validation
+
+- Focused reference validation tests: 8 passed in 3.61 seconds.
+- Full offline suite: 181 passed in 36.19 seconds.
+- Repeated real validation: `Outputs changed: False`.
+- Completed review SHA-256:
+  `b3131c460bcef79903324fafd07c4083c8018259cdc221847568d33862872f16`.
+- Generated approved registry SHA-256:
+  `b12b3f19d199c605fb9e88bfabacb8d1ca9369ba54aa91208d393f99de7efd72`.
+- Source SQL, raw/derived dataset content, global EDS approvals, external
+  systems, provider, upload, publication, and training state were not changed.
+
+### State For Next Agent
+
+- AI roadmap Phase 2 passed its exit gate for Northwind.
+- The versioned completed review is the human authority; the ignored approved
+  registry is a reproducible adapter for semantic/query modules.
+- Northwind physical relationships are ready for Phase 3, but no semantic
+  definition has yet been reviewed or applied.
+
+### Next Logical Step
+
+- Prepare a bounded Northwind semantic catalog candidate using only the approved
+  relationship projection, validate it with the existing Stage 5C compiler, and
+  generate the separate pending semantic review.
+
+### Do Not Do Yet
+
+- Do not treat physical relationship approval as semantic-definition,
+  expected-answer, provider, upload, publication, or training authority.
+- Do not apply semantic state before the separate exact human semantic review.

@@ -32,4 +32,5 @@ All notable user-facing and release-relevant changes will be documented here.
 - Governed local benchmark storage plus restricted T-SQL conversion to DuckDB and Zstandard-compressed Parquet for Northwind and Pubs.
 - Reference-dataset validation with fixed provenance/license evidence,
   independent conversion equivalence, read-only PK/FK profiling, explicit use
-  scopes, and a separate exact human relationship-review gate.
+  scopes, a separate exact human relationship-review gate, and a hash-bound
+  approved-relationship projection containing accepted decisions only.

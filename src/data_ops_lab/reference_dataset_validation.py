@@ -12,9 +12,10 @@ import duckdb
 import yaml
 
 
-MODULE_VERSION = 1
+MODULE_VERSION = 2
 MANIFEST_NAME = "reference_dataset_validation.yml"
 REVIEW_NAME = "relationship_review.yml"
+APPROVED_RELATIONSHIPS_NAME = "approved_relationships.yml"
 REPORT_NAME = "reference_dataset_report.md"
 IDENTIFIER_PATTERN = re.compile(r"[a-z][a-z0-9_]{0,62}")
 SHA256_PATTERN = re.compile(r"[0-9a-f]{64}")
@@ -39,6 +40,7 @@ class ReferenceDatasetValidationResult:
     status: str
     manifest_path: Path
     review_path: Path
+    approved_relationships_path: Path
     report_path: Path
     blocker_count: int
     table_count: int
@@ -604,6 +606,56 @@ def pending_review_payload(
     }
 
 
+def approved_relationships_payload(
+    dataset: str,
+    status: str,
+    source_manifest_hash: str,
+    relationship_hash: str | None,
+    review_hash: str | None,
+    decisions: list[dict[str, Any]],
+    relationship_evidence: list[dict[str, Any]],
+) -> dict[str, Any]:
+    decisions_by_id = {row["id"]: row for row in decisions}
+    authority_complete = status == "ready_for_semantic_modeling"
+    approved = []
+    rejected = []
+    for relationship in relationship_evidence:
+        decision = decisions_by_id.get(relationship["id"], {})
+        if not authority_complete:
+            continue
+        if decision.get("decision") == "accepted":
+            approved.append(
+                {
+                    "source_table": relationship["source_table"],
+                    "source_column": relationship["source_column"],
+                    "target_table": relationship["target_table"],
+                    "target_column": relationship["target_column"],
+                }
+            )
+        elif decision.get("decision") == "rejected":
+            rejected.append(relationship["id"])
+    return {
+        "version": 1,
+        "status": "approved" if authority_complete else "pending_review",
+        "dataset": dataset,
+        "authority": {
+            "source_manifest_sha256": source_manifest_hash,
+            "relationship_candidates_sha256": relationship_hash,
+            "completed_review_sha256": review_hash if authority_complete else None,
+            "derived_from_completed_human_review": authority_complete,
+            "automatic_approval": False,
+            "scope": "local_offline_relationship_use" if authority_complete else None,
+        },
+        "approved_relationships": approved,
+        "rejected_relationship_ids": rejected,
+        "non_authorizations": [
+            "external_upload",
+            "model_parameter_training",
+            "publication",
+        ],
+    }
+
+
 def render_report(evidence: dict[str, Any]) -> str:
     relationships = evidence["relationships"]
     schema = evidence["schema"]
@@ -788,9 +840,23 @@ def run_reference_dataset_validation(
         if resolved_review and resolved_review.is_file()
         else yaml.safe_dump(review_template, sort_keys=False, allow_unicode=False)
     )
+    relationship_registry = approved_relationships_payload(
+        dataset,
+        status,
+        reference_hash,
+        relationship_hash,
+        review_hash,
+        decisions,
+        relationship_evidence,
+    )
     contents = {
         MANIFEST_NAME: yaml.safe_dump(evidence, sort_keys=False, allow_unicode=False),
         REVIEW_NAME: review_content,
+        APPROVED_RELATIONSHIPS_NAME: yaml.safe_dump(
+            relationship_registry,
+            sort_keys=False,
+            allow_unicode=False,
+        ),
         REPORT_NAME: render_report(evidence),
     }
     outputs_changed = write_outputs(output_dir.resolve(), contents)
@@ -799,6 +865,7 @@ def run_reference_dataset_validation(
         status=status,
         manifest_path=output_dir.resolve() / MANIFEST_NAME,
         review_path=output_dir.resolve() / REVIEW_NAME,
+        approved_relationships_path=output_dir.resolve() / APPROVED_RELATIONSHIPS_NAME,
         report_path=output_dir.resolve() / REPORT_NAME,
         blocker_count=len(blockers),
         table_count=len(catalog),

@@ -33,9 +33,11 @@ exact-contract schema/key DuckDB pushdown: peak process memory fell 27.23% and
 runtime fell 98.99% on the fixed 3-table workload. Phase 2 now requires explicit
 reference-dataset provenance, license, schema, relationship, and use decisions.
 Northwind has since passed provenance, MIT-license, checksum, independent
-conversion, schema/key, relationship-integrity, and local-use gates. Phase 2
-remains open because all 13 exact relationship candidates still require human
-accept/reject decisions before Northwind can enter semantic modeling.
+conversion, schema/key, relationship-integrity, local-use, and exact human
+relationship-review gates. All 13 candidates were accepted and revalidated;
+Northwind is `ready_for_semantic_modeling`. Phase 2 has passed for the first
+reference dataset, and Phase 3 may now prepare a Northwind semantic catalog for
+its own separate human review.
 
 ## Target Architecture
 

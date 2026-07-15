@@ -48,7 +48,7 @@ otherwise the command fails without overwriting them.
 
 | Dataset | Local state | Evidence | Remaining gate |
 | --- | --- | --- | --- |
-| Northwind | `ready_for_relationship_review` | Exact official Microsoft copies; MIT; independent conversion; 13/13 PKs and 13/13 FKs technically valid | Human accept/reject review for all 13 exact relationships. |
+| Northwind | `ready_for_semantic_modeling` | Exact official Microsoft copies; MIT; independent conversion; 13/13 PKs valid; 13/13 exact relationships accepted | Prepare and review the Phase 3 semantic catalog. |
 | Pubs | Converted: 11 tables, 255 rows | DuckDB, Parquet, 10 relationship candidates | Confirm source/license; assess two replacement characters; review schema/relationships. |
 | AdventureWorks 2025 | Official backup restored locally as `READ_ONLY` | Exact release hash; `RESTORE VERIFYONLY` and `DBCC CHECKDB` passed; 71 tables, 20 views, 90 declared foreign keys, 760,167 aggregate rows | Implement a reproducible read-only DuckDB/Parquet export, then review schema, relationships, and benchmark use. |
 | Contoso warehouse recipe | Raw SQL/Markdown retained | Schema/load recipe only | Confirm source/license; acquire an authorized local data package without external execution. |
@@ -78,11 +78,15 @@ keys. Eleven relationships have positive source-row coverage. The two
 table is empty.
 
 The project owner authorized local conversion, profiling, benchmark design, and
-offline evaluation on 2026-07-15. Relationship promotion is still pending one
-explicit accept/reject decision per exact candidate. External upload,
-publication, and model-parameter training remain not authorized. The exact
-versioned authority is
+offline evaluation on 2026-07-15, then accepted all 13 exact relationships with
+explicit notes for the two empty-table bridges and the employee hierarchy. The
+completed review revalidated as `ready_for_semantic_modeling`; its generated
+approved-relationship registry remains a reproducible projection rather than a
+replacement for human authority. External upload, publication, and model-
+parameter training remain not authorized. The exact versioned dataset authority is
 [`northwind.reference.yml`](../datasets/benchmarks/manifests/northwind.reference.yml),
+the relationship authority is
+[`northwind.relationship-review.yml`](../datasets/benchmarks/manifests/northwind.relationship-review.yml),
 and generated technical evidence remains under ignored `outputs/benchmarks/`.
 
 The downstream

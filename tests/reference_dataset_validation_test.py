@@ -163,6 +163,12 @@ def test_reference_dataset_validation_profiles_without_approving_relationships(
     assert review["decisions"][0]["decision"] == "pending"
     assert review["decisions"][0]["technical_validation"]["orphan_rows"] == 0
     assert review["decisions"][0]["technical_validation"]["positive_coverage"] is True
+    relationships = yaml.safe_load(
+        first.approved_relationships_path.read_text(encoding="utf-8")
+    )
+    assert relationships["status"] == "pending_review"
+    assert relationships["approved_relationships"] == []
+    assert relationships["authority"]["automatic_approval"] is False
 
 
 def test_completed_exact_review_opens_semantic_modeling_gate(tmp_path: Path) -> None:
@@ -195,6 +201,59 @@ def test_completed_exact_review_opens_semantic_modeling_gate(tmp_path: Path) -> 
     assert evidence["relationships"]["review_status"] == "completed"
     assert evidence["relationships"]["accepted"] == 1
     assert evidence["relationships"]["pending"] == 0
+    relationships = yaml.safe_load(
+        result.approved_relationships_path.read_text(encoding="utf-8")
+    )
+    assert relationships["status"] == "approved"
+    assert relationships["authority"]["completed_review_sha256"] == sha256(
+        completed_review
+    )
+    assert relationships["authority"]["automatic_approval"] is False
+    assert relationships["approved_relationships"] == [
+        {
+            "source_table": "orders",
+            "source_column": "customer_id",
+            "target_table": "customers",
+            "target_column": "customer_id",
+        }
+    ]
+
+
+def test_completed_rejection_is_preserved_outside_approved_registry(
+    tmp_path: Path,
+) -> None:
+    reference_path, _, _ = build_reference_package(tmp_path)
+    pending = run_reference_dataset_validation(reference_path, tmp_path / "pending")
+    review = yaml.safe_load(pending.review_path.read_text(encoding="utf-8"))
+    review["status"] = "completed"
+    review["scope"]["local_offline_relationship_use"] = "approved"
+    decision = review["decisions"][0]
+    decision["decision"] = "rejected"
+    decision["reviewer"] = "human_reviewer"
+    decision["reviewed_at"] = "2026-07-15T10:30:00+02:00"
+    decision["notes"] = "Rejected after reviewing the exact candidate."
+    completed_review = tmp_path / "rejected_relationship_review.yml"
+    completed_review.write_text(
+        yaml.safe_dump(review, sort_keys=False),
+        encoding="utf-8",
+    )
+
+    result = run_reference_dataset_validation(
+        reference_path,
+        tmp_path / "reviewed",
+        review_path=completed_review,
+    )
+
+    assert result.status == "ready_for_semantic_modeling"
+    assert result.approved_relationship_count == 0
+    relationships = yaml.safe_load(
+        result.approved_relationships_path.read_text(encoding="utf-8")
+    )
+    assert relationships["status"] == "approved"
+    assert relationships["approved_relationships"] == []
+    assert relationships["rejected_relationship_ids"] == [
+        "orders.customer_id->customers.customer_id"
+    ]
 
 
 def test_orphan_relationship_blocks_reference_dataset(tmp_path: Path) -> None:
