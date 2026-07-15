@@ -2032,3 +2032,107 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 - Do not invoke Ollama for the comparative pack, enable dynamic dispatch or
   concurrency, add live narration, connect external providers, upload/publish
   data, or train model parameters before their separate gates.
+
+## 2026-07-15 - Codex - Governed Northwind live Ollama development evaluation
+
+### Initial Context
+
+- Branch: `main` at `1b8d648`; worktree clean and synchronized with
+  `origin/main`.
+- The recorded Northwind answer authority and its 13/13 offline baseline were
+  already complete. The project owner then explicitly approved continuation
+  with the bounded 13-case local Ollama comparison.
+- That approval did not extend to an external provider, upload, training,
+  narration, publication, concurrency, dynamic dispatch, or production use.
+
+### Work Performed
+
+- Added `analytics-dataset-benchmark-evaluate-ollama` and its version-1 Python
+  contract with offline dry-run default, separate hash-bound live authority,
+  exact literal-loopback provider matching, double invocation opt-in,
+  sequential cases, timeout circuit breaker, immutable rehashing, ordinary
+  Stage 5A/5B controls, and sanitized evidence.
+- Added provider token/duration/request telemetry and prompt contract
+  `ollama_semantic_intent_v2`, requiring complete structured output and general
+  deterministic ordering/limit/path policies.
+- Kept v1, v2, and v3 live authorizations as additive historical authority.
+  Older files cannot silently authorize the newer prompt or alias policy.
+- Added reviewed alias-only canonicalization after all non-alias request fields
+  match. Literal and semantic metrics remain separate; tables, columns,
+  functions, relationship paths, filters/values, ordering directions, and
+  limits are never repaired.
+- Added atomic evidence publication, divergent/unknown-output protection, and
+  conservative network reporting for unexpected failures after entering the
+  provider boundary.
+- Added fake-provider offline tests and an isolated opt-in real 13-case test.
+- Created commit `8b1ecbe` (`feat(ai): add governed live benchmark
+  evaluation`).
+
+### Live Evidence
+
+- v1 strict comparison completed 13 provider calls but executed no queries; it
+  exposed missing aliases, arrays, stable tie-breaks, and default limits rather
+  than a deterministic-pipeline defect.
+- After the general prompt refinement and explicitly authorized alias-only
+  policy, v3 ran all 13 cases sequentially and passed 9/13 end to end with zero
+  contract blockers.
+- Provider acceptance: 11/13. Semantic request agreement after alias-only
+  normalization: 9/13. Literal request agreement: 2/13. Result/control
+  agreement: 9/13.
+- The four failures were two provider rejections, one filter mismatch, and one
+  scalar alias/limit mismatch. All four stopped before Stage 5A/5B query
+  execution.
+- Exact result accuracy was 8/12 and the reviewed numeric-tolerance case passed
+  1/1.
+- The 13 calls reported 80,804 prompt tokens, 1,638 completion tokens, and
+  429.073 seconds total provider wall time; median was 31.759 seconds and p95
+  was 43.220 seconds. Hosted API cost was USD 0.
+- Point-in-time resource evidence observed up to 7,461/8,192 MB GPU memory and a
+  fall in available system RAM from 18,462.6 MB before the run to a minimum of
+  8,041.5 MB after a case.
+- Authorization v3 SHA-256:
+  `a47ffac89f91eaa1e48a1024c5d206887e0c1a2e2269d7f1e6617d1d1e70ba81`.
+- v3 evaluation-manifest SHA-256:
+  `745f0a533956307be6d58056fb219e7efa489386a739a44e47b1c3c0ebc442ff`.
+- Generated preflight/live evidence remains local under
+  `outputs/benchmarks/northwind-phase5-live-evaluation-*`; `outputs/` remains
+  ignored by design.
+
+### Validation
+
+- Focused live-evaluator/provider suites: 62 passed in 10.46 seconds.
+- Full offline suite: 217 passed and 2 opt-in online tests skipped in 39.58
+  seconds.
+- Isolated loopback Ollama smoke after prompt v2: 1 passed in 37.97 seconds.
+- Internal links: 106 checked, zero broken.
+- `git diff --check`: no whitespace errors.
+- No external provider, credential, upload, publication, narration, model
+  training, migration, import, synchronization, or database write was used.
+
+### State For Next Agent
+
+- The live-evaluation contract is implemented and measured, but Phase 5 provider
+  selection is not complete. A 9/13 development result is not a production gate
+  pass.
+- Northwind influenced prompt and alias-policy refinement, so its pack is now a
+  development set rather than a holdout. Preserve its gold authority unchanged.
+- Persistent evaluator evidence intentionally contains no questions, provider
+  responses, SQL, parameters, filter values, expected rows, or actual rows.
+
+### Next Logical Step
+
+- Fix Phase 5 acceptance thresholds before new live results are visible.
+- Design, collect, independently review, and approve a fresh holdout pack whose
+  cases do not reuse the Northwind development questions.
+- Obtain a new exact live invocation authority, then compare the local provider
+  without tuning prompts or policy on that holdout.
+
+### Do Not Do Yet
+
+- Do not call the 9/13 Northwind result provider selection or production
+  readiness, and do not change approved answers to fit model output.
+- Do not reuse any prior live authorization for a changed provider, prompt,
+  case pack, timeout, or execution policy.
+- Do not enable external providers, upload, training, narration, publication,
+  concurrency, dynamic dispatch, automatic execution, or a UI before their
+  separate gates.
