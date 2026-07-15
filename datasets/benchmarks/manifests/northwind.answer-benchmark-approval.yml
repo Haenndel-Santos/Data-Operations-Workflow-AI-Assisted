@@ -1,0 +1,24 @@
+version: 1
+status: approved
+dataset_id: northwind_commerce
+pack_id: northwind_expected_answers_v1
+source:
+  dataset_manifest_sha256: a28082e46a3f142be58ae3d7078e95c91f21747835caa90f12c3e06a36a92393
+  database_sha256: 4195629326d6aa0a4f7556f6423902eb4b70c4dde11997a5e02fde133c012b76
+  approved_semantic_state_sha256: bc2daed705320ae344286cd4678645fe54844e11f8657e55c52e999e046f2d10
+  approved_relationships_sha256: b12b3f19d199c605fb9e88bfabacb8d1ca9369ba54aa91208d393f99de7efd72
+  benchmark_pack_sha256: 68d453860a0bf9841b86b4062ef1265e5876ba1724ed11dca23ce9eb70707683
+review_evidence:
+  review_sha256: deaa274d7a015071896d91788a7ca8f2d7c2f358e416f4e9b40833242493630f
+  decision_digest: 09e7dc96fb8881c29949298531a9b4eee4bc7adae5169ed5623cb16cd22c5473
+decision:
+  local_offline_evaluation_approved: true
+  recorded_provider_responses_reviewed: true
+  expected_requests_reviewed: true
+  expected_results_reviewed: true
+  comparison_policy_reviewed: true
+  live_provider_use_approved: false
+  external_upload_approved: false
+  model_training_approved: false
+approved_by: project_owner
+approved_at: '2026-07-15T15:51:37.8955777+02:00'

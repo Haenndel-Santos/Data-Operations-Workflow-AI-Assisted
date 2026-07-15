@@ -1,0 +1,106 @@
+version: 1
+status: completed_human_review
+source:
+  dataset_manifest_sha256: a28082e46a3f142be58ae3d7078e95c91f21747835caa90f12c3e06a36a92393
+  database_sha256: 4195629326d6aa0a4f7556f6423902eb4b70c4dde11997a5e02fde133c012b76
+  approved_semantic_state_sha256: bc2daed705320ae344286cd4678645fe54844e11f8657e55c52e999e046f2d10
+  approved_relationships_sha256: b12b3f19d199c605fb9e88bfabacb8d1ca9369ba54aa91208d393f99de7efd72
+  benchmark_pack_sha256: 68d453860a0bf9841b86b4062ef1265e5876ba1724ed11dca23ce9eb70707683
+identity:
+  dataset_id: northwind_commerce
+  pack_id: northwind_expected_answers_v1
+review:
+  reviewer: project_owner
+  reviewed_at: '2026-07-15T15:51:37.8955777+02:00'
+  scope_decisions:
+  - scope: local_offline_evaluation
+    decision: approved
+    notes: Owner approved execution against the immutable local Northwind dataset using recorded provider responses only.
+  - scope: live_provider_use
+    decision: not_authorized
+    notes: This review does not authorize live Ollama or any other provider invocation.
+  - scope: external_upload
+    decision: not_authorized
+    notes: This review does not authorize uploading dataset content, prompts, results, or metadata to external services.
+  - scope: model_training
+    decision: not_authorized
+    notes: This review does not authorize training, fine-tuning, or adapting any model with the dataset.
+  case_decisions:
+  - case_id: assignments_by_sales_region
+    recorded_provider_response: approved
+    expected_request: approved
+    expected_result: approved
+    comparison_policy: approved
+    notes: Approved after independent read-only recomputation confirmed the request, exact result, and comparison policy.
+  - case_id: average_discount_by_category
+    recorded_provider_response: approved
+    expected_request: approved
+    expected_result: approved
+    comparison_policy: approved
+    notes: Approved with the documented unweighted average per order line and absolute numeric tolerance of 1e-9.
+  - case_id: customers_by_country
+    recorded_provider_response: approved
+    expected_request: approved
+    expected_result: approved
+    comparison_policy: approved
+    notes: Approved with deterministic alphabetical tie-breaking at the exact top-10 cutoff, including Canada and excluding tied Italy.
+  - case_id: customers_without_region
+    recorded_provider_response: approved
+    expected_request: approved
+    expected_result: approved
+    comparison_policy: approved
+    notes: Approved after independent verification that the result counts null region values under the documented filter semantics.
+  - case_id: discontinued_product_count
+    recorded_provider_response: approved
+    expected_request: approved
+    expected_result: approved
+    comparison_policy: approved
+    notes: Approved after independent read-only recomputation confirmed the request, exact result, and comparison policy.
+  - case_id: freight_by_ship_country
+    recorded_provider_response: approved
+    expected_request: approved
+    expected_result: approved
+    comparison_policy: approved
+    notes: Approved after independent read-only recomputation confirmed the request, exact result, and comparison policy.
+  - case_id: no_orders_for_atlantis
+    recorded_provider_response: approved
+    expected_request: approved
+    expected_result: approved
+    comparison_policy: approved
+    notes: Approved after independent case-insensitive verification found no Atlantis shipping-country rows.
+  - case_id: orders_by_shipper
+    recorded_provider_response: approved
+    expected_request: approved
+    expected_result: approved
+    comparison_policy: approved
+    notes: Approved after independent read-only recomputation confirmed complete joins and the exact grouped result.
+  - case_id: orders_placed_in_1997
+    recorded_provider_response: approved
+    expected_request: approved
+    expected_result: approved
+    comparison_policy: approved
+    notes: Approved after independent verification of the documented 1997 date boundary and exact result.
+  - case_id: products_by_category
+    recorded_provider_response: approved
+    expected_request: approved
+    expected_result: approved
+    comparison_policy: approved
+    notes: Approved after independent read-only recomputation confirmed complete joins and the exact grouped result.
+  - case_id: total_order_count
+    recorded_provider_response: approved
+    expected_request: approved
+    expected_result: approved
+    comparison_policy: approved
+    notes: Approved after independent reconciliation confirmed 830 distinct, non-null order identifiers.
+  - case_id: units_by_product
+    recorded_provider_response: approved
+    expected_request: approved
+    expected_result: approved
+    comparison_policy: approved
+    notes: Approved with deterministic alphabetical tie-breaking at the exact top-10 cutoff, including Chang and excluding tied Flotemysost.
+  - case_id: units_by_supplier_country
+    recorded_provider_response: approved
+    expected_request: approved
+    expected_result: approved
+    comparison_policy: approved
+    notes: Approved using the documented current product-to-supplier country mapping and independently verified complete joins.
