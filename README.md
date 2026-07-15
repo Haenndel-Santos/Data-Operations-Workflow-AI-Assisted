@@ -212,6 +212,19 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 
 This executes only a temporary synthetic DuckDB database after exact request and plan gates. It does not use a live model or real dataset.
 
+To prepare a bounded real-dataset answer design through recorded Stage 5D and
+exact Stage 5A plans while stopping before table-row access:
+
+```powershell
+$env:PYTHONPATH = "src"
+$env:PYTHONDONTWRITEBYTECODE = "1"
+.\.venv\Scripts\python.exe -m data_ops_lab analytics-dataset-benchmark-answer-prepare --design "datasets\benchmarks\manifests\northwind.answer-benchmark-design.yml" --dataset-manifest "datasets\benchmarks\manifests\northwind.dataset-benchmark.yml" --database "datasets\benchmarks\derived\northwind\northwind.duckdb" --semantic-state "config\analytics\approved_semantic_catalog.yml" --relationships "outputs\benchmarks\northwind-phase2-reviewed\approved_relationships.yml" --output "outputs\benchmarks\northwind-phase5-answer-preparation-v1"
+```
+
+This creates one hash-bound pending review for all exact plans. It does not run
+Stage 5B, read table rows, use Ollama/network, collect expected answers, or
+approve the final benchmark pack.
+
 To validate immutable dataset-backed benchmark bindings without opening or querying the database:
 
 ```powershell
@@ -220,7 +233,9 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 .\.venv\Scripts\python.exe -m data_ops_lab analytics-dataset-benchmark-validate --dataset-manifest "<manifest.yml>" --database "<dataset.duckdb>" --semantic-state "<semantic.yml>" --relationships "<relationships.yml>" --pack "<pack.yml>" --approval "<approval.yml>" --output "outputs\<run-id>\analytics_dataset_benchmark_validation"
 ```
 
-This is a hash-bound dry-run only. Current EDS and benchmark datasets do not yet meet its approval prerequisites.
+This is a hash-bound dry-run only. Northwind has review-ready answer-collection
+plans but no collected, reviewed, or approved expected-answer pack yet; EDS also
+does not meet this contract.
 
 To prepare and validate the separate human review required by that contract:
 
@@ -430,6 +445,8 @@ DuckDB is a good fit for this project because it supports local analytical workf
 - [Analytics natural-language translation contract](docs/analytics-nl-translation.md)
 - [Analytics translation evaluation contract](docs/analytics-translation-evaluation.md)
 - [Analytics expected-answer evaluation contract](docs/analytics-answer-evaluation.md)
+- [Dataset benchmark answer preparation contract](docs/analytics-dataset-benchmark-preparation.md)
+- [Northwind expected-answer plan review](docs/northwind-answer-benchmark-review.md)
 - [Dataset-backed benchmark validation contract](docs/analytics-dataset-benchmark.md)
 - [Dataset benchmark review and approval contract](docs/analytics-dataset-benchmark-review.md)
 - [Dataset-backed offline benchmark evaluation contract](docs/analytics-dataset-benchmark-evaluation.md)

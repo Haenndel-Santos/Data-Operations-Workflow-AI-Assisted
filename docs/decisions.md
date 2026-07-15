@@ -498,3 +498,32 @@ without DuckDB access or SQL execution. Phase 4 is complete for this local
 development boundary. Phase 5 model accuracy, reviewed expected answers, live
 narration, concurrency, external providers, upload, publication, training, and
 automatic execution remain separate decisions.
+
+## 2026-07-15 - Expected-Answer Collection Requires Exact Plan Review
+
+**Decision:** Before collecting any expected result from a real benchmark,
+compile every versioned English question and recorded semantic intent through
+Stage 5D and Stage 5A, then require a separate aggregate human review bound to
+the complete preparation manifest and every exact plan SHA-256. Treat this as
+answer-collection authority only; review the resulting expected requests,
+typed results, and comparison policies again through the existing dataset-pack
+approval workflow before evaluation.
+
+**Rationale:** A human cannot review an expected answer until it exists, but
+creating that answer requires a real query. The generic authorization to start
+Phase 5 is not exact plan approval. Adding a narrow pre-execution checkpoint
+resolves this ordering dependency without bypassing Stage 5B review or letting
+query execution approve the expected values it produces.
+
+**Alternatives:** Query Northwind directly while drafting the pack; treat broad
+Phase 5 authorization as approval for unknown plans; calculate answers outside
+the governed planner/executor; skip the second per-case expected-answer review;
+or use live Ollama responses while establishing the gold pack.
+
+**Impact:** `analytics-dataset-benchmark-answer-prepare` validates a bounded
+design, immutable dataset authority, approved semantics and relationships, then
+creates recorded Stage 5D and exact Stage 5A evidence for every case. The first
+Northwind design produced 13 review-ready plans and zero blockers without
+Stage 5B, table-row reads, answers, a live provider, or network access. Expected
+answers, local read-only collection, live-model comparison, narration, upload,
+publication, and training remain unapproved until their exact later gates.

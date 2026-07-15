@@ -144,7 +144,7 @@ def _validate_hash_bindings(
             )
 
 
-def _validate_dataset_manifest(
+def validate_dataset_manifest_contract(
     manifest: dict[str, Any],
     database_exists: bool,
     actual_size: int,
@@ -684,7 +684,7 @@ def inspect_analytics_dataset_benchmark_candidate(
         "approved_relationships_sha256": file_sha256(relationships_path) if relationships_path.is_file() else "",
     }
     dataset_manifest = _read_control_mapping(dataset_manifest_path, blockers, "dataset_manifest")
-    dataset_id = _validate_dataset_manifest(
+    dataset_id = validate_dataset_manifest_contract(
         dataset_manifest,
         database_exists,
         database_size,

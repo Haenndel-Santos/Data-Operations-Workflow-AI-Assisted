@@ -90,6 +90,13 @@ case has:
 Expected result types are `string`, `integer`, `decimal`, `float`, and
 `boolean`. Multi-row answers require explicit `order_by`.
 
+For a real dataset, do not collect these expected values ad hoc. First use the
+[Dataset Benchmark Answer Preparation](analytics-dataset-benchmark-preparation.md)
+workflow to compile the versioned questions and semantic intents into exact
+Stage 5A plans and obtain separate per-plan human authority before Stage 5B.
+The resulting candidate pack still requires the complete review described
+below; answer collection does not approve its own values.
+
 Exact comparison cannot declare tolerances. Numeric tolerance must name a
 declared numeric column and provide finite non-negative absolute and relative
 values, at least one greater than zero. Relative tolerance cannot exceed 1.

@@ -5,6 +5,9 @@ from pathlib import Path
 
 from .analytics_answer_evaluation import run_analytics_answer_evaluation
 from .analytics_dataset_benchmark import run_analytics_dataset_benchmark_validation
+from .analytics_dataset_benchmark_preparation import (
+    run_analytics_dataset_benchmark_preparation,
+)
 from .analytics_dataset_benchmark_evaluation import (
     run_analytics_dataset_benchmark_evaluation,
 )
@@ -436,6 +439,27 @@ def build_parser() -> argparse.ArgumentParser:
         "--output",
         type=Path,
         default=Path("outputs/analytics_dataset_benchmark_validation"),
+    )
+
+    analytics_dataset_benchmark_prepare = subparsers.add_parser(
+        "analytics-dataset-benchmark-answer-prepare",
+        help="Compile recorded benchmark intents into exact plans and stop for aggregate review.",
+    )
+    analytics_dataset_benchmark_prepare.add_argument("--design", type=Path, required=True)
+    analytics_dataset_benchmark_prepare.add_argument(
+        "--dataset-manifest", type=Path, required=True
+    )
+    analytics_dataset_benchmark_prepare.add_argument("--database", type=Path, required=True)
+    analytics_dataset_benchmark_prepare.add_argument(
+        "--semantic-state", type=Path, required=True
+    )
+    analytics_dataset_benchmark_prepare.add_argument(
+        "--relationships", type=Path, required=True
+    )
+    analytics_dataset_benchmark_prepare.add_argument(
+        "--output",
+        type=Path,
+        default=Path("outputs/analytics_dataset_benchmark_answer_preparation"),
     )
 
     analytics_dataset_benchmark_review = subparsers.add_parser(
@@ -1285,6 +1309,26 @@ def main() -> None:
         print(f"Outputs changed: {result.outputs_changed}")
         print(f"Manifest: {result.manifest_path}")
         print("Dry-run only. The database was hashed but never opened or queried.")
+        return
+
+    if args.command == "analytics-dataset-benchmark-answer-prepare":
+        result = run_analytics_dataset_benchmark_preparation(
+            args.design,
+            args.dataset_manifest,
+            args.database,
+            args.semantic_state,
+            args.relationships,
+            args.output,
+        )
+        print("Dataset benchmark answer preparation complete")
+        print(f"Status: {result.status}")
+        print(f"Cases: {result.case_count}")
+        print(f"Review-ready plans: {result.ready_case_count}")
+        print(f"Blockers: {result.blocker_count}")
+        print(f"Outputs changed: {result.outputs_changed}")
+        print(f"Manifest: {result.manifest_path}")
+        print(f"Execution review: {result.review_path or 'not written'}")
+        print("Preparation stops before Stage 5B; no table rows or answers were read.")
         return
 
     if args.command == "analytics-dataset-benchmark-review":

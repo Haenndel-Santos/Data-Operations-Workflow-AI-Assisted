@@ -96,6 +96,13 @@ the registry, but the registry does not dispatch it: `network_enabled` and
 dynamic execution remain false. A live semantic response still passes through
 Stage 5D and stops before the existing human Stage 5A execution review.
 
+The Phase 5 dataset benchmark answer-preparation command is also standalone and
+not dynamically dispatched by the registry. It batches recorded Stage 5D and
+Stage 5A preparation only, then emits one aggregate pending review bound to all
+exact plan hashes. It cannot call Stage 5B, auto-complete its review, invoke the
+live Ollama provider, or approve the expected answers that a later reviewed
+collection may produce.
+
 `ready_for_relationship_review` is likewise not relationship authority. A
 future semantic-catalog workflow may consume only the accepted subset from a
 completed exact relationship review that revalidates as

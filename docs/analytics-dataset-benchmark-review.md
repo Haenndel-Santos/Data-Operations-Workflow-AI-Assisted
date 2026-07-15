@@ -33,6 +33,11 @@ them.
 
 ## Workflow
 
+For a real dataset, first complete the separate
+[answer-preparation plan review](analytics-dataset-benchmark-preparation.md)
+and bounded answer collection; that authority does not approve the resulting
+values.
+
 1. Validate the candidate dataset manifest, opaque DuckDB hash, applied semantic
    state, approved relationships, and candidate pack.
 2. Generate a pending review bound to all five sources by SHA-256.

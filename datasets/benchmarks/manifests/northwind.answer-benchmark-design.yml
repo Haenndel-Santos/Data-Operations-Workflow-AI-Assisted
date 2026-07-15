@@ -1,0 +1,369 @@
+version: 1
+status: candidate_for_execution_review
+design_id: northwind_answer_design_v1
+pack_id: northwind_expected_answers_v1
+dataset_id: northwind_commerce
+bindings:
+  dataset_manifest_sha256: a28082e46a3f142be58ae3d7078e95c91f21747835caa90f12c3e06a36a92393
+  database_sha256: 4195629326d6aa0a4f7556f6423902eb4b70c4dde11997a5e02fde133c012b76
+  approved_semantic_state_sha256: bc2daed705320ae344286cd4678645fe54844e11f8657e55c52e999e046f2d10
+  approved_relationships_sha256: b12b3f19d199c605fb9e88bfabacb8d1ca9369ba54aa91208d393f99de7efd72
+cases:
+- id: total_order_count
+  coverage: [table_selection, measure_selection, exact_answer]
+  question: How many orders are in the Northwind dataset?
+  provider_response:
+    version: 1
+    from: orders
+    relationship_paths: []
+    dimensions: []
+    metrics:
+    - term: order_count
+      alias: order_count
+    filters: []
+    order_by: []
+    limit: 20
+  result_shape: single_row
+  expected_columns:
+  - name: order_count
+    type: integer
+  comparison:
+    mode: exact
+    tolerances: []
+- id: customers_by_country
+  coverage: [table_selection, dimension_selection, measure_selection, order_selection, exact_answer]
+  question: Which customer countries have the most customers? Return the top 10.
+  provider_response:
+    version: 1
+    from: customers
+    relationship_paths: []
+    dimensions:
+    - term: customer_country
+      alias: country
+    metrics:
+    - term: customer_count
+      alias: customer_count
+    filters: []
+    order_by:
+    - field: customer_count
+      direction: desc
+    - field: country
+      direction: asc
+    limit: 10
+  result_shape: ordered_rows
+  expected_columns:
+  - name: country
+    type: string
+  - name: customer_count
+    type: integer
+  comparison:
+    mode: exact
+    tolerances: []
+- id: freight_by_ship_country
+  coverage: [table_selection, dimension_selection, measure_selection, order_selection, exact_answer]
+  question: Which shipping countries have the highest total freight? Return the top 10.
+  provider_response:
+    version: 1
+    from: orders
+    relationship_paths: []
+    dimensions:
+    - term: order_ship_country
+      alias: ship_country
+    metrics:
+    - term: freight_total
+      alias: freight_total
+    filters: []
+    order_by:
+    - field: freight_total
+      direction: desc
+    - field: ship_country
+      direction: asc
+    limit: 10
+  result_shape: ordered_rows
+  expected_columns:
+  - name: ship_country
+    type: string
+  - name: freight_total
+    type: decimal
+  comparison:
+    mode: exact
+    tolerances: []
+- id: orders_placed_in_1997
+  coverage: [table_selection, measure_selection, filter_selection, exact_answer]
+  question: How many orders were placed during calendar year 1997?
+  provider_response:
+    version: 1
+    from: orders
+    relationship_paths: []
+    dimensions: []
+    metrics:
+    - term: order_count
+      alias: order_count
+    filters:
+    - term: order_date
+      operator: gte
+      value: '1997-01-01'
+    - term: order_date
+      operator: lt
+      value: '1998-01-01'
+    order_by: []
+    limit: 20
+  result_shape: single_row
+  expected_columns:
+  - name: order_count
+    type: integer
+  comparison:
+    mode: exact
+    tolerances: []
+- id: discontinued_product_count
+  coverage: [table_selection, measure_selection, filter_selection, exact_answer]
+  question: How many products are discontinued?
+  provider_response:
+    version: 1
+    from: products
+    relationship_paths: []
+    dimensions: []
+    metrics:
+    - term: product_count
+      alias: product_count
+    filters:
+    - term: product_discontinued
+      operator: eq
+      value: true
+    order_by: []
+    limit: 20
+  result_shape: single_row
+  expected_columns:
+  - name: product_count
+    type: integer
+  comparison:
+    mode: exact
+    tolerances: []
+- id: products_by_category
+  coverage: [table_selection, dimension_selection, measure_selection, order_selection, relationship_selection, exact_answer]
+  question: How many products are in each product category? Order by product count descending.
+  provider_response:
+    version: 1
+    from: products
+    relationship_paths: [products_to_categories]
+    dimensions:
+    - term: category_name
+      alias: category
+    metrics:
+    - term: product_count
+      alias: product_count
+    filters: []
+    order_by:
+    - field: product_count
+      direction: desc
+    - field: category
+      direction: asc
+    limit: 20
+  result_shape: ordered_rows
+  expected_columns:
+  - name: category
+    type: string
+  - name: product_count
+    type: integer
+  comparison:
+    mode: exact
+    tolerances: []
+- id: units_by_product
+  coverage: [table_selection, dimension_selection, measure_selection, order_selection, relationship_selection, exact_answer]
+  question: Which products have the highest total units ordered? Return the top 10.
+  provider_response:
+    version: 1
+    from: order_lines
+    relationship_paths: [order_lines_to_products]
+    dimensions:
+    - term: product_name
+      alias: product
+    metrics:
+    - term: units_ordered_total
+      alias: units_ordered
+    filters: []
+    order_by:
+    - field: units_ordered
+      direction: desc
+    - field: product
+      direction: asc
+    limit: 10
+  result_shape: ordered_rows
+  expected_columns:
+  - name: product
+    type: string
+  - name: units_ordered
+    type: integer
+  comparison:
+    mode: exact
+    tolerances: []
+- id: orders_by_shipper
+  coverage: [table_selection, dimension_selection, measure_selection, order_selection, relationship_selection, exact_answer]
+  question: How many orders were handled by each shipper? Order by order count descending.
+  provider_response:
+    version: 1
+    from: orders
+    relationship_paths: [orders_to_shippers]
+    dimensions:
+    - term: shipper_company_name
+      alias: shipper
+    metrics:
+    - term: order_count
+      alias: order_count
+    filters: []
+    order_by:
+    - field: order_count
+      direction: desc
+    - field: shipper
+      direction: asc
+    limit: 20
+  result_shape: ordered_rows
+  expected_columns:
+  - name: shipper
+    type: string
+  - name: order_count
+    type: integer
+  comparison:
+    mode: exact
+    tolerances: []
+- id: units_by_supplier_country
+  coverage: [table_selection, dimension_selection, measure_selection, order_selection, relationship_selection, exact_answer]
+  question: Which supplier countries account for the most units ordered? Return the top 10.
+  provider_response:
+    version: 1
+    from: order_lines
+    relationship_paths: [order_lines_to_suppliers]
+    dimensions:
+    - term: supplier_country
+      alias: supplier_country
+    metrics:
+    - term: units_ordered_total
+      alias: units_ordered
+    filters: []
+    order_by:
+    - field: units_ordered
+      direction: desc
+    - field: supplier_country
+      direction: asc
+    limit: 10
+  result_shape: ordered_rows
+  expected_columns:
+  - name: supplier_country
+    type: string
+  - name: units_ordered
+    type: integer
+  comparison:
+    mode: exact
+    tolerances: []
+- id: assignments_by_sales_region
+  coverage: [table_selection, dimension_selection, measure_selection, order_selection, relationship_selection, exact_answer]
+  question: How many employee territory assignments belong to each sales region?
+  provider_response:
+    version: 1
+    from: employee_territory_assignments
+    relationship_paths: [employee_assignments_to_regions]
+    dimensions:
+    - term: sales_region_name
+      alias: sales_region
+    metrics:
+    - term: employee_territory_assignment_count
+      alias: assignment_count
+    filters: []
+    order_by:
+    - field: assignment_count
+      direction: desc
+    - field: sales_region
+      direction: asc
+    limit: 20
+  result_shape: ordered_rows
+  expected_columns:
+  - name: sales_region
+    type: string
+  - name: assignment_count
+    type: integer
+  comparison:
+    mode: exact
+    tolerances: []
+- id: customers_without_region
+  coverage: [table_selection, dimension_selection, filter_selection, order_selection, null_filter, exact_answer]
+  question: Which customers have no region recorded? List their company names alphabetically.
+  provider_response:
+    version: 1
+    from: customers
+    relationship_paths: []
+    dimensions:
+    - term: customer_company_name
+      alias: customer
+    metrics: []
+    filters:
+    - term: customer_region
+      operator: is_null
+    order_by:
+    - field: customer
+      direction: asc
+    limit: 100
+  result_shape: ordered_rows
+  expected_columns:
+  - name: customer
+    type: string
+  comparison:
+    mode: exact
+    tolerances: []
+- id: no_orders_for_atlantis
+  coverage: [table_selection, dimension_selection, filter_selection, order_selection, no_rows, exact_answer]
+  question: Which order IDs were shipped to Atlantis?
+  provider_response:
+    version: 1
+    from: orders
+    relationship_paths: []
+    dimensions:
+    - term: order_id
+      alias: order_id
+    metrics: []
+    filters:
+    - term: order_ship_country
+      operator: eq
+      value: Atlantis
+    order_by:
+    - field: order_id
+      direction: asc
+    limit: 20
+  result_shape: ordered_rows
+  expected_columns:
+  - name: order_id
+    type: integer
+  comparison:
+    mode: exact
+    tolerances: []
+- id: average_discount_by_category
+  coverage: [table_selection, dimension_selection, measure_selection, order_selection, relationship_selection, tolerance_answer]
+  question: Which product categories have the highest average line discount rate?
+  provider_response:
+    version: 1
+    from: order_lines
+    relationship_paths: [order_lines_to_categories]
+    dimensions:
+    - term: category_name
+      alias: category
+    metrics:
+    - term: line_discount_rate_average
+      alias: average_discount_rate
+    filters: []
+    order_by:
+    - field: average_discount_rate
+      direction: desc
+    - field: category
+      direction: asc
+    limit: 20
+  result_shape: ordered_rows
+  expected_columns:
+  - name: category
+    type: string
+  - name: average_discount_rate
+    type: float
+  comparison:
+    mode: numeric_tolerance
+    tolerances:
+    - column: average_discount_rate
+      absolute: 1.0e-09
+      relative: 0.0

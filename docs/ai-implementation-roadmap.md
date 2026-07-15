@@ -25,7 +25,7 @@ As of 2026-07-15, the project has:
 - a two-phase local session that stops for exact human plan review;
 - a versioned static module registry for those session phases with dynamic
   execution, concurrency, network, and review auto-approval disabled;
-- 193 passing offline tests plus one skipped opt-in live test, one approved real
+- 199 passing offline tests plus one skipped opt-in live test, one approved real
   Northwind semantic registry, and no production UI or authorized real benchmark
   expected-answer execution.
 
@@ -47,7 +47,10 @@ Northwind. Phase 4 passed on 2026-07-15 after explicit project-owner selection
 of local Ollama `gpt-oss:20b`, loopback/proxy/credential/privacy constraints,
 bounded context/output/timeout, sanitized failure tests, zero hosted-token cost,
 offline mocks, and one isolated live smoke test. Phase 5 comparative evaluation
-and reviewed expected-answer authority remain pending.
+has now started with a versioned 13-case Northwind answer design. Recorded Stage
+5D plus Stage 5A produced 13 exact plans with zero blockers and no table-row
+access. Aggregate plan review, Stage 5B answer collection, final per-case answer
+review, and comparative evidence remain pending.
 
 ## Target Architecture
 
@@ -160,6 +163,12 @@ Measure at least:
 
 Select a provider only after comparing it against versioned synthetic and
 approved dataset-backed packs. Passing recorded cases is not live-model proof.
+
+Started on 2026-07-15. The Northwind answer design covers table, dimension,
+measure, filter, order, relationship, null, no-row, exact, and numeric-tolerance
+behavior. Its 13 plans are waiting at the pre-execution human gate. No expected
+values or live-provider comparison have been collected yet, so the Phase 5 exit
+gate remains open.
 
 ### Phase 6 - Generic Dataset Recognition
 

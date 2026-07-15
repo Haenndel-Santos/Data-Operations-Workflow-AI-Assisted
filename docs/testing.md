@@ -182,6 +182,26 @@ for the temporary test fixture. Validating a real package requires its own
 reviewed manifest, semantic state, relationships, pack, and approval; execution
 is a later, separate capability.
 
+## Dataset Benchmark Answer Preparation
+
+The focused preparation tests create a temporary synthetic DuckDB package and
+compile recorded Stage 5D intents into exact Stage 5A plans. They cover immutable
+bindings, provider SQL rejection before database access, output alias/shape
+checks, pending aggregate plan review, idempotency, non-overwrite behavior, and
+the fixed no-execution CLI boundary:
+
+```powershell
+$env:PYTHONPATH = "src"
+$env:PYTHONDONTWRITEBYTECODE = "1"
+.\.venv\Scripts\python.exe -m pytest -p no:cacheprovider tests\analytics_dataset_benchmark_preparation_test.py
+```
+
+The tests never call Stage 5B or a live provider. The separately authorized real
+Northwind preparation command reads only the DuckDB catalog in read-only mode,
+produces exact plans, and stops for aggregate human review. It must not be used
+to infer approval of answer collection or of the values that a later reviewed
+collection may produce.
+
 ## Dataset Benchmark Review And Approval
 
 The same focused synthetic fixture verifies hash-bound pending review,

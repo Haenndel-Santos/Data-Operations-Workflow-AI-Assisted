@@ -1,0 +1,18 @@
+version: 1
+status: verified_dataset_package
+dataset:
+  id: northwind_commerce
+  classification: public
+  format: duckdb
+artifact:
+  bytes: 3944448
+  sha256: 4195629326d6aa0a4f7556f6423902eb4b70c4dde11997a5e02fde133c012b76
+provenance:
+  status: verified
+  source: microsoft/sql-server-samples instnwnd.sql at commit 2f85f3724ee45776a5183ed34d064488a6e1dc53
+license:
+  status: verified
+  identifier: MIT
+bindings:
+  approved_semantic_state_sha256: bc2daed705320ae344286cd4678645fe54844e11f8657e55c52e999e046f2d10
+  approved_relationships_sha256: b12b3f19d199c605fb9e88bfabacb8d1ca9369ba54aa91208d393f99de7efd72
