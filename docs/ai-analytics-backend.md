@@ -56,8 +56,12 @@ review, validates complete human decisions in dry-run mode, and can persist a
 minimal approved registry only with explicit `--apply`. Rejected, pending,
 missing, duplicate, or stale decisions fail closed. Ambiguities either remain
 clarification points or resolve to an exact candidate selected by a human.
-No real semantic catalog has been approved, so Stage 5D remains operationally
-blocked. See [Analytics Semantic Review And Approval](analytics-semantic-approval.md).
+The first real Northwind candidate now compiles with 13 tables, 60 dimensions,
+19 measures, 18 approved paths, 339 terms, zero ambiguities, and zero blockers.
+Its separate 111-entity review remains pending, so no real semantic catalog has
+been approved and Stage 5D remains operationally blocked. See
+[Northwind Semantic Catalog Review](northwind-semantic-review.md) and
+[Analytics Semantic Review And Approval](analytics-semantic-approval.md).
 
 Stage 5D now provides `analytics-semantic-adapter`, an offline deterministic
 compiler for a supplied version-1 semantic intent. It requires applied approved

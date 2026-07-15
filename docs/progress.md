@@ -6,11 +6,11 @@ Turn local operational spreadsheets into validated analytical datasets and an ap
 
 ## Current Stage
 
-Three active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases 0-2 passed their gates for the first Northwind reference dataset; and Phase 3 may now prepare a Northwind semantic catalog for separate human review. Stage 5A-5F governed analytics still lacks an applied real semantic catalog and expected-answer pack, live provider, dynamic dispatch, or user interface.
+Three active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases 0-2 passed their gates for the first Northwind reference dataset; and Phase 3 has a technically valid Northwind semantic candidate pending separate human review. Stage 5A-5F governed analytics still lacks an applied real semantic catalog and expected-answer pack, live provider, dynamic dispatch, or user interface.
 
 ## Last Completed Milestone
 
-On 2026-07-15, the project owner accepted all 13 exact Northwind relationships after reviewing their meanings and local data location, explicitly including the two empty-table bridges and the immediate-manager hierarchy. The separate versioned review binds the exact reference/candidate hashes and revalidated as `ready_for_semantic_modeling` with zero blockers. A generated 13-relationship registry is derived only from that completed review; rejected decisions would remain excluded. Upload, publication, and model-parameter training remain not authorized.
+On 2026-07-15, Phase 3 produced the first real Northwind semantic candidate over the separately approved physical relationships. Metadata-only compilation found 13 semantic tables, 60 dimensions, 19 measures, 18 many-to-one paths, 339 normalized terms, zero ambiguities, and zero blockers. A hash-bound 111-entity review is pending; no semantic definition or Stage 5D adapter use has been approved or applied. Upload, publication, live-provider use, and model-parameter training remain not authorized.
 
 ## Current Capabilities
 
@@ -85,13 +85,17 @@ On 2026-07-15, the project owner accepted all 13 exact Northwind relationships a
 - Project accepted relationship decisions into a hash-bound local approved
   registry only after completed-review validation; pending or rejected
   decisions never enter the approved list.
+- Compile the versioned real Northwind semantic candidate against its live local
+  catalog and approved relationship projection, with explicit grains, direct
+  measures, multilingual synonyms, fanout caveats, and a separate pending
+  111-entity review.
 - Restore and integrity-check the official AdventureWorks 2025 backup in an isolated local read-only SQL Server database.
 
 ## Test Status
 
-- Automated suite: 181 tests passed offline on 2026-07-15; latest run completed in 36.19 seconds.
+- Automated suite: 181 tests passed offline on 2026-07-15; latest run completed in 32.17 seconds.
 - All 12 project-local skills passed the official skill validator on 2026-07-13.
-- Internal link check: 70 checked, 0 broken on 2026-07-15.
+- Internal link check: 78 checked, 0 broken on 2026-07-15.
 - Main suite is offline and uses temporary directories for generated test artifacts.
 - Documentation link checker is available at `scripts/check_internal_links.py`.
 - The relocated `.venv` has a stale editable-install path; use the `PYTHONPATH=src` command in `docs/testing.md` until environment repair is explicitly approved.
@@ -106,7 +110,7 @@ On 2026-07-15, the project owner accepted all 13 exact Northwind relationships a
 - Conflicted line extracts must not be promoted to approved relationships.
 - The recorded analytics session now has a validated static registry and narrow checkpoints/resume semantics, but registry-driven dispatch and generic partial-run/dry-run infrastructure remain deliberately absent.
 - Cleaning is now the highest-memory measured synthetic stage and still loads a full Parquet table into Pandas before writing Parquet and CSV; any bounded-batch refactor must preserve type-detection and exact output contracts.
-- No concrete Northwind semantic catalog has completed human review or been applied; Stage 5D therefore remains operationally blocked for this real dataset despite its approved physical relationships.
+- The concrete Northwind semantic candidate has zero technical blockers but has not completed its 111-entity human review or been applied; Stage 5D therefore remains operationally blocked for this real dataset.
 - A live model provider, approved real benchmark pack, real dataset-backed evaluation, and user interface are not implemented or authorized. Recorded narration proves grounding controls only; synthetic Stage 5D/5E packs and temporary dataset-backed tests are not live-model or business-quality evidence.
 - Stage 5B plan-to-execution drift still uses size and nanosecond modification time in ordinary queries. The dataset-backed evaluator additionally rechecks the complete database SHA-256 and every other authority hash before each Stage 5B call and after evaluation.
 - Exact download provenance and licensing remain unconfirmed for Pubs and Contoso. Northwind provenance and MIT licensing are verified, but its technical relationship evidence is not promotion authority.
@@ -121,17 +125,17 @@ On 2026-07-15, the project owner accepted all 13 exact Northwind relationships a
 - No explicit apply contract or approved versioned representation exists yet for the candidate canonical Product snapshot.
 - EDS cross-table analytics remain blocked because `approved_relationships.yml` is intentionally empty.
 - No applied `config/analytics/approved_semantic_catalog.yml` exists for a real authorized dataset.
-- Northwind is `ready_for_semantic_modeling` with 13 accepted exact relationships. Pubs remains pending provenance, license, schema, relationship, and benchmark-use review.
+- Northwind is `semantic_candidate_ready_for_human_review` with 13 accepted exact relationships and 111 pending semantic decisions. Pubs remains pending provenance, license, schema, relationship, and benchmark-use review.
 - AdventureWorks is restored and validated but remains pending reproducible export, schema review, relationship approval, and benchmark-use approval.
 
 ## Next Logical Milestone
 
-Begin Phase 3 by preparing a bounded Northwind semantic catalog candidate over the approved physical relationships. Define table meanings/grains, dimensions, measures, synonyms, approved paths, ambiguities, currency/quantity/date semantics, and fanout caveats, then generate the existing separate semantic human review. Do not apply semantic state, create expected-answer authority, use a live provider, upload, publish, or train a model from candidate definitions.
+Have the project owner review the Northwind semantic candidate using `docs/northwind-semantic-review.md`, then record one factual approved/rejected decision for all 111 entities. If every definition is approved, validate semantic approval in dry-run mode before any explicit apply. Do not infer this approval from the completed physical-relationship review, create expected-answer authority, use a live provider, upload, publish, or train a model from candidate definitions.
 
 ## Last Verified Commit
 
-`e8c12a1` (`perf(schema): push candidate inference into duckdb`)
+`12b0307` (`feat(benchmarks): approve northwind relationships`)
 
 ## Last Updated
 
-2026-07-15 by Codex after preparing Northwind Phase 2 for exact relationship review.
+2026-07-15 by Codex after preparing the Northwind Phase 3 semantic candidate for separate human review.

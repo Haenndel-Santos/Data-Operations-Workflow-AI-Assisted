@@ -14,7 +14,7 @@ continues to apply.
 
 ## Current Baseline
 
-As of 2026-07-14, the project has:
+As of 2026-07-15, the project has:
 
 - governed Stage 5A planning and Stage 5B read-only DuckDB execution;
 - semantic review, approval, and Stage 5D deterministic adaptation;
@@ -24,7 +24,7 @@ As of 2026-07-14, the project has:
 - a two-phase local session that stops for exact human plan review;
 - a versioned static module registry for those session phases with dynamic
   execution, concurrency, network, and review auto-approval disabled;
-- 173 passing offline tests and no approved real semantic registry, live model
+- 181 passing offline tests and no approved real semantic registry, live model
   provider, production UI, or authorized real benchmark execution.
 
 Phase 0 passed its exit gate on 2026-07-14 through static validation only.
@@ -35,9 +35,11 @@ reference-dataset provenance, license, schema, relationship, and use decisions.
 Northwind has since passed provenance, MIT-license, checksum, independent
 conversion, schema/key, relationship-integrity, local-use, and exact human
 relationship-review gates. All 13 candidates were accepted and revalidated;
-Northwind is `ready_for_semantic_modeling`. Phase 2 has passed for the first
-reference dataset, and Phase 3 may now prepare a Northwind semantic catalog for
-its own separate human review.
+Northwind then entered Phase 3. Its versioned semantic candidate compiles to 13
+tables, 60 dimensions, 19 measures, 18 approved many-to-one paths, and 339
+normalized terms with zero blockers or ambiguities. The separate 111-entity
+review is still pending, so Phase 3 has not passed and no real semantic state or
+adapter authority has been applied.
 
 ## Target Architecture
 

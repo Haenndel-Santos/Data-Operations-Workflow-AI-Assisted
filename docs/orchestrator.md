@@ -29,6 +29,11 @@ review. With a completed review it may report `ready_for_semantic_modeling` and
 derive an approved-relationship registry containing accepted decisions only.
 It is not yet part of the declarative analytics-session registry.
 
+Northwind now has a separate Stage 5C candidate compiled from that accepted
+relationship projection. The generated 111-entity semantic review remains
+pending, so neither the explicit CLI nor future orchestration may run semantic
+approval/apply or Stage 5D for Northwind yet.
+
 ## Responsibility
 
 The orchestrator may discover, validate, select, order, execute, record, recover, and summarize module work. It must not duplicate specialized module logic, hide failures, mutate inputs, or promote unapproved decisions.

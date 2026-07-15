@@ -244,6 +244,26 @@ DuckDB in read-only mode and does not approve its pending relationships. A
 completed-review test also verifies that only accepted decisions enter the
 derived registry and that rejected decisions remain explicitly excluded.
 
+## Northwind Semantic Candidate Validation
+
+The ordinary Stage 5C tests remain synthetic and offline. The separately
+authorized real candidate check reads only DuckDB metadata and the approved
+Northwind relationship projection, then prepares an unapproved review:
+
+```powershell
+$env:PYTHONPATH = "src"
+$env:PYTHONDONTWRITEBYTECODE = "1"
+.\.venv\Scripts\python.exe -m pytest -p no:cacheprovider tests\analytics_semantic_catalog_test.py tests\analytics_semantic_approval_test.py
+.\.venv\Scripts\python.exe -m data_ops_lab analytics-semantic-catalog --catalog "datasets\benchmarks\manifests\northwind.semantic-catalog-candidate.yml" --database "datasets\benchmarks\derived\northwind\northwind.duckdb" --relationships "outputs\benchmarks\northwind-phase2-reviewed\approved_relationships.yml" --output "outputs\benchmarks\northwind-phase3-semantic-catalog-v2"
+.\.venv\Scripts\python.exe -m data_ops_lab analytics-semantic-review --catalog "outputs\benchmarks\northwind-phase3-semantic-catalog-v2\analytics_semantic_catalog.yml" --output "outputs\benchmarks\northwind-phase3-semantic-review\analytics_semantic_review.yml"
+```
+
+The real compile must report `ready_for_semantic_review`, zero blockers, zero
+ambiguities, 13 tables, 60 dimensions, 19 measures, and 18 paths. A repeated
+compile and review must reuse byte-identical outputs. Neither command queries
+table rows, approves semantics, applies `config/analytics` state, executes an
+analysis, or uses a provider/network.
+
 ## Deterministic Result Presentation And Narration
 
 Result presentation tests create only temporary synthetic DuckDB and Stage 5A/

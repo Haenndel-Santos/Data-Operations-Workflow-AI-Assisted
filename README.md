@@ -304,6 +304,18 @@ is reproduced with:
 .\.venv\Scripts\python.exe -m data_ops_lab reference-dataset-validate --manifest "datasets\benchmarks\manifests\northwind.reference.yml" --review "datasets\benchmarks\manifests\northwind.relationship-review.yml" --output "outputs\benchmarks\northwind-phase2-reviewed"
 ```
 
+To compile the current Northwind semantic candidate and prepare its separate
+pending review without applying semantic state:
+
+```powershell
+.\.venv\Scripts\python.exe -m data_ops_lab analytics-semantic-catalog --catalog "datasets\benchmarks\manifests\northwind.semantic-catalog-candidate.yml" --database "datasets\benchmarks\derived\northwind\northwind.duckdb" --relationships "outputs\benchmarks\northwind-phase2-reviewed\approved_relationships.yml" --output "outputs\benchmarks\northwind-phase3-semantic-catalog-v2"
+.\.venv\Scripts\python.exe -m data_ops_lab analytics-semantic-review --catalog "outputs\benchmarks\northwind-phase3-semantic-catalog-v2\analytics_semantic_catalog.yml" --output "outputs\benchmarks\northwind-phase3-semantic-review\analytics_semantic_review.yml"
+```
+
+The candidate has zero technical blockers and remains unapproved. Use the
+[Northwind semantic review guide](docs/northwind-semantic-review.md) before
+recording decisions for its 111 semantic entities.
+
 To generate the conceptual main database schema overview:
 
 ```powershell
@@ -391,6 +403,7 @@ DuckDB is a good fit for this project because it supports local analytical workf
 - [Structured analytics query plan contract](docs/analytics-query-plan.md)
 - [Analytics semantic catalog contract](docs/analytics-semantic-catalog.md)
 - [Analytics semantic review and approval contract](docs/analytics-semantic-approval.md)
+- [Northwind semantic catalog review](docs/northwind-semantic-review.md)
 - [Analytics semantic adapter contract](docs/analytics-semantic-adapter.md)
 - [Analytics natural-language translation contract](docs/analytics-nl-translation.md)
 - [Analytics translation evaluation contract](docs/analytics-translation-evaluation.md)

@@ -48,7 +48,7 @@ otherwise the command fails without overwriting them.
 
 | Dataset | Local state | Evidence | Remaining gate |
 | --- | --- | --- | --- |
-| Northwind | `ready_for_semantic_modeling` | Exact official Microsoft copies; MIT; independent conversion; 13/13 PKs valid; 13/13 exact relationships accepted | Prepare and review the Phase 3 semantic catalog. |
+| Northwind | `semantic_candidate_ready_for_human_review` | Phase 2 passed; candidate has 13 tables, 60 dimensions, 19 measures, 18 approved paths, zero blockers/ambiguities | Complete the separate 111-entity semantic review; do not apply before approval. |
 | Pubs | Converted: 11 tables, 255 rows | DuckDB, Parquet, 10 relationship candidates | Confirm source/license; assess two replacement characters; review schema/relationships. |
 | AdventureWorks 2025 | Official backup restored locally as `READ_ONLY` | Exact release hash; `RESTORE VERIFYONLY` and `DBCC CHECKDB` passed; 71 tables, 20 views, 90 declared foreign keys, 760,167 aggregate rows | Implement a reproducible read-only DuckDB/Parquet export, then review schema, relationships, and benchmark use. |
 | Contoso warehouse recipe | Raw SQL/Markdown retained | Schema/load recipe only | Confirm source/license; acquire an authorized local data package without external execution. |
@@ -61,7 +61,7 @@ It is restored only in the local SQL Server 2025 Developer instance, database
 The SQL Server restore is a temporary compatibility bridge; no derived export
 or relationship approval has been produced from it yet.
 
-## Northwind Phase 2 Boundary
+## Northwind Phase 2 And 3 Boundary
 
 Both local Northwind scripts are byte-identical to their official Microsoft
 `sql-server-samples` files at commit
@@ -88,6 +88,14 @@ parameter training remain not authorized. The exact versioned dataset authority 
 the relationship authority is
 [`northwind.relationship-review.yml`](../datasets/benchmarks/manifests/northwind.relationship-review.yml),
 and generated technical evidence remains under ignored `outputs/benchmarks/`.
+
+Phase 3 now has a versioned
+[`Northwind semantic candidate`](../datasets/benchmarks/manifests/northwind.semantic-catalog-candidate.yml)
+and a focused [semantic review guide](northwind-semantic-review.md). Metadata-only
+compilation found 13 semantic tables, 60 dimensions, 19 measures, 18 paths over
+approved relationships, 339 normalized terms, zero ambiguities, and zero
+blockers. The separate 111-entity review remains pending; no semantic registry
+or adapter authority has been applied.
 
 The downstream
 [dataset-backed benchmark contract](analytics-dataset-benchmark.md) is a strict

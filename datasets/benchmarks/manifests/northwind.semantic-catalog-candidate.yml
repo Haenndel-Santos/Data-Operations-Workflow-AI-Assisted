@@ -1,0 +1,868 @@
+version: 1
+dataset:
+  id: northwind_commerce
+  name: Northwind Commerce
+  description: >-
+    Commercial reference data for customers, orders, order lines, products,
+    suppliers, employees, shipping, and sales territories. The version-1
+    catalog exposes only direct column aggregates; it does not define revenue
+    or other calculated measures.
+  synonyms:
+  - northwind
+  - northwind commercial operations
+  - comercio northwind
+  - operacoes comerciais northwind
+
+tables:
+- id: product_categories
+  source_table: categories
+  name: Product Categories
+  description: One row per product category, keyed by category_id.
+  synonyms:
+  - category master
+  - categorias de produto
+- id: customer_demographic_assignments
+  source_table: customer_customer_demo
+  name: Customer Demographic Assignments
+  description: >-
+    One row per customer and demographic-type assignment. The benchmark table
+    is structurally valid but contains no rows in this Northwind snapshot.
+  synonyms:
+  - customer type assignments
+  - classificacoes demograficas de clientes
+- id: customer_demographic_types
+  source_table: customer_demographics
+  name: Customer Demographic Types
+  description: >-
+    One row per customer demographic type. The benchmark table is structurally
+    valid but contains no rows in this Northwind snapshot.
+  synonyms:
+  - customer types
+  - tipos demograficos de clientes
+- id: customers
+  source_table: customers
+  name: Customers
+  description: One row per customer account, keyed by customer_id.
+  synonyms:
+  - customer master
+  - clientes
+  - cadastro de clientes
+- id: employee_territory_assignments
+  source_table: employee_territories
+  name: Employee Territory Assignments
+  description: One row per employee and territory assignment.
+  synonyms:
+  - territory staffing
+  - atribuicoes territoriais de funcionarios
+- id: employees
+  source_table: employees
+  name: Employees
+  description: >-
+    One row per employee, keyed by employee_id. reports_to stores the immediate
+    manager employee ID when one exists.
+  synonyms:
+  - employee master
+  - funcionarios
+  - colaboradores
+- id: order_lines
+  source_table: order_details
+  name: Order Lines
+  description: >-
+    One row per order and product pair. This is the transactional line grain;
+    quantity, captured unit price, and discount belong to this grain.
+  synonyms:
+  - order details
+  - sales order lines
+  - itens de pedido
+  - linhas de pedido
+- id: orders
+  source_table: orders
+  name: Orders
+  description: >-
+    One row per commercial order, keyed by order_id. Freight and shipping
+    fields belong to the order grain and must not be multiplied by line joins.
+  synonyms:
+  - sales orders
+  - pedidos
+  - pedidos de venda
+- id: products
+  source_table: products
+  name: Products
+  description: One row per product, keyed by product_id.
+  synonyms:
+  - product master
+  - produtos
+  - cadastro de produtos
+- id: sales_regions
+  source_table: region
+  name: Sales Regions
+  description: One row per sales region, keyed by region_id.
+  synonyms:
+  - geographic regions
+  - regioes comerciais
+- id: shippers
+  source_table: shippers
+  name: Shippers
+  description: One row per shipping company, keyed by shipper_id.
+  synonyms:
+  - carriers
+  - transportadoras
+- id: suppliers
+  source_table: suppliers
+  name: Suppliers
+  description: One row per supplier, keyed by supplier_id.
+  synonyms:
+  - supplier master
+  - fornecedores
+  - cadastro de fornecedores
+- id: sales_territories
+  source_table: territories
+  name: Sales Territories
+  description: One row per sales territory, keyed by territory_id.
+  synonyms:
+  - territories
+  - territorios comerciais
+
+dimensions:
+- id: category_id
+  table_id: product_categories
+  source_column: category_id
+  name: Category ID
+  description: Stable identifier of a product category.
+  synonyms: [codigo da categoria]
+- id: category_name
+  table_id: product_categories
+  source_column: category_name
+  name: Category Name
+  description: Business name of a product category.
+  synonyms: [category, categoria, nome da categoria]
+- id: category_description
+  table_id: product_categories
+  source_column: description
+  name: Category Description
+  description: Free-text description of a product category.
+  synonyms: [descricao da categoria]
+
+- id: demographic_assignment_customer_id
+  table_id: customer_demographic_assignments
+  source_column: customer_id
+  name: Demographic Assignment Customer ID
+  description: Customer identifier on a demographic assignment row.
+  synonyms: [cliente da classificacao demografica]
+- id: demographic_assignment_type_id
+  table_id: customer_demographic_assignments
+  source_column: customer_type_id
+  name: Assigned Demographic Type ID
+  description: Demographic type identifier on a customer assignment row.
+  synonyms: [tipo demografico atribuido]
+- id: demographic_type_id
+  table_id: customer_demographic_types
+  source_column: customer_type_id
+  name: Demographic Type ID
+  description: Stable identifier of a customer demographic type.
+  synonyms: [codigo do tipo demografico]
+- id: demographic_type_description
+  table_id: customer_demographic_types
+  source_column: customer_desc
+  name: Demographic Type Description
+  description: Free-text description of a customer demographic type.
+  synonyms: [descricao do tipo demografico]
+
+- id: customer_id
+  table_id: customers
+  source_column: customer_id
+  name: Customer ID
+  description: Stable identifier of a customer account.
+  synonyms: [customer code, codigo do cliente]
+- id: customer_company_name
+  table_id: customers
+  source_column: company_name
+  name: Customer Company Name
+  description: Company name recorded for a customer account.
+  synonyms: [customer name, nome do cliente, empresa cliente]
+- id: customer_contact_name
+  table_id: customers
+  source_column: contact_name
+  name: Customer Contact Name
+  description: Primary contact name recorded for a customer account.
+  synonyms: [contato do cliente]
+- id: customer_contact_title
+  table_id: customers
+  source_column: contact_title
+  name: Customer Contact Title
+  description: Job title of the primary customer contact.
+  synonyms: [cargo do contato do cliente]
+- id: customer_city
+  table_id: customers
+  source_column: city
+  name: Customer City
+  description: City recorded on the customer account.
+  synonyms: [cidade do cliente]
+- id: customer_region
+  table_id: customers
+  source_column: region
+  name: Customer Region
+  description: State, province, or region recorded on the customer account.
+  synonyms: [estado do cliente, regiao do cliente]
+- id: customer_postal_code
+  table_id: customers
+  source_column: postal_code
+  name: Customer Postal Code
+  description: Postal code recorded on the customer account.
+  synonyms: [cep do cliente]
+- id: customer_country
+  table_id: customers
+  source_column: country
+  name: Customer Country
+  description: Country recorded on the customer account.
+  synonyms: [pais do cliente]
+
+- id: assignment_employee_id
+  table_id: employee_territory_assignments
+  source_column: employee_id
+  name: Assigned Employee ID
+  description: Employee identifier on an employee-territory assignment row.
+  synonyms: [funcionario atribuido]
+- id: assignment_territory_id
+  table_id: employee_territory_assignments
+  source_column: territory_id
+  name: Assigned Territory ID
+  description: Territory identifier on an employee-territory assignment row.
+  synonyms: [territorio atribuido]
+
+- id: employee_id
+  table_id: employees
+  source_column: employee_id
+  name: Employee ID
+  description: Stable identifier of an employee.
+  synonyms: [employee code, codigo do funcionario]
+- id: employee_first_name
+  table_id: employees
+  source_column: first_name
+  name: Employee First Name
+  description: Employee given name.
+  synonyms: [primeiro nome do funcionario]
+- id: employee_last_name
+  table_id: employees
+  source_column: last_name
+  name: Employee Last Name
+  description: Employee family name.
+  synonyms: [sobrenome do funcionario]
+- id: employee_title
+  table_id: employees
+  source_column: title
+  name: Employee Title
+  description: Employee job title.
+  synonyms: [cargo do funcionario]
+- id: employee_hire_date
+  table_id: employees
+  source_column: hire_date
+  name: Employee Hire Date
+  description: Date when the employee was hired.
+  synonyms: [data de contratacao]
+- id: employee_city
+  table_id: employees
+  source_column: city
+  name: Employee City
+  description: City recorded for the employee.
+  synonyms: [cidade do funcionario]
+- id: employee_region
+  table_id: employees
+  source_column: region
+  name: Employee Region
+  description: State, province, or region recorded for the employee.
+  synonyms: [regiao do funcionario]
+- id: employee_country
+  table_id: employees
+  source_column: country
+  name: Employee Country
+  description: Country recorded for the employee.
+  synonyms: [pais do funcionario]
+- id: manager_employee_id
+  table_id: employees
+  source_column: reports_to
+  name: Manager Employee ID
+  description: >-
+    Immediate manager employee ID. The self-relationship is physically approved,
+    but version 1 cannot express a self-join semantic path.
+  synonyms: [reports to, gestor imediato, supervisor id]
+
+- id: line_order_id
+  table_id: order_lines
+  source_column: order_id
+  name: Order Line Order ID
+  description: Order identifier on an order-line row.
+  synonyms: [pedido da linha]
+- id: line_product_id
+  table_id: order_lines
+  source_column: product_id
+  name: Order Line Product ID
+  description: Product identifier on an order-line row.
+  synonyms: [produto da linha]
+- id: line_unit_price
+  table_id: order_lines
+  source_column: unit_price
+  name: Captured Line Unit Price
+  description: Unit price captured on the order line before applying discount.
+  synonyms: [preco unitario da linha, selling unit price]
+- id: line_discount_rate
+  table_id: order_lines
+  source_column: discount
+  name: Line Discount Rate
+  description: Fractional discount stored on the order line, where zero means no discount.
+  synonyms: [discount, desconto da linha, taxa de desconto]
+
+- id: order_id
+  table_id: orders
+  source_column: order_id
+  name: Order ID
+  description: Stable identifier of a commercial order.
+  synonyms: [order number, numero do pedido]
+- id: order_customer_id
+  table_id: orders
+  source_column: customer_id
+  name: Order Customer ID
+  description: Customer identifier recorded on the order.
+  synonyms: [cliente do pedido]
+- id: order_employee_id
+  table_id: orders
+  source_column: employee_id
+  name: Order Employee ID
+  description: Employee identifier recorded as responsible for the order.
+  synonyms: [funcionario do pedido, vendedor do pedido]
+- id: order_date
+  table_id: orders
+  source_column: order_date
+  name: Order Date
+  description: Date when the order was placed.
+  synonyms: [data do pedido]
+- id: order_required_date
+  table_id: orders
+  source_column: required_date
+  name: Required Delivery Date
+  description: Requested delivery date recorded on the order.
+  synonyms: [required date, data requerida]
+- id: order_shipped_date
+  table_id: orders
+  source_column: shipped_date
+  name: Shipped Date
+  description: Date when the order was shipped; null means no shipment date was recorded.
+  synonyms: [shipping date, data de envio]
+- id: order_shipper_id
+  table_id: orders
+  source_column: ship_via
+  name: Order Shipper ID
+  description: Shipping-company identifier selected for the order.
+  synonyms: [ship via, transportadora do pedido]
+- id: order_ship_name
+  table_id: orders
+  source_column: ship_name
+  name: Order Ship-To Name
+  description: Recipient name captured on the order shipping address.
+  synonyms: [destinatario do pedido]
+- id: order_ship_city
+  table_id: orders
+  source_column: ship_city
+  name: Order Ship-To City
+  description: City captured on the order shipping address.
+  synonyms: [cidade de entrega]
+- id: order_ship_region
+  table_id: orders
+  source_column: ship_region
+  name: Order Ship-To Region
+  description: State, province, or region captured on the order shipping address.
+  synonyms: [regiao de entrega]
+- id: order_ship_postal_code
+  table_id: orders
+  source_column: ship_postal_code
+  name: Order Ship-To Postal Code
+  description: Postal code captured on the order shipping address.
+  synonyms: [cep de entrega]
+- id: order_ship_country
+  table_id: orders
+  source_column: ship_country
+  name: Order Ship-To Country
+  description: Country captured on the order shipping address.
+  synonyms: [pais de entrega]
+
+- id: product_id
+  table_id: products
+  source_column: product_id
+  name: Product ID
+  description: Stable identifier of a product.
+  synonyms: [product code, codigo do produto]
+- id: product_name
+  table_id: products
+  source_column: product_name
+  name: Product Name
+  description: Business name of the product.
+  synonyms: [product, produto, nome do produto]
+- id: product_supplier_id
+  table_id: products
+  source_column: supplier_id
+  name: Product Supplier ID
+  description: Supplier identifier recorded on the product.
+  synonyms: [fornecedor do produto]
+- id: product_category_id
+  table_id: products
+  source_column: category_id
+  name: Product Category ID
+  description: Category identifier recorded on the product.
+  synonyms: [categoria do produto]
+- id: product_quantity_per_unit
+  table_id: products
+  source_column: quantity_per_unit
+  name: Product Quantity Per Unit
+  description: Packaging quantity description recorded for the product.
+  synonyms: [package size, embalagem do produto]
+- id: product_discontinued
+  table_id: products
+  source_column: discontinued
+  name: Product Discontinued Flag
+  description: Boolean flag indicating whether the product is discontinued.
+  synonyms: [discontinued, produto descontinuado]
+
+- id: sales_region_id
+  table_id: sales_regions
+  source_column: region_id
+  name: Sales Region ID
+  description: Stable identifier of a sales region.
+  synonyms: [codigo da regiao comercial]
+- id: sales_region_name
+  table_id: sales_regions
+  source_column: region_description
+  name: Sales Region Name
+  description: Business description used as the sales-region name.
+  synonyms: [sales region, regiao comercial]
+
+- id: shipper_id
+  table_id: shippers
+  source_column: shipper_id
+  name: Shipper ID
+  description: Stable identifier of a shipping company.
+  synonyms: [carrier id, codigo da transportadora]
+- id: shipper_company_name
+  table_id: shippers
+  source_column: company_name
+  name: Shipper Company Name
+  description: Company name of the shipper.
+  synonyms: [shipper name, carrier name, nome da transportadora]
+
+- id: supplier_id
+  table_id: suppliers
+  source_column: supplier_id
+  name: Supplier ID
+  description: Stable identifier of a supplier.
+  synonyms: [supplier code, codigo do fornecedor]
+- id: supplier_company_name
+  table_id: suppliers
+  source_column: company_name
+  name: Supplier Company Name
+  description: Company name of the supplier.
+  synonyms: [supplier name, nome do fornecedor]
+- id: supplier_city
+  table_id: suppliers
+  source_column: city
+  name: Supplier City
+  description: City recorded for the supplier.
+  synonyms: [cidade do fornecedor]
+- id: supplier_region
+  table_id: suppliers
+  source_column: region
+  name: Supplier Region
+  description: State, province, or region recorded for the supplier.
+  synonyms: [regiao do fornecedor]
+- id: supplier_country
+  table_id: suppliers
+  source_column: country
+  name: Supplier Country
+  description: Country recorded for the supplier.
+  synonyms: [pais do fornecedor]
+
+- id: sales_territory_id
+  table_id: sales_territories
+  source_column: territory_id
+  name: Sales Territory ID
+  description: Stable identifier of a sales territory.
+  synonyms: [codigo do territorio comercial]
+- id: sales_territory_name
+  table_id: sales_territories
+  source_column: territory_description
+  name: Sales Territory Name
+  description: Business description used as the sales-territory name.
+  synonyms: [sales territory, territorio comercial]
+- id: territory_region_id
+  table_id: sales_territories
+  source_column: region_id
+  name: Territory Sales Region ID
+  description: Sales-region identifier recorded on the territory.
+  synonyms: [regiao do territorio]
+
+measures:
+- id: category_count
+  table_id: product_categories
+  source_column: category_id
+  function: count_distinct
+  name: Category Count
+  description: Distinct count of product-category identifiers.
+  synonyms: [number of categories, quantidade de categorias]
+- id: customer_count
+  table_id: customers
+  source_column: customer_id
+  function: count_distinct
+  name: Customer Count
+  description: Distinct count of customer identifiers.
+  synonyms: [number of customers, quantidade de clientes]
+- id: employee_territory_assignment_count
+  table_id: employee_territory_assignments
+  source_column: "*"
+  function: count
+  name: Employee Territory Assignment Count
+  description: Count of rows at the employee-and-territory assignment grain.
+  synonyms: [territory assignment count, quantidade de atribuicoes territoriais]
+- id: employee_count
+  table_id: employees
+  source_column: employee_id
+  function: count_distinct
+  name: Employee Count
+  description: Distinct count of employee identifiers.
+  synonyms: [number of employees, quantidade de funcionarios]
+- id: order_line_count
+  table_id: order_lines
+  source_column: "*"
+  function: count
+  name: Order Line Count
+  description: Count of rows at the order-and-product line grain.
+  synonyms: [line count, quantidade de linhas de pedido]
+- id: units_ordered_total
+  table_id: order_lines
+  source_column: quantity
+  function: sum
+  name: Total Units Ordered
+  description: Sum of order-line quantity; additive at the order-line grain.
+  synonyms: [ordered quantity, quantidade total pedida]
+- id: line_unit_price_average
+  table_id: order_lines
+  source_column: unit_price
+  function: avg
+  name: Average Captured Line Unit Price
+  description: Unweighted average of captured pre-discount unit price across order lines.
+  synonyms: [average selling unit price, preco unitario medio da linha]
+- id: line_discount_rate_average
+  table_id: order_lines
+  source_column: discount
+  function: avg
+  name: Average Line Discount Rate
+  description: Unweighted average of the fractional discount across order lines.
+  synonyms: [average discount, desconto medio da linha]
+- id: order_count
+  table_id: orders
+  source_column: order_id
+  function: count_distinct
+  name: Order Count
+  description: Distinct count of commercial order identifiers.
+  synonyms: [number of orders, quantidade de pedidos]
+- id: freight_total
+  table_id: orders
+  source_column: freight
+  function: sum
+  name: Total Order Freight
+  description: >-
+    Sum of freight at the order grain. It must not be aggregated after a
+    one-to-many expansion from orders to order lines.
+  synonyms: [total freight, frete total]
+- id: freight_average
+  table_id: orders
+  source_column: freight
+  function: avg
+  name: Average Order Freight
+  description: Unweighted average freight amount across orders.
+  synonyms: [average freight, frete medio]
+- id: product_count
+  table_id: products
+  source_column: product_id
+  function: count_distinct
+  name: Product Count
+  description: Distinct count of product identifiers.
+  synonyms: [number of products, quantidade de produtos]
+- id: stock_units_total
+  table_id: products
+  source_column: units_in_stock
+  function: sum
+  name: Total Units In Stock
+  description: >-
+    Sum of the current units_in_stock snapshot across products; it is not an
+    inventory movement or a time-additive measure.
+  synonyms: [inventory units, unidades totais em estoque]
+- id: units_on_order_total
+  table_id: products
+  source_column: units_on_order
+  function: sum
+  name: Total Units On Order
+  description: Sum of the current units_on_order snapshot across products.
+  synonyms: [open purchase units, unidades totais encomendadas]
+- id: product_unit_price_average
+  table_id: products
+  source_column: unit_price
+  function: avg
+  name: Average Product List Unit Price
+  description: Unweighted average of the current product catalog unit price.
+  synonyms: [average list price, preco medio de tabela]
+- id: sales_region_count
+  table_id: sales_regions
+  source_column: region_id
+  function: count_distinct
+  name: Sales Region Count
+  description: Distinct count of sales-region identifiers.
+  synonyms: [number of sales regions, quantidade de regioes comerciais]
+- id: shipper_count
+  table_id: shippers
+  source_column: shipper_id
+  function: count_distinct
+  name: Shipper Count
+  description: Distinct count of shipping-company identifiers.
+  synonyms: [carrier count, quantidade de transportadoras]
+- id: supplier_count
+  table_id: suppliers
+  source_column: supplier_id
+  function: count_distinct
+  name: Supplier Count
+  description: Distinct count of supplier identifiers.
+  synonyms: [number of suppliers, quantidade de fornecedores]
+- id: sales_territory_count
+  table_id: sales_territories
+  source_column: territory_id
+  function: count_distinct
+  name: Sales Territory Count
+  description: Distinct count of sales-territory identifiers.
+  synonyms: [number of territories, quantidade de territorios comerciais]
+
+relationship_paths:
+- id: demographic_assignments_to_customers
+  name: Demographic Assignments To Customers
+  description: >-
+    Many-to-one path from customer demographic assignments to customer
+    accounts. A left join preserves assignment rows if future snapshots contain
+    an unmatched customer.
+  synonyms: [customer for demographic assignment]
+  hops:
+  - source_table_id: customer_demographic_assignments
+    source_column: customer_id
+    target_table_id: customers
+    target_column: customer_id
+    kind: left
+- id: demographic_assignments_to_types
+  name: Demographic Assignments To Types
+  description: >-
+    Many-to-one path from customer demographic assignments to demographic
+    types. A left join preserves assignment rows if future snapshots contain an
+    unmatched type.
+  synonyms: [demographic type for assignment]
+  hops:
+  - source_table_id: customer_demographic_assignments
+    source_column: customer_type_id
+    target_table_id: customer_demographic_types
+    target_column: customer_type_id
+    kind: left
+- id: employee_assignments_to_employees
+  name: Employee Territory Assignments To Employees
+  description: Many-to-one path from territory assignments to employees.
+  synonyms: [employee for territory assignment]
+  hops:
+  - source_table_id: employee_territory_assignments
+    source_column: employee_id
+    target_table_id: employees
+    target_column: employee_id
+    kind: inner
+- id: employee_assignments_to_territories
+  name: Employee Territory Assignments To Territories
+  description: Many-to-one path from employee-territory assignments to territories.
+  synonyms: [territory for employee assignment]
+  hops:
+  - source_table_id: employee_territory_assignments
+    source_column: territory_id
+    target_table_id: sales_territories
+    target_column: territory_id
+    kind: inner
+- id: employee_assignments_to_regions
+  name: Employee Territory Assignments To Sales Regions
+  description: >-
+    Many-to-one two-hop path from employee-territory assignments through
+    territories to sales regions; it preserves the assignment grain.
+  synonyms: [sales region for employee assignment]
+  hops:
+  - source_table_id: employee_territory_assignments
+    source_column: territory_id
+    target_table_id: sales_territories
+    target_column: territory_id
+    kind: inner
+  - source_table_id: sales_territories
+    source_column: region_id
+    target_table_id: sales_regions
+    target_column: region_id
+    kind: inner
+- id: order_lines_to_orders
+  name: Order Lines To Orders
+  description: Many-to-one path from order lines to their parent orders.
+  synonyms: [order for order line, relacao linha pedido]
+  hops:
+  - source_table_id: order_lines
+    source_column: order_id
+    target_table_id: orders
+    target_column: order_id
+    kind: inner
+- id: order_lines_to_products
+  name: Order Lines To Products
+  description: Many-to-one path from order lines to products.
+  synonyms: [product for order line, produto da linha de pedido]
+  hops:
+  - source_table_id: order_lines
+    source_column: product_id
+    target_table_id: products
+    target_column: product_id
+    kind: inner
+- id: orders_to_customers
+  name: Orders To Customers
+  description: Many-to-one path from orders to customer accounts.
+  synonyms: [customer for order, relacao pedido cliente]
+  hops:
+  - source_table_id: orders
+    source_column: customer_id
+    target_table_id: customers
+    target_column: customer_id
+    kind: inner
+- id: orders_to_employees
+  name: Orders To Employees
+  description: Many-to-one path from orders to responsible employees.
+  synonyms: [employee for order, funcionario responsavel pelo pedido]
+  hops:
+  - source_table_id: orders
+    source_column: employee_id
+    target_table_id: employees
+    target_column: employee_id
+    kind: inner
+- id: orders_to_shippers
+  name: Orders To Shippers
+  description: Many-to-one path from orders to selected shipping companies.
+  synonyms: [shipper for order, relacao pedido transportadora]
+  hops:
+  - source_table_id: orders
+    source_column: ship_via
+    target_table_id: shippers
+    target_column: shipper_id
+    kind: inner
+- id: products_to_categories
+  name: Products To Categories
+  description: Many-to-one path from products to product categories.
+  synonyms: [category for product, relacao produto categoria]
+  hops:
+  - source_table_id: products
+    source_column: category_id
+    target_table_id: product_categories
+    target_column: category_id
+    kind: inner
+- id: products_to_suppliers
+  name: Products To Suppliers
+  description: Many-to-one path from products to suppliers.
+  synonyms: [supplier for product, relacao produto fornecedor]
+  hops:
+  - source_table_id: products
+    source_column: supplier_id
+    target_table_id: suppliers
+    target_column: supplier_id
+    kind: inner
+- id: territories_to_regions
+  name: Sales Territories To Sales Regions
+  description: Many-to-one path from sales territories to sales regions.
+  synonyms: [region for territory, relacao territorio regiao]
+  hops:
+  - source_table_id: sales_territories
+    source_column: region_id
+    target_table_id: sales_regions
+    target_column: region_id
+    kind: inner
+- id: order_lines_to_customers
+  name: Order Lines To Customers
+  description: >-
+    Many-to-one two-hop path from order lines through orders to customers; it
+    preserves the order-line grain.
+  synonyms: [customer for order line, cliente da linha de pedido]
+  hops:
+  - source_table_id: order_lines
+    source_column: order_id
+    target_table_id: orders
+    target_column: order_id
+    kind: inner
+  - source_table_id: orders
+    source_column: customer_id
+    target_table_id: customers
+    target_column: customer_id
+    kind: inner
+- id: order_lines_to_employees
+  name: Order Lines To Employees
+  description: >-
+    Many-to-one two-hop path from order lines through orders to responsible
+    employees; it preserves the order-line grain.
+  synonyms: [employee for order line, funcionario da linha de pedido]
+  hops:
+  - source_table_id: order_lines
+    source_column: order_id
+    target_table_id: orders
+    target_column: order_id
+    kind: inner
+  - source_table_id: orders
+    source_column: employee_id
+    target_table_id: employees
+    target_column: employee_id
+    kind: inner
+- id: order_lines_to_shippers
+  name: Order Lines To Shippers
+  description: >-
+    Many-to-one two-hop path from order lines through orders to shipping
+    companies; it preserves the order-line grain.
+  synonyms: [shipper for order line, transportadora da linha de pedido]
+  hops:
+  - source_table_id: order_lines
+    source_column: order_id
+    target_table_id: orders
+    target_column: order_id
+    kind: inner
+  - source_table_id: orders
+    source_column: ship_via
+    target_table_id: shippers
+    target_column: shipper_id
+    kind: inner
+- id: order_lines_to_categories
+  name: Order Lines To Product Categories
+  description: >-
+    Many-to-one two-hop path from order lines through products to categories;
+    it preserves the order-line grain.
+  synonyms: [category for order line, categoria da linha de pedido]
+  hops:
+  - source_table_id: order_lines
+    source_column: product_id
+    target_table_id: products
+    target_column: product_id
+    kind: inner
+  - source_table_id: products
+    source_column: category_id
+    target_table_id: product_categories
+    target_column: category_id
+    kind: inner
+- id: order_lines_to_suppliers
+  name: Order Lines To Suppliers
+  description: >-
+    Many-to-one two-hop path from order lines through products to suppliers; it
+    preserves the order-line grain.
+  synonyms: [supplier for order line, fornecedor da linha de pedido]
+  hops:
+  - source_table_id: order_lines
+    source_column: product_id
+    target_table_id: products
+    target_column: product_id
+    kind: inner
+  - source_table_id: products
+    source_column: supplier_id
+    target_table_id: suppliers
+    target_column: supplier_id
+    kind: inner

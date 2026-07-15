@@ -1507,3 +1507,86 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 - Do not treat physical relationship approval as semantic-definition,
   expected-answer, provider, upload, publication, or training authority.
 - Do not apply semantic state before the separate exact human semantic review.
+
+## 2026-07-15 - Codex - Northwind semantic candidate and Phase 3 review gate
+
+### Initial Context
+
+- Branch: `main` at `12b0307`; worktree clean and four local commits ahead of
+  `origin/main`.
+- Northwind had passed Phase 2 with 13 accepted exact physical relationships,
+  but no real semantic definition had been proposed, reviewed, or applied.
+- The project owner authorized continued implementation; the completed physical
+  relationship review was not treated as advance approval of unseen semantic
+  definitions.
+
+### Work Performed
+
+- Added the versioned candidate at
+  `datasets/benchmarks/manifests/northwind.semantic-catalog-candidate.yml` with
+  one dataset, 13 table grains, 60 dimensions, 19 direct-column measures, 18
+  approved many-to-one relationship paths, and English/Portuguese terms.
+- Kept calculated revenue absent because the version-1 measure contract cannot
+  express unit price times quantity times discount. Distinguished order-line
+  price from product list price, marked freight as order-grain, retained stock
+  quantities as snapshots, and documented the unknown currency code.
+- Retained both empty demographic tables as structural candidates and exposed
+  `employees.reports_to` only as an immediate-manager ID because version 1
+  rejects self-relationship hops.
+- Compiled the candidate against the local Northwind DuckDB metadata and the
+  Phase 2 approved relationship projection. The first immutable output recorded
+  six accidental ID-versus-path synonym ambiguities; the versioned candidate
+  was revised with explicit relationship terms and compiled into a new output
+  with zero ambiguities.
+- Prepared the separate hash-bound pending semantic review with 111 entity
+  decisions and zero ambiguity decisions. No decision was prefilled or applied.
+- Added `docs/northwind-semantic-review.md` with the material modeling choices,
+  review checklist, hashes, authority boundary, and reproduction commands.
+- Updated the dataset inventory, roadmap, current state, backend, architecture,
+  orchestrator, benchmark/semantic/testing docs, README, and changelog.
+
+### Validation
+
+- Candidate SHA-256:
+  `b67181e7de1e1d876719a341d7275d5f493e95d7e6d34c1014c80748b2676b08`.
+- Approved relationship registry SHA-256:
+  `b12b3f19d199c605fb9e88bfabacb8d1ca9369ba54aa91208d393f99de7efd72`.
+- Physical catalog SHA-256:
+  `1659954ac2def925cee82348e953820cc49e7d531669d9b2ceab21a4839b323c`.
+- Compiled catalog SHA-256:
+  `c46696f29890e70dbbc075882219d9daf319d8749d6a1dbdfead47f91ef0bb0d`.
+- Real compile: `ready_for_semantic_review`, zero blockers, zero ambiguities,
+  13 tables, 60 dimensions, 19 measures, 18 paths, and 339 terms.
+- Repeated compile: `Outputs changed: False`; repeated review preparation:
+  `Output changed: False`.
+- Focused semantic catalog/approval tests: 14 passed in 2.38 seconds.
+- Full offline suite: 181 passed in 32.17 seconds.
+- Internal links: 78 checked, zero broken.
+- No table rows, analytical query, external database, provider, network, upload,
+  publication, model training, EDS approval, or `config/analytics` state was
+  used or changed.
+
+### State For Next Agent
+
+- Northwind is `semantic_candidate_ready_for_human_review`.
+- The compiled candidate and pending review are generated under
+  `outputs/benchmarks/northwind-phase3-semantic-catalog-v2/` and
+  `outputs/benchmarks/northwind-phase3-semantic-review/`.
+- Phase 3 has not passed. Stage 5D remains blocked for Northwind until the exact
+  111-entity review is completed and semantic approval/apply succeeds.
+
+### Next Logical Step
+
+- Have the project owner evaluate the definitions and material caveats in
+  `docs/northwind-semantic-review.md`. Record an approved/rejected decision and
+  factual note for every entity in a separate completed review. If all are
+  approved, run semantic approval in dry-run mode before requesting an explicit
+  apply decision.
+
+### Do Not Do Yet
+
+- Do not infer semantic approval from the earlier physical relationship review,
+  implementation authorization, or zero technical blockers.
+- Do not apply `config/analytics/approved_semantic_catalog.yml`, create expected
+  answers, execute Northwind analytics through Stage 5D, use a live provider,
+  upload, publish, or train a model before their separate gates are satisfied.

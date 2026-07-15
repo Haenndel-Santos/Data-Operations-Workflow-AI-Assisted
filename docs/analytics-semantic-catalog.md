@@ -113,3 +113,13 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 
 The command reads metadata only. Existing byte-identical evidence is reused;
 different existing evidence is never overwritten.
+
+## Current Northwind Candidate
+
+The first real Phase 3 candidate is versioned as
+[`northwind.semantic-catalog-candidate.yml`](../datasets/benchmarks/manifests/northwind.semantic-catalog-candidate.yml).
+Against the approved Northwind relationship projection it compiles with 13
+tables, 60 dimensions, 19 measures, 18 relationship paths, 339 terms, zero
+ambiguities, and zero blockers. This is technical candidate evidence only. Its
+111 semantic entities remain pending in the separate human review described in
+the [Northwind semantic review guide](northwind-semantic-review.md).

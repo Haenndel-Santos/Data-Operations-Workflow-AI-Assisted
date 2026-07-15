@@ -43,13 +43,29 @@ datasets:
       derived_export_status: pending
       external_connection_used: false
   - id: northwind
-    status: ready_for_semantic_modeling
+    status: semantic_candidate_ready_for_human_review
     intended_role: small_commercial_oltp_reference
     reference_manifest: datasets/benchmarks/manifests/northwind.reference.yml
     relationship_review: datasets/benchmarks/manifests/northwind.relationship-review.yml
     relationship_review_sha256: b3131c460bcef79903324fafd07c4083c8018259cdc221847568d33862872f16
     approved_relationship_registry: outputs/benchmarks/northwind-phase2-reviewed/approved_relationships.yml
     approved_relationship_registry_sha256: b12b3f19d199c605fb9e88bfabacb8d1ca9369ba54aa91208d393f99de7efd72
+    semantic_model:
+      status: candidate_ready_for_human_review
+      candidate: datasets/benchmarks/manifests/northwind.semantic-catalog-candidate.yml
+      candidate_sha256: b67181e7de1e1d876719a341d7275d5f493e95d7e6d34c1014c80748b2676b08
+      compiled_output: outputs/benchmarks/northwind-phase3-semantic-catalog-v2/analytics_semantic_catalog.yml
+      compiled_output_sha256: c46696f29890e70dbbc075882219d9daf319d8749d6a1dbdfead47f91ef0bb0d
+      pending_review: outputs/benchmarks/northwind-phase3-semantic-review/analytics_semantic_review.yml
+      physical_catalog_sha256: 1659954ac2def925cee82348e953820cc49e7d531669d9b2ceab21a4839b323c
+      semantic_tables: 13
+      dimensions: 60
+      measures: 19
+      relationship_paths: 18
+      normalized_terms: 339
+      ambiguities: 0
+      semantic_definitions_approved: false
+      adapter_use_authorized: false
     provenance: verified_exact_official_microsoft_copy
     authoritative_source: https://github.com/microsoft/sql-server-samples/blob/2f85f3724ee45776a5183ed34d064488a6e1dc53/samples/databases/northwind-pubs/instnwnd.sql
     license: MIT
