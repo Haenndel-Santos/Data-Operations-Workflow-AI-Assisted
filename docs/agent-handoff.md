@@ -1751,3 +1751,96 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 - Do not execute unreviewed benchmark cases, enable automatic query execution,
   add live narration, connect an external provider, upload/publish data, or
   fine-tune/train model parameters without their separate gates.
+
+## 2026-07-15 - Codex - Phase 5 Northwind answer-plan preparation
+
+### Initial Context
+
+- Branch: `main` at `209d87e`; worktree clean and seven local commits ahead of
+  `origin/main`.
+- AI roadmap Phases 0-4 had passed for Northwind and local Ollama
+  `gpt-oss:20b`, but only one live non-executing smoke question existed.
+- Northwind provenance, MIT license, local benchmark scope, all 13 physical
+  relationships, and all 111 semantic entities were already separately
+  approved.
+- No real expected-answer pack or safe workflow for collecting its values
+  existed. General Phase 5 authorization was not treated as exact query-plan
+  approval.
+
+### Work Performed
+
+- Added `analytics_dataset_benchmark_preparation` and the
+  `analytics-dataset-benchmark-answer-prepare` CLI. The module validates a
+  verified immutable dataset manifest, approved semantics and relationships,
+  bounded recorded semantic intents, deterministic result shape/aliases, typed
+  columns, comparison policy, and exact source hashes.
+- Reused the existing recorded Stage 5D and local-session Stage 5A preparation
+  for each case. The module never imports or calls Stage 5B and generates one
+  aggregate pending execution review bound to the complete preparation manifest
+  and every exact plan hash.
+- Added a public shared dataset-manifest contract validator without changing its
+  existing behavior or consumers.
+- Added six focused tests for review readiness/idempotency, provider SQL refusal
+  before catalog access, source binding drift, output alias drift, divergent
+  evidence preservation, and fixed CLI safety.
+- Added the versioned Northwind public dataset manifest and a 13-case English
+  answer design covering table, dimension, measure, filter, order,
+  relationship, null-filter, no-row, exact, and numeric-tolerance behavior.
+- Ran the real preparation against the bound local Northwind DuckDB. All 13
+  recorded intents reached exact Stage 5A plan readiness with zero blockers.
+  Generated local evidence is under
+  `outputs/benchmarks/northwind-phase5-answer-preparation-v1/`.
+- Added a human-readable per-case review guide at
+  `docs/northwind-answer-benchmark-review.md` and recorded the durable two-gate
+  answer-authority decision.
+- Created feature commit `c69dc4a` (`feat(benchmarks): prepare northwind answer
+  plans`). No push was performed.
+
+### Validation
+
+- Focused preparation plus existing dataset benchmark suite: 32 passed in 7.18
+  seconds.
+- Full offline suite: 199 passed and 1 opt-in Ollama live test skipped in 36.50
+  seconds.
+- Internal links: 91 checked, zero broken.
+- Real Northwind preparation: `awaiting_execution_review`, 13 cases, 13 exact
+  review-ready plans, zero blockers.
+- Repeated real preparation: `Outputs changed: False`.
+- Design SHA-256:
+  `8bce09e23112c1b3cfc300b27e6c9fe7c5fe17600e2b59d170da9b44a7dd93ff`.
+- Preparation-manifest SHA-256:
+  `8a645dd34fad6f0a039f78d7b19f874d4d0cbaa2648916ad697734de611da3ca`.
+- No Stage 5B query, table-row read, expected result, live provider, network,
+  credential, upload, publication, narration, model training, migration,
+  import, or synchronization was used.
+
+### State For Next Agent
+
+- Phase 5 is active but its exit gate remains open.
+- The exact pending aggregate review is
+  `outputs/benchmarks/northwind-phase5-answer-preparation-v1/analytics_dataset_benchmark_execution_review.yml`.
+- The review guide lists every question, table grain, measure, filter value,
+  join path, ordering, output type, and comparison policy that the human must
+  inspect.
+- Approval of these plans will authorize only sequential fixed-limit local
+  read-only answer collection. It will not approve the collected values.
+- A completed-review validator and candidate-pack materializer remain the next
+  implementation unit; after collection, the existing final per-case benchmark
+  review/approval contract remains mandatory before evaluation.
+
+### Next Logical Step
+
+- Obtain an explicit decision on all 13 exact plans. If approved, implement and
+  test completed execution-review validation plus sequential Stage 5B candidate
+  answer materialization, run it against the unchanged hashes, and generate the
+  separate pending final expected-answer review.
+
+### Do Not Do Yet
+
+- Do not convert the pending execution review into approval without the project
+  owner's explicit per-case decision.
+- Do not execute any of the 13 Northwind plans, collect expected values, approve
+  the resulting pack, or run comparative live Ollama evaluation before their
+  exact gates.
+- Do not enable concurrency, dynamic dispatch, live narration, external
+  providers, upload, publication, or model-parameter training.
