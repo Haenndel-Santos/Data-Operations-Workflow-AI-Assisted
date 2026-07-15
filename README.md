@@ -235,9 +235,10 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 .\.venv\Scripts\python.exe -m data_ops_lab analytics-dataset-benchmark-answer-materialize --design "datasets\benchmarks\manifests\northwind.answer-benchmark-design.yml" --dataset-manifest "datasets\benchmarks\manifests\northwind.dataset-benchmark.yml" --preparation-manifest "outputs\benchmarks\northwind-phase5-answer-preparation-v1\analytics_dataset_benchmark_preparation.yml" --execution-review "datasets\benchmarks\manifests\northwind.answer-execution-review.yml" --database "datasets\benchmarks\derived\northwind\northwind.duckdb" --semantic-state "config\analytics\approved_semantic_catalog.yml" --relationships "outputs\benchmarks\northwind-phase2-reviewed\approved_relationships.yml" --pack-output "datasets\benchmarks\manifests\northwind.answer-benchmark-pack.yml" --output "outputs\benchmarks\northwind-phase5-answer-materialization-v3"
 ```
 
-Northwind now has a 13-case `candidate_for_review` pack. Its collected values
-remain unapproved and Ollama has not been evaluated against them. See the
-[expected-answer review guide](docs/northwind-expected-answer-review.md).
+Northwind now has a reviewed 13-case candidate pack plus a separate immutable
+approval. Its recorded offline evaluation passed 13/13 with zero blockers;
+Ollama has not been evaluated across the pack. See the
+[expected-answer review record](docs/northwind-expected-answer-review.md).
 
 To validate immutable dataset-backed benchmark bindings without opening or querying the database:
 
@@ -247,9 +248,8 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 .\.venv\Scripts\python.exe -m data_ops_lab analytics-dataset-benchmark-validate --dataset-manifest "<manifest.yml>" --database "<dataset.duckdb>" --semantic-state "<semantic.yml>" --relationships "<relationships.yml>" --pack "<pack.yml>" --approval "<approval.yml>" --output "outputs\<run-id>\analytics_dataset_benchmark_validation"
 ```
 
-This is a hash-bound dry-run only. Northwind has a collected candidate pack but
-no completed per-case pack review or approval yet; EDS also does not meet this
-contract.
+This is a hash-bound dry-run only. Northwind now meets this contract through its
+versioned completed review and generated approval; EDS does not.
 
 To prepare and validate the separate human review required by that contract:
 
@@ -266,7 +266,9 @@ After an exact package and review have produced a valid approval, the offline ev
 .\.venv\Scripts\python.exe -m data_ops_lab analytics-dataset-benchmark-evaluate --dataset-manifest "<manifest.yml>" --database "<dataset.duckdb>" --semantic-state "<semantic.yml>" --relationships "<relationships.yml>" --pack "<pack.yml>" --approval "<approval.yml>" --output "outputs\<run-id>\analytics_dataset_benchmark_evaluation"
 ```
 
-This command runs fixed-limit read-only queries with recorded responses only. No current real project dataset meets its prerequisites.
+This command runs fixed-limit read-only queries with recorded responses only.
+Northwind is the first real project package to meet its prerequisites and passed
+13/13; this is not live-model quality evidence.
 
 To render a completed Stage 5B result deterministically and validate a recorded
 cited narrative:
@@ -424,7 +426,7 @@ DuckDB is a good fit for this project because it supports local analytical workf
 
 ## Next Extensions
 
-- Complete the final per-case review and approval of the collected English Northwind expected-answer pack, then run comparative local-model evaluation.
+- Add a separately authorized, bounded 13-case local Ollama comparison against the approved Northwind offline baseline.
 - Add a governed UI for questions, result tables, evidence, and validation review.
 - Add Tableau workbook screenshots as a final portfolio artifact.
 - Add richer validation checks for totals before and after joins.

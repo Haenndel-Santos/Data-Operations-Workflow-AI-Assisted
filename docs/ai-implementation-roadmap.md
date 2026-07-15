@@ -26,9 +26,9 @@ As of 2026-07-15, the project has:
 - a versioned static module registry for those session phases with dynamic
   execution, concurrency, network, and review auto-approval disabled;
 - 206 passing offline tests plus one skipped opt-in live test, one approved real
-  Northwind semantic registry, one collected but unapproved 13-case Northwind
-  expected-answer pack, and no production UI or authorized comparative model
-  evaluation.
+  Northwind semantic registry, one 13-case Northwind expected-answer pack with
+  separate immutable approval, a 13/13 recorded offline answer baseline, and no
+  production UI or authorized comparative live-model evaluation.
 
 Phase 0 passed its exit gate on 2026-07-14 through static validation only.
 Phase 1 also passed its exit gate with an isolated synthetic baseline and an
@@ -47,14 +47,14 @@ run mode, and applied idempotently. A real structured intent reached
 Northwind. Phase 4 passed on 2026-07-15 after explicit project-owner selection
 of local Ollama `gpt-oss:20b`, loopback/proxy/credential/privacy constraints,
 bounded context/output/timeout, sanitized failure tests, zero hosted-token cost,
-offline mocks, and one isolated live smoke test. Phase 5 comparative evaluation
-has now started with a versioned 13-case Northwind answer design. Recorded Stage
-5D plus Stage 5A produced 13 exact plans with zero blockers and no table-row
-access. The project owner approved those exact plans for bounded local read-only
-collection. Sequential Stage 5B then completed all 13 cases, and the typed
-candidate pack passed contract validation with zero blockers. Its separate
-per-case expected-answer review and all comparative provider evidence remain
-pending.
+offline mocks, and one isolated live smoke test. Phase 5 evaluation has now
+started with a versioned 13-case Northwind answer design. Recorded Stage 5D plus
+Stage 5A produced 13 exact plans, the project owner approved bounded local read-
+only collection, and sequential Stage 5B produced the typed candidate pack. The
+owner then approved all four answer decisions for every case. Immutable approval
+and package validation passed with zero blockers, and the recorded offline
+evaluator passed 13/13. Comparative live-provider evidence remains pending and
+requires separate invocation authority.
 
 ## Target Architecture
 
@@ -171,9 +171,12 @@ approved dataset-backed packs. Passing recorded cases is not live-model proof.
 Started on 2026-07-15. The Northwind answer design covers table, dimension,
 measure, filter, order, relationship, null, no-row, exact, and numeric-tolerance
 behavior. Its 13 exact plans passed the pre-execution human gate and completed
-sequential fixed-limit Stage 5B collection. The resulting candidate expected-
-answer pack is waiting at the separate per-case human gate. No live-provider
-comparison has been run, so the Phase 5 exit gate remains open.
+sequential fixed-limit Stage 5B collection. All four final decisions per case
+were then approved and bound into an immutable approval. The recorded offline
+evaluation passed 13/13, including 12 exact and one reviewed-tolerance result,
+with zero blockers and byte-idempotent reuse. This is the deterministic baseline,
+not live-model proof. No 13-case live-provider comparison has been authorized or
+run, so the Phase 5 exit gate remains open.
 
 ### Phase 6 - Generic Dataset Recognition
 

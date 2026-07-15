@@ -1944,3 +1944,91 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 - Do not call Ollama for comparative evaluation, enable concurrency/dynamic
   dispatch, add live narration, connect external providers, upload/publish
   data, or train model parameters before their separate gates.
+
+## 2026-07-15 - Codex - Northwind approved recorded-answer baseline
+
+### Initial Context
+
+- Branch: `main` at `5531b2b`; worktree clean and synchronized with
+  `origin/main`.
+- The project owner explicitly approved all 13 final Northwind cases after an
+  independent read-only result and data-quality review.
+- The accepted scope was the recorded local offline evaluation only. Live
+  provider use, external upload, and model training remained not authorized.
+
+### Work Performed
+
+- Preserved the generated pending form and created the additive completed review
+  at `datasets/benchmarks/manifests/northwind.answer-benchmark-review.yml`.
+- Recorded all four required decisions for every case. Notes retain the accepted
+  unweighted line-level discount average and deterministic alphabetical tie
+  rules at both exact top-10 cutoffs.
+- Ran the approval workflow first in dry-run and then with explicit apply. Both
+  reported zero blockers; a repeated apply reused the exact approval without
+  changes.
+- Generated the immutable approval at
+  `datasets/benchmarks/manifests/northwind.answer-benchmark-approval.yml` with
+  local offline evaluation enabled and live provider, upload, and training
+  disabled.
+- Validated the complete package as `ready_for_offline_evaluation`, then ran the
+  13 cases through recorded Stage 5D, exact Stage 5A request gating, and fixed-
+  limit read-only Stage 5B execution.
+- Repeated the evaluator against the same output path and confirmed byte-
+  idempotent evidence reuse.
+- Created authority commit `3536ddc` (`feat(benchmarks): approve northwind
+  answer pack`).
+
+### Validation
+
+- Approval dry-run/apply: `ready_for_apply`, zero blockers; repeated apply
+  reported `Approval changed: False` and `Outputs changed: False`.
+- Package validation: `ready_for_offline_evaluation`, 13 cases, 12 exact
+  comparisons, one numeric-tolerance comparison, 13 approved relationships,
+  zero blockers.
+- Recorded offline evaluation: `passed`, 13/13 overall, pipeline, request,
+  result, and control checks; 12/12 exact and 1/1 numeric tolerance; zero
+  contract blockers.
+- Repeated evaluation: `Outputs changed: False`.
+- Focused benchmark suites: 39 passed in 9.40 seconds.
+- Full offline suite: 206 passed and one opt-in live-provider test skipped in
+  36.64 seconds.
+- Internal links: 103 checked, zero broken.
+- Completed-review SHA-256:
+  `deaa274d7a015071896d91788a7ca8f2d7c2f358e416f4e9b40833242493630f`.
+- Approval SHA-256:
+  `b1ceda6e675448d3fc808d21af2a919c26de4f2016e7d68dfbb6b32b019016b0`.
+- Evaluation-manifest SHA-256:
+  `e03fa9de299fc1bf946b6b19d4ee1f0b5b24e3fa6c1103fb46a520938cfea3e8`.
+- No live Ollama call, external network, credential, upload, publication,
+  narration, model training, migration, import, synchronization, or database
+  write was used.
+
+### State For Next Agent
+
+- The Northwind pack plus its separate immutable approval is now the first real-
+  dataset recorded offline answer authority. The pack remains mechanically
+  `candidate_for_review`; the approval remains separate. Together they prove
+  deterministic request, pipeline, execution, comparison, and safety controls
+  for these 13 recorded cases.
+- It is not evidence that `gpt-oss:20b` can translate the 13 live questions.
+  The local provider still has only one isolated live smoke pass.
+- Generated dry-run, apply, validation, and evaluation evidence remains local
+  under the corresponding `outputs/benchmarks/northwind-phase5-*` directories;
+  `outputs/` is ignored by design.
+
+### Next Logical Step
+
+- Define and review a bounded Phase 5 live-comparison contract, including case
+  isolation, prompt minimization, latency/token/memory evidence, sanitized
+  failures, no persisted case content, and explicit loopback-only invocation.
+- Obtain separate live-provider authority before invoking Ollama across the 13
+  cases, then compare live semantic intent and downstream answers with this
+  approved recorded baseline.
+
+### Do Not Do Yet
+
+- Do not infer live-model quality or live-provider permission from the 13/13
+  recorded result.
+- Do not invoke Ollama for the comparative pack, enable dynamic dispatch or
+  concurrency, add live narration, connect external providers, upload/publish
+  data, or train model parameters before their separate gates.

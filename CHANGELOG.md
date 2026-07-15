@@ -22,6 +22,7 @@ All notable user-facing and release-relevant changes will be documented here.
 - Dry-run dataset-backed Stage 5E validation with cryptographic dataset, semantic, relationship, pack, and separate approval bindings.
 - Hash-bound per-case dataset benchmark review and explicit immutable approval generation without database access or execution.
 - Approved offline dataset-backed evaluation through recorded Stage 5D, exact Stage 5A request gates, Stage 5B read-only execution, and exact/tolerance metrics.
+- First immutable real-dataset answer authority and reproducible recorded offline baseline: all 13 approved Northwind cases passed with zero blockers and no live provider or network.
 - Hash-bound deterministic Stage 5B result presentation plus recorded grounded narration with mandatory citations and exact numeric preservation.
 - Two-phase recorded local analytics sessions with immutable preparation, exact human plan review, safe resume, and last-valid-checkpoint evidence.
 - Versioned static analytics module-registry validation for exact entrypoint
