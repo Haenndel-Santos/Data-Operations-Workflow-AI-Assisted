@@ -2136,3 +2136,104 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 - Do not enable external providers, upload, training, narration, publication,
   concurrency, dynamic dispatch, automatic execution, or a UI before their
   separate gates.
+
+## 2026-07-15 - Codex - Guarded local Ollama overnight soak launched
+
+### Initial Context
+
+- Branch: `main` at `1cc76e7`; worktree clean and synchronized with
+  `origin/main`.
+- The user explicitly requested an unattended local test that could use the
+  available GPU and RAM overnight without consuming Codex tokens after launch.
+- The workstation exposed an RTX 3070 Ti with 8,192 MB VRAM, approximately
+  31.9 GB total RAM with 16.8 GB available, and 533.8 GB free disk before work.
+
+### Alignment And Hardware Decision
+
+- The installed `gpt-oss:20b` artifact is about 13 GB. A real canary used 7,309
+  MB VRAM and Ollama reported a 57% CPU / 43% GPU split.
+- Model-call concurrency was fixed at one. The GPU performs tensor work in
+  parallel internally; simultaneous model requests on this hardware would add
+  KV-cache/context and system-memory pressure rather than useful throughput.
+- The approved scope is repeated Northwind development evaluation only. It does
+  not authorize training, fine-tuning, a hosted provider, upload, narration,
+  publication, production use, or holdout/provider-selection claims.
+
+### Work Performed
+
+- Added `analytics-ollama-soak`, a standalone dry-run/live command that reuses
+  the governed live evaluator instead of duplicating Stage 5D/5A/5B logic.
+- Added a separate SHA-256-bound authorization permitting 12 hours or 96
+  cycles, 45 seconds cooldown, provider concurrency one, and no more than two
+  consecutive technical cycle errors.
+- Added fail-closed limits: 78 degrees Celsius GPU temperature, 6,144 MB minimum
+  available system memory, 20,480 MB minimum free disk, immediate stop after a
+  provider timeout, and a `STOP` file.
+- Extended the live evaluator with an optional fail-closed guard checked before
+  each provider case. A running request remains bounded by the 120-second
+  provider timeout.
+- Added atomic root checkpoints, per-cycle evidence, aggregate case-stability
+  counts, PID/heartbeat/stop state, local token/latency totals, and GPU/RAM/disk
+  extrema without copying questions, responses, SQL, parameters, filter values,
+  or rows.
+- Created and pushed commit `10d16df` (`feat(ai): add guarded local ollama
+  soak`).
+
+### Validation
+
+- Focused dataset/live/soak suite: 45 passed in 11.51 seconds.
+- Full offline suite after final source changes: 224 passed and 2 opt-in online
+  tests skipped in 37.33 seconds.
+- Internal links: 109 checked, zero broken.
+- Real soak preflight: `ready_for_overnight_soak`, zero provider calls, zero
+  blockers, and no DuckDB access.
+- Real one-question local Ollama canary: 1 passed in 39.48 seconds with no
+  DuckDB or SQL execution.
+- `git diff --check`: no whitespace errors.
+
+### Active Run
+
+- Started at `2026-07-15T17:16:46+02:00` in a hidden background process.
+- Effective Python PID: `12720`; virtual-environment launcher PID: `24684`.
+- Output:
+  `outputs/benchmarks/northwind-ollama-overnight-soak-20260715-171646/`.
+- Standard logs use the same path with `.stdout.log` and `.stderr.log` suffixes.
+- Initial manifest status: `running`; zero contract blockers.
+- During the first cycle, the observed GPU reached 98% utilization, 7,284 MB
+  VRAM, 58 degrees Celsius, and approximately 172 W.
+- The runtime manifest explicitly records
+  `codex_or_hosted_model_api_used_by_runtime: false`.
+
+### How To Inspect Or Stop
+
+- Inspect
+  `outputs/benchmarks/northwind-ollama-overnight-soak-20260715-171646/analytics_ollama_soak.yml`
+  and `analytics_ollama_soak_report.md` for the latest atomic checkpoint.
+- Run `nvidia-smi` for a current device sample.
+- Create an empty file named `STOP` inside the run directory for a graceful
+  stop before the next model call or during cooldown.
+- If the process has already finished, trust the final manifest status and stop
+  reason rather than the historical PIDs.
+
+### State For Next Agent
+
+- Do not start a second soak while PIDs `12720`/`24684` or another
+  `analytics-ollama-soak` process is active.
+- The active results are development stability evidence. They cannot alter the
+  approved Northwind pack or replace the still-required fresh holdout.
+- Generated soak outputs and logs remain under ignored `outputs/` paths.
+
+### Next Logical Step
+
+- After completion, validate final status, stop reason, cycle count, provider
+  calls, per-case stability, total local tokens/latency, peak GPU temperature,
+  peak VRAM/power, minimum RAM/disk, and empty error log.
+- Record the final evidence hash and interpret variations without tuning against
+  a future holdout.
+
+### Do Not Do Yet
+
+- Do not treat repeated Northwind cases as additional independent accuracy
+  samples or as a holdout.
+- Do not enable parallel model requests, training, external providers, upload,
+  narration, publication, dynamic dispatch, or production use.

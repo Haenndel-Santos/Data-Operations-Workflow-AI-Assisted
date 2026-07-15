@@ -6,11 +6,13 @@ Turn local operational spreadsheets into validated analytical datasets and an ap
 
 ## Current Stage
 
-Three active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases 0-4 passed their gates for Northwind and the selected local Ollama development provider; and Phase 5 is active after completing both the first approved real-dataset recorded baseline and a separately authorized local live development comparison. Stage 5A-5F governed analytics has its first applied real semantic catalog, immutable 13-case Northwind answer authority, reproducible 13/13 recorded evaluation, and governed 9/13 loopback Ollama result. A fresh holdout, provider selection, dynamic dispatch, live narration, and a user interface remain pending.
+Three active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases 0-4 passed their gates for Northwind and the selected local Ollama development provider; and Phase 5 is active after completing both the first approved real-dataset recorded baseline and a separately authorized local live development comparison. Stage 5A-5F governed analytics has its first applied real semantic catalog, immutable 13-case Northwind answer authority, reproducible 13/13 recorded evaluation, governed 9/13 loopback Ollama result, and a separately authorized 12-hour local endurance run currently active. A fresh holdout, provider selection, dynamic dispatch, live narration, and a user interface remain pending.
 
 ## Last Completed Milestone
 
 On 2026-07-15, the project owner separately authorized the exact 13-case Northwind loopback Ollama comparison after its recorded offline baseline passed 13/13. The new evaluator dry-runs without provider/database access, requires both explicit live and loopback-network flags, binds every immutable source plus provider/prompt/execution configuration, runs sequentially, and rehashes authority before provider/query use. Authorization v3 SHA-256 is `a47ffac89f91eaa1e48a1024c5d206887e0c1a2e2269d7f1e6617d1d1e70ba81`. Its live `gpt-oss:20b` development run passed 9/13 end to end with zero contract blockers: 11/13 provider acceptance, 9/13 semantic request agreement after reviewed alias-only normalization, 2/13 literal request agreement, and 9/13 result/control agreement. Two provider rejections, one filter mismatch, and one scalar alias/limit mismatch were stopped before query execution. The 13 calls used 82,442 reported tokens and 429.073 seconds provider wall time; hosted API cost was USD 0. Because prompt and alias behavior were refined against these cases, Northwind is now a development set rather than a holdout. External providers, upload, training, publication, narration, concurrency, and dynamic dispatch remained disabled.
+
+The local endurance harness was then implemented and launched at 17:16 Europe/Amsterdam on 2026-07-15. It repeats only the exact Northwind development comparison for at most 12 hours or 96 cycles, keeps provider concurrency at one, pauses 45 seconds between cycles, checkpoints safe aggregate evidence, and checks `STOP`, GPU temperature, RAM, and disk before every model call. It stops at 78 degrees Celsius, below 6,144 MB available RAM, below 20,480 MB free disk, any provider timeout, or two consecutive technical errors. Its offline preflight made zero provider/database calls and reported zero blockers; a one-question live canary passed in 39.48 seconds. At launch the active run reported zero blockers, and the first cycle drove the GPU to 98% utilization, 7,284/8,192 MB VRAM, 58 degrees Celsius, and about 172 W. The runtime uses local Python, Ollama, and read-only DuckDB only; it does not use Codex or a hosted-model API.
 
 ## Current Capabilities
 
@@ -68,6 +70,7 @@ On 2026-07-15, the project owner separately authorized the exact 13-case Northwi
 - Evaluate an exact ordered pack sequentially through literal-loopback Ollama, Stage 5D, Stage 5A, and fixed-limit read-only Stage 5B only after immutable live authority and explicit invocation flags pass.
 - Report literal and reviewed alias-normalized semantic/request accuracy separately while refusing to normalize tables, columns, functions, paths, filters, ordering directions, or limits.
 - Persist sanitized latency, token, cost, RAM/GPU, component, pipeline, result, and control evidence without questions, provider responses, SQL, parameters, filter values, or rows.
+- Repeat the exact approved development comparison through a separately authorized local soak with provider concurrency one, per-case resource/`STOP` gates, atomic cycle checkpoints, and aggregate per-case stability evidence.
 - Revalidate completed Stage 5B evidence into a deterministic local Markdown result and a bounded facts package without reconnecting to DuckDB.
 - Preserve exact displayed CSV text, stable cell/control fact IDs, source hashes, explicit no-row diagnostics, and preview-truncation caveats.
 - Validate recorded result narration against the exact presentation manifest and facts SHA-256 before any provider call.
@@ -110,10 +113,10 @@ On 2026-07-15, the project owner separately authorized the exact 13-case Northwi
 
 ## Test Status
 
-- Automated suite: 217 tests passed and 2 opt-in live-provider tests skipped offline on 2026-07-15; latest run completed in 39.58 seconds.
-- Isolated local Ollama smoke test: 1 passed in 37.97 seconds on 2026-07-15 with an 8,192-token context; it used no database or SQL execution.
+- Automated suite: 224 tests passed and 2 opt-in live-provider tests skipped offline on 2026-07-15; latest run completed in 37.33 seconds.
+- Isolated local Ollama smoke test: 1 passed in 39.48 seconds on 2026-07-15 with an 8,192-token context; it used no database or SQL execution.
 - All 12 project-local skills passed the official skill validator on 2026-07-13.
-- Internal link check: 106 checked, 0 broken on 2026-07-15.
+- Internal link check: 109 checked, 0 broken on 2026-07-15.
 - Main suite is offline and uses temporary directories for generated test artifacts.
 - Documentation link checker is available at `scripts/check_internal_links.py`.
 - The relocated `.venv` has a stale editable-install path; use the `PYTHONPATH=src` command in `docs/testing.md` until environment repair is explicitly approved.
@@ -130,6 +133,7 @@ On 2026-07-15, the project owner separately authorized the exact 13-case Northwi
 - Cleaning is now the highest-memory measured synthetic stage and still loads a full Parquet table into Pandas before writing Parquet and CSV; any bounded-batch refactor must preserve type-detection and exact output contracts.
 - Northwind semantic state is approved and operational for deterministic local Stage 5D use, but its current catalog cannot express calculated revenue or a self-join employee-manager path; those remain explicit version-1 limitations.
 - The local Ollama provider passed only 9/13 Northwind development cases end to end. Two cases were rejected, one missed a filter, and one scalar request mismatched alias/limit; all four were blocked before query execution. Literal request agreement was only 2/13, so alias normalization must remain visible. Northwind informed prompt/policy refinement and cannot serve as the final holdout. No selected provider, fresh holdout evidence, live narration provider, dynamic dispatch, concurrency evidence, or user interface exists yet.
+- The active overnight soak consumes sustained local electricity and CPU/GPU resources. It is bounded and guarded, but its final stability evidence is pending until the process completes or stops. Repetition of Northwind cannot upgrade development evidence into a holdout or provider-selection result.
 - Stage 5B plan-to-execution drift still uses size and nanosecond modification time in ordinary queries. The dataset-backed evaluator additionally rechecks the complete database SHA-256 and every other authority hash before each Stage 5B call and after evaluation.
 - Exact download provenance and licensing remain unconfirmed for Pubs and Contoso. Northwind provenance and MIT licensing are verified, but its technical relationship evidence is not promotion authority.
 - Northwind's two `customer_customer_demo` relationships were explicitly accepted as official structural relationships without positive row coverage; semantic modeling must retain that limitation instead of presenting them as row-validated.
@@ -147,12 +151,12 @@ On 2026-07-15, the project owner separately authorized the exact 13-case Northwi
 
 ## Next Logical Milestone
 
-Define Phase 5 acceptance thresholds before seeing new live results, then create and separately review a fresh holdout pack that does not reuse the Northwind development questions. Bind a new invocation authority only after the holdout answers, semantic requests, relationships, comparison rules, and evaluation scope are approved. Compare the local provider without prompt tuning on that holdout. Do not select a provider from 9/13 development evidence, change the Northwind gold pack to fit the model, enable dynamic dispatch, add live narration, upload, publish, or train a model.
+Let the bounded overnight soak finish or stop safely, inspect its cycle/resource/stability evidence without changing the approved Northwind pack, then define Phase 5 acceptance thresholds before seeing new holdout results. Create and separately review a fresh holdout pack that does not reuse the Northwind development questions. Bind a new invocation authority only after the holdout answers, semantic requests, relationships, comparison rules, and evaluation scope are approved. Do not select a provider from repeated development evidence, enable dynamic dispatch, add live narration, upload, publish, or train a model.
 
 ## Last Verified Commit
 
-`8b1ecbe` (`feat(ai): add governed live benchmark evaluation`).
+`10d16df` (`feat(ai): add guarded local ollama soak`).
 
 ## Last Updated
 
-2026-07-15 by Codex after implementing the governed live evaluator and measuring the authorized Northwind local Ollama development run.
+2026-07-15 by Codex after implementing, validating, and launching the guarded local Northwind Ollama endurance run.
