@@ -56,10 +56,12 @@ review, validates complete human decisions in dry-run mode, and can persist a
 minimal approved registry only with explicit `--apply`. Rejected, pending,
 missing, duplicate, or stale decisions fail closed. Ambiguities either remain
 clarification points or resolve to an exact candidate selected by a human.
-The first real Northwind candidate now compiles with 13 tables, 60 dimensions,
-19 measures, 18 approved paths, 339 terms, zero ambiguities, and zero blockers.
-Its separate 111-entity review remains pending, so no real semantic catalog has
-been approved and Stage 5D remains operationally blocked. See
+The first real Northwind catalog compiles with 13 tables, 60 dimensions, 19
+measures, 18 approved paths, 339 terms, zero ambiguities, and zero blockers. Its
+separate 111-entity review is complete and the hash-bound approved registry is
+applied. A real structured intent passed Stage 5D and Stage 5A without execution;
+Northwind is no longer semantically blocked. A live provider and verified
+expected-answer pack remain separate. See
 [Northwind Semantic Catalog Review](northwind-semantic-review.md) and
 [Analytics Semantic Review And Approval](analytics-semantic-approval.md).
 

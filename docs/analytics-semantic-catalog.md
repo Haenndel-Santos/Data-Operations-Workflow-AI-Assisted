@@ -120,6 +120,8 @@ The first real Phase 3 candidate is versioned as
 [`northwind.semantic-catalog-candidate.yml`](../datasets/benchmarks/manifests/northwind.semantic-catalog-candidate.yml).
 Against the approved Northwind relationship projection it compiles with 13
 tables, 60 dimensions, 19 measures, 18 relationship paths, 339 terms, zero
-ambiguities, and zero blockers. This is technical candidate evidence only. Its
-111 semantic entities remain pending in the separate human review described in
-the [Northwind semantic review guide](northwind-semantic-review.md).
+ambiguities, and zero blockers. The project owner subsequently approved all 111
+entities through the separate hash-bound review, and the resulting approved
+semantic registry is now applied. Candidate compilation remains technical
+evidence; authority comes from the completed review described in the
+[Northwind semantic review guide](northwind-semantic-review.md).

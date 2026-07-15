@@ -1,0 +1,564 @@
+version: 1
+status: completed_human_review
+source:
+  semantic_catalog_sha256: c46696f29890e70dbbc075882219d9daf319d8749d6a1dbdfead47f91ef0bb0d
+review:
+  reviewer: project_owner
+  reviewed_at: '2026-07-15T12:20:39.3771266+02:00'
+  entity_decisions:
+  - kind: dataset
+    id: northwind_commerce
+    name: Northwind Commerce
+    decision: approved
+    notes: Project owner approved the complete Northwind semantic scope and stated modeling caveats.
+  - kind: table
+    id: product_categories
+    name: Product Categories
+    decision: approved
+    notes: Project owner approved this table definition, business name, synonyms, and documented row grain.
+  - kind: table
+    id: customer_demographic_assignments
+    name: Customer Demographic Assignments
+    decision: approved
+    notes: Project owner approved this table definition, business name, synonyms, and documented row grain.
+  - kind: table
+    id: customer_demographic_types
+    name: Customer Demographic Types
+    decision: approved
+    notes: Project owner approved this table definition, business name, synonyms, and documented row grain.
+  - kind: table
+    id: customers
+    name: Customers
+    decision: approved
+    notes: Project owner approved this table definition, business name, synonyms, and documented row grain.
+  - kind: table
+    id: employee_territory_assignments
+    name: Employee Territory Assignments
+    decision: approved
+    notes: Project owner approved this table definition, business name, synonyms, and documented row grain.
+  - kind: table
+    id: employees
+    name: Employees
+    decision: approved
+    notes: Project owner approved this table definition, business name, synonyms, and documented row grain.
+  - kind: table
+    id: order_lines
+    name: Order Lines
+    decision: approved
+    notes: Project owner approved this table definition, business name, synonyms, and documented row grain.
+  - kind: table
+    id: orders
+    name: Orders
+    decision: approved
+    notes: Project owner approved this table definition, business name, synonyms, and documented row grain.
+  - kind: table
+    id: products
+    name: Products
+    decision: approved
+    notes: Project owner approved this table definition, business name, synonyms, and documented row grain.
+  - kind: table
+    id: sales_regions
+    name: Sales Regions
+    decision: approved
+    notes: Project owner approved this table definition, business name, synonyms, and documented row grain.
+  - kind: table
+    id: shippers
+    name: Shippers
+    decision: approved
+    notes: Project owner approved this table definition, business name, synonyms, and documented row grain.
+  - kind: table
+    id: suppliers
+    name: Suppliers
+    decision: approved
+    notes: Project owner approved this table definition, business name, synonyms, and documented row grain.
+  - kind: table
+    id: sales_territories
+    name: Sales Territories
+    decision: approved
+    notes: Project owner approved this table definition, business name, synonyms, and documented row grain.
+  - kind: dimension
+    id: category_id
+    name: Category ID
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: category_name
+    name: Category Name
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: category_description
+    name: Category Description
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: demographic_assignment_customer_id
+    name: Demographic Assignment Customer ID
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: demographic_assignment_type_id
+    name: Assigned Demographic Type ID
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: demographic_type_id
+    name: Demographic Type ID
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: demographic_type_description
+    name: Demographic Type Description
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: customer_id
+    name: Customer ID
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: customer_company_name
+    name: Customer Company Name
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: customer_contact_name
+    name: Customer Contact Name
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: customer_contact_title
+    name: Customer Contact Title
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: customer_city
+    name: Customer City
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: customer_region
+    name: Customer Region
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: customer_postal_code
+    name: Customer Postal Code
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: customer_country
+    name: Customer Country
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: assignment_employee_id
+    name: Assigned Employee ID
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: assignment_territory_id
+    name: Assigned Territory ID
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: employee_id
+    name: Employee ID
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: employee_first_name
+    name: Employee First Name
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: employee_last_name
+    name: Employee Last Name
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: employee_title
+    name: Employee Title
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: employee_hire_date
+    name: Employee Hire Date
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: employee_city
+    name: Employee City
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: employee_region
+    name: Employee Region
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: employee_country
+    name: Employee Country
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: manager_employee_id
+    name: Manager Employee ID
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: line_order_id
+    name: Order Line Order ID
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: line_product_id
+    name: Order Line Product ID
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: line_unit_price
+    name: Captured Line Unit Price
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: line_discount_rate
+    name: Line Discount Rate
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: order_id
+    name: Order ID
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: order_customer_id
+    name: Order Customer ID
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: order_employee_id
+    name: Order Employee ID
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: order_date
+    name: Order Date
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: order_required_date
+    name: Required Delivery Date
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: order_shipped_date
+    name: Shipped Date
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: order_shipper_id
+    name: Order Shipper ID
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: order_ship_name
+    name: Order Ship-To Name
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: order_ship_city
+    name: Order Ship-To City
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: order_ship_region
+    name: Order Ship-To Region
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: order_ship_postal_code
+    name: Order Ship-To Postal Code
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: order_ship_country
+    name: Order Ship-To Country
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: product_id
+    name: Product ID
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: product_name
+    name: Product Name
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: product_supplier_id
+    name: Product Supplier ID
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: product_category_id
+    name: Product Category ID
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: product_quantity_per_unit
+    name: Product Quantity Per Unit
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: product_discontinued
+    name: Product Discontinued Flag
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: sales_region_id
+    name: Sales Region ID
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: sales_region_name
+    name: Sales Region Name
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: shipper_id
+    name: Shipper ID
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: shipper_company_name
+    name: Shipper Company Name
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: supplier_id
+    name: Supplier ID
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: supplier_company_name
+    name: Supplier Company Name
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: supplier_city
+    name: Supplier City
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: supplier_region
+    name: Supplier Region
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: supplier_country
+    name: Supplier Country
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: sales_territory_id
+    name: Sales Territory ID
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: sales_territory_name
+    name: Sales Territory Name
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: dimension
+    id: territory_region_id
+    name: Territory Sales Region ID
+    decision: approved
+    notes: Project owner approved this physical mapping, business label, description, and synonyms.
+  - kind: measure
+    id: category_count
+    name: Category Count
+    decision: approved
+    notes: Project owner approved this source, aggregation, label, description, and stated grain or unit caveat.
+  - kind: measure
+    id: customer_count
+    name: Customer Count
+    decision: approved
+    notes: Project owner approved this source, aggregation, label, description, and stated grain or unit caveat.
+  - kind: measure
+    id: employee_territory_assignment_count
+    name: Employee Territory Assignment Count
+    decision: approved
+    notes: Project owner approved this source, aggregation, label, description, and stated grain or unit caveat.
+  - kind: measure
+    id: employee_count
+    name: Employee Count
+    decision: approved
+    notes: Project owner approved this source, aggregation, label, description, and stated grain or unit caveat.
+  - kind: measure
+    id: order_line_count
+    name: Order Line Count
+    decision: approved
+    notes: Project owner approved this source, aggregation, label, description, and stated grain or unit caveat.
+  - kind: measure
+    id: units_ordered_total
+    name: Total Units Ordered
+    decision: approved
+    notes: Project owner approved this source, aggregation, label, description, and stated grain or unit caveat.
+  - kind: measure
+    id: line_unit_price_average
+    name: Average Captured Line Unit Price
+    decision: approved
+    notes: Project owner approved this source, aggregation, label, description, and stated grain or unit caveat.
+  - kind: measure
+    id: line_discount_rate_average
+    name: Average Line Discount Rate
+    decision: approved
+    notes: Project owner approved this source, aggregation, label, description, and stated grain or unit caveat.
+  - kind: measure
+    id: order_count
+    name: Order Count
+    decision: approved
+    notes: Project owner approved this source, aggregation, label, description, and stated grain or unit caveat.
+  - kind: measure
+    id: freight_total
+    name: Total Order Freight
+    decision: approved
+    notes: Project owner approved this source, aggregation, label, description, and stated grain or unit caveat.
+  - kind: measure
+    id: freight_average
+    name: Average Order Freight
+    decision: approved
+    notes: Project owner approved this source, aggregation, label, description, and stated grain or unit caveat.
+  - kind: measure
+    id: product_count
+    name: Product Count
+    decision: approved
+    notes: Project owner approved this source, aggregation, label, description, and stated grain or unit caveat.
+  - kind: measure
+    id: stock_units_total
+    name: Total Units In Stock
+    decision: approved
+    notes: Project owner approved this source, aggregation, label, description, and stated grain or unit caveat.
+  - kind: measure
+    id: units_on_order_total
+    name: Total Units On Order
+    decision: approved
+    notes: Project owner approved this source, aggregation, label, description, and stated grain or unit caveat.
+  - kind: measure
+    id: product_unit_price_average
+    name: Average Product List Unit Price
+    decision: approved
+    notes: Project owner approved this source, aggregation, label, description, and stated grain or unit caveat.
+  - kind: measure
+    id: sales_region_count
+    name: Sales Region Count
+    decision: approved
+    notes: Project owner approved this source, aggregation, label, description, and stated grain or unit caveat.
+  - kind: measure
+    id: shipper_count
+    name: Shipper Count
+    decision: approved
+    notes: Project owner approved this source, aggregation, label, description, and stated grain or unit caveat.
+  - kind: measure
+    id: supplier_count
+    name: Supplier Count
+    decision: approved
+    notes: Project owner approved this source, aggregation, label, description, and stated grain or unit caveat.
+  - kind: measure
+    id: sales_territory_count
+    name: Sales Territory Count
+    decision: approved
+    notes: Project owner approved this source, aggregation, label, description, and stated grain or unit caveat.
+  - kind: relationship_path
+    id: demographic_assignments_to_customers
+    name: Demographic Assignments To Customers
+    decision: approved
+    notes: Project owner approved this exact approved-relationship path, join direction, join kind, description, and synonyms.
+  - kind: relationship_path
+    id: demographic_assignments_to_types
+    name: Demographic Assignments To Types
+    decision: approved
+    notes: Project owner approved this exact approved-relationship path, join direction, join kind, description, and synonyms.
+  - kind: relationship_path
+    id: employee_assignments_to_employees
+    name: Employee Territory Assignments To Employees
+    decision: approved
+    notes: Project owner approved this exact approved-relationship path, join direction, join kind, description, and synonyms.
+  - kind: relationship_path
+    id: employee_assignments_to_territories
+    name: Employee Territory Assignments To Territories
+    decision: approved
+    notes: Project owner approved this exact approved-relationship path, join direction, join kind, description, and synonyms.
+  - kind: relationship_path
+    id: employee_assignments_to_regions
+    name: Employee Territory Assignments To Sales Regions
+    decision: approved
+    notes: Project owner approved this exact approved-relationship path, join direction, join kind, description, and synonyms.
+  - kind: relationship_path
+    id: order_lines_to_orders
+    name: Order Lines To Orders
+    decision: approved
+    notes: Project owner approved this exact approved-relationship path, join direction, join kind, description, and synonyms.
+  - kind: relationship_path
+    id: order_lines_to_products
+    name: Order Lines To Products
+    decision: approved
+    notes: Project owner approved this exact approved-relationship path, join direction, join kind, description, and synonyms.
+  - kind: relationship_path
+    id: orders_to_customers
+    name: Orders To Customers
+    decision: approved
+    notes: Project owner approved this exact approved-relationship path, join direction, join kind, description, and synonyms.
+  - kind: relationship_path
+    id: orders_to_employees
+    name: Orders To Employees
+    decision: approved
+    notes: Project owner approved this exact approved-relationship path, join direction, join kind, description, and synonyms.
+  - kind: relationship_path
+    id: orders_to_shippers
+    name: Orders To Shippers
+    decision: approved
+    notes: Project owner approved this exact approved-relationship path, join direction, join kind, description, and synonyms.
+  - kind: relationship_path
+    id: products_to_categories
+    name: Products To Categories
+    decision: approved
+    notes: Project owner approved this exact approved-relationship path, join direction, join kind, description, and synonyms.
+  - kind: relationship_path
+    id: products_to_suppliers
+    name: Products To Suppliers
+    decision: approved
+    notes: Project owner approved this exact approved-relationship path, join direction, join kind, description, and synonyms.
+  - kind: relationship_path
+    id: territories_to_regions
+    name: Sales Territories To Sales Regions
+    decision: approved
+    notes: Project owner approved this exact approved-relationship path, join direction, join kind, description, and synonyms.
+  - kind: relationship_path
+    id: order_lines_to_customers
+    name: Order Lines To Customers
+    decision: approved
+    notes: Project owner approved this exact approved-relationship path, join direction, join kind, description, and synonyms.
+  - kind: relationship_path
+    id: order_lines_to_employees
+    name: Order Lines To Employees
+    decision: approved
+    notes: Project owner approved this exact approved-relationship path, join direction, join kind, description, and synonyms.
+  - kind: relationship_path
+    id: order_lines_to_shippers
+    name: Order Lines To Shippers
+    decision: approved
+    notes: Project owner approved this exact approved-relationship path, join direction, join kind, description, and synonyms.
+  - kind: relationship_path
+    id: order_lines_to_categories
+    name: Order Lines To Product Categories
+    decision: approved
+    notes: Project owner approved this exact approved-relationship path, join direction, join kind, description, and synonyms.
+  - kind: relationship_path
+    id: order_lines_to_suppliers
+    name: Order Lines To Suppliers
+    decision: approved
+    notes: Project owner approved this exact approved-relationship path, join direction, join kind, description, and synonyms.
+  ambiguity_decisions: []

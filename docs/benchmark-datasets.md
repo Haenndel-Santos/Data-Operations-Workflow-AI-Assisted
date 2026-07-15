@@ -48,7 +48,7 @@ otherwise the command fails without overwriting them.
 
 | Dataset | Local state | Evidence | Remaining gate |
 | --- | --- | --- | --- |
-| Northwind | `semantic_candidate_ready_for_human_review` | Phase 2 passed; candidate has 13 tables, 60 dimensions, 19 measures, 18 approved paths, zero blockers/ambiguities | Complete the separate 111-entity semantic review; do not apply before approval. |
+| Northwind | `semantic_catalog_approved` | Phases 2-3 passed; 13 tables, 60 dimensions, 19 measures, 18 approved paths, 339 terms, zero blockers/ambiguities | Select and govern a live provider separately; expected-answer authority remains pending. |
 | Pubs | Converted: 11 tables, 255 rows | DuckDB, Parquet, 10 relationship candidates | Confirm source/license; assess two replacement characters; review schema/relationships. |
 | AdventureWorks 2025 | Official backup restored locally as `READ_ONLY` | Exact release hash; `RESTORE VERIFYONLY` and `DBCC CHECKDB` passed; 71 tables, 20 views, 90 declared foreign keys, 760,167 aggregate rows | Implement a reproducible read-only DuckDB/Parquet export, then review schema, relationships, and benchmark use. |
 | Contoso warehouse recipe | Raw SQL/Markdown retained | Schema/load recipe only | Confirm source/license; acquire an authorized local data package without external execution. |
@@ -94,8 +94,12 @@ Phase 3 now has a versioned
 and a focused [semantic review guide](northwind-semantic-review.md). Metadata-only
 compilation found 13 semantic tables, 60 dimensions, 19 measures, 18 paths over
 approved relationships, 339 normalized terms, zero ambiguities, and zero
-blockers. The separate 111-entity review remains pending; no semantic registry
-or adapter authority has been applied.
+blockers. The project owner then approved all 111 entities. The completed review
+and applied semantic state are hash-bound, versioned, and idempotent; the
+original pending template remains unchanged. A real adapter smoke test compiled
+one structured intent through Stage 5D and Stage 5A to
+`ready_for_execution_review` without executing SQL. Live-provider, expected-
+answer, upload, publication, and training authority remain separate.
 
 The downstream
 [dataset-backed benchmark contract](analytics-dataset-benchmark.md) is a strict

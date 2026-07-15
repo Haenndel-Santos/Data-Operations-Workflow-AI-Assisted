@@ -244,25 +244,30 @@ DuckDB in read-only mode and does not approve its pending relationships. A
 completed-review test also verifies that only accepted decisions enter the
 derived registry and that rejected decisions remain explicitly excluded.
 
-## Northwind Semantic Candidate Validation
+## Northwind Semantic Catalog Validation
 
 The ordinary Stage 5C tests remain synthetic and offline. The separately
-authorized real candidate check reads only DuckDB metadata and the approved
-Northwind relationship projection, then prepares an unapproved review:
+authorized real catalog check reads only DuckDB metadata and the approved
+Northwind relationship projection. The completed review is validated in dry-
+run mode before an explicit idempotent apply:
 
 ```powershell
 $env:PYTHONPATH = "src"
 $env:PYTHONDONTWRITEBYTECODE = "1"
-.\.venv\Scripts\python.exe -m pytest -p no:cacheprovider tests\analytics_semantic_catalog_test.py tests\analytics_semantic_approval_test.py
+.\.venv\Scripts\python.exe -m pytest -p no:cacheprovider tests\analytics_semantic_catalog_test.py tests\analytics_semantic_approval_test.py tests\analytics_semantic_adapter_test.py
 .\.venv\Scripts\python.exe -m data_ops_lab analytics-semantic-catalog --catalog "datasets\benchmarks\manifests\northwind.semantic-catalog-candidate.yml" --database "datasets\benchmarks\derived\northwind\northwind.duckdb" --relationships "outputs\benchmarks\northwind-phase2-reviewed\approved_relationships.yml" --output "outputs\benchmarks\northwind-phase3-semantic-catalog-v2"
 .\.venv\Scripts\python.exe -m data_ops_lab analytics-semantic-review --catalog "outputs\benchmarks\northwind-phase3-semantic-catalog-v2\analytics_semantic_catalog.yml" --output "outputs\benchmarks\northwind-phase3-semantic-review\analytics_semantic_review.yml"
+.\.venv\Scripts\python.exe -m data_ops_lab analytics-semantic-approval --catalog "outputs\benchmarks\northwind-phase3-semantic-catalog-v2\analytics_semantic_catalog.yml" --review "datasets\benchmarks\manifests\northwind.semantic-review.yml" --output "outputs\benchmarks\northwind-phase3-semantic-approval-dry-run" --config "config\analytics"
+.\.venv\Scripts\python.exe -m data_ops_lab analytics-semantic-approval --catalog "outputs\benchmarks\northwind-phase3-semantic-catalog-v2\analytics_semantic_catalog.yml" --review "datasets\benchmarks\manifests\northwind.semantic-review.yml" --output "outputs\benchmarks\northwind-phase3-semantic-approval-apply" --config "config\analytics" --apply
 ```
 
 The real compile must report `ready_for_semantic_review`, zero blockers, zero
 ambiguities, 13 tables, 60 dimensions, 19 measures, and 18 paths. A repeated
-compile and review must reuse byte-identical outputs. Neither command queries
-table rows, approves semantics, applies `config/analytics` state, executes an
-analysis, or uses a provider/network.
+compile, review preparation, and repeated apply must reuse byte-identical
+outputs/state. Compilation, review, and approval do not query table rows,
+execute an analysis, or use a provider/network. Only the final `--apply` writes
+the already approved registry. A separate real smoke intent reached Stage 5A
+`ready_for_execution_review` without Stage 5B execution.
 
 ## Deterministic Result Presentation And Narration
 

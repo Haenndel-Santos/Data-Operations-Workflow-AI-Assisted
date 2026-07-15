@@ -24,8 +24,8 @@ As of 2026-07-15, the project has:
 - a two-phase local session that stops for exact human plan review;
 - a versioned static module registry for those session phases with dynamic
   execution, concurrency, network, and review auto-approval disabled;
-- 181 passing offline tests and no approved real semantic registry, live model
-  provider, production UI, or authorized real benchmark execution.
+- 181 passing offline tests, one approved real Northwind semantic registry, and
+  no live model provider, production UI, or authorized real benchmark execution.
 
 Phase 0 passed its exit gate on 2026-07-14 through static validation only.
 Phase 1 also passed its exit gate with an isolated synthetic baseline and an
@@ -38,8 +38,11 @@ relationship-review gates. All 13 candidates were accepted and revalidated;
 Northwind then entered Phase 3. Its versioned semantic candidate compiles to 13
 tables, 60 dimensions, 19 measures, 18 approved many-to-one paths, and 339
 normalized terms with zero blockers or ambiguities. The separate 111-entity
-review is still pending, so Phase 3 has not passed and no real semantic state or
-adapter authority has been applied.
+review was then completed and approved by the project owner, validated in dry-
+run mode, and applied idempotently. A real structured intent reached
+`ready_for_execution_review` without SQL execution. Phase 3 has passed for
+Northwind; Phase 4 remains pending a separately selected and governed live
+provider.
 
 ## Target Architecture
 

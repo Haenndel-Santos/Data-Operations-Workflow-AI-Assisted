@@ -43,7 +43,7 @@ datasets:
       derived_export_status: pending
       external_connection_used: false
   - id: northwind
-    status: semantic_candidate_ready_for_human_review
+    status: semantic_catalog_approved
     intended_role: small_commercial_oltp_reference
     reference_manifest: datasets/benchmarks/manifests/northwind.reference.yml
     relationship_review: datasets/benchmarks/manifests/northwind.relationship-review.yml
@@ -51,12 +51,17 @@ datasets:
     approved_relationship_registry: outputs/benchmarks/northwind-phase2-reviewed/approved_relationships.yml
     approved_relationship_registry_sha256: b12b3f19d199c605fb9e88bfabacb8d1ca9369ba54aa91208d393f99de7efd72
     semantic_model:
-      status: candidate_ready_for_human_review
+      status: approved
       candidate: datasets/benchmarks/manifests/northwind.semantic-catalog-candidate.yml
       candidate_sha256: b67181e7de1e1d876719a341d7275d5f493e95d7e6d34c1014c80748b2676b08
       compiled_output: outputs/benchmarks/northwind-phase3-semantic-catalog-v2/analytics_semantic_catalog.yml
       compiled_output_sha256: c46696f29890e70dbbc075882219d9daf319d8749d6a1dbdfead47f91ef0bb0d
       pending_review: outputs/benchmarks/northwind-phase3-semantic-review/analytics_semantic_review.yml
+      completed_review: datasets/benchmarks/manifests/northwind.semantic-review.yml
+      completed_review_sha256: 2528ebd5a6c33da05fab4fab276ae83f239faad95901fd60e0420dd53c91e2c5
+      approved_state: config/analytics/approved_semantic_catalog.yml
+      approved_state_sha256: bc2daed705320ae344286cd4678645fe54844e11f8657e55c52e999e046f2d10
+      decision_digest: 49c9b9f73a93db4378e441f8ab37dd58d46bd44f8ce48574a02adf8506affc8c
       physical_catalog_sha256: 1659954ac2def925cee82348e953820cc49e7d531669d9b2ceab21a4839b323c
       semantic_tables: 13
       dimensions: 60
@@ -64,8 +69,9 @@ datasets:
       relationship_paths: 18
       normalized_terms: 339
       ambiguities: 0
-      semantic_definitions_approved: false
-      adapter_use_authorized: false
+      semantic_definitions_approved: true
+      adapter_use_authorized: true
+      candidate_relationships_accepted: false
     provenance: verified_exact_official_microsoft_copy
     authoritative_source: https://github.com/microsoft/sql-server-samples/blob/2f85f3724ee45776a5183ed34d064488a6e1dc53/samples/databases/northwind-pubs/instnwnd.sql
     license: MIT

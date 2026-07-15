@@ -2,8 +2,8 @@
 
 ## Status And Authority
 
-The Northwind semantic catalog is a technically valid candidate, not approved
-semantic state. The versioned candidate is
+The Northwind semantic catalog is now approved local semantic state. The
+versioned candidate is
 [`northwind.semantic-catalog-candidate.yml`](../datasets/benchmarks/manifests/northwind.semantic-catalog-candidate.yml)
 at SHA-256
 `b67181e7de1e1d876719a341d7275d5f493e95d7e6d34c1014c80748b2676b08`.
@@ -18,29 +18,33 @@ The current local compilation is under
 - compiled semantic catalog SHA-256
   `c46696f29890e70dbbc075882219d9daf319d8749d6a1dbdfead47f91ef0bb0d`.
 
-The generated review at
+The original generated template at
 `outputs/benchmarks/northwind-phase3-semantic-review/analytics_semantic_review.yml`
-has 111 pending entity decisions and zero ambiguity decisions. It must remain
-pending until a human has evaluated the definitions below.
+remains pending and unchanged. The separate completed review is
+[`northwind.semantic-review.yml`](../datasets/benchmarks/manifests/northwind.semantic-review.yml)
+at SHA-256
+`2528ebd5a6c33da05fab4fab276ae83f239faad95901fd60e0420dd53c91e2c5`.
+It records 111 approved entity decisions and zero ambiguity decisions from the
+project owner at `2026-07-15T12:20:39.3771266+02:00`.
 
-## What The Reviewer Must Evaluate
+## What Was Reviewed
 
-Review the candidate in five groups:
+The project owner approved the candidate in five groups:
 
-1. **Dataset and table grain:** confirm that each table description states what
+1. **Dataset and table grain:** confirmed that each table description states what
    one row represents. The important transactional grains are one row per order
    in `orders`, one row per order/product pair in `order_details`, and one row
    per employee/territory pair in `employee_territories`.
-2. **Dimensions:** confirm that IDs, names, dates, geography, status, and rate
+2. **Dimensions:** confirmed that IDs, names, dates, geography, status, and rate
    fields have accurate business labels and useful English/Portuguese synonyms.
    A synonym must refer to the same concept, not merely a related concept.
-3. **Measures:** confirm the aggregation, source column, grain, and unit implied
+3. **Measures:** confirmed the aggregation, source column, grain, and unit implied
    by every measure. Counts use distinct identifiers where possible; the two
    direct row-count measures use their physical row grains.
-4. **Relationship paths:** confirm that every path starts on the detailed side
+4. **Relationship paths:** confirmed that every path starts on the detailed side
    and moves many-to-one toward descriptive data. These paths preserve the base
    grain and use only the 13 separately approved physical relationships.
-5. **Omissions and caveats:** confirm that the catalog is honest about concepts
+5. **Omissions and caveats:** confirmed that the catalog is honest about concepts
    the source or version-1 contract cannot safely represent.
 
 ## Material Modeling Choices
@@ -75,14 +79,18 @@ Review the candidate in five groups:
 
 ## Approval Outcome
 
-A complete review requires one `approved` or `rejected` decision and a factual
-note for the dataset plus all 13 tables, 60 dimensions, 19 measures, and 18
-relationship paths. Version 1 can be applied only when all 111 entities are
-approved. A rejection should lead to a revised candidate and new compilation;
-it must not be deleted silently from the existing review.
+A complete review now records one factual `approved` decision for the dataset
+plus all 13 tables, 60 dimensions, 19 measures, and 18 relationship paths. The
+dry-run returned `ready_for_apply` with zero blockers. The approved state at
+[`approved_semantic_catalog.yml`](../config/analytics/approved_semantic_catalog.yml)
+has SHA-256
+`bc2daed705320ae344286cd4678645fe54844e11f8657e55c52e999e046f2d10`
+and decision digest
+`49c9b9f73a93db4378e441f8ab37dd58d46bd44f8ce48574a02adf8506affc8c`.
+Repeated application changed neither evidence nor state.
 
-Approval of this catalog would authorize only the separately defined local
-semantic state and adapter scope. It would not authorize a live provider,
+Approval authorizes only the defined local semantic state and deterministic
+adapter scope. It does not authorize a live provider,
 external upload, publication, model-parameter training, database writes, or a
 Northwind expected-answer benchmark pack.
 
@@ -100,7 +108,21 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 .\.venv\Scripts\python.exe -m data_ops_lab analytics-semantic-review `
   --catalog "outputs\benchmarks\northwind-phase3-semantic-catalog-v2\analytics_semantic_catalog.yml" `
   --output "outputs\benchmarks\northwind-phase3-semantic-review\analytics_semantic_review.yml"
+
+.\.venv\Scripts\python.exe -m data_ops_lab analytics-semantic-approval `
+  --catalog "outputs\benchmarks\northwind-phase3-semantic-catalog-v2\analytics_semantic_catalog.yml" `
+  --review "datasets\benchmarks\manifests\northwind.semantic-review.yml" `
+  --output "outputs\benchmarks\northwind-phase3-semantic-approval-dry-run" `
+  --config "config\analytics"
+
+.\.venv\Scripts\python.exe -m data_ops_lab analytics-semantic-approval `
+  --catalog "outputs\benchmarks\northwind-phase3-semantic-catalog-v2\analytics_semantic_catalog.yml" `
+  --review "datasets\benchmarks\manifests\northwind.semantic-review.yml" `
+  --output "outputs\benchmarks\northwind-phase3-semantic-approval-apply" `
+  --config "config\analytics" `
+  --apply
 ```
 
-Both commands are metadata/review preparation only. They do not query table
-rows, apply semantic state, execute an analytical request, or use a network.
+These commands do not query table rows, execute an analytical request, or use a
+network. Only the final explicit `--apply` command writes the approved semantic
+state.

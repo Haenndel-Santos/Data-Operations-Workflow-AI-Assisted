@@ -34,6 +34,7 @@ All notable user-facing and release-relevant changes will be documented here.
   independent conversion equivalence, read-only PK/FK profiling, explicit use
   scopes, a separate exact human relationship-review gate, and a hash-bound
   approved-relationship projection containing accepted decisions only.
-- A real Northwind Phase 3 semantic candidate with explicit table grains,
+- A real Northwind Phase 3 semantic catalog with explicit table grains,
   English/Portuguese terms, measures, fanout caveats, approved many-to-one
-  paths, zero compiled ambiguities, and a separate pending human review.
+  paths, zero compiled ambiguities, a completed 111-entity human review, and an
+  applied hash-bound semantic registry for deterministic local adapter use.

@@ -124,9 +124,11 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
   --output "outputs/<run-id>/analytics_semantic_adapter"
 ```
 
-The repository currently has no approved real semantic state, so the default
-command remains blocked for real datasets. Synthetic tests create approved
-state only inside pytest temporary directories.
+The repository now has one approved real semantic state for Northwind. A local
+smoke intent resolved `Order Lines`, `Order Lines To Products`, `Product Name`,
+and `Total Units Ordered`, then compiled through Stage 5A to
+`ready_for_execution_review` with zero blockers and no SQL execution. Other
+datasets remain blocked until they receive their own exact semantic approval.
 
 The upstream provider-neutral free-text boundary is documented in
 [Analytics Natural-Language Translation](analytics-nl-translation.md). Every

@@ -439,3 +439,30 @@ Northwind has now reached `ready_for_semantic_modeling` after the project owner
 accepted all 13 exact candidates. Version 2 derives an approved registry from
 that completed review while keeping the review as authority; external upload,
 publication, and model-parameter training remain not authorized.
+
+## 2026-07-15 - Approve Northwind Semantics Without Expanding External Authority
+
+**Decision:** Accept the complete Northwind semantic package as presented in the
+grouped review guide: 1 dataset, 13 table grains, 60 dimensions, 19 direct-
+column measures, and 18 many-to-one relationship paths. Bind all 111 approved
+decisions to the exact compiled catalog, validate in dry-run mode, and apply the
+resulting registry for deterministic local Stage 5D adapter use.
+
+**Rationale:** Northwind had already passed provenance, license, conversion,
+schema, relationship, and local-use gates. The semantic candidate preserved
+those authorities, compiled with zero blockers/ambiguities, exposed its grain,
+currency, fanout, empty-table, snapshot, and self-join limitations, and received
+explicit project-owner approval after that review was presented.
+
+**Alternatives:** Treat the prior physical relationship approval as semantic
+approval; approve only an opaque aggregate status without entity decisions;
+leave the completed package unapplied; add calculated revenue or a manager
+self-join outside the version-1 contract; let semantic approval authorize a live
+provider or expected answers.
+
+**Impact:** `config/analytics/approved_semantic_catalog.yml` is now the first
+applied real semantic registry. It is bound to the candidate, compiled physical
+catalog, approved relationships, completed review, and decision digest. A real
+structured intent reached Stage 5A `ready_for_execution_review` without SQL
+execution. Live-provider use, network disclosure, expected-answer authority,
+upload, publication, training, and database writes remain separate decisions.

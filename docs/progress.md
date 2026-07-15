@@ -6,11 +6,11 @@ Turn local operational spreadsheets into validated analytical datasets and an ap
 
 ## Current Stage
 
-Three active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases 0-2 passed their gates for the first Northwind reference dataset; and Phase 3 has a technically valid Northwind semantic candidate pending separate human review. Stage 5A-5F governed analytics still lacks an applied real semantic catalog and expected-answer pack, live provider, dynamic dispatch, or user interface.
+Three active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases 0-3 passed their gates for Northwind; and Phase 4 is pending a separately selected and governed live provider. Stage 5A-5F governed analytics now has its first applied real semantic catalog but still lacks an approved real expected-answer pack, live provider, dynamic dispatch, or user interface.
 
 ## Last Completed Milestone
 
-On 2026-07-15, Phase 3 produced the first real Northwind semantic candidate over the separately approved physical relationships. Metadata-only compilation found 13 semantic tables, 60 dimensions, 19 measures, 18 many-to-one paths, 339 normalized terms, zero ambiguities, and zero blockers. A hash-bound 111-entity review is pending; no semantic definition or Stage 5D adapter use has been approved or applied. Upload, publication, live-provider use, and model-parameter training remain not authorized.
+On 2026-07-15, the project owner approved the complete 111-entity Northwind semantic package after reviewing its grouped definitions and material caveats. The separate completed review is bound to the exact compiled catalog. Dry-run approval returned `ready_for_apply` with zero blockers; explicit apply created `config/analytics/approved_semantic_catalog.yml`, and an identical rerun changed neither state nor evidence. A real structured intent then reached `ready_for_execution_review` through Stage 5D and Stage 5A without executing SQL. Upload, publication, live-provider use, model-parameter training, and benchmark expected answers remain not authorized.
 
 ## Current Capabilities
 
@@ -87,15 +87,18 @@ On 2026-07-15, Phase 3 produced the first real Northwind semantic candidate over
   decisions never enter the approved list.
 - Compile the versioned real Northwind semantic candidate against its live local
   catalog and approved relationship projection, with explicit grains, direct
-  measures, multilingual synonyms, fanout caveats, and a separate pending
+  measures, multilingual synonyms, fanout caveats, and a separate hash-bound
   111-entity review.
+- Validate and apply the separately completed Northwind semantic review into a
+  hash-bound approved registry, then compile one real structured semantic intent
+  through Stage 5D and Stage 5A without executing its review-ready plan.
 - Restore and integrity-check the official AdventureWorks 2025 backup in an isolated local read-only SQL Server database.
 
 ## Test Status
 
-- Automated suite: 181 tests passed offline on 2026-07-15; latest run completed in 32.17 seconds.
+- Automated suite: 181 tests passed offline on 2026-07-15; latest run completed in 32.90 seconds.
 - All 12 project-local skills passed the official skill validator on 2026-07-13.
-- Internal link check: 78 checked, 0 broken on 2026-07-15.
+- Internal link check: 82 checked, 0 broken on 2026-07-15.
 - Main suite is offline and uses temporary directories for generated test artifacts.
 - Documentation link checker is available at `scripts/check_internal_links.py`.
 - The relocated `.venv` has a stale editable-install path; use the `PYTHONPATH=src` command in `docs/testing.md` until environment repair is explicitly approved.
@@ -110,7 +113,7 @@ On 2026-07-15, Phase 3 produced the first real Northwind semantic candidate over
 - Conflicted line extracts must not be promoted to approved relationships.
 - The recorded analytics session now has a validated static registry and narrow checkpoints/resume semantics, but registry-driven dispatch and generic partial-run/dry-run infrastructure remain deliberately absent.
 - Cleaning is now the highest-memory measured synthetic stage and still loads a full Parquet table into Pandas before writing Parquet and CSV; any bounded-batch refactor must preserve type-detection and exact output contracts.
-- The concrete Northwind semantic candidate has zero technical blockers but has not completed its 111-entity human review or been applied; Stage 5D therefore remains operationally blocked for this real dataset.
+- Northwind semantic state is approved and operational for deterministic local Stage 5D use, but its current catalog cannot express calculated revenue or a self-join employee-manager path; those remain explicit version-1 limitations.
 - A live model provider, approved real benchmark pack, real dataset-backed evaluation, and user interface are not implemented or authorized. Recorded narration proves grounding controls only; synthetic Stage 5D/5E packs and temporary dataset-backed tests are not live-model or business-quality evidence.
 - Stage 5B plan-to-execution drift still uses size and nanosecond modification time in ordinary queries. The dataset-backed evaluator additionally rechecks the complete database SHA-256 and every other authority hash before each Stage 5B call and after evaluation.
 - Exact download provenance and licensing remain unconfirmed for Pubs and Contoso. Northwind provenance and MIT licensing are verified, but its technical relationship evidence is not promotion authority.
@@ -124,18 +127,17 @@ On 2026-07-15, Phase 3 produced the first real Northwind semantic candidate over
 - Broader canonical key and relationship approvals remain pending; the Product-specific state does not populate `approved_keys.yml` or `approved_relationships.yml`.
 - No explicit apply contract or approved versioned representation exists yet for the candidate canonical Product snapshot.
 - EDS cross-table analytics remain blocked because `approved_relationships.yml` is intentionally empty.
-- No applied `config/analytics/approved_semantic_catalog.yml` exists for a real authorized dataset.
-- Northwind is `semantic_candidate_ready_for_human_review` with 13 accepted exact relationships and 111 pending semantic decisions. Pubs remains pending provenance, license, schema, relationship, and benchmark-use review.
+- Northwind is `semantic_catalog_approved` with 13 accepted exact relationships and 111 approved semantic entities. Its expected-answer pack and live-provider authority remain pending. Pubs remains pending provenance, license, schema, relationship, and benchmark-use review.
 - AdventureWorks is restored and validated but remains pending reproducible export, schema review, relationship approval, and benchmark-use approval.
 
 ## Next Logical Milestone
 
-Have the project owner review the Northwind semantic candidate using `docs/northwind-semantic-review.md`, then record one factual approved/rejected decision for all 111 entities. If every definition is approved, validate semantic approval in dry-run mode before any explicit apply. Do not infer this approval from the completed physical-relationship review, create expected-answer authority, use a live provider, upload, publish, or train a model from candidate definitions.
+Begin Phase 4 only after selecting a concrete hosted or local provider and documenting its privacy/retention policy, credential boundary, timeout, cost ceiling, and online-test isolation. The existing recorded provider and approved Northwind semantics support offline development, but they do not determine the provider choice or authorize network disclosure. Do not create expected-answer authority, upload, publish, or train a model from the semantic approval.
 
 ## Last Verified Commit
 
-`12b0307` (`feat(benchmarks): approve northwind relationships`)
+`5c2bfb2` (`feat(analytics): prepare northwind semantic catalog`)
 
 ## Last Updated
 
-2026-07-15 by Codex after preparing the Northwind Phase 3 semantic candidate for separate human review.
+2026-07-15 by Codex after applying the approved Northwind semantic catalog and closing Phase 3.

@@ -29,10 +29,11 @@ review. With a completed review it may report `ready_for_semantic_modeling` and
 derive an approved-relationship registry containing accepted decisions only.
 It is not yet part of the declarative analytics-session registry.
 
-Northwind now has a separate Stage 5C candidate compiled from that accepted
-relationship projection. The generated 111-entity semantic review remains
-pending, so neither the explicit CLI nor future orchestration may run semantic
-approval/apply or Stage 5D for Northwind yet.
+Northwind now has a separate Stage 5C catalog compiled from that accepted
+relationship projection, a completed 111-entity review, and an applied approved
+semantic registry. Stage 5D may consume that exact state, but Stage 5A
+`ready_for_execution_review` still cannot be treated as Stage 5B execution
+authority by the explicit CLI or future orchestration.
 
 ## Responsibility
 

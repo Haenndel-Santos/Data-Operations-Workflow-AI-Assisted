@@ -304,17 +304,25 @@ is reproduced with:
 .\.venv\Scripts\python.exe -m data_ops_lab reference-dataset-validate --manifest "datasets\benchmarks\manifests\northwind.reference.yml" --review "datasets\benchmarks\manifests\northwind.relationship-review.yml" --output "outputs\benchmarks\northwind-phase2-reviewed"
 ```
 
-To compile the current Northwind semantic candidate and prepare its separate
-pending review without applying semantic state:
+To compile the Northwind semantic catalog and reproduce its original pending
+review template:
 
 ```powershell
 .\.venv\Scripts\python.exe -m data_ops_lab analytics-semantic-catalog --catalog "datasets\benchmarks\manifests\northwind.semantic-catalog-candidate.yml" --database "datasets\benchmarks\derived\northwind\northwind.duckdb" --relationships "outputs\benchmarks\northwind-phase2-reviewed\approved_relationships.yml" --output "outputs\benchmarks\northwind-phase3-semantic-catalog-v2"
 .\.venv\Scripts\python.exe -m data_ops_lab analytics-semantic-review --catalog "outputs\benchmarks\northwind-phase3-semantic-catalog-v2\analytics_semantic_catalog.yml" --output "outputs\benchmarks\northwind-phase3-semantic-review\analytics_semantic_review.yml"
 ```
 
-The candidate has zero technical blockers and remains unapproved. Use the
-[Northwind semantic review guide](docs/northwind-semantic-review.md) before
-recording decisions for its 111 semantic entities.
+The project owner approved all 111 entities in the separate versioned review.
+The approval can be revalidated without changing state, or applied idempotently,
+with:
+
+```powershell
+.\.venv\Scripts\python.exe -m data_ops_lab analytics-semantic-approval --catalog "outputs\benchmarks\northwind-phase3-semantic-catalog-v2\analytics_semantic_catalog.yml" --review "datasets\benchmarks\manifests\northwind.semantic-review.yml" --output "outputs\benchmarks\northwind-phase3-semantic-approval-dry-run" --config "config\analytics"
+.\.venv\Scripts\python.exe -m data_ops_lab analytics-semantic-approval --catalog "outputs\benchmarks\northwind-phase3-semantic-catalog-v2\analytics_semantic_catalog.yml" --review "datasets\benchmarks\manifests\northwind.semantic-review.yml" --output "outputs\benchmarks\northwind-phase3-semantic-approval-apply" --config "config\analytics" --apply
+```
+
+See the [Northwind semantic review record](docs/northwind-semantic-review.md)
+for hashes, modeling caveats, and the remaining provider/benchmark boundaries.
 
 To generate the conceptual main database schema overview:
 

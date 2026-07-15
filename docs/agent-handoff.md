@@ -1590,3 +1590,84 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 - Do not apply `config/analytics/approved_semantic_catalog.yml`, create expected
   answers, execute Northwind analytics through Stage 5D, use a live provider,
   upload, publish, or train a model before their separate gates are satisfied.
+
+## 2026-07-15 - Codex - Northwind semantic approval and Phase 3 exit
+
+### Initial Context
+
+- Branch: `main` at `5c2bfb2`; worktree clean and five local commits ahead of
+  `origin/main`.
+- Northwind had a technically valid 111-entity semantic candidate and a
+  generated pending review, but no completed semantic authority or applied
+  `config/analytics` state.
+- After receiving the grouped review guide and material caveats, the project
+  owner replied `/aprovado`, explicitly accepting the complete package.
+
+### Work Performed
+
+- Preserved the original generated pending review unchanged under `outputs/`.
+- Added the separate versioned completed review at
+  `datasets/benchmarks/manifests/northwind.semantic-review.yml`, bound to the
+  exact compiled catalog SHA-256 and recording `project_owner`, a timezone-aware
+  timestamp, 111 approved decisions, notes by semantic kind, and zero ambiguity
+  decisions.
+- Ran semantic approval first in dry-run mode. It returned
+  `ready_for_apply`, zero blockers, and no state change.
+- Used the explicit approval to run `analytics-semantic-approval --apply` into
+  the previously absent `config/analytics/approved_semantic_catalog.yml`.
+  Candidate physical relationships remained explicitly unaccepted by semantic
+  approval.
+- Repeated the apply command and confirmed `State changed: False` and
+  `Outputs changed: False`.
+- Compiled a local smoke intent for total ordered quantity by product through
+  the applied Stage 5D registry. It reached `ready_for_query_plan`; Stage 5A
+  then reached `ready_for_execution_review` against the real local Northwind
+  catalog and approved relationships. Stage 5B was not called and no SQL ran.
+- Updated dataset inventory, roadmap, current state, durable decisions,
+  architecture, orchestrator, backend, semantic contracts, benchmark/testing
+  docs, README, changelog, and the Northwind review record.
+
+### Validation
+
+- Completed semantic review SHA-256:
+  `2528ebd5a6c33da05fab4fab276ae83f239faad95901fd60e0420dd53c91e2c5`.
+- Decision digest:
+  `49c9b9f73a93db4378e441f8ab37dd58d46bd44f8ce48574a02adf8506affc8c`.
+- Approved semantic state SHA-256:
+  `bc2daed705320ae344286cd4678645fe54844e11f8657e55c52e999e046f2d10`.
+- State counts: 13 semantic tables, 60 dimensions, 19 measures, 18
+  relationship paths, 339 terms, zero ambiguities, and 111 entity decisions.
+- Focused semantic catalog/approval/adapter tests: 22 passed in 3.03 seconds.
+- Full offline suite: 181 passed in 32.90 seconds.
+- Internal links: 82 checked, zero broken.
+- Real dry-run/apply, adapter, and Stage 5A reruns were byte-identical and
+  idempotent.
+- No Stage 5B execution, table-row read, database write, external database,
+  live provider, network, credential, upload, publication, model training,
+  migration, import, or synchronization was used.
+
+### State For Next Agent
+
+- AI roadmap Phase 3 passed its exit gate for Northwind.
+- `config/analytics/approved_semantic_catalog.yml` is the first applied real
+  semantic registry and authorizes deterministic local Stage 5D use for its
+  exact approved definitions.
+- Version-1 limitations remain explicit: no calculated revenue measure, no
+  encoded currency, no employee-manager self-join path, empty demographic
+  tables, order-grain freight, and snapshot inventory quantities.
+- No real expected-answer pack, live provider, online test, or natural-language
+  quality evidence exists yet.
+
+### Next Logical Step
+
+- Begin Phase 4 only after a concrete hosted or local provider is selected and
+  its retention/privacy behavior, credential storage, network boundary,
+  timeout, cost ceiling, failure handling, and isolated online-test policy are
+  explicitly documented. The recorded provider remains the offline default.
+
+### Do Not Do Yet
+
+- Do not infer provider/network, expected-answer, upload, publication, training,
+  or query-execution authority from semantic approval.
+- Do not execute the generated smoke plan; `ready_for_execution_review` remains
+  a mandatory separate human checkpoint.

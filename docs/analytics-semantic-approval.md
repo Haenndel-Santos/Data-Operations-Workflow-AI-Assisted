@@ -30,6 +30,19 @@ state changes require `--apply`.
 No real project catalog was approved when this contract was implemented. Tests
 use synthetic metadata only.
 
+## Current Northwind Approval
+
+The project owner approved the complete 111-entity Northwind catalog on
+2026-07-15. The versioned completed review is
+[`northwind.semantic-review.yml`](../datasets/benchmarks/manifests/northwind.semantic-review.yml),
+and the applied registry is
+[`approved_semantic_catalog.yml`](../config/analytics/approved_semantic_catalog.yml).
+Dry-run validation returned `ready_for_apply` with zero blockers; explicit
+application wrote the new state once, and an identical rerun changed neither
+state nor evidence. This approval authorizes deterministic local adapter use
+only, not a live provider, upload, publication, training, database writes, or
+an expected-answer benchmark pack.
+
 ## Review Workflow
 
 1. Generate a pending review from an exact compiled Stage 5C catalog.

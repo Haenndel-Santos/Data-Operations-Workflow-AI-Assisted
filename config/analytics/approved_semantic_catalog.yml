@@ -1,0 +1,4268 @@
+version: 1
+status: approved
+source:
+  compiled_semantic_catalog_sha256: c46696f29890e70dbbc075882219d9daf319d8749d6a1dbdfead47f91ef0bb0d
+  candidate_semantic_catalog_sha256: b67181e7de1e1d876719a341d7275d5f493e95d7e6d34c1014c80748b2676b08
+  relationships_sha256: b12b3f19d199c605fb9e88bfabacb8d1ca9369ba54aa91208d393f99de7efd72
+  physical_catalog_sha256: 1659954ac2def925cee82348e953820cc49e7d531669d9b2ceab21a4839b323c
+  review_sha256: 2528ebd5a6c33da05fab4fab276ae83f239faad95901fd60e0420dd53c91e2c5
+  decision_digest: 49c9b9f73a93db4378e441f8ab37dd58d46bd44f8ce48574a02adf8506affc8c
+approval:
+  semantic_definitions_approved: true
+  adapter_use_authorized: true
+  candidate_relationships_accepted: false
+  approved_by: project_owner
+  approved_at: '2026-07-15T12:20:39.3771266+02:00'
+  requires_clarification: false
+catalog:
+  physical_tables: 13
+  physical_columns: 88
+  semantic_tables: 13
+  dimensions: 60
+  measures: 19
+  relationship_paths: 18
+  terms: 339
+  ambiguities: 0
+dataset:
+  id: northwind_commerce
+  name: Northwind Commerce
+  description: Commercial reference data for customers, orders, order lines, products,
+    suppliers, employees, shipping, and sales territories. The version-1 catalog exposes
+    only direct column aggregates; it does not define revenue or other calculated
+    measures.
+  synonyms:
+  - northwind
+  - northwind commercial operations
+  - comercio northwind
+  - operacoes comerciais northwind
+tables:
+- id: product_categories
+  source_table: categories
+  name: Product Categories
+  description: One row per product category, keyed by category_id.
+  synonyms:
+  - category master
+  - categorias de produto
+- id: customer_demographic_assignments
+  source_table: customer_customer_demo
+  name: Customer Demographic Assignments
+  description: One row per customer and demographic-type assignment. The benchmark
+    table is structurally valid but contains no rows in this Northwind snapshot.
+  synonyms:
+  - customer type assignments
+  - classificacoes demograficas de clientes
+- id: customer_demographic_types
+  source_table: customer_demographics
+  name: Customer Demographic Types
+  description: One row per customer demographic type. The benchmark table is structurally
+    valid but contains no rows in this Northwind snapshot.
+  synonyms:
+  - customer types
+  - tipos demograficos de clientes
+- id: customers
+  source_table: customers
+  name: Customers
+  description: One row per customer account, keyed by customer_id.
+  synonyms:
+  - customer master
+  - clientes
+  - cadastro de clientes
+- id: employee_territory_assignments
+  source_table: employee_territories
+  name: Employee Territory Assignments
+  description: One row per employee and territory assignment.
+  synonyms:
+  - territory staffing
+  - atribuicoes territoriais de funcionarios
+- id: employees
+  source_table: employees
+  name: Employees
+  description: One row per employee, keyed by employee_id. reports_to stores the immediate
+    manager employee ID when one exists.
+  synonyms:
+  - employee master
+  - funcionarios
+  - colaboradores
+- id: order_lines
+  source_table: order_details
+  name: Order Lines
+  description: One row per order and product pair. This is the transactional line
+    grain; quantity, captured unit price, and discount belong to this grain.
+  synonyms:
+  - order details
+  - sales order lines
+  - itens de pedido
+  - linhas de pedido
+- id: orders
+  source_table: orders
+  name: Orders
+  description: One row per commercial order, keyed by order_id. Freight and shipping
+    fields belong to the order grain and must not be multiplied by line joins.
+  synonyms:
+  - sales orders
+  - pedidos
+  - pedidos de venda
+- id: products
+  source_table: products
+  name: Products
+  description: One row per product, keyed by product_id.
+  synonyms:
+  - product master
+  - produtos
+  - cadastro de produtos
+- id: sales_regions
+  source_table: region
+  name: Sales Regions
+  description: One row per sales region, keyed by region_id.
+  synonyms:
+  - geographic regions
+  - regioes comerciais
+- id: shippers
+  source_table: shippers
+  name: Shippers
+  description: One row per shipping company, keyed by shipper_id.
+  synonyms:
+  - carriers
+  - transportadoras
+- id: suppliers
+  source_table: suppliers
+  name: Suppliers
+  description: One row per supplier, keyed by supplier_id.
+  synonyms:
+  - supplier master
+  - fornecedores
+  - cadastro de fornecedores
+- id: sales_territories
+  source_table: territories
+  name: Sales Territories
+  description: One row per sales territory, keyed by territory_id.
+  synonyms:
+  - territories
+  - territorios comerciais
+dimensions:
+- id: category_id
+  table_id: product_categories
+  source_table: categories
+  source_column: category_id
+  source_type: INTEGER
+  name: Category ID
+  description: Stable identifier of a product category.
+  synonyms:
+  - codigo da categoria
+- id: category_name
+  table_id: product_categories
+  source_table: categories
+  source_column: category_name
+  source_type: VARCHAR
+  name: Category Name
+  description: Business name of a product category.
+  synonyms:
+  - category
+  - categoria
+  - nome da categoria
+- id: category_description
+  table_id: product_categories
+  source_table: categories
+  source_column: description
+  source_type: VARCHAR
+  name: Category Description
+  description: Free-text description of a product category.
+  synonyms:
+  - descricao da categoria
+- id: demographic_assignment_customer_id
+  table_id: customer_demographic_assignments
+  source_table: customer_customer_demo
+  source_column: customer_id
+  source_type: VARCHAR
+  name: Demographic Assignment Customer ID
+  description: Customer identifier on a demographic assignment row.
+  synonyms:
+  - cliente da classificacao demografica
+- id: demographic_assignment_type_id
+  table_id: customer_demographic_assignments
+  source_table: customer_customer_demo
+  source_column: customer_type_id
+  source_type: VARCHAR
+  name: Assigned Demographic Type ID
+  description: Demographic type identifier on a customer assignment row.
+  synonyms:
+  - tipo demografico atribuido
+- id: demographic_type_id
+  table_id: customer_demographic_types
+  source_table: customer_demographics
+  source_column: customer_type_id
+  source_type: VARCHAR
+  name: Demographic Type ID
+  description: Stable identifier of a customer demographic type.
+  synonyms:
+  - codigo do tipo demografico
+- id: demographic_type_description
+  table_id: customer_demographic_types
+  source_table: customer_demographics
+  source_column: customer_desc
+  source_type: VARCHAR
+  name: Demographic Type Description
+  description: Free-text description of a customer demographic type.
+  synonyms:
+  - descricao do tipo demografico
+- id: customer_id
+  table_id: customers
+  source_table: customers
+  source_column: customer_id
+  source_type: VARCHAR
+  name: Customer ID
+  description: Stable identifier of a customer account.
+  synonyms:
+  - customer code
+  - codigo do cliente
+- id: customer_company_name
+  table_id: customers
+  source_table: customers
+  source_column: company_name
+  source_type: VARCHAR
+  name: Customer Company Name
+  description: Company name recorded for a customer account.
+  synonyms:
+  - customer name
+  - nome do cliente
+  - empresa cliente
+- id: customer_contact_name
+  table_id: customers
+  source_table: customers
+  source_column: contact_name
+  source_type: VARCHAR
+  name: Customer Contact Name
+  description: Primary contact name recorded for a customer account.
+  synonyms:
+  - contato do cliente
+- id: customer_contact_title
+  table_id: customers
+  source_table: customers
+  source_column: contact_title
+  source_type: VARCHAR
+  name: Customer Contact Title
+  description: Job title of the primary customer contact.
+  synonyms:
+  - cargo do contato do cliente
+- id: customer_city
+  table_id: customers
+  source_table: customers
+  source_column: city
+  source_type: VARCHAR
+  name: Customer City
+  description: City recorded on the customer account.
+  synonyms:
+  - cidade do cliente
+- id: customer_region
+  table_id: customers
+  source_table: customers
+  source_column: region
+  source_type: VARCHAR
+  name: Customer Region
+  description: State, province, or region recorded on the customer account.
+  synonyms:
+  - estado do cliente
+  - regiao do cliente
+- id: customer_postal_code
+  table_id: customers
+  source_table: customers
+  source_column: postal_code
+  source_type: VARCHAR
+  name: Customer Postal Code
+  description: Postal code recorded on the customer account.
+  synonyms:
+  - cep do cliente
+- id: customer_country
+  table_id: customers
+  source_table: customers
+  source_column: country
+  source_type: VARCHAR
+  name: Customer Country
+  description: Country recorded on the customer account.
+  synonyms:
+  - pais do cliente
+- id: assignment_employee_id
+  table_id: employee_territory_assignments
+  source_table: employee_territories
+  source_column: employee_id
+  source_type: INTEGER
+  name: Assigned Employee ID
+  description: Employee identifier on an employee-territory assignment row.
+  synonyms:
+  - funcionario atribuido
+- id: assignment_territory_id
+  table_id: employee_territory_assignments
+  source_table: employee_territories
+  source_column: territory_id
+  source_type: VARCHAR
+  name: Assigned Territory ID
+  description: Territory identifier on an employee-territory assignment row.
+  synonyms:
+  - territorio atribuido
+- id: employee_id
+  table_id: employees
+  source_table: employees
+  source_column: employee_id
+  source_type: INTEGER
+  name: Employee ID
+  description: Stable identifier of an employee.
+  synonyms:
+  - employee code
+  - codigo do funcionario
+- id: employee_first_name
+  table_id: employees
+  source_table: employees
+  source_column: first_name
+  source_type: VARCHAR
+  name: Employee First Name
+  description: Employee given name.
+  synonyms:
+  - primeiro nome do funcionario
+- id: employee_last_name
+  table_id: employees
+  source_table: employees
+  source_column: last_name
+  source_type: VARCHAR
+  name: Employee Last Name
+  description: Employee family name.
+  synonyms:
+  - sobrenome do funcionario
+- id: employee_title
+  table_id: employees
+  source_table: employees
+  source_column: title
+  source_type: VARCHAR
+  name: Employee Title
+  description: Employee job title.
+  synonyms:
+  - cargo do funcionario
+- id: employee_hire_date
+  table_id: employees
+  source_table: employees
+  source_column: hire_date
+  source_type: TIMESTAMP
+  name: Employee Hire Date
+  description: Date when the employee was hired.
+  synonyms:
+  - data de contratacao
+- id: employee_city
+  table_id: employees
+  source_table: employees
+  source_column: city
+  source_type: VARCHAR
+  name: Employee City
+  description: City recorded for the employee.
+  synonyms:
+  - cidade do funcionario
+- id: employee_region
+  table_id: employees
+  source_table: employees
+  source_column: region
+  source_type: VARCHAR
+  name: Employee Region
+  description: State, province, or region recorded for the employee.
+  synonyms:
+  - regiao do funcionario
+- id: employee_country
+  table_id: employees
+  source_table: employees
+  source_column: country
+  source_type: VARCHAR
+  name: Employee Country
+  description: Country recorded for the employee.
+  synonyms:
+  - pais do funcionario
+- id: manager_employee_id
+  table_id: employees
+  source_table: employees
+  source_column: reports_to
+  source_type: INTEGER
+  name: Manager Employee ID
+  description: Immediate manager employee ID. The self-relationship is physically
+    approved, but version 1 cannot express a self-join semantic path.
+  synonyms:
+  - reports to
+  - gestor imediato
+  - supervisor id
+- id: line_order_id
+  table_id: order_lines
+  source_table: order_details
+  source_column: order_id
+  source_type: INTEGER
+  name: Order Line Order ID
+  description: Order identifier on an order-line row.
+  synonyms:
+  - pedido da linha
+- id: line_product_id
+  table_id: order_lines
+  source_table: order_details
+  source_column: product_id
+  source_type: INTEGER
+  name: Order Line Product ID
+  description: Product identifier on an order-line row.
+  synonyms:
+  - produto da linha
+- id: line_unit_price
+  table_id: order_lines
+  source_table: order_details
+  source_column: unit_price
+  source_type: DECIMAL(19,4)
+  name: Captured Line Unit Price
+  description: Unit price captured on the order line before applying discount.
+  synonyms:
+  - preco unitario da linha
+  - selling unit price
+- id: line_discount_rate
+  table_id: order_lines
+  source_table: order_details
+  source_column: discount
+  source_type: DOUBLE
+  name: Line Discount Rate
+  description: Fractional discount stored on the order line, where zero means no discount.
+  synonyms:
+  - discount
+  - desconto da linha
+  - taxa de desconto
+- id: order_id
+  table_id: orders
+  source_table: orders
+  source_column: order_id
+  source_type: INTEGER
+  name: Order ID
+  description: Stable identifier of a commercial order.
+  synonyms:
+  - order number
+  - numero do pedido
+- id: order_customer_id
+  table_id: orders
+  source_table: orders
+  source_column: customer_id
+  source_type: VARCHAR
+  name: Order Customer ID
+  description: Customer identifier recorded on the order.
+  synonyms:
+  - cliente do pedido
+- id: order_employee_id
+  table_id: orders
+  source_table: orders
+  source_column: employee_id
+  source_type: INTEGER
+  name: Order Employee ID
+  description: Employee identifier recorded as responsible for the order.
+  synonyms:
+  - funcionario do pedido
+  - vendedor do pedido
+- id: order_date
+  table_id: orders
+  source_table: orders
+  source_column: order_date
+  source_type: TIMESTAMP
+  name: Order Date
+  description: Date when the order was placed.
+  synonyms:
+  - data do pedido
+- id: order_required_date
+  table_id: orders
+  source_table: orders
+  source_column: required_date
+  source_type: TIMESTAMP
+  name: Required Delivery Date
+  description: Requested delivery date recorded on the order.
+  synonyms:
+  - required date
+  - data requerida
+- id: order_shipped_date
+  table_id: orders
+  source_table: orders
+  source_column: shipped_date
+  source_type: TIMESTAMP
+  name: Shipped Date
+  description: Date when the order was shipped; null means no shipment date was recorded.
+  synonyms:
+  - shipping date
+  - data de envio
+- id: order_shipper_id
+  table_id: orders
+  source_table: orders
+  source_column: ship_via
+  source_type: INTEGER
+  name: Order Shipper ID
+  description: Shipping-company identifier selected for the order.
+  synonyms:
+  - ship via
+  - transportadora do pedido
+- id: order_ship_name
+  table_id: orders
+  source_table: orders
+  source_column: ship_name
+  source_type: VARCHAR
+  name: Order Ship-To Name
+  description: Recipient name captured on the order shipping address.
+  synonyms:
+  - destinatario do pedido
+- id: order_ship_city
+  table_id: orders
+  source_table: orders
+  source_column: ship_city
+  source_type: VARCHAR
+  name: Order Ship-To City
+  description: City captured on the order shipping address.
+  synonyms:
+  - cidade de entrega
+- id: order_ship_region
+  table_id: orders
+  source_table: orders
+  source_column: ship_region
+  source_type: VARCHAR
+  name: Order Ship-To Region
+  description: State, province, or region captured on the order shipping address.
+  synonyms:
+  - regiao de entrega
+- id: order_ship_postal_code
+  table_id: orders
+  source_table: orders
+  source_column: ship_postal_code
+  source_type: VARCHAR
+  name: Order Ship-To Postal Code
+  description: Postal code captured on the order shipping address.
+  synonyms:
+  - cep de entrega
+- id: order_ship_country
+  table_id: orders
+  source_table: orders
+  source_column: ship_country
+  source_type: VARCHAR
+  name: Order Ship-To Country
+  description: Country captured on the order shipping address.
+  synonyms:
+  - pais de entrega
+- id: product_id
+  table_id: products
+  source_table: products
+  source_column: product_id
+  source_type: INTEGER
+  name: Product ID
+  description: Stable identifier of a product.
+  synonyms:
+  - product code
+  - codigo do produto
+- id: product_name
+  table_id: products
+  source_table: products
+  source_column: product_name
+  source_type: VARCHAR
+  name: Product Name
+  description: Business name of the product.
+  synonyms:
+  - product
+  - produto
+  - nome do produto
+- id: product_supplier_id
+  table_id: products
+  source_table: products
+  source_column: supplier_id
+  source_type: INTEGER
+  name: Product Supplier ID
+  description: Supplier identifier recorded on the product.
+  synonyms:
+  - fornecedor do produto
+- id: product_category_id
+  table_id: products
+  source_table: products
+  source_column: category_id
+  source_type: INTEGER
+  name: Product Category ID
+  description: Category identifier recorded on the product.
+  synonyms:
+  - categoria do produto
+- id: product_quantity_per_unit
+  table_id: products
+  source_table: products
+  source_column: quantity_per_unit
+  source_type: VARCHAR
+  name: Product Quantity Per Unit
+  description: Packaging quantity description recorded for the product.
+  synonyms:
+  - package size
+  - embalagem do produto
+- id: product_discontinued
+  table_id: products
+  source_table: products
+  source_column: discontinued
+  source_type: BOOLEAN
+  name: Product Discontinued Flag
+  description: Boolean flag indicating whether the product is discontinued.
+  synonyms:
+  - discontinued
+  - produto descontinuado
+- id: sales_region_id
+  table_id: sales_regions
+  source_table: region
+  source_column: region_id
+  source_type: INTEGER
+  name: Sales Region ID
+  description: Stable identifier of a sales region.
+  synonyms:
+  - codigo da regiao comercial
+- id: sales_region_name
+  table_id: sales_regions
+  source_table: region
+  source_column: region_description
+  source_type: VARCHAR
+  name: Sales Region Name
+  description: Business description used as the sales-region name.
+  synonyms:
+  - sales region
+  - regiao comercial
+- id: shipper_id
+  table_id: shippers
+  source_table: shippers
+  source_column: shipper_id
+  source_type: INTEGER
+  name: Shipper ID
+  description: Stable identifier of a shipping company.
+  synonyms:
+  - carrier id
+  - codigo da transportadora
+- id: shipper_company_name
+  table_id: shippers
+  source_table: shippers
+  source_column: company_name
+  source_type: VARCHAR
+  name: Shipper Company Name
+  description: Company name of the shipper.
+  synonyms:
+  - shipper name
+  - carrier name
+  - nome da transportadora
+- id: supplier_id
+  table_id: suppliers
+  source_table: suppliers
+  source_column: supplier_id
+  source_type: INTEGER
+  name: Supplier ID
+  description: Stable identifier of a supplier.
+  synonyms:
+  - supplier code
+  - codigo do fornecedor
+- id: supplier_company_name
+  table_id: suppliers
+  source_table: suppliers
+  source_column: company_name
+  source_type: VARCHAR
+  name: Supplier Company Name
+  description: Company name of the supplier.
+  synonyms:
+  - supplier name
+  - nome do fornecedor
+- id: supplier_city
+  table_id: suppliers
+  source_table: suppliers
+  source_column: city
+  source_type: VARCHAR
+  name: Supplier City
+  description: City recorded for the supplier.
+  synonyms:
+  - cidade do fornecedor
+- id: supplier_region
+  table_id: suppliers
+  source_table: suppliers
+  source_column: region
+  source_type: VARCHAR
+  name: Supplier Region
+  description: State, province, or region recorded for the supplier.
+  synonyms:
+  - regiao do fornecedor
+- id: supplier_country
+  table_id: suppliers
+  source_table: suppliers
+  source_column: country
+  source_type: VARCHAR
+  name: Supplier Country
+  description: Country recorded for the supplier.
+  synonyms:
+  - pais do fornecedor
+- id: sales_territory_id
+  table_id: sales_territories
+  source_table: territories
+  source_column: territory_id
+  source_type: VARCHAR
+  name: Sales Territory ID
+  description: Stable identifier of a sales territory.
+  synonyms:
+  - codigo do territorio comercial
+- id: sales_territory_name
+  table_id: sales_territories
+  source_table: territories
+  source_column: territory_description
+  source_type: VARCHAR
+  name: Sales Territory Name
+  description: Business description used as the sales-territory name.
+  synonyms:
+  - sales territory
+  - territorio comercial
+- id: territory_region_id
+  table_id: sales_territories
+  source_table: territories
+  source_column: region_id
+  source_type: INTEGER
+  name: Territory Sales Region ID
+  description: Sales-region identifier recorded on the territory.
+  synonyms:
+  - regiao do territorio
+measures:
+- id: category_count
+  table_id: product_categories
+  source_table: categories
+  source_column: category_id
+  source_type: INTEGER
+  function: count_distinct
+  name: Category Count
+  description: Distinct count of product-category identifiers.
+  synonyms:
+  - number of categories
+  - quantidade de categorias
+- id: customer_count
+  table_id: customers
+  source_table: customers
+  source_column: customer_id
+  source_type: VARCHAR
+  function: count_distinct
+  name: Customer Count
+  description: Distinct count of customer identifiers.
+  synonyms:
+  - number of customers
+  - quantidade de clientes
+- id: employee_territory_assignment_count
+  table_id: employee_territory_assignments
+  source_table: employee_territories
+  source_column: '*'
+  source_type: ROW_COUNT
+  function: count
+  name: Employee Territory Assignment Count
+  description: Count of rows at the employee-and-territory assignment grain.
+  synonyms:
+  - territory assignment count
+  - quantidade de atribuicoes territoriais
+- id: employee_count
+  table_id: employees
+  source_table: employees
+  source_column: employee_id
+  source_type: INTEGER
+  function: count_distinct
+  name: Employee Count
+  description: Distinct count of employee identifiers.
+  synonyms:
+  - number of employees
+  - quantidade de funcionarios
+- id: order_line_count
+  table_id: order_lines
+  source_table: order_details
+  source_column: '*'
+  source_type: ROW_COUNT
+  function: count
+  name: Order Line Count
+  description: Count of rows at the order-and-product line grain.
+  synonyms:
+  - line count
+  - quantidade de linhas de pedido
+- id: units_ordered_total
+  table_id: order_lines
+  source_table: order_details
+  source_column: quantity
+  source_type: SMALLINT
+  function: sum
+  name: Total Units Ordered
+  description: Sum of order-line quantity; additive at the order-line grain.
+  synonyms:
+  - ordered quantity
+  - quantidade total pedida
+- id: line_unit_price_average
+  table_id: order_lines
+  source_table: order_details
+  source_column: unit_price
+  source_type: DECIMAL(19,4)
+  function: avg
+  name: Average Captured Line Unit Price
+  description: Unweighted average of captured pre-discount unit price across order
+    lines.
+  synonyms:
+  - average selling unit price
+  - preco unitario medio da linha
+- id: line_discount_rate_average
+  table_id: order_lines
+  source_table: order_details
+  source_column: discount
+  source_type: DOUBLE
+  function: avg
+  name: Average Line Discount Rate
+  description: Unweighted average of the fractional discount across order lines.
+  synonyms:
+  - average discount
+  - desconto medio da linha
+- id: order_count
+  table_id: orders
+  source_table: orders
+  source_column: order_id
+  source_type: INTEGER
+  function: count_distinct
+  name: Order Count
+  description: Distinct count of commercial order identifiers.
+  synonyms:
+  - number of orders
+  - quantidade de pedidos
+- id: freight_total
+  table_id: orders
+  source_table: orders
+  source_column: freight
+  source_type: DECIMAL(19,4)
+  function: sum
+  name: Total Order Freight
+  description: Sum of freight at the order grain. It must not be aggregated after
+    a one-to-many expansion from orders to order lines.
+  synonyms:
+  - total freight
+  - frete total
+- id: freight_average
+  table_id: orders
+  source_table: orders
+  source_column: freight
+  source_type: DECIMAL(19,4)
+  function: avg
+  name: Average Order Freight
+  description: Unweighted average freight amount across orders.
+  synonyms:
+  - average freight
+  - frete medio
+- id: product_count
+  table_id: products
+  source_table: products
+  source_column: product_id
+  source_type: INTEGER
+  function: count_distinct
+  name: Product Count
+  description: Distinct count of product identifiers.
+  synonyms:
+  - number of products
+  - quantidade de produtos
+- id: stock_units_total
+  table_id: products
+  source_table: products
+  source_column: units_in_stock
+  source_type: SMALLINT
+  function: sum
+  name: Total Units In Stock
+  description: Sum of the current units_in_stock snapshot across products; it is not
+    an inventory movement or a time-additive measure.
+  synonyms:
+  - inventory units
+  - unidades totais em estoque
+- id: units_on_order_total
+  table_id: products
+  source_table: products
+  source_column: units_on_order
+  source_type: SMALLINT
+  function: sum
+  name: Total Units On Order
+  description: Sum of the current units_on_order snapshot across products.
+  synonyms:
+  - open purchase units
+  - unidades totais encomendadas
+- id: product_unit_price_average
+  table_id: products
+  source_table: products
+  source_column: unit_price
+  source_type: DECIMAL(19,4)
+  function: avg
+  name: Average Product List Unit Price
+  description: Unweighted average of the current product catalog unit price.
+  synonyms:
+  - average list price
+  - preco medio de tabela
+- id: sales_region_count
+  table_id: sales_regions
+  source_table: region
+  source_column: region_id
+  source_type: INTEGER
+  function: count_distinct
+  name: Sales Region Count
+  description: Distinct count of sales-region identifiers.
+  synonyms:
+  - number of sales regions
+  - quantidade de regioes comerciais
+- id: shipper_count
+  table_id: shippers
+  source_table: shippers
+  source_column: shipper_id
+  source_type: INTEGER
+  function: count_distinct
+  name: Shipper Count
+  description: Distinct count of shipping-company identifiers.
+  synonyms:
+  - carrier count
+  - quantidade de transportadoras
+- id: supplier_count
+  table_id: suppliers
+  source_table: suppliers
+  source_column: supplier_id
+  source_type: INTEGER
+  function: count_distinct
+  name: Supplier Count
+  description: Distinct count of supplier identifiers.
+  synonyms:
+  - number of suppliers
+  - quantidade de fornecedores
+- id: sales_territory_count
+  table_id: sales_territories
+  source_table: territories
+  source_column: territory_id
+  source_type: VARCHAR
+  function: count_distinct
+  name: Sales Territory Count
+  description: Distinct count of sales-territory identifiers.
+  synonyms:
+  - number of territories
+  - quantidade de territorios comerciais
+relationship_paths:
+- id: demographic_assignments_to_customers
+  name: Demographic Assignments To Customers
+  description: Many-to-one path from customer demographic assignments to customer
+    accounts. A left join preserves assignment rows if future snapshots contain an
+    unmatched customer.
+  synonyms:
+  - customer for demographic assignment
+  hops:
+  - source_table_id: customer_demographic_assignments
+    source_table: customer_customer_demo
+    source_column: customer_id
+    target_table_id: customers
+    target_table: customers
+    target_column: customer_id
+    kind: left
+- id: demographic_assignments_to_types
+  name: Demographic Assignments To Types
+  description: Many-to-one path from customer demographic assignments to demographic
+    types. A left join preserves assignment rows if future snapshots contain an unmatched
+    type.
+  synonyms:
+  - demographic type for assignment
+  hops:
+  - source_table_id: customer_demographic_assignments
+    source_table: customer_customer_demo
+    source_column: customer_type_id
+    target_table_id: customer_demographic_types
+    target_table: customer_demographics
+    target_column: customer_type_id
+    kind: left
+- id: employee_assignments_to_employees
+  name: Employee Territory Assignments To Employees
+  description: Many-to-one path from territory assignments to employees.
+  synonyms:
+  - employee for territory assignment
+  hops:
+  - source_table_id: employee_territory_assignments
+    source_table: employee_territories
+    source_column: employee_id
+    target_table_id: employees
+    target_table: employees
+    target_column: employee_id
+    kind: inner
+- id: employee_assignments_to_territories
+  name: Employee Territory Assignments To Territories
+  description: Many-to-one path from employee-territory assignments to territories.
+  synonyms:
+  - territory for employee assignment
+  hops:
+  - source_table_id: employee_territory_assignments
+    source_table: employee_territories
+    source_column: territory_id
+    target_table_id: sales_territories
+    target_table: territories
+    target_column: territory_id
+    kind: inner
+- id: employee_assignments_to_regions
+  name: Employee Territory Assignments To Sales Regions
+  description: Many-to-one two-hop path from employee-territory assignments through
+    territories to sales regions; it preserves the assignment grain.
+  synonyms:
+  - sales region for employee assignment
+  hops:
+  - source_table_id: employee_territory_assignments
+    source_table: employee_territories
+    source_column: territory_id
+    target_table_id: sales_territories
+    target_table: territories
+    target_column: territory_id
+    kind: inner
+  - source_table_id: sales_territories
+    source_table: territories
+    source_column: region_id
+    target_table_id: sales_regions
+    target_table: region
+    target_column: region_id
+    kind: inner
+- id: order_lines_to_orders
+  name: Order Lines To Orders
+  description: Many-to-one path from order lines to their parent orders.
+  synonyms:
+  - order for order line
+  - relacao linha pedido
+  hops:
+  - source_table_id: order_lines
+    source_table: order_details
+    source_column: order_id
+    target_table_id: orders
+    target_table: orders
+    target_column: order_id
+    kind: inner
+- id: order_lines_to_products
+  name: Order Lines To Products
+  description: Many-to-one path from order lines to products.
+  synonyms:
+  - product for order line
+  - produto da linha de pedido
+  hops:
+  - source_table_id: order_lines
+    source_table: order_details
+    source_column: product_id
+    target_table_id: products
+    target_table: products
+    target_column: product_id
+    kind: inner
+- id: orders_to_customers
+  name: Orders To Customers
+  description: Many-to-one path from orders to customer accounts.
+  synonyms:
+  - customer for order
+  - relacao pedido cliente
+  hops:
+  - source_table_id: orders
+    source_table: orders
+    source_column: customer_id
+    target_table_id: customers
+    target_table: customers
+    target_column: customer_id
+    kind: inner
+- id: orders_to_employees
+  name: Orders To Employees
+  description: Many-to-one path from orders to responsible employees.
+  synonyms:
+  - employee for order
+  - funcionario responsavel pelo pedido
+  hops:
+  - source_table_id: orders
+    source_table: orders
+    source_column: employee_id
+    target_table_id: employees
+    target_table: employees
+    target_column: employee_id
+    kind: inner
+- id: orders_to_shippers
+  name: Orders To Shippers
+  description: Many-to-one path from orders to selected shipping companies.
+  synonyms:
+  - shipper for order
+  - relacao pedido transportadora
+  hops:
+  - source_table_id: orders
+    source_table: orders
+    source_column: ship_via
+    target_table_id: shippers
+    target_table: shippers
+    target_column: shipper_id
+    kind: inner
+- id: products_to_categories
+  name: Products To Categories
+  description: Many-to-one path from products to product categories.
+  synonyms:
+  - category for product
+  - relacao produto categoria
+  hops:
+  - source_table_id: products
+    source_table: products
+    source_column: category_id
+    target_table_id: product_categories
+    target_table: categories
+    target_column: category_id
+    kind: inner
+- id: products_to_suppliers
+  name: Products To Suppliers
+  description: Many-to-one path from products to suppliers.
+  synonyms:
+  - supplier for product
+  - relacao produto fornecedor
+  hops:
+  - source_table_id: products
+    source_table: products
+    source_column: supplier_id
+    target_table_id: suppliers
+    target_table: suppliers
+    target_column: supplier_id
+    kind: inner
+- id: territories_to_regions
+  name: Sales Territories To Sales Regions
+  description: Many-to-one path from sales territories to sales regions.
+  synonyms:
+  - region for territory
+  - relacao territorio regiao
+  hops:
+  - source_table_id: sales_territories
+    source_table: territories
+    source_column: region_id
+    target_table_id: sales_regions
+    target_table: region
+    target_column: region_id
+    kind: inner
+- id: order_lines_to_customers
+  name: Order Lines To Customers
+  description: Many-to-one two-hop path from order lines through orders to customers;
+    it preserves the order-line grain.
+  synonyms:
+  - customer for order line
+  - cliente da linha de pedido
+  hops:
+  - source_table_id: order_lines
+    source_table: order_details
+    source_column: order_id
+    target_table_id: orders
+    target_table: orders
+    target_column: order_id
+    kind: inner
+  - source_table_id: orders
+    source_table: orders
+    source_column: customer_id
+    target_table_id: customers
+    target_table: customers
+    target_column: customer_id
+    kind: inner
+- id: order_lines_to_employees
+  name: Order Lines To Employees
+  description: Many-to-one two-hop path from order lines through orders to responsible
+    employees; it preserves the order-line grain.
+  synonyms:
+  - employee for order line
+  - funcionario da linha de pedido
+  hops:
+  - source_table_id: order_lines
+    source_table: order_details
+    source_column: order_id
+    target_table_id: orders
+    target_table: orders
+    target_column: order_id
+    kind: inner
+  - source_table_id: orders
+    source_table: orders
+    source_column: employee_id
+    target_table_id: employees
+    target_table: employees
+    target_column: employee_id
+    kind: inner
+- id: order_lines_to_shippers
+  name: Order Lines To Shippers
+  description: Many-to-one two-hop path from order lines through orders to shipping
+    companies; it preserves the order-line grain.
+  synonyms:
+  - shipper for order line
+  - transportadora da linha de pedido
+  hops:
+  - source_table_id: order_lines
+    source_table: order_details
+    source_column: order_id
+    target_table_id: orders
+    target_table: orders
+    target_column: order_id
+    kind: inner
+  - source_table_id: orders
+    source_table: orders
+    source_column: ship_via
+    target_table_id: shippers
+    target_table: shippers
+    target_column: shipper_id
+    kind: inner
+- id: order_lines_to_categories
+  name: Order Lines To Product Categories
+  description: Many-to-one two-hop path from order lines through products to categories;
+    it preserves the order-line grain.
+  synonyms:
+  - category for order line
+  - categoria da linha de pedido
+  hops:
+  - source_table_id: order_lines
+    source_table: order_details
+    source_column: product_id
+    target_table_id: products
+    target_table: products
+    target_column: product_id
+    kind: inner
+  - source_table_id: products
+    source_table: products
+    source_column: category_id
+    target_table_id: product_categories
+    target_table: categories
+    target_column: category_id
+    kind: inner
+- id: order_lines_to_suppliers
+  name: Order Lines To Suppliers
+  description: Many-to-one two-hop path from order lines through products to suppliers;
+    it preserves the order-line grain.
+  synonyms:
+  - supplier for order line
+  - fornecedor da linha de pedido
+  hops:
+  - source_table_id: order_lines
+    source_table: order_details
+    source_column: product_id
+    target_table_id: products
+    target_table: products
+    target_column: product_id
+    kind: inner
+  - source_table_id: products
+    source_table: products
+    source_column: supplier_id
+    target_table_id: suppliers
+    target_table: suppliers
+    target_column: supplier_id
+    kind: inner
+term_index:
+- term: assigned demographic type id
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id023
+    kind: dimension
+    id: demographic_assignment_type_id
+    name: Assigned Demographic Type ID
+- term: assigned employee id
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id001
+    kind: dimension
+    id: assignment_employee_id
+    name: Assigned Employee ID
+- term: assigned territory id
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id002
+    kind: dimension
+    id: assignment_territory_id
+    name: Assigned Territory ID
+- term: assignment employee id
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id001
+- term: assignment territory id
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id002
+- term: atribuicoes territoriais de funcionarios
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id035
+    kind: table
+    id: employee_territory_assignments
+    name: Employee Territory Assignments
+- term: average captured line unit price
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id006
+    kind: measure
+    id: line_unit_price_average
+    name: Average Captured Line Unit Price
+- term: average discount
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id003
+    kind: measure
+    id: line_discount_rate_average
+    name: Average Line Discount Rate
+- term: average freight
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id004
+    kind: measure
+    id: freight_average
+    name: Average Order Freight
+- term: average line discount rate
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id003
+- term: average list price
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id005
+    kind: measure
+    id: product_unit_price_average
+    name: Average Product List Unit Price
+- term: average order freight
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id004
+- term: average product list unit price
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id005
+- term: average selling unit price
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id006
+- term: cadastro de clientes
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id010
+    kind: table
+    id: customers
+    name: Customers
+- term: cadastro de fornecedores
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id040
+    kind: table
+    id: suppliers
+    name: Suppliers
+- term: cadastro de produtos
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id081
+    kind: table
+    id: products
+    name: Products
+- term: captured line unit price
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id044
+    kind: dimension
+    id: line_unit_price
+    name: Captured Line Unit Price
+- term: cargo do contato do cliente
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id016
+    kind: dimension
+    id: customer_contact_title
+    name: Customer Contact Title
+- term: cargo do funcionario
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id038
+    kind: dimension
+    id: employee_title
+    name: Employee Title
+- term: carrier count
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id088
+    kind: measure
+    id: shipper_count
+    name: Shipper Count
+- term: carrier id
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id012
+    kind: dimension
+    id: shipper_id
+    name: Shipper ID
+- term: carrier name
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id047
+    kind: dimension
+    id: shipper_company_name
+    name: Shipper Company Name
+- term: carriers
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id101
+    kind: table
+    id: shippers
+    name: Shippers
+- term: categoria
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id008
+    kind: dimension
+    id: category_name
+    name: Category Name
+- term: categoria da linha de pedido
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id009
+    kind: relationship_path
+    id: order_lines_to_categories
+    name: Order Lines To Product Categories
+- term: categoria do produto
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id076
+    kind: dimension
+    id: product_category_id
+    name: Product Category ID
+- term: categorias de produto
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id007
+    kind: table
+    id: product_categories
+    name: Product Categories
+- term: categories
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id007
+- term: category
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id008
+- term: category count
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id049
+    kind: measure
+    id: category_count
+    name: Category Count
+- term: category description
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id027
+    kind: dimension
+    id: category_description
+    name: Category Description
+- term: category for order line
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id009
+- term: category for product
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id083
+    kind: relationship_path
+    id: products_to_categories
+    name: Products To Categories
+- term: category id
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id011
+    kind: dimension
+    id: category_id
+    name: Category ID
+- term: category master
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id007
+- term: category name
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id008
+- term: cep de entrega
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id065
+    kind: dimension
+    id: order_ship_postal_code
+    name: Order Ship-To Postal Code
+- term: cep do cliente
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id021
+    kind: dimension
+    id: customer_postal_code
+    name: Customer Postal Code
+- term: cidade de entrega
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id063
+    kind: dimension
+    id: order_ship_city
+    name: Order Ship-To City
+- term: cidade do cliente
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id013
+    kind: dimension
+    id: customer_city
+    name: Customer City
+- term: cidade do fornecedor
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id104
+    kind: dimension
+    id: supplier_city
+    name: Supplier City
+- term: cidade do funcionario
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id030
+    kind: dimension
+    id: employee_city
+    name: Employee City
+- term: classificacoes demograficas de clientes
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id017
+    kind: table
+    id: customer_demographic_assignments
+    name: Customer Demographic Assignments
+- term: cliente da classificacao demografica
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id022
+    kind: dimension
+    id: demographic_assignment_customer_id
+    name: Demographic Assignment Customer ID
+- term: cliente da linha de pedido
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id019
+    kind: relationship_path
+    id: order_lines_to_customers
+    name: Order Lines To Customers
+- term: cliente do pedido
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id053
+    kind: dimension
+    id: order_customer_id
+    name: Order Customer ID
+- term: clientes
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id010
+- term: codigo da categoria
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id011
+- term: codigo da regiao comercial
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id096
+    kind: dimension
+    id: sales_region_id
+    name: Sales Region ID
+- term: codigo da transportadora
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id012
+- term: codigo do cliente
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id014
+    kind: dimension
+    id: customer_id
+    name: Customer ID
+- term: codigo do fornecedor
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id105
+    kind: dimension
+    id: supplier_id
+    name: Supplier ID
+- term: codigo do funcionario
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id031
+    kind: dimension
+    id: employee_id
+    name: Employee ID
+- term: codigo do produto
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id077
+    kind: dimension
+    id: product_id
+    name: Product ID
+- term: codigo do territorio comercial
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id097
+    kind: dimension
+    id: sales_territory_id
+    name: Sales Territory ID
+- term: codigo do tipo demografico
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id026
+    kind: dimension
+    id: demographic_type_id
+    name: Demographic Type ID
+- term: colaboradores
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id034
+    kind: table
+    id: employees
+    name: Employees
+- term: comercio northwind
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id048
+    kind: dataset
+    id: northwind_commerce
+    name: Northwind Commerce
+- term: contato do cliente
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id015
+    kind: dimension
+    id: customer_contact_name
+    name: Customer Contact Name
+- term: customer city
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id013
+- term: customer code
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id014
+- term: customer company name
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id020
+    kind: dimension
+    id: customer_company_name
+    name: Customer Company Name
+- term: customer contact name
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id015
+- term: customer contact title
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id016
+- term: customer count
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id050
+    kind: measure
+    id: customer_count
+    name: Customer Count
+- term: customer country
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id071
+    kind: dimension
+    id: customer_country
+    name: Customer Country
+- term: customer customer demo
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id017
+- term: customer demographic assignments
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id017
+- term: customer demographic types
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id018
+    kind: table
+    id: customer_demographic_types
+    name: Customer Demographic Types
+- term: customer demographics
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id018
+- term: customer for demographic assignment
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id024
+    kind: relationship_path
+    id: demographic_assignments_to_customers
+    name: Demographic Assignments To Customers
+- term: customer for order
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id069
+    kind: relationship_path
+    id: orders_to_customers
+    name: Orders To Customers
+- term: customer for order line
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id019
+- term: customer id
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id014
+- term: customer master
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id010
+- term: customer name
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id020
+- term: customer postal code
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id021
+- term: customer region
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id039
+    kind: dimension
+    id: customer_region
+    name: Customer Region
+- term: customer type assignments
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id017
+- term: customer types
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id018
+- term: customers
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id010
+- term: data de contratacao
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id033
+    kind: dimension
+    id: employee_hire_date
+    name: Employee Hire Date
+- term: data de envio
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id068
+    kind: dimension
+    id: order_shipped_date
+    name: Shipped Date
+- term: data do pedido
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id054
+    kind: dimension
+    id: order_date
+    name: Order Date
+- term: data requerida
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id062
+    kind: dimension
+    id: order_required_date
+    name: Required Delivery Date
+- term: demographic assignment customer id
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id022
+- term: demographic assignment type id
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id023
+- term: demographic assignments to customers
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id024
+- term: demographic assignments to types
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id025
+    kind: relationship_path
+    id: demographic_assignments_to_types
+    name: Demographic Assignments To Types
+- term: demographic type description
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id028
+    kind: dimension
+    id: demographic_type_description
+    name: Demographic Type Description
+- term: demographic type for assignment
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id025
+- term: demographic type id
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id026
+- term: desconto da linha
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id029
+    kind: dimension
+    id: line_discount_rate
+    name: Line Discount Rate
+- term: desconto medio da linha
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id003
+- term: descricao da categoria
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id027
+- term: descricao do tipo demografico
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id028
+- term: destinatario do pedido
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id064
+    kind: dimension
+    id: order_ship_name
+    name: Order Ship-To Name
+- term: discontinued
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id079
+    kind: dimension
+    id: product_discontinued
+    name: Product Discontinued Flag
+- term: discount
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id029
+- term: embalagem do produto
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id070
+    kind: dimension
+    id: product_quantity_per_unit
+    name: Product Quantity Per Unit
+- term: employee assignments to employees
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id032
+    kind: relationship_path
+    id: employee_assignments_to_employees
+    name: Employee Territory Assignments To Employees
+- term: employee assignments to regions
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id036
+    kind: relationship_path
+    id: employee_assignments_to_regions
+    name: Employee Territory Assignments To Sales Regions
+- term: employee assignments to territories
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id037
+    kind: relationship_path
+    id: employee_assignments_to_territories
+    name: Employee Territory Assignments To Territories
+- term: employee city
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id030
+- term: employee code
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id031
+- term: employee count
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id051
+    kind: measure
+    id: employee_count
+    name: Employee Count
+- term: employee country
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id072
+    kind: dimension
+    id: employee_country
+    name: Employee Country
+- term: employee first name
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id074
+    kind: dimension
+    id: employee_first_name
+    name: Employee First Name
+- term: employee for order
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id043
+    kind: relationship_path
+    id: orders_to_employees
+    name: Orders To Employees
+- term: employee for order line
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id042
+    kind: relationship_path
+    id: order_lines_to_employees
+    name: Order Lines To Employees
+- term: employee for territory assignment
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id032
+- term: employee hire date
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id033
+- term: employee id
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id031
+- term: employee last name
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id102
+    kind: dimension
+    id: employee_last_name
+    name: Employee Last Name
+- term: employee master
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id034
+- term: employee region
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id090
+    kind: dimension
+    id: employee_region
+    name: Employee Region
+- term: employee territories
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id035
+- term: employee territory assignment count
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id084
+    kind: measure
+    id: employee_territory_assignment_count
+    name: Employee Territory Assignment Count
+- term: employee territory assignments
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id035
+- term: employee territory assignments to employees
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id032
+- term: employee territory assignments to sales regions
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id036
+- term: employee territory assignments to territories
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id037
+- term: employee title
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id038
+- term: employees
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id034
+- term: empresa cliente
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id020
+- term: estado do cliente
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id039
+- term: fornecedor da linha de pedido
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id061
+    kind: relationship_path
+    id: order_lines_to_suppliers
+    name: Order Lines To Suppliers
+- term: fornecedor do produto
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id082
+    kind: dimension
+    id: product_supplier_id
+    name: Product Supplier ID
+- term: fornecedores
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id040
+- term: freight average
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id004
+- term: freight total
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id041
+    kind: measure
+    id: freight_total
+    name: Total Order Freight
+- term: frete medio
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id004
+- term: frete total
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id041
+- term: funcionario atribuido
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id001
+- term: funcionario da linha de pedido
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id042
+- term: funcionario do pedido
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id055
+    kind: dimension
+    id: order_employee_id
+    name: Order Employee ID
+- term: funcionario responsavel pelo pedido
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id043
+- term: funcionarios
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id034
+- term: geographic regions
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id091
+    kind: table
+    id: sales_regions
+    name: Sales Regions
+- term: gestor imediato
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id046
+    kind: dimension
+    id: manager_employee_id
+    name: Manager Employee ID
+- term: inventory units
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id103
+    kind: measure
+    id: stock_units_total
+    name: Total Units In Stock
+- term: itens de pedido
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id045
+    kind: table
+    id: order_lines
+    name: Order Lines
+- term: line count
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id057
+    kind: measure
+    id: order_line_count
+    name: Order Line Count
+- term: line discount rate
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id029
+- term: line discount rate average
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id003
+- term: line order id
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id058
+    kind: dimension
+    id: line_order_id
+    name: Order Line Order ID
+- term: line product id
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id059
+    kind: dimension
+    id: line_product_id
+    name: Order Line Product ID
+- term: line unit price
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id044
+- term: line unit price average
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id006
+- term: linhas de pedido
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id045
+- term: manager employee id
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id046
+- term: nome da categoria
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id008
+- term: nome da transportadora
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id047
+- term: nome do cliente
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id020
+- term: nome do fornecedor
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id106
+    kind: dimension
+    id: supplier_company_name
+    name: Supplier Company Name
+- term: nome do produto
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id075
+    kind: dimension
+    id: product_name
+    name: Product Name
+- term: northwind
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id048
+- term: northwind commerce
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id048
+- term: northwind commercial operations
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id048
+- term: number of categories
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id049
+- term: number of customers
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id050
+- term: number of employees
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id051
+- term: number of orders
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id052
+    kind: measure
+    id: order_count
+    name: Order Count
+- term: number of products
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id078
+    kind: measure
+    id: product_count
+    name: Product Count
+- term: number of sales regions
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id086
+    kind: measure
+    id: sales_region_count
+    name: Sales Region Count
+- term: number of suppliers
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id085
+    kind: measure
+    id: supplier_count
+    name: Supplier Count
+- term: number of territories
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id087
+    kind: measure
+    id: sales_territory_count
+    name: Sales Territory Count
+- term: numero do pedido
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id056
+    kind: dimension
+    id: order_id
+    name: Order ID
+- term: open purchase units
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id111
+    kind: measure
+    id: units_on_order_total
+    name: Total Units On Order
+- term: operacoes comerciais northwind
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id048
+- term: order count
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id052
+- term: order customer id
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id053
+- term: order date
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id054
+- term: order details
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id045
+- term: order employee id
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id055
+- term: order for order line
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id060
+    kind: relationship_path
+    id: order_lines_to_orders
+    name: Order Lines To Orders
+- term: order id
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id056
+- term: order line count
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id057
+- term: order line order id
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id058
+- term: order line product id
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id059
+- term: order lines
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id045
+- term: order lines to categories
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id009
+- term: order lines to customers
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id019
+- term: order lines to employees
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id042
+- term: order lines to orders
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id060
+- term: order lines to product categories
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id009
+- term: order lines to products
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id080
+    kind: relationship_path
+    id: order_lines_to_products
+    name: Order Lines To Products
+- term: order lines to shippers
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id100
+    kind: relationship_path
+    id: order_lines_to_shippers
+    name: Order Lines To Shippers
+- term: order lines to suppliers
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id061
+- term: order number
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id056
+- term: order required date
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id062
+- term: order ship city
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id063
+- term: order ship country
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id066
+    kind: dimension
+    id: order_ship_country
+    name: Order Ship-To Country
+- term: order ship name
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id064
+- term: order ship postal code
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id065
+- term: order ship region
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id067
+    kind: dimension
+    id: order_ship_region
+    name: Order Ship-To Region
+- term: order ship to city
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id063
+- term: order ship to country
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id066
+- term: order ship to name
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id064
+- term: order ship to postal code
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id065
+- term: order ship to region
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id067
+- term: order shipped date
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id068
+- term: order shipper id
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id099
+    kind: dimension
+    id: order_shipper_id
+    name: Order Shipper ID
+- term: ordered quantity
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id089
+    kind: measure
+    id: units_ordered_total
+    name: Total Units Ordered
+- term: orders
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id073
+    kind: table
+    id: orders
+    name: Orders
+- term: orders to customers
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id069
+- term: orders to employees
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id043
+- term: orders to shippers
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id092
+    kind: relationship_path
+    id: orders_to_shippers
+    name: Orders To Shippers
+- term: package size
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id070
+- term: pais de entrega
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id066
+- term: pais do cliente
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id071
+- term: pais do fornecedor
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id107
+    kind: dimension
+    id: supplier_country
+    name: Supplier Country
+- term: pais do funcionario
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id072
+- term: pedido da linha
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id058
+- term: pedidos
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id073
+- term: pedidos de venda
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id073
+- term: preco medio de tabela
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id005
+- term: preco unitario da linha
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id044
+- term: preco unitario medio da linha
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id006
+- term: primeiro nome do funcionario
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id074
+- term: product
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id075
+- term: product categories
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id007
+- term: product category id
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id076
+- term: product code
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id077
+- term: product count
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id078
+- term: product discontinued
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id079
+- term: product discontinued flag
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id079
+- term: product for order line
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id080
+- term: product id
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id077
+- term: product master
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id081
+- term: product name
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id075
+- term: product quantity per unit
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id070
+- term: product supplier id
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id082
+- term: product unit price average
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id005
+- term: products
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id081
+- term: products to categories
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id083
+- term: products to suppliers
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id093
+    kind: relationship_path
+    id: products_to_suppliers
+    name: Products To Suppliers
+- term: produto
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id075
+- term: produto da linha
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id059
+- term: produto da linha de pedido
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id080
+- term: produto descontinuado
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id079
+- term: produtos
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id081
+- term: quantidade de atribuicoes territoriais
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id084
+- term: quantidade de categorias
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id049
+- term: quantidade de clientes
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id050
+- term: quantidade de fornecedores
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id085
+- term: quantidade de funcionarios
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id051
+- term: quantidade de linhas de pedido
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id057
+- term: quantidade de pedidos
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id052
+- term: quantidade de produtos
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id078
+- term: quantidade de regioes comerciais
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id086
+- term: quantidade de territorios comerciais
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id087
+- term: quantidade de transportadoras
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id088
+- term: quantidade total pedida
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id089
+- term: regiao comercial
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id095
+    kind: dimension
+    id: sales_region_name
+    name: Sales Region Name
+- term: regiao de entrega
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id067
+- term: regiao do cliente
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id039
+- term: regiao do fornecedor
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id108
+    kind: dimension
+    id: supplier_region
+    name: Supplier Region
+- term: regiao do funcionario
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id090
+- term: regiao do territorio
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id110
+    kind: dimension
+    id: territory_region_id
+    name: Territory Sales Region ID
+- term: regioes comerciais
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id091
+- term: region
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id091
+- term: region for territory
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id094
+    kind: relationship_path
+    id: territories_to_regions
+    name: Sales Territories To Sales Regions
+- term: relacao linha pedido
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id060
+- term: relacao pedido cliente
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id069
+- term: relacao pedido transportadora
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id092
+- term: relacao produto categoria
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id083
+- term: relacao produto fornecedor
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id093
+- term: relacao territorio regiao
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id094
+- term: reports to
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id046
+- term: required date
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id062
+- term: required delivery date
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id062
+- term: sales order lines
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id045
+- term: sales orders
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id073
+- term: sales region
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id095
+- term: sales region count
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id086
+- term: sales region for employee assignment
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id036
+- term: sales region id
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id096
+- term: sales region name
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id095
+- term: sales regions
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id091
+- term: sales territories
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id109
+    kind: table
+    id: sales_territories
+    name: Sales Territories
+- term: sales territories to sales regions
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id094
+- term: sales territory
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - &id098
+    kind: dimension
+    id: sales_territory_name
+    name: Sales Territory Name
+- term: sales territory count
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id087
+- term: sales territory id
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id097
+- term: sales territory name
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id098
+- term: selling unit price
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id044
+- term: ship via
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id099
+- term: shipped date
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id068
+- term: shipper company name
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id047
+- term: shipper count
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id088
+- term: shipper for order
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id092
+- term: shipper for order line
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id100
+- term: shipper id
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id012
+- term: shipper name
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id047
+- term: shippers
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id101
+- term: shipping date
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id068
+- term: sobrenome do funcionario
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id102
+- term: stock units total
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id103
+- term: supervisor id
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id046
+- term: supplier city
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id104
+- term: supplier code
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id105
+- term: supplier company name
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id106
+- term: supplier count
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id085
+- term: supplier country
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id107
+- term: supplier for order line
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id061
+- term: supplier for product
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id093
+- term: supplier id
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id105
+- term: supplier master
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id040
+- term: supplier name
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id106
+- term: supplier region
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id108
+- term: suppliers
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id040
+- term: taxa de desconto
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id029
+- term: territories
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id109
+- term: territories to regions
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id094
+- term: territorio atribuido
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id002
+- term: territorio comercial
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id098
+- term: territorios comerciais
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id109
+- term: territory assignment count
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id084
+- term: territory for employee assignment
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id037
+- term: territory region id
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id110
+- term: territory sales region id
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id110
+- term: territory staffing
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id035
+- term: tipo demografico atribuido
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id023
+- term: tipos demograficos de clientes
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id018
+- term: total freight
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id041
+- term: total order freight
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id041
+- term: total units in stock
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id103
+- term: total units on order
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id111
+- term: total units ordered
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id089
+- term: transportadora da linha de pedido
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id100
+- term: transportadora do pedido
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id099
+- term: transportadoras
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id101
+- term: unidades totais em estoque
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id103
+- term: unidades totais encomendadas
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id111
+- term: units on order total
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id111
+- term: units ordered total
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id089
+- term: vendedor do pedido
+  status: resolved
+  candidate_count: 1
+  ambiguity_score: 0.0
+  requires_clarification: false
+  targets:
+  - *id055
+ambiguities: []
+ambiguity_decisions: []
+entity_decisions:
+- kind: dataset
+  id: northwind_commerce
+  decision: approved
+- kind: table
+  id: product_categories
+  decision: approved
+- kind: table
+  id: customer_demographic_assignments
+  decision: approved
+- kind: table
+  id: customer_demographic_types
+  decision: approved
+- kind: table
+  id: customers
+  decision: approved
+- kind: table
+  id: employee_territory_assignments
+  decision: approved
+- kind: table
+  id: employees
+  decision: approved
+- kind: table
+  id: order_lines
+  decision: approved
+- kind: table
+  id: orders
+  decision: approved
+- kind: table
+  id: products
+  decision: approved
+- kind: table
+  id: sales_regions
+  decision: approved
+- kind: table
+  id: shippers
+  decision: approved
+- kind: table
+  id: suppliers
+  decision: approved
+- kind: table
+  id: sales_territories
+  decision: approved
+- kind: dimension
+  id: category_id
+  decision: approved
+- kind: dimension
+  id: category_name
+  decision: approved
+- kind: dimension
+  id: category_description
+  decision: approved
+- kind: dimension
+  id: demographic_assignment_customer_id
+  decision: approved
+- kind: dimension
+  id: demographic_assignment_type_id
+  decision: approved
+- kind: dimension
+  id: demographic_type_id
+  decision: approved
+- kind: dimension
+  id: demographic_type_description
+  decision: approved
+- kind: dimension
+  id: customer_id
+  decision: approved
+- kind: dimension
+  id: customer_company_name
+  decision: approved
+- kind: dimension
+  id: customer_contact_name
+  decision: approved
+- kind: dimension
+  id: customer_contact_title
+  decision: approved
+- kind: dimension
+  id: customer_city
+  decision: approved
+- kind: dimension
+  id: customer_region
+  decision: approved
+- kind: dimension
+  id: customer_postal_code
+  decision: approved
+- kind: dimension
+  id: customer_country
+  decision: approved
+- kind: dimension
+  id: assignment_employee_id
+  decision: approved
+- kind: dimension
+  id: assignment_territory_id
+  decision: approved
+- kind: dimension
+  id: employee_id
+  decision: approved
+- kind: dimension
+  id: employee_first_name
+  decision: approved
+- kind: dimension
+  id: employee_last_name
+  decision: approved
+- kind: dimension
+  id: employee_title
+  decision: approved
+- kind: dimension
+  id: employee_hire_date
+  decision: approved
+- kind: dimension
+  id: employee_city
+  decision: approved
+- kind: dimension
+  id: employee_region
+  decision: approved
+- kind: dimension
+  id: employee_country
+  decision: approved
+- kind: dimension
+  id: manager_employee_id
+  decision: approved
+- kind: dimension
+  id: line_order_id
+  decision: approved
+- kind: dimension
+  id: line_product_id
+  decision: approved
+- kind: dimension
+  id: line_unit_price
+  decision: approved
+- kind: dimension
+  id: line_discount_rate
+  decision: approved
+- kind: dimension
+  id: order_id
+  decision: approved
+- kind: dimension
+  id: order_customer_id
+  decision: approved
+- kind: dimension
+  id: order_employee_id
+  decision: approved
+- kind: dimension
+  id: order_date
+  decision: approved
+- kind: dimension
+  id: order_required_date
+  decision: approved
+- kind: dimension
+  id: order_shipped_date
+  decision: approved
+- kind: dimension
+  id: order_shipper_id
+  decision: approved
+- kind: dimension
+  id: order_ship_name
+  decision: approved
+- kind: dimension
+  id: order_ship_city
+  decision: approved
+- kind: dimension
+  id: order_ship_region
+  decision: approved
+- kind: dimension
+  id: order_ship_postal_code
+  decision: approved
+- kind: dimension
+  id: order_ship_country
+  decision: approved
+- kind: dimension
+  id: product_id
+  decision: approved
+- kind: dimension
+  id: product_name
+  decision: approved
+- kind: dimension
+  id: product_supplier_id
+  decision: approved
+- kind: dimension
+  id: product_category_id
+  decision: approved
+- kind: dimension
+  id: product_quantity_per_unit
+  decision: approved
+- kind: dimension
+  id: product_discontinued
+  decision: approved
+- kind: dimension
+  id: sales_region_id
+  decision: approved
+- kind: dimension
+  id: sales_region_name
+  decision: approved
+- kind: dimension
+  id: shipper_id
+  decision: approved
+- kind: dimension
+  id: shipper_company_name
+  decision: approved
+- kind: dimension
+  id: supplier_id
+  decision: approved
+- kind: dimension
+  id: supplier_company_name
+  decision: approved
+- kind: dimension
+  id: supplier_city
+  decision: approved
+- kind: dimension
+  id: supplier_region
+  decision: approved
+- kind: dimension
+  id: supplier_country
+  decision: approved
+- kind: dimension
+  id: sales_territory_id
+  decision: approved
+- kind: dimension
+  id: sales_territory_name
+  decision: approved
+- kind: dimension
+  id: territory_region_id
+  decision: approved
+- kind: measure
+  id: category_count
+  decision: approved
+- kind: measure
+  id: customer_count
+  decision: approved
+- kind: measure
+  id: employee_territory_assignment_count
+  decision: approved
+- kind: measure
+  id: employee_count
+  decision: approved
+- kind: measure
+  id: order_line_count
+  decision: approved
+- kind: measure
+  id: units_ordered_total
+  decision: approved
+- kind: measure
+  id: line_unit_price_average
+  decision: approved
+- kind: measure
+  id: line_discount_rate_average
+  decision: approved
+- kind: measure
+  id: order_count
+  decision: approved
+- kind: measure
+  id: freight_total
+  decision: approved
+- kind: measure
+  id: freight_average
+  decision: approved
+- kind: measure
+  id: product_count
+  decision: approved
+- kind: measure
+  id: stock_units_total
+  decision: approved
+- kind: measure
+  id: units_on_order_total
+  decision: approved
+- kind: measure
+  id: product_unit_price_average
+  decision: approved
+- kind: measure
+  id: sales_region_count
+  decision: approved
+- kind: measure
+  id: shipper_count
+  decision: approved
+- kind: measure
+  id: supplier_count
+  decision: approved
+- kind: measure
+  id: sales_territory_count
+  decision: approved
+- kind: relationship_path
+  id: demographic_assignments_to_customers
+  decision: approved
+- kind: relationship_path
+  id: demographic_assignments_to_types
+  decision: approved
+- kind: relationship_path
+  id: employee_assignments_to_employees
+  decision: approved
+- kind: relationship_path
+  id: employee_assignments_to_territories
+  decision: approved
+- kind: relationship_path
+  id: employee_assignments_to_regions
+  decision: approved
+- kind: relationship_path
+  id: order_lines_to_orders
+  decision: approved
+- kind: relationship_path
+  id: order_lines_to_products
+  decision: approved
+- kind: relationship_path
+  id: orders_to_customers
+  decision: approved
+- kind: relationship_path
+  id: orders_to_employees
+  decision: approved
+- kind: relationship_path
+  id: orders_to_shippers
+  decision: approved
+- kind: relationship_path
+  id: products_to_categories
+  decision: approved
+- kind: relationship_path
+  id: products_to_suppliers
+  decision: approved
+- kind: relationship_path
+  id: territories_to_regions
+  decision: approved
+- kind: relationship_path
+  id: order_lines_to_customers
+  decision: approved
+- kind: relationship_path
+  id: order_lines_to_employees
+  decision: approved
+- kind: relationship_path
+  id: order_lines_to_shippers
+  decision: approved
+- kind: relationship_path
+  id: order_lines_to_categories
+  decision: approved
+- kind: relationship_path
+  id: order_lines_to_suppliers
+  decision: approved

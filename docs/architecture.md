@@ -45,6 +45,7 @@ CLI
      -> separate exact human relationship review
      -> review-ready semantic candidate
      -> separate exact human semantic review
+     -> applied approved semantic registry
 ```
 
 ## Boundaries
@@ -101,4 +102,4 @@ Modeling decisions use distinct states such as candidate, pending review, approv
 - No generic dependency graph, checkpoint, resume, or dry-run engine; only the recorded analytics session has narrow tested checkpoint/resume semantics.
 - CLI stage dispatch and the default workflow are not yet unified under one orchestration contract.
 - Some generated summaries become stale when later review steps run; consolidated state must cite the newest validation evidence.
-- Semantic governance, Stage 5D translation evaluation, a synthetic Stage 5E exact-answer harness, dataset benchmark review/approval, dry-run binding validation, approved offline dataset-backed execution, deterministic result presentation, and recorded narration validation exist. A real Northwind semantic candidate is technically valid but its 111-entity human review is pending; no real semantic registry or benchmark pack is approved yet, and live model-provider integration and a user interface are not implemented.
+- Semantic governance, Stage 5D translation evaluation, a synthetic Stage 5E exact-answer harness, dataset benchmark review/approval, dry-run binding validation, approved offline dataset-backed execution, deterministic result presentation, and recorded narration validation exist. Northwind now has the first applied real semantic registry and a non-executing Stage 5D/5A smoke plan. No real expected-answer benchmark pack or live provider is approved yet, and live model-provider integration and a user interface are not implemented.
