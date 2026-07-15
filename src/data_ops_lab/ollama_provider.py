@@ -27,6 +27,7 @@ DEFAULT_OLLAMA_MODEL = "gpt-oss:20b"
 DEFAULT_CONTEXT_TOKENS = 8_192
 DEFAULT_MAX_OUTPUT_TOKENS = 1_024
 DEFAULT_KEEP_ALIVE = "2m"
+OLLAMA_SEMANTIC_PROMPT_CONTRACT_VERSION = "ollama_semantic_intent_v2"
 MAX_OLLAMA_REQUEST_BYTES = 512_000
 MAX_OLLAMA_HTTP_RESPONSE_BYTES = 2_000_000
 MODEL_NAME_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/-]{0,127}$")
@@ -92,7 +93,7 @@ def ollama_semantic_response_schema(semantic_context: dict[str, Any]) -> dict[st
                 "pattern": IDENTIFIER_PATTERN.pattern,
             },
         },
-        "required": ["term"],
+        "required": ["term", "alias"],
     }
     scalar = {"type": ["string", "number", "boolean"]}
     return {
@@ -164,7 +165,16 @@ def ollama_semantic_response_schema(semantic_context: dict[str, Any]) -> dict[st
             },
             "limit": {"type": "integer", "minimum": 1, "maximum": MAX_LIMIT},
         },
-        "required": ["version", "from"],
+        "required": [
+            "version",
+            "from",
+            "relationship_paths",
+            "dimensions",
+            "metrics",
+            "filters",
+            "order_by",
+            "limit",
+        ],
     }
 
 
@@ -175,6 +185,7 @@ def _open_without_proxy(request: Request, timeout_seconds: int):
 class OllamaSemanticIntentProvider:
     mode = "local_live"
     network_access_required = True
+    prompt_contract_version = OLLAMA_SEMANTIC_PROMPT_CONTRACT_VERSION
 
     def __init__(
         self,
@@ -203,6 +214,7 @@ class OllamaSemanticIntentProvider:
         self.context_tokens = context_tokens
         self.max_output_tokens = max_output_tokens
         self.name = f"ollama:{model}"
+        self.last_metrics: dict[str, int | float | str | None] = {}
 
     def translate(
         self,
@@ -235,6 +247,17 @@ class OllamaSemanticIntentProvider:
                         "The from field must be a tables ID. Relationship path IDs belong only in "
                         "relationship_paths; dimension IDs belong only in dimensions and filters; "
                         "measure IDs belong only in metrics. "
+                        "Return every response field, including empty arrays. Every dimension and "
+                        "metric must have a concise snake_case alias based on the shortest "
+                        "unambiguous business wording in the question; order_by must reference "
+                        "those aliases. Use the exact requested top-N limit. Otherwise use limit "
+                        "20, except explicit unbounded entity-list requests use limit 100. For a "
+                        "grouped metric, order by the first metric descending unless the question "
+                        "says otherwise, then append every dimension alias ascending as a stable "
+                        "tie-break. Order dimension-only lists ascending. Scalar metrics have no "
+                        "order rules. Choose from at the measure or fact grain and use the shortest "
+                        "approved relationship path whose first hop starts from that table and "
+                        "connects every selected semantic entity. "
                         "Return exactly one JSON object matching the response schema. "
                         "Never return the question, SQL, physical tables, physical columns, joins, "
                         "Markdown, explanations, or unsupported fields."
@@ -260,6 +283,15 @@ class OllamaSemanticIntentProvider:
             ensure_ascii=True,
             separators=(",", ":"),
         ).encode("utf-8")
+        self.last_metrics = {
+            "request_bytes": len(body),
+            "prompt_tokens": None,
+            "completion_tokens": None,
+            "total_duration_ms": None,
+            "load_duration_ms": None,
+            "prompt_eval_duration_ms": None,
+            "eval_duration_ms": None,
+        }
         if len(body) > MAX_OLLAMA_REQUEST_BYTES:
             raise OllamaProviderError("The minimized Ollama request exceeds its local size limit.")
         request = Request(
@@ -283,6 +315,22 @@ class OllamaSemanticIntentProvider:
             raise OllamaProviderError("The local Ollama endpoint returned invalid JSON.") from error
         if not isinstance(envelope, dict) or envelope.get("error"):
             raise OllamaProviderError("The local Ollama endpoint returned an error response.")
+        for source_name, target_name in (
+            ("prompt_eval_count", "prompt_tokens"),
+            ("eval_count", "completion_tokens"),
+        ):
+            value = envelope.get(source_name)
+            if isinstance(value, int) and not isinstance(value, bool) and value >= 0:
+                self.last_metrics[target_name] = value
+        for source_name, target_name in (
+            ("total_duration", "total_duration_ms"),
+            ("load_duration", "load_duration_ms"),
+            ("prompt_eval_duration", "prompt_eval_duration_ms"),
+            ("eval_duration", "eval_duration_ms"),
+        ):
+            value = envelope.get(source_name)
+            if isinstance(value, int) and not isinstance(value, bool) and value >= 0:
+                self.last_metrics[target_name] = round(value / 1_000_000, 3)
         message = envelope.get("message")
         content = message.get("content") if isinstance(message, dict) else None
         if not isinstance(content, str) or not content.strip():

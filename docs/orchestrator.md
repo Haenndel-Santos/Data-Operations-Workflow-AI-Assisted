@@ -103,6 +103,14 @@ exact plan hashes. It cannot call Stage 5B, auto-complete its review, invoke the
 live Ollama provider, or approve the expected answers that a later reviewed
 collection may produce.
 
+The dataset benchmark live evaluator is likewise standalone. Dry-run validates
+its separate SHA-256-bound live authority without provider or database access;
+live mode additionally requires explicit execution and loopback-network flags.
+It cannot be invoked by the static registry, use an external provider, run
+cases concurrently, bypass Stage 5A/5B controls, narrate, publish, or train a
+model. A completed live comparison is evaluation evidence, not provider
+selection or production authority.
+
 `ready_for_relationship_review` is likewise not relationship authority. A
 future semantic-catalog workflow may consume only the accepted subset from a
 completed exact relationship review that revalidates as

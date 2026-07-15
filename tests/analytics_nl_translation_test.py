@@ -491,7 +491,15 @@ def test_ollama_provider_uses_minimized_loopback_request_and_full_adapter(
         captured["url"] = request.full_url
         captured["timeout_seconds"] = timeout_seconds
         captured["body"] = json.loads(request.data.decode("utf-8"))
-        envelope = {"message": {"role": "assistant", "content": json.dumps(provider_response())}}
+        envelope = {
+            "message": {"role": "assistant", "content": json.dumps(provider_response())},
+            "prompt_eval_count": 321,
+            "eval_count": 45,
+            "total_duration": 1_500_000_000,
+            "load_duration": 100_000_000,
+            "prompt_eval_duration": 900_000_000,
+            "eval_duration": 500_000_000,
+        }
         return FakeHttpResponse(json.dumps(envelope).encode("utf-8"))
 
     monkeypatch.setattr("data_ops_lab.ollama_provider._open_without_proxy", fake_open)
@@ -518,6 +526,16 @@ def test_ollama_provider_uses_minimized_loopback_request_and_full_adapter(
     assert body["keep_alive"] == "2m"
     assert body["options"] == {"temperature": 0, "num_ctx": 8_192, "num_predict": 512}
     assert body["format"]["additionalProperties"] is False
+    assert set(body["format"]["required"]) == {
+        "version",
+        "from",
+        "relationship_paths",
+        "dimensions",
+        "metrics",
+        "filters",
+        "order_by",
+        "limit",
+    }
     assert body["format"]["properties"]["from"]["enum"] == ["sales_orders"]
     assert body["format"]["properties"]["dimensions"]["items"]["properties"]["term"][
         "enum"
@@ -525,6 +543,10 @@ def test_ollama_provider_uses_minimized_loopback_request_and_full_adapter(
     assert body["format"]["properties"]["metrics"]["items"]["properties"]["term"][
         "enum"
     ] == ["order_count"]
+    assert body["format"]["properties"]["dimensions"]["items"]["required"] == [
+        "term",
+        "alias",
+    ]
     user_payload = json.loads(body["messages"][1]["content"])
     serialized = json.dumps(user_payload, sort_keys=True)
     assert user_payload["question"] == "How many open orders exist by status?"
@@ -536,6 +558,13 @@ def test_ollama_provider_uses_minimized_loopback_request_and_full_adapter(
     assert manifest["provider"]["name"] == "ollama:gpt-oss:20b"
     assert manifest["provider"]["mode"] == "local_live"
     assert manifest["provider"]["network_authorized"] is True
+    assert provider.last_metrics["prompt_tokens"] == 321
+    assert provider.last_metrics["completion_tokens"] == 45
+    assert provider.last_metrics["total_duration_ms"] == 1500.0
+    assert provider.last_metrics["load_duration_ms"] == 100.0
+    assert provider.last_metrics["prompt_eval_duration_ms"] == 900.0
+    assert provider.last_metrics["eval_duration_ms"] == 500.0
+    assert isinstance(provider.last_metrics["request_bytes"], int)
 
 
 def test_ollama_provider_is_not_called_without_explicit_opt_in(

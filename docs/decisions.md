@@ -560,3 +560,40 @@ pending review now requires independent decisions for the recorded response,
 expected request, expected result, and comparison policy of every case. Live
 provider use, upload, publication, training, and benchmark evaluation remain
 not authorized.
+
+## 2026-07-15 - Bind Live Benchmark Runs Separately And Preserve Holdout Integrity
+
+**Decision:** Evaluate an approved dataset pack through local Ollama only with a
+separate additive authorization bound to every immutable source, ordered case,
+exact provider/prompt configuration, timeout, and execution control. Require
+dry-run preflight, explicit live and loopback-network flags, sequential cases,
+authority rehashing, Stage 5A/5B controls, and minimized non-content evidence.
+Permit canonicalization only for aliases already approved in the expected
+request and only after every non-alias field matches. Report literal and
+alias-normalized accuracy separately.
+
+**Rationale:** Offline recorded answers prove the deterministic pipeline but not
+model interpretation. A live comparison exposes local model quality, latency,
+tokens, and workstation pressure, while a separate cryptographic authority
+prevents an answer approval from silently expanding into provider use. Alias
+spelling is not a semantic decision when the resolved table, columns, function,
+paths, filters, ordering, and limits are identical, but hiding literal drift
+would make model quality look better than measured.
+
+**Alternatives:** Reuse offline approval as live authority; accept external or
+LAN endpoints; execute model-generated SQL; normalize tables, columns, filters,
+limits, or relationship paths; run cases concurrently; persist questions,
+responses, SQL, or rows; keep tuning against Northwind and call the same pack a
+holdout; treat a partial live pass as provider selection.
+
+**Impact:** `analytics-dataset-benchmark-evaluate-ollama` now dry-runs without
+provider/database access and live-runs only through literal loopback Ollama. The
+authorized Northwind v3 development run passed 9/13 end to end; two provider
+rejections, one filter mismatch, and one scalar alias/limit mismatch were
+blocked before query execution. The run cost USD 0 in hosted API charges and
+recorded latency, token, RAM, and GPU evidence without case content. Because the
+prompt and alias policy were refined using Northwind, its pack is now a
+development set. Phase 5 provider selection requires thresholds fixed in
+advance and a fresh separately reviewed holdout. External providers, upload,
+training, narration, publication, concurrency, dynamic dispatch, and production
+use remain unapproved.

@@ -259,6 +259,40 @@ The test suite does not run this command against any project, EDS, SQL Server,
 or public benchmark database. Real execution requires the exact generated
 approval for that package and is not part of the default project state.
 
+## Dataset-Backed Live Ollama Evaluation
+
+The focused synthetic tests use an injected fake live provider and temporary
+DuckDB package. They cover offline/idempotent preflight, exact provider and
+authority binding, literal-loopback enforcement, separate execution/network
+flags, sequential full-pipeline comparison, alias-only normalization, mismatch
+isolation, authority drift, conservative network telemetry on unexpected errors,
+resource/token evidence, privacy, atomic output publication, and preservation of
+unknown or divergent evidence:
+
+```powershell
+$env:PYTHONPATH = "src"
+$env:PYTHONDONTWRITEBYTECODE = "1"
+.\.venv\Scripts\python.exe -m pytest -p no:cacheprovider tests\analytics_dataset_benchmark_test.py
+```
+
+The real 13-case test is collected but skipped unless explicitly enabled. It is
+not part of the offline suite and must be run only with the exact versioned live
+authorization, local Northwind artifacts, installed model, and already-running
+loopback Ollama service:
+
+```powershell
+$env:PYTHONPATH = "src"
+$env:PYTHONDONTWRITEBYTECODE = "1"
+$env:DATA_OPS_LAB_RUN_OLLAMA_BENCHMARK_LIVE = "1"
+.\.venv\Scripts\python.exe -m pytest -p no:cacheprovider tests\ollama_dataset_benchmark_live_test.py -vv
+Remove-Item Env:DATA_OPS_LAB_RUN_OLLAMA_BENCHMARK_LIVE
+```
+
+This test makes 13 sequential local HTTP calls and eligible read-only DuckDB
+queries, can consume several minutes and most of an 8 GB GPU, and writes only
+sanitized evidence. It does not authorize an external endpoint, upload,
+training, narration, publication, or reuse of a changed authorization.
+
 ## Benchmark Conversion Validation
 
 Use the restricted converter only for a locally approved SQL sample whose

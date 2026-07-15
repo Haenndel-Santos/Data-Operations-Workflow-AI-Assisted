@@ -60,16 +60,19 @@ The first real Northwind catalog compiles with 13 tables, 60 dimensions, 19
 measures, 18 approved paths, 339 terms, zero ambiguities, and zero blockers. Its
 separate 111-entity review is complete and the hash-bound approved registry is
 applied. A real structured intent passed Stage 5D and Stage 5A without execution;
-Northwind is no longer semantically blocked. A local Ollama provider has now
-passed one separate English smoke question. Phase 5 has started with a
+  Northwind is no longer semantically blocked. A local Ollama provider passed a
+  separate English smoke question. Phase 5 has started with a
 versioned 13-case English answer design. Its 13 exact Stage 5A plans received
 separate human collection approval and completed sequential fixed-limit Stage
 5B execution. All four final decisions per case were then approved, producing
-immutable answer authority, and the recorded offline evaluator passed 13/13.
-Comparative live-model quality evidence remains separate. See
+  immutable answer authority, and the recorded offline evaluator passed 13/13.
+  A separately authorized 13-case local Ollama development comparison then
+  passed 9/13 end to end; four mismatches were blocked before query execution.
+  See
 [Northwind Semantic Catalog Review](northwind-semantic-review.md),
 [Northwind Expected-Answer Plan Review](northwind-answer-benchmark-review.md),
-[Northwind Expected-Answer Review](northwind-expected-answer-review.md), and
+  [Northwind Expected-Answer Review](northwind-expected-answer-review.md),
+  [Dataset Benchmark Live Evaluation](analytics-dataset-benchmark-live-evaluation.md), and
 [Analytics Semantic Review And Approval](analytics-semantic-approval.md).
 
 Stage 5D now provides `analytics-semantic-adapter`, an offline deterministic
@@ -142,6 +145,18 @@ first approved real package to run through this boundary: 13/13 cases passed,
 including 12/12 exact and 1/1 reviewed-tolerance results, with zero blockers and
 no live provider or network. See
 [Dataset-Backed Offline Benchmark Evaluation](analytics-dataset-benchmark-evaluation.md).
+
+The separate live dataset evaluator requires its own SHA-256-bound human
+authorization, dry-runs without a provider or database, and in live mode accepts
+only exact literal-loopback Ollama plus explicit execution and socket flags. It
+runs cases sequentially, rehashes authority before provider/query use, permits
+only reviewed alias normalization after every non-alias request field matches,
+and persists no question, response, SQL, parameter, or result row. The first
+Northwind development run passed 9/13 with zero contract blockers and USD 0
+hosted cost. Because these cases informed prompt and alias-policy refinement,
+they are not a holdout; a fresh reviewed pack is required before provider
+selection. See
+[Dataset Benchmark Live Evaluation](analytics-dataset-benchmark-live-evaluation.md).
 
 The result-presentation boundary revalidates exact Stage 5B request/result
 hashes and controls, then writes a deterministic local table and bounded fact
@@ -246,7 +261,8 @@ semantics are approved, its 13 exact plans passed collection review, and all 13
 expected answers were collected through sequential read-only Stage 5B with zero
 materialization blockers. The separate per-case review approved every response,
 request, result, and comparison policy; its recorded offline evaluation passed
-13/13. This does not authorize or prove a 13-case live Ollama comparison. Pubs still
+13/13. The separately authorized live development comparison passed 9/13 and
+does not complete provider selection. Pubs still
 requires exact source/license and relationship review. AdventureWorks exactly
 matches Microsoft's official MIT-licensed
 2025 backup and is restored in a local SQL Server 2025 Developer instance as a
@@ -281,8 +297,8 @@ commercial-readiness path are maintained in
 1. **Stage 5A - Safe query planning:** structured request, catalog validation, approved joins, parameterized SQL, dry-run evidence. Implemented.
 2. **Stage 5B - Controlled local execution:** read-only DuckDB executor, timeout/resource limits, result manifest, control totals, and no-result diagnostics. Implemented.
 3. **Stage 5C - Semantic catalog:** business names, synonyms, measures, dimensions, relationship paths, ambiguity scores, and dataset-specific domain packs. Technical validation and human review/apply infrastructure are implemented; Northwind is the first concrete approved catalog.
-4. **Stage 5D - Natural-language adapter:** deterministic approved-semantic compiler, provider-neutral translation boundary, synthetic offline regression pack, and an explicitly authorized loopback Ollama adapter are implemented. Comparative live-model evaluation remains pending. Raw SQL is never accepted.
-5. **Stage 5E - Expected-answer harness:** synthetic evaluation, pre-execution answer preparation, reviewed sequential candidate-answer materialization, per-case benchmark review/approval, dry-run immutable binding validation, and approved offline dataset-backed execution are implemented. Northwind has the first real 13-case pack with separate immutable approval and passed its recorded offline evaluation 13/13; comparative live-model and EDS evaluation remain pending.
+4. **Stage 5D - Natural-language adapter:** deterministic approved-semantic compiler, provider-neutral translation boundary, synthetic offline regression pack, an explicitly authorized loopback Ollama adapter, and a governed live development-evaluation path are implemented. Raw SQL is never accepted.
+5. **Stage 5E - Expected-answer harness:** synthetic evaluation, pre-execution answer preparation, reviewed sequential candidate-answer materialization, per-case dataset benchmark review/approval, dry-run immutable binding validation, approved offline dataset-backed execution, and separate hash-bound live comparison are implemented. Northwind passed its recorded baseline 13/13 and local Ollama development comparison 9/13; a fresh holdout, provider selection, and EDS evaluation remain pending.
 6. **Stage 5F - User experience:** deterministic result tables, recorded cited narration, and a two-phase local session coordinator are implemented. Query UI, charts, evidence navigation, saved analyses, feedback, and role-aware governance remain pending.
 7. **Stage 5G - Optional data connectors:** separately authorized read-only database connectors with credential isolation and online tests outside the default suite.
 

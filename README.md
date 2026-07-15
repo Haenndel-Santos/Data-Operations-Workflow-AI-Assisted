@@ -237,7 +237,9 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 
 Northwind now has a reviewed 13-case candidate pack plus a separate immutable
 approval. Its recorded offline evaluation passed 13/13 with zero blockers;
-Ollama has not been evaluated across the pack. See the
+the separately authorized local Ollama development comparison subsequently
+passed 9/13 end to end and safely blocked four mismatches before query execution.
+See the
 [expected-answer review record](docs/northwind-expected-answer-review.md).
 
 To validate immutable dataset-backed benchmark bindings without opening or querying the database:
@@ -269,6 +271,17 @@ After an exact package and review have produced a valid approval, the offline ev
 This command runs fixed-limit read-only queries with recorded responses only.
 Northwind is the first real project package to meet its prerequisites and passed
 13/13; this is not live-model quality evidence.
+
+The separate local live evaluator is dry-run by default and requires a
+hash-bound live authorization in addition to the offline answer approval:
+
+```powershell
+.\.venv\Scripts\python.exe -m data_ops_lab analytics-dataset-benchmark-evaluate-ollama --dataset-manifest "<manifest.yml>" --database "<dataset.duckdb>" --semantic-state "<semantic.yml>" --relationships "<relationships.yml>" --pack "<pack.yml>" --approval "<approval.yml>" --live-authorization "<live-authorization.yml>" --endpoint "http://127.0.0.1:11434" --model "gpt-oss:20b" --context-tokens 8192 --max-output-tokens 1024 --timeout-seconds 120 --output "outputs\<new-run-id>"
+```
+
+Only a reviewed invocation may add `--execute --allow-network`. The first
+Northwind development run passed 9/13, so provider selection remains open and
+requires a fresh holdout pack rather than further tuning against these cases.
 
 To render a completed Stage 5B result deterministically and validate a recorded
 cited narrative:
@@ -426,7 +439,8 @@ DuckDB is a good fit for this project because it supports local analytical workf
 
 ## Next Extensions
 
-- Add a separately authorized, bounded 13-case local Ollama comparison against the approved Northwind offline baseline.
+- Create and approve a fresh Phase 5 holdout pack, fix acceptance thresholds,
+  and compare eligible local providers without tuning on the holdout.
 - Add a governed UI for questions, result tables, evidence, and validation review.
 - Add Tableau workbook screenshots as a final portfolio artifact.
 - Add richer validation checks for totals before and after joins.
@@ -468,6 +482,7 @@ DuckDB is a good fit for this project because it supports local analytical workf
 - [Dataset-backed benchmark validation contract](docs/analytics-dataset-benchmark.md)
 - [Dataset benchmark review and approval contract](docs/analytics-dataset-benchmark-review.md)
 - [Dataset-backed offline benchmark evaluation contract](docs/analytics-dataset-benchmark-evaluation.md)
+- [Dataset-backed live Ollama benchmark evaluation contract](docs/analytics-dataset-benchmark-live-evaluation.md)
 - [Deterministic analytics result presentation contract](docs/analytics-result-presentation.md)
 - [Grounded analytics result narration contract](docs/analytics-result-narration.md)
 - [Local analytics session contract](docs/analytics-session.md)

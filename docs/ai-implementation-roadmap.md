@@ -25,10 +25,11 @@ As of 2026-07-15, the project has:
 - a two-phase local session that stops for exact human plan review;
 - a versioned static module registry for those session phases with dynamic
   execution, concurrency, network, and review auto-approval disabled;
-- 206 passing offline tests plus one skipped opt-in live test, one approved real
+- a passing offline suite plus separately skipped opt-in live tests, one approved real
   Northwind semantic registry, one 13-case Northwind expected-answer pack with
-  separate immutable approval, a 13/13 recorded offline answer baseline, and no
-  production UI or authorized comparative live-model evaluation.
+  separate immutable approval, a 13/13 recorded offline answer baseline, a
+  separately authorized 9/13 local Ollama development comparison, and no
+  production UI or selected production provider.
 
 Phase 0 passed its exit gate on 2026-07-14 through static validation only.
 Phase 1 also passed its exit gate with an isolated synthetic baseline and an
@@ -53,8 +54,11 @@ Stage 5A produced 13 exact plans, the project owner approved bounded local read-
 only collection, and sequential Stage 5B produced the typed candidate pack. The
 owner then approved all four answer decisions for every case. Immutable approval
 and package validation passed with zero blockers, and the recorded offline
-evaluator passed 13/13. Comparative live-provider evidence remains pending and
-requires separate invocation authority.
+  evaluator passed 13/13. A separately authorized loopback evaluation contract
+  then ran all 13 cases through `gpt-oss:20b`; 9/13 passed end to end and four
+  mismatches were blocked before query execution. Because general prompt and
+  alias behavior were refined against Northwind, this pack is now development
+  evidence rather than a holdout.
 
 ## Target Architecture
 
@@ -174,9 +178,17 @@ behavior. Its 13 exact plans passed the pre-execution human gate and completed
 sequential fixed-limit Stage 5B collection. All four final decisions per case
 were then approved and bound into an immutable approval. The recorded offline
 evaluation passed 13/13, including 12 exact and one reviewed-tolerance result,
-with zero blockers and byte-idempotent reuse. This is the deterministic baseline,
-not live-model proof. No 13-case live-provider comparison has been authorized or
-run, so the Phase 5 exit gate remains open.
+with zero blockers and byte-idempotent reuse. The separate live-evaluation
+contract then bound the exact local provider, prompt, ordered cases, limits, and
+non-authorizations. Dry-run made zero provider/database calls. The live v3 run
+made 13 sequential loopback calls and passed 9/13 end to end: 11/13 provider
+acceptance, 9/13 semantic request agreement after reviewed alias-only
+normalization, 2/13 literal request agreement, and 9/13 result/control agreement.
+Four mismatches were safely prevented from reaching the database. Total provider
+wall time was 429.073 seconds, median 31.759 seconds, p95 43.220 seconds, with
+82,442 reported tokens and USD 0 hosted cost. Phase 5 remains open: define
+thresholds first, create a fresh separately reviewed holdout pack, and evaluate
+without tuning on that holdout before selecting a provider.
 
 ### Phase 6 - Generic Dataset Recognition
 

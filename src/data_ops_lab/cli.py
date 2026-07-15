@@ -14,6 +14,10 @@ from .analytics_dataset_benchmark_materialization import (
 from .analytics_dataset_benchmark_evaluation import (
     run_analytics_dataset_benchmark_evaluation,
 )
+from .analytics_dataset_benchmark_live_evaluation import (
+    run_analytics_dataset_benchmark_live_evaluation,
+    sample_local_resources,
+)
 from .analytics_dataset_benchmark_review import (
     run_analytics_dataset_benchmark_approval,
     run_analytics_dataset_benchmark_review,
@@ -546,6 +550,62 @@ def build_parser() -> argparse.ArgumentParser:
         "--output",
         type=Path,
         default=Path("outputs/analytics_dataset_benchmark_evaluation"),
+    )
+
+    analytics_dataset_benchmark_evaluate_ollama = subparsers.add_parser(
+        "analytics-dataset-benchmark-evaluate-ollama",
+        help="Preflight or execute an explicitly authorized sequential benchmark through loopback Ollama.",
+    )
+    analytics_dataset_benchmark_evaluate_ollama.add_argument(
+        "--dataset-manifest", type=Path, required=True
+    )
+    analytics_dataset_benchmark_evaluate_ollama.add_argument(
+        "--database", type=Path, required=True
+    )
+    analytics_dataset_benchmark_evaluate_ollama.add_argument(
+        "--semantic-state", type=Path, required=True
+    )
+    analytics_dataset_benchmark_evaluate_ollama.add_argument(
+        "--relationships", type=Path, required=True
+    )
+    analytics_dataset_benchmark_evaluate_ollama.add_argument(
+        "--pack", type=Path, required=True
+    )
+    analytics_dataset_benchmark_evaluate_ollama.add_argument(
+        "--approval", type=Path, required=True
+    )
+    analytics_dataset_benchmark_evaluate_ollama.add_argument(
+        "--live-authorization", type=Path, required=True
+    )
+    analytics_dataset_benchmark_evaluate_ollama.add_argument(
+        "--endpoint", default=DEFAULT_OLLAMA_ENDPOINT
+    )
+    analytics_dataset_benchmark_evaluate_ollama.add_argument(
+        "--model", default=DEFAULT_OLLAMA_MODEL
+    )
+    analytics_dataset_benchmark_evaluate_ollama.add_argument(
+        "--context-tokens", type=int, default=DEFAULT_CONTEXT_TOKENS
+    )
+    analytics_dataset_benchmark_evaluate_ollama.add_argument(
+        "--max-output-tokens", type=int, default=DEFAULT_MAX_OUTPUT_TOKENS
+    )
+    analytics_dataset_benchmark_evaluate_ollama.add_argument(
+        "--timeout-seconds", type=int, default=120
+    )
+    analytics_dataset_benchmark_evaluate_ollama.add_argument(
+        "--output",
+        type=Path,
+        default=Path("outputs/analytics_dataset_benchmark_live_evaluation"),
+    )
+    analytics_dataset_benchmark_evaluate_ollama.add_argument(
+        "--execute",
+        action="store_true",
+        help="Execute the live comparison after successful preflight; dry-run is the default.",
+    )
+    analytics_dataset_benchmark_evaluate_ollama.add_argument(
+        "--allow-network",
+        action="store_true",
+        help="Authorize loopback HTTP for this live execution; invalid in dry-run mode.",
     )
 
     benchmark_convert_sql = subparsers.add_parser(
@@ -1448,6 +1508,41 @@ def main() -> None:
         print(f"Outputs changed: {result.outputs_changed}")
         print(f"Manifest: {result.manifest_path}")
         print("Approved local DuckDB only; read-only queries, recorded responses, and no network.")
+        return
+
+    if args.command == "analytics-dataset-benchmark-evaluate-ollama":
+        provider = OllamaSemanticIntentProvider(
+            endpoint=args.endpoint,
+            model=args.model,
+            context_tokens=args.context_tokens,
+            max_output_tokens=args.max_output_tokens,
+        )
+        result = run_analytics_dataset_benchmark_live_evaluation(
+            args.dataset_manifest,
+            args.database,
+            args.semantic_state,
+            args.relationships,
+            args.pack,
+            args.approval,
+            args.live_authorization,
+            args.output,
+            provider,
+            timeout_seconds=args.timeout_seconds,
+            execute=args.execute,
+            allow_network=args.allow_network,
+            resource_sampler=sample_local_resources if args.execute else None,
+        )
+        print("Dataset-backed Ollama benchmark evaluation complete")
+        print(f"Status: {result.status}")
+        print(f"Mode: {result.mode}")
+        print(f"Cases: {result.case_count}")
+        print(f"Provider calls: {result.provider_call_count}")
+        print(f"Passed: {result.passed_count}")
+        print(f"Failed: {result.failed_count}")
+        print(f"Contract blockers: {result.blocker_count}")
+        print(f"Outputs changed: {result.outputs_changed}")
+        print(f"Manifest: {result.manifest_path}")
+        print("Loopback Ollama and approved local read-only DuckDB only; no external provider or upload.")
         return
 
     if args.command == "benchmark-convert-sql":

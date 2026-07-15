@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import csv
 import hashlib
+from copy import deepcopy
 from pathlib import Path
 
 import duckdb
@@ -9,6 +10,7 @@ import pytest
 import yaml
 
 import data_ops_lab.analytics_dataset_benchmark_evaluation as dataset_evaluation
+import data_ops_lab.analytics_dataset_benchmark_live_evaluation as live_evaluation
 from data_ops_lab.analytics_dataset_benchmark import (
     AnalyticsDatasetBenchmarkResult,
     inspect_analytics_dataset_benchmark_candidate,
@@ -17,6 +19,10 @@ from data_ops_lab.analytics_dataset_benchmark import (
 from data_ops_lab.analytics_dataset_benchmark_evaluation import (
     AnalyticsDatasetBenchmarkEvaluationResult,
     run_analytics_dataset_benchmark_evaluation,
+)
+from data_ops_lab.analytics_dataset_benchmark_live_evaluation import (
+    AnalyticsDatasetBenchmarkLiveEvaluationResult,
+    run_analytics_dataset_benchmark_live_evaluation,
 )
 from data_ops_lab.analytics_dataset_benchmark_review import (
     CASE_REVIEW_FIELDS,
@@ -1135,4 +1141,563 @@ def test_dataset_benchmark_evaluation_cli_has_fixed_offline_boundary() -> None:
         "memory_limit_mb",
         "threads",
     ):
+        assert not hasattr(args, name)
+
+
+class FakeLiveProvider:
+    name = "ollama:synthetic-test-model"
+    mode = "local_live"
+    network_access_required = True
+    endpoint = "http://127.0.0.1:11434"
+    model = "synthetic-test-model"
+    context_tokens = 8192
+    max_output_tokens = 1024
+    prompt_contract_version = "ollama_semantic_intent_v2"
+
+    def __init__(self, responses: dict[str, dict]) -> None:
+        self.responses = responses
+        self.calls: list[str] = []
+        self.last_metrics: dict[str, int | float | None] = {}
+
+    def translate(self, prompt: object, *, timeout_seconds: int) -> dict:
+        assert timeout_seconds == 120
+        question = getattr(prompt, "question")
+        self.calls.append(question)
+        self.last_metrics = {
+            "request_bytes": 2048,
+            "prompt_tokens": 400,
+            "completion_tokens": 40,
+            "total_duration_ms": 1500.0,
+            "load_duration_ms": 100.0,
+            "prompt_eval_duration_ms": 900.0,
+            "eval_duration_ms": 500.0,
+        }
+        return self.responses[question]
+
+
+def fake_live_provider(paths: dict[str, Path]) -> FakeLiveProvider:
+    pack = read_yaml(paths["pack"])
+    return FakeLiveProvider(
+        {case["question"]: case["provider_response"] for case in pack["cases"]}
+    )
+
+
+def live_authorization_payload(
+    paths: dict[str, Path],
+    approval_path: Path,
+    provider: FakeLiveProvider,
+) -> dict:
+    pack = read_yaml(paths["pack"])
+    return {
+        "version": 1,
+        "status": "approved_live_evaluation",
+        "dataset_id": "synthetic_dataset_package",
+        "pack_id": "synthetic_dataset_pack_v1",
+        "source": {
+            "dataset_manifest_sha256": file_sha256(paths["manifest"]),
+            "database_sha256": file_sha256(paths["database"]),
+            "approved_semantic_state_sha256": file_sha256(paths["semantic"]),
+            "approved_relationships_sha256": file_sha256(paths["relationships"]),
+            "benchmark_pack_sha256": file_sha256(paths["pack"]),
+            "benchmark_approval_sha256": file_sha256(approval_path),
+        },
+        "provider": {
+            "name": provider.name,
+            "mode": provider.mode,
+            "endpoint": provider.endpoint,
+            "model": provider.model,
+            "context_tokens": provider.context_tokens,
+            "max_output_tokens": provider.max_output_tokens,
+            "timeout_seconds": 120,
+            "prompt_contract_version": provider.prompt_contract_version,
+        },
+        "execution": {
+            "case_ids": [case["id"] for case in pack["cases"]],
+            "max_cases": len(pack["cases"]),
+            "sequential": True,
+            "expected_request_gate": True,
+            "read_only_stage_5b": True,
+            "continue_after_case_mismatch": True,
+            "alias_normalization": "reviewed_expected_aliases_only_after_non_alias_request_match",
+        },
+        "decision": live_evaluation.LIVE_DECISIONS,
+        "authorized_by": "synthetic-reviewer",
+        "authorized_at": "2026-07-15T16:30:00+02:00",
+        "notes": "Approved only for the bounded synthetic loopback live evaluation test.",
+    }
+
+
+def prepare_live_authorization(
+    paths: dict[str, Path],
+    approval_path: Path,
+    provider: FakeLiveProvider,
+    path: Path,
+) -> Path:
+    write_yaml(path, live_authorization_payload(paths, approval_path, provider))
+    return path
+
+
+def run_live_evaluation(
+    paths: dict[str, Path],
+    approval_path: Path,
+    authorization_path: Path,
+    output_dir: Path,
+    provider: FakeLiveProvider,
+    *,
+    execute: bool,
+    allow_network: bool,
+    resource_sampler: object = None,
+) -> AnalyticsDatasetBenchmarkLiveEvaluationResult:
+    return run_analytics_dataset_benchmark_live_evaluation(
+        paths["manifest"],
+        paths["database"],
+        paths["semantic"],
+        paths["relationships"],
+        paths["pack"],
+        approval_path,
+        authorization_path,
+        output_dir,
+        provider,
+        timeout_seconds=120,
+        execute=execute,
+        allow_network=allow_network,
+        resource_sampler=resource_sampler,
+    )
+
+
+def test_live_dataset_evaluation_preflight_is_offline_and_idempotent(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    paths = build_fixture(tmp_path)
+    approval_path = generate_benchmark_approval(paths, tmp_path / "authority")
+    provider = fake_live_provider(paths)
+    authorization = prepare_live_authorization(
+        paths, approval_path, provider, tmp_path / "live_authorization.yml"
+    )
+    monkeypatch.setattr(
+        duckdb,
+        "connect",
+        lambda *args, **kwargs: pytest.fail("live preflight opened DuckDB"),
+    )
+    output_dir = tmp_path / "live_preflight"
+
+    first = run_live_evaluation(
+        paths,
+        approval_path,
+        authorization,
+        output_dir,
+        provider,
+        execute=False,
+        allow_network=False,
+    )
+    second = run_live_evaluation(
+        paths,
+        approval_path,
+        authorization,
+        output_dir,
+        provider,
+        execute=False,
+        allow_network=False,
+    )
+    manifest = read_yaml(first.manifest_path)
+
+    assert first.status == "ready_for_live_evaluation"
+    assert first.mode == "dry-run"
+    assert first.case_count == 0
+    assert first.provider_call_count == 0
+    assert second.outputs_changed is False
+    assert provider.calls == []
+    assert manifest["controls"]["network_accessed"] is False
+    assert manifest["controls"]["live_provider_used"] is False
+
+
+def test_live_dataset_evaluation_passes_full_fake_pipeline_with_safe_metrics(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    paths = build_fixture(tmp_path)
+    approval_path = generate_benchmark_approval(paths, tmp_path / "authority")
+    provider = fake_live_provider(paths)
+    authorization = prepare_live_authorization(
+        paths, approval_path, provider, tmp_path / "live_authorization.yml"
+    )
+    protected = {
+        path: file_sha256(path)
+        for path in (
+            paths["manifest"],
+            paths["database"],
+            paths["semantic"],
+            paths["relationships"],
+            paths["pack"],
+            approval_path,
+            authorization,
+        )
+    }
+    original_connect = duckdb.connect
+    connections: list[bool] = []
+
+    def guarded_connect(*args: object, **kwargs: object) -> duckdb.DuckDBPyConnection:
+        connections.append(kwargs.get("read_only") is True)
+        assert kwargs.get("read_only") is True
+        return original_connect(*args, **kwargs)
+
+    monkeypatch.setattr(duckdb, "connect", guarded_connect)
+    resource_samples = iter(
+        [
+            {
+                "system_total_memory_mb": 32000.0,
+                "system_available_memory_mb": 12000.0,
+                "gpu_total_memory_mb": 8192,
+                "gpu_used_memory_mb": 1000,
+            },
+            {
+                "system_available_memory_mb": 10000.0,
+                "gpu_used_memory_mb": 7000,
+            },
+            {
+                "system_available_memory_mb": 9500.0,
+                "gpu_used_memory_mb": 7200,
+            },
+        ]
+    )
+    output_dir = tmp_path / "live_evaluation"
+    result = run_live_evaluation(
+        paths,
+        approval_path,
+        authorization,
+        output_dir,
+        provider,
+        execute=True,
+        allow_network=True,
+        resource_sampler=lambda: next(resource_samples),
+    )
+    manifest = read_yaml(result.manifest_path)
+    cases = list(csv.DictReader(result.cases_path.open(newline="", encoding="utf-8")))
+    persisted = "\n".join(
+        path.read_text(encoding="utf-8")
+        for path in output_dir.iterdir()
+        if path.is_file()
+    )
+
+    assert result.status == "passed"
+    assert result.case_count == 2
+    assert result.passed_count == 2
+    assert result.provider_call_count == 2
+    assert connections and all(connections)
+    assert all(row["semantic_intent_match"] == "True" for row in cases)
+    assert all(row["request_match"] == "True" for row in cases)
+    assert manifest["metrics"]["overall"]["rate"] == 1.0
+    assert manifest["metrics"]["semantic_intent_accuracy"]["rate"] == 1.0
+    assert manifest["telemetry"]["tokens"]["total_tokens"] == 880
+    assert manifest["telemetry"]["resources"]["maximum_gpu_used_after_case_mb"] == 7200
+    assert manifest["telemetry"]["hosted_api_cost_usd"] == 0.0
+    assert "How many synthetic orders exist?" not in persisted
+    assert "37.75" not in persisted
+    assert "select " not in persisted.lower()
+    assert all(file_sha256(path) == digest for path, digest in protected.items())
+
+
+def test_live_dataset_evaluation_conservatively_records_unexpected_provider_boundary_error(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    paths = build_fixture(tmp_path)
+    approval_path = generate_benchmark_approval(paths, tmp_path / "authority")
+    provider = fake_live_provider(paths)
+    authorization = prepare_live_authorization(
+        paths, approval_path, provider, tmp_path / "live_authorization.yml"
+    )
+    monkeypatch.setattr(
+        live_evaluation,
+        "run_analytics_query_plan",
+        lambda *args, **kwargs: (_ for _ in ()).throw(RuntimeError("synthetic failure")),
+    )
+
+    result = run_live_evaluation(
+        paths,
+        approval_path,
+        authorization,
+        tmp_path / "live_evaluation",
+        provider,
+        execute=True,
+        allow_network=True,
+    )
+    manifest = read_yaml(result.manifest_path)
+    cases = list(csv.DictReader(result.cases_path.open(newline="", encoding="utf-8")))
+
+    assert result.status == "failed"
+    assert result.provider_call_count == 2
+    assert all(row["provider_outcome"] == "evaluation_error" for row in cases)
+    assert all(row["provider_called"] == "True" for row in cases)
+    assert manifest["controls"]["network_accessed"] is True
+    assert manifest["telemetry"]["tokens"]["total_tokens"] == 880
+
+
+def test_live_dataset_evaluation_rejects_preexisting_unknown_output(
+    tmp_path: Path,
+) -> None:
+    paths = build_fixture(tmp_path)
+    approval_path = generate_benchmark_approval(paths, tmp_path / "authority")
+    provider = fake_live_provider(paths)
+    authorization = prepare_live_authorization(
+        paths, approval_path, provider, tmp_path / "live_authorization.yml"
+    )
+    output_dir = tmp_path / "live_evaluation"
+    output_dir.mkdir()
+    unknown = output_dir / "human-notes.txt"
+    unknown.write_text("preserve me\n", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="existing evidence was not overwritten"):
+        run_live_evaluation(
+            paths,
+            approval_path,
+            authorization,
+            output_dir,
+            provider,
+            execute=False,
+            allow_network=False,
+        )
+
+    assert unknown.read_text(encoding="utf-8") == "preserve me\n"
+
+
+def test_live_dataset_request_mismatch_fails_without_query_and_continues(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    paths = build_fixture(tmp_path)
+    approval_path = generate_benchmark_approval(paths, tmp_path / "authority")
+    provider = fake_live_provider(paths)
+    pack = read_yaml(paths["pack"])
+    provider.responses[pack["cases"][0]["question"]] = pack["cases"][1]["provider_response"]
+    authorization = prepare_live_authorization(
+        paths, approval_path, provider, tmp_path / "live_authorization.yml"
+    )
+    original_plan = live_evaluation.run_analytics_query_plan
+    planned_questions: list[str] = []
+
+    def guarded_plan(request_path: Path, *args: object, **kwargs: object):
+        request = read_yaml(request_path)
+        planned_questions.append(request["question"])
+        return original_plan(request_path, *args, **kwargs)
+
+    monkeypatch.setattr(live_evaluation, "run_analytics_query_plan", guarded_plan)
+    result = run_live_evaluation(
+        paths,
+        approval_path,
+        authorization,
+        tmp_path / "live_evaluation",
+        provider,
+        execute=True,
+        allow_network=True,
+    )
+    cases = {
+        row["case_id"]: row
+        for row in csv.DictReader(result.cases_path.open(newline="", encoding="utf-8"))
+    }
+
+    assert result.status == "failed"
+    assert result.passed_count == 1
+    assert result.provider_call_count == 2
+    assert cases["exact_order_count"]["request_match"] == "False"
+    assert cases["exact_order_count"]["planning_status"] == "not_run"
+    assert cases["tolerant_total_amount"]["passed"] == "True"
+    assert planned_questions == ["What is the synthetic total amount?"]
+
+
+def test_live_dataset_normalizes_alias_only_differences_before_execution(
+    tmp_path: Path,
+) -> None:
+    paths = build_fixture(tmp_path)
+    approval_path = generate_benchmark_approval(paths, tmp_path / "authority")
+    provider = fake_live_provider(paths)
+    pack = read_yaml(paths["pack"])
+    first_question = pack["cases"][0]["question"]
+    provider.responses[first_question] = deepcopy(provider.responses[first_question])
+    provider.responses[first_question]["metrics"][0]["alias"] = "count"
+    authorization = prepare_live_authorization(
+        paths, approval_path, provider, tmp_path / "live_authorization.yml"
+    )
+
+    result = run_live_evaluation(
+        paths,
+        approval_path,
+        authorization,
+        tmp_path / "live_evaluation",
+        provider,
+        execute=True,
+        allow_network=True,
+    )
+    cases = {
+        row["case_id"]: row
+        for row in csv.DictReader(result.cases_path.open(newline="", encoding="utf-8"))
+    }
+    manifest = read_yaml(result.manifest_path)
+
+    assert result.status == "passed"
+    assert result.passed_count == 2
+    assert cases["exact_order_count"]["semantic_intent_exact_match"] == "False"
+    assert cases["exact_order_count"]["semantic_intent_match"] == "True"
+    assert cases["exact_order_count"]["request_exact_match"] == "False"
+    assert cases["exact_order_count"]["request_match"] == "True"
+    assert cases["exact_order_count"]["passed"] == "True"
+    assert manifest["metrics"]["request_accuracy"]["rate"] == 1.0
+    assert manifest["metrics"]["request_exact_accuracy"]["rate"] == 0.5
+
+
+@pytest.mark.parametrize(
+    ("mutator", "allow_network", "expected_blocker"),
+    [
+        (
+            lambda payload: payload["provider"].update({"model": "different-model"}),
+            True,
+            "live_evaluation_provider_mismatch",
+        ),
+        (
+            lambda payload: None,
+            False,
+            "live_evaluation_network_not_authorized_for_invocation",
+        ),
+    ],
+)
+def test_live_dataset_evaluation_blocks_invalid_authority_before_provider_or_database(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    mutator: object,
+    allow_network: bool,
+    expected_blocker: str,
+) -> None:
+    paths = build_fixture(tmp_path)
+    approval_path = generate_benchmark_approval(paths, tmp_path / "authority")
+    provider = fake_live_provider(paths)
+    authorization = tmp_path / "live_authorization.yml"
+    payload = live_authorization_payload(paths, approval_path, provider)
+    mutator(payload)
+    write_yaml(authorization, payload)
+    monkeypatch.setattr(
+        duckdb,
+        "connect",
+        lambda *args, **kwargs: pytest.fail("blocked live evaluation opened DuckDB"),
+    )
+
+    result = run_live_evaluation(
+        paths,
+        approval_path,
+        authorization,
+        tmp_path / "live_evaluation",
+        provider,
+        execute=True,
+        allow_network=allow_network,
+    )
+
+    assert result.status == "blocked"
+    assert result.provider_call_count == 0
+    assert expected_blocker in blocker_types(result)
+    assert provider.calls == []
+
+
+def test_live_dataset_evaluation_rejects_non_loopback_provider_even_when_authorized(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    paths = build_fixture(tmp_path)
+    approval_path = generate_benchmark_approval(paths, tmp_path / "authority")
+    provider = fake_live_provider(paths)
+    provider.endpoint = "http://192.168.1.10:11434"
+    authorization = prepare_live_authorization(
+        paths, approval_path, provider, tmp_path / "live_authorization.yml"
+    )
+    monkeypatch.setattr(
+        duckdb,
+        "connect",
+        lambda *args, **kwargs: pytest.fail("non-loopback provider opened DuckDB"),
+    )
+
+    result = run_live_evaluation(
+        paths,
+        approval_path,
+        authorization,
+        tmp_path / "live_preflight",
+        provider,
+        execute=False,
+        allow_network=False,
+    )
+
+    assert result.status == "blocked"
+    assert result.provider_call_count == 0
+    assert "live_evaluation_provider_not_loopback_ollama" in blocker_types(result)
+
+
+def test_live_authority_drift_after_provider_blocks_stage_5b(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    paths = build_fixture(tmp_path)
+    approval_path = generate_benchmark_approval(paths, tmp_path / "authority")
+    provider = fake_live_provider(paths)
+    authorization = prepare_live_authorization(
+        paths, approval_path, provider, tmp_path / "live_authorization.yml"
+    )
+    real_match = live_evaluation._hashes_match
+    calls = 0
+
+    def drifting_match(expected: dict[str, str], source_paths: dict[str, Path]) -> bool:
+        nonlocal calls
+        calls += 1
+        return False if calls == 3 else real_match(expected, source_paths)
+
+    monkeypatch.setattr(live_evaluation, "_hashes_match", drifting_match)
+    monkeypatch.setattr(
+        live_evaluation,
+        "run_analytics_query_execution",
+        lambda *args, **kwargs: pytest.fail("authority drift reached Stage 5B"),
+    )
+
+    result = run_live_evaluation(
+        paths,
+        approval_path,
+        authorization,
+        tmp_path / "live_evaluation",
+        provider,
+        execute=True,
+        allow_network=True,
+    )
+
+    assert result.status == "blocked"
+    assert result.case_count == 0
+    assert result.provider_call_count == 0
+    assert "dataset_benchmark_authority_changed_before_live_query" in blocker_types(result)
+
+
+def test_live_dataset_benchmark_cli_requires_separate_execute_and_loopback_flags() -> None:
+    args = build_parser().parse_args(
+        [
+            "analytics-dataset-benchmark-evaluate-ollama",
+            "--dataset-manifest",
+            "manifest.yml",
+            "--database",
+            "dataset.duckdb",
+            "--semantic-state",
+            "semantic.yml",
+            "--relationships",
+            "relationships.yml",
+            "--pack",
+            "pack.yml",
+            "--approval",
+            "approval.yml",
+            "--live-authorization",
+            "live.yml",
+            "--output",
+            "evidence",
+            "--execute",
+            "--allow-network",
+        ]
+    )
+
+    assert args.command == "analytics-dataset-benchmark-evaluate-ollama"
+    assert args.execute is True
+    assert args.allow_network is True
+    assert args.live_authorization == Path("live.yml")
+    for name in ("sql", "max_rows", "memory_limit_mb", "threads", "replace_existing"):
         assert not hasattr(args, name)
