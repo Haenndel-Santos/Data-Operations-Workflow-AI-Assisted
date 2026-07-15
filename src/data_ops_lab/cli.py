@@ -8,6 +8,9 @@ from .analytics_dataset_benchmark import run_analytics_dataset_benchmark_validat
 from .analytics_dataset_benchmark_preparation import (
     run_analytics_dataset_benchmark_preparation,
 )
+from .analytics_dataset_benchmark_materialization import (
+    run_analytics_dataset_benchmark_materialization,
+)
 from .analytics_dataset_benchmark_evaluation import (
     run_analytics_dataset_benchmark_evaluation,
 )
@@ -460,6 +463,40 @@ def build_parser() -> argparse.ArgumentParser:
         "--output",
         type=Path,
         default=Path("outputs/analytics_dataset_benchmark_answer_preparation"),
+    )
+
+    analytics_dataset_benchmark_materialize = subparsers.add_parser(
+        "analytics-dataset-benchmark-answer-materialize",
+        help="Execute approved exact plans sequentially and write a candidate expected-answer pack.",
+    )
+    analytics_dataset_benchmark_materialize.add_argument(
+        "--design", type=Path, required=True
+    )
+    analytics_dataset_benchmark_materialize.add_argument(
+        "--dataset-manifest", type=Path, required=True
+    )
+    analytics_dataset_benchmark_materialize.add_argument(
+        "--preparation-manifest", type=Path, required=True
+    )
+    analytics_dataset_benchmark_materialize.add_argument(
+        "--execution-review", type=Path, required=True
+    )
+    analytics_dataset_benchmark_materialize.add_argument(
+        "--database", type=Path, required=True
+    )
+    analytics_dataset_benchmark_materialize.add_argument(
+        "--semantic-state", type=Path, required=True
+    )
+    analytics_dataset_benchmark_materialize.add_argument(
+        "--relationships", type=Path, required=True
+    )
+    analytics_dataset_benchmark_materialize.add_argument(
+        "--pack-output", type=Path, required=True
+    )
+    analytics_dataset_benchmark_materialize.add_argument(
+        "--output",
+        type=Path,
+        default=Path("outputs/analytics_dataset_benchmark_answer_materialization"),
     )
 
     analytics_dataset_benchmark_review = subparsers.add_parser(
@@ -1329,6 +1366,28 @@ def main() -> None:
         print(f"Manifest: {result.manifest_path}")
         print(f"Execution review: {result.review_path or 'not written'}")
         print("Preparation stops before Stage 5B; no table rows or answers were read.")
+        return
+
+    if args.command == "analytics-dataset-benchmark-answer-materialize":
+        result = run_analytics_dataset_benchmark_materialization(
+            args.design,
+            args.dataset_manifest,
+            args.preparation_manifest,
+            args.execution_review,
+            args.database,
+            args.semantic_state,
+            args.relationships,
+            args.pack_output,
+            args.output,
+        )
+        print("Dataset benchmark answer materialization complete")
+        print(f"Status: {result.status}")
+        print(f"Cases: {result.case_count}")
+        print(f"Completed: {result.completed_count}")
+        print(f"Blockers: {result.blocker_count}")
+        print(f"Outputs changed: {result.outputs_changed}")
+        print(f"Candidate pack: {result.pack_path or 'not written'}")
+        print("Local read-only Stage 5B only; final expected-answer review remains pending.")
         return
 
     if args.command == "analytics-dataset-benchmark-review":

@@ -25,9 +25,10 @@ As of 2026-07-15, the project has:
 - a two-phase local session that stops for exact human plan review;
 - a versioned static module registry for those session phases with dynamic
   execution, concurrency, network, and review auto-approval disabled;
-- 199 passing offline tests plus one skipped opt-in live test, one approved real
-  Northwind semantic registry, and no production UI or authorized real benchmark
-  expected-answer execution.
+- 206 passing offline tests plus one skipped opt-in live test, one approved real
+  Northwind semantic registry, one collected but unapproved 13-case Northwind
+  expected-answer pack, and no production UI or authorized comparative model
+  evaluation.
 
 Phase 0 passed its exit gate on 2026-07-14 through static validation only.
 Phase 1 also passed its exit gate with an isolated synthetic baseline and an
@@ -49,8 +50,11 @@ bounded context/output/timeout, sanitized failure tests, zero hosted-token cost,
 offline mocks, and one isolated live smoke test. Phase 5 comparative evaluation
 has now started with a versioned 13-case Northwind answer design. Recorded Stage
 5D plus Stage 5A produced 13 exact plans with zero blockers and no table-row
-access. Aggregate plan review, Stage 5B answer collection, final per-case answer
-review, and comparative evidence remain pending.
+access. The project owner approved those exact plans for bounded local read-only
+collection. Sequential Stage 5B then completed all 13 cases, and the typed
+candidate pack passed contract validation with zero blockers. Its separate
+per-case expected-answer review and all comparative provider evidence remain
+pending.
 
 ## Target Architecture
 
@@ -166,9 +170,10 @@ approved dataset-backed packs. Passing recorded cases is not live-model proof.
 
 Started on 2026-07-15. The Northwind answer design covers table, dimension,
 measure, filter, order, relationship, null, no-row, exact, and numeric-tolerance
-behavior. Its 13 plans are waiting at the pre-execution human gate. No expected
-values or live-provider comparison have been collected yet, so the Phase 5 exit
-gate remains open.
+behavior. Its 13 exact plans passed the pre-execution human gate and completed
+sequential fixed-limit Stage 5B collection. The resulting candidate expected-
+answer pack is waiting at the separate per-case human gate. No live-provider
+comparison has been run, so the Phase 5 exit gate remains open.
 
 ### Phase 6 - Generic Dataset Recognition
 

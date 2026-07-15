@@ -62,11 +62,13 @@ separate 111-entity review is complete and the hash-bound approved registry is
 applied. A real structured intent passed Stage 5D and Stage 5A without execution;
 Northwind is no longer semantically blocked. A local Ollama provider has now
 passed one separate English smoke question. Phase 5 has started with a
-versioned 13-case English answer design and 13 exact review-ready Stage 5A
-plans, while Stage 5B answer collection, a reviewed expected-answer pack, and
-comparative quality evidence remain separate. See
+versioned 13-case English answer design. Its 13 exact Stage 5A plans received
+separate human collection approval and completed sequential fixed-limit Stage
+5B execution. The resulting typed pack is `candidate_for_review`; final answer
+authority and comparative quality evidence remain separate. See
 [Northwind Semantic Catalog Review](northwind-semantic-review.md),
-[Northwind Expected-Answer Plan Review](northwind-answer-benchmark-review.md), and
+[Northwind Expected-Answer Plan Review](northwind-answer-benchmark-review.md),
+[Northwind Expected-Answer Review](northwind-expected-answer-review.md), and
 [Analytics Semantic Review And Approval](analytics-semantic-approval.md).
 
 Stage 5D now provides `analytics-semantic-adapter`, an offline deterministic
@@ -109,14 +111,22 @@ one aggregate pending review bound to every plan hash. It does not call Stage
 5B or read table rows. See
 [Dataset Benchmark Answer Preparation](analytics-dataset-benchmark-preparation.md).
 
+The companion answer materializer validates that completed review before any
+table-row access, rechecks all immutable sources plus each request and plan
+before and after every query, runs Stage 5B sequentially with fixed limits, and
+constructs a typed candidate pack only after result hashes, schemas, types, and
+control totals pass. It does not call a model or approve collected values. See
+[Dataset Benchmark Answer Materialization](analytics-dataset-benchmark-materialization.md).
+
 The dataset-backed Stage 5E dry-run validator now binds a verified local DuckDB
 artifact, approved semantic state, approved relationships, candidate benchmark
 pack, and separate human approval by SHA-256. It validates expected results and
 exact or explicitly bounded numeric comparison policies without opening or
-querying the database. Northwind now has the required dataset manifest and
-review-ready answer-collection plans, but it still lacks collected and approved
-expected answers; only temporary synthetic packages have exercised
-dataset-backed execution. See
+querying the database. Northwind now has the required dataset manifest and a
+collected 13-case candidate expected-answer pack, but it still lacks the
+completed per-case pack review and approval required for evaluation. Only
+temporary synthetic packages have exercised approved dataset-backed evaluation.
+See
 [Dataset-Backed Benchmark Validation](analytics-dataset-benchmark.md).
 
 The companion benchmark governance workflow prepares a pending hash-bound
@@ -231,8 +241,10 @@ Microsoft's official source, MIT-license verified, independently reproduced,
 and read-only validated across 13 declared PKs and 13 FK candidates. Its local
 benchmark scope is approved, and a completed exact human review accepted all 13
 physical relationships, producing `ready_for_semantic_modeling`. Northwind
-semantics are approved, and its Phase 5 answer design has 13 exact plans pending
-execution review; expected answer values remain uncollected and unapproved. Pubs still
+semantics are approved, its 13 exact plans passed collection review, and all 13
+candidate expected answers were collected through sequential read-only Stage
+5B with zero materialization blockers. The values remain unapproved pending the
+separate per-case review. Pubs still
 requires exact source/license and relationship review. AdventureWorks exactly
 matches Microsoft's official MIT-licensed
 2025 backup and is restored in a local SQL Server 2025 Developer instance as a
@@ -268,7 +280,7 @@ commercial-readiness path are maintained in
 2. **Stage 5B - Controlled local execution:** read-only DuckDB executor, timeout/resource limits, result manifest, control totals, and no-result diagnostics. Implemented.
 3. **Stage 5C - Semantic catalog:** business names, synonyms, measures, dimensions, relationship paths, ambiguity scores, and dataset-specific domain packs. Technical validation and human review/apply infrastructure are implemented; Northwind is the first concrete approved catalog.
 4. **Stage 5D - Natural-language adapter:** deterministic approved-semantic compiler, provider-neutral translation boundary, synthetic offline regression pack, and an explicitly authorized loopback Ollama adapter are implemented. Comparative live-model evaluation remains pending. Raw SQL is never accepted.
-5. **Stage 5E - Expected-answer harness:** synthetic evaluation, pre-execution answer preparation, per-case benchmark review/approval, dry-run immutable binding validation, and approved offline dataset-backed execution are implemented. Northwind has 13 plans at the answer-collection review gate; EDS local evaluation and an approved real expected-answer pack remain pending.
+5. **Stage 5E - Expected-answer harness:** synthetic evaluation, pre-execution answer preparation, reviewed sequential candidate-answer materialization, per-case benchmark review/approval, dry-run immutable binding validation, and approved offline dataset-backed execution are implemented. Northwind has a collected 13-case candidate pack at the final per-case review gate; EDS local evaluation and an approved real expected-answer pack remain pending.
 6. **Stage 5F - User experience:** deterministic result tables, recorded cited narration, and a two-phase local session coordinator are implemented. Query UI, charts, evidence navigation, saved analyses, feedback, and role-aware governance remain pending.
 7. **Stage 5G - Optional data connectors:** separately authorized read-only database connectors with credential isolation and online tests outside the default suite.
 

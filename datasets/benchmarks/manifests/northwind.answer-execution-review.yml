@@ -1,0 +1,85 @@
+version: 1
+status: completed_human_review
+source:
+  preparation_manifest_sha256: 8a645dd34fad6f0a039f78d7b19f874d4d0cbaa2648916ad697734de611da3ca
+  design_sha256: 8bce09e23112c1b3cfc300b27e6c9fe7c5fe17600e2b59d170da9b44a7dd93ff
+  dataset_manifest_sha256: a28082e46a3f142be58ae3d7078e95c91f21747835caa90f12c3e06a36a92393
+  database_sha256: 4195629326d6aa0a4f7556f6423902eb4b70c4dde11997a5e02fde133c012b76
+  approved_semantic_state_sha256: bc2daed705320ae344286cd4678645fe54844e11f8657e55c52e999e046f2d10
+  approved_relationships_sha256: b12b3f19d199c605fb9e88bfabacb8d1ca9369ba54aa91208d393f99de7efd72
+identity:
+  dataset_id: northwind_commerce
+  design_id: northwind_answer_design_v1
+  pack_id: northwind_expected_answers_v1
+review:
+  reviewer: project_owner
+  reviewed_at: '2026-07-15T15:10:04.3851932+02:00'
+  scope_decisions:
+  - scope: local_read_only_answer_collection
+    decision: approved
+    notes: Project owner approved all 13 exact hash-bound plans for local read-only execution.
+  - scope: live_provider_use
+    decision: not_authorized
+    notes: This review does not authorize invoking Ollama or any other model provider.
+  - scope: external_upload
+    decision: not_authorized
+    notes: This review does not authorize uploading data or results to an external service.
+  - scope: model_training
+    decision: not_authorized
+    notes: This review does not authorize training or fine-tuning a model.
+  - scope: publication
+    decision: not_authorized
+    notes: Candidate answers require a separate human review before publication or benchmark use.
+  case_decisions:
+  - case_id: total_order_count
+    reviewed_plan_sha256: 194944744463c98c3727b94fc605f199488a5efc77796fd32fba05ac239d3e05
+    decision: approved
+    notes: Project owner approved this exact plan for local read-only answer collection.
+  - case_id: customers_by_country
+    reviewed_plan_sha256: 5790a13bb87993c7c64946ee461ab6b3b9540d8a02774cb1c9c568cd2594d402
+    decision: approved
+    notes: Project owner approved this exact plan for local read-only answer collection.
+  - case_id: freight_by_ship_country
+    reviewed_plan_sha256: e32ec7f882a12b54e04d2217bb0f9318e5db685ce8aec9634a20b832a578dfdc
+    decision: approved
+    notes: Project owner approved this exact plan for local read-only answer collection.
+  - case_id: orders_placed_in_1997
+    reviewed_plan_sha256: e888495b65074a1d04c382a372142d7a9695789ff7483494d90687f4be93744a
+    decision: approved
+    notes: Project owner approved this exact plan for local read-only answer collection.
+  - case_id: discontinued_product_count
+    reviewed_plan_sha256: 3d064ac95504de5e19c743614f8f2740a4d2feead87906f99d478c68791b25fd
+    decision: approved
+    notes: Project owner approved this exact plan for local read-only answer collection.
+  - case_id: products_by_category
+    reviewed_plan_sha256: 8313e8ac8337cb89a9d8c11e1dfc32ee85df7d84af444b154581ae729ba69f37
+    decision: approved
+    notes: Project owner approved this exact plan for local read-only answer collection.
+  - case_id: units_by_product
+    reviewed_plan_sha256: 063397898bbe8553b7d34c3758b3c1408730228d844a4b36c1f764ed613a8072
+    decision: approved
+    notes: Project owner approved this exact plan for local read-only answer collection.
+  - case_id: orders_by_shipper
+    reviewed_plan_sha256: 9ffe95f1ce8df2c36cf4ccce03c1bc705f6054eabd6051ae6e1967cb7a43ec63
+    decision: approved
+    notes: Project owner approved this exact plan for local read-only answer collection.
+  - case_id: units_by_supplier_country
+    reviewed_plan_sha256: 6ffe476a5145bc118a4e7071b85f15a37859a254b432485ca9b43ceb80ba55b8
+    decision: approved
+    notes: Project owner approved this exact plan for local read-only answer collection.
+  - case_id: assignments_by_sales_region
+    reviewed_plan_sha256: 7c3e1d38da19c19a583c906b40e79f5edaebb2dd6e5079a0eb23b27a72ca4f42
+    decision: approved
+    notes: Project owner approved this exact plan for local read-only answer collection.
+  - case_id: customers_without_region
+    reviewed_plan_sha256: d18603678eb1ee1e91faf1e6c5c70217d659a5f51cb0d93e945c448ef5b60839
+    decision: approved
+    notes: Project owner approved this exact plan for local read-only answer collection.
+  - case_id: no_orders_for_atlantis
+    reviewed_plan_sha256: a1571c7b870c463fe4c7006e49e15ab28c8e7f545a347923cae77772a46d8806
+    decision: approved
+    notes: Project owner approved this exact plan for local read-only answer collection.
+  - case_id: average_discount_by_category
+    reviewed_plan_sha256: a177ee04a7ca5db609489f54e7a82c91a3f5879f0af5f79085d569dc6943116a
+    decision: approved
+    notes: Project owner approved this exact plan for local read-only answer collection.

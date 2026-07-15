@@ -11,6 +11,7 @@ import yaml
 import data_ops_lab.analytics_dataset_benchmark_evaluation as dataset_evaluation
 from data_ops_lab.analytics_dataset_benchmark import (
     AnalyticsDatasetBenchmarkResult,
+    inspect_analytics_dataset_benchmark_candidate,
     run_analytics_dataset_benchmark_validation,
 )
 from data_ops_lab.analytics_dataset_benchmark_evaluation import (
@@ -239,6 +240,55 @@ def run_validation(paths: dict[str, Path]) -> AnalyticsDatasetBenchmarkResult:
         paths["approval"],
         paths["output"],
     )
+
+
+def test_candidate_accepts_hash_bound_governed_relationship_registry(
+    tmp_path: Path,
+) -> None:
+    paths = build_fixture(tmp_path)
+    original = read_yaml(paths["relationships"])
+    write_yaml(
+        paths["relationships"],
+        {
+            "version": 1,
+            "status": "approved",
+            "dataset": "synthetic",
+            "authority": {
+                "source_manifest_sha256": "1" * 64,
+                "relationship_candidates_sha256": "2" * 64,
+                "completed_review_sha256": "3" * 64,
+                "derived_from_completed_human_review": True,
+                "automatic_approval": False,
+                "scope": "local_offline_relationship_use",
+            },
+            "approved_relationships": original["approved_relationships"],
+            "rejected_relationship_ids": [],
+            "non_authorizations": [
+                "external_upload",
+                "model_parameter_training",
+                "publication",
+            ],
+        },
+    )
+    relationships_hash = file_sha256(paths["relationships"])
+    manifest = read_yaml(paths["manifest"])
+    manifest["bindings"]["approved_relationships_sha256"] = relationships_hash
+    write_yaml(paths["manifest"], manifest)
+    pack = read_yaml(paths["pack"])
+    pack["bindings"]["approved_relationships_sha256"] = relationships_hash
+    pack["bindings"]["dataset_manifest_sha256"] = file_sha256(paths["manifest"])
+    write_yaml(paths["pack"], pack)
+
+    candidate = inspect_analytics_dataset_benchmark_candidate(
+        paths["manifest"],
+        paths["database"],
+        paths["semantic"],
+        paths["relationships"],
+        paths["pack"],
+    )
+
+    assert candidate.blockers == ()
+    assert candidate.relationship_count == 1
 
 
 def blocker_types(result: AnalyticsDatasetBenchmarkResult) -> set[str]:

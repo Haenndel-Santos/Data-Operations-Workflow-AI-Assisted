@@ -1,0 +1,900 @@
+version: 1
+status: candidate_for_review
+pack_id: northwind_expected_answers_v1
+dataset_id: northwind_commerce
+bindings:
+  dataset_manifest_sha256: a28082e46a3f142be58ae3d7078e95c91f21747835caa90f12c3e06a36a92393
+  database_sha256: 4195629326d6aa0a4f7556f6423902eb4b70c4dde11997a5e02fde133c012b76
+  approved_semantic_state_sha256: bc2daed705320ae344286cd4678645fe54844e11f8657e55c52e999e046f2d10
+  approved_relationships_sha256: b12b3f19d199c605fb9e88bfabacb8d1ca9369ba54aa91208d393f99de7efd72
+cases:
+- id: total_order_count
+  question: How many orders are in the Northwind dataset?
+  provider_response:
+    version: 1
+    from: orders
+    relationship_paths: []
+    dimensions: []
+    metrics:
+    - term: order_count
+      alias: order_count
+    filters: []
+    order_by: []
+    limit: 20
+  expected_request:
+    version: 1
+    question: How many orders are in the Northwind dataset?
+    from: orders
+    joins: []
+    dimensions: []
+    metrics:
+    - function: count_distinct
+      column: orders.order_id
+      alias: order_count
+    filters: []
+    order_by: []
+    limit: 20
+  expected_result:
+    status: completed
+    columns:
+    - name: order_count
+      type: integer
+    rows:
+    - - 830
+    row_count: 1
+    column_count: 1
+    null_cells: 0
+  comparison:
+    mode: exact
+    tolerances: []
+- id: customers_by_country
+  question: Which customer countries have the most customers? Return the top 10.
+  provider_response:
+    version: 1
+    from: customers
+    relationship_paths: []
+    dimensions:
+    - term: customer_country
+      alias: country
+    metrics:
+    - term: customer_count
+      alias: customer_count
+    filters: []
+    order_by:
+    - field: customer_count
+      direction: desc
+    - field: country
+      direction: asc
+    limit: 10
+  expected_request:
+    version: 1
+    question: Which customer countries have the most customers? Return the top 10.
+    from: customers
+    joins: []
+    dimensions:
+    - column: customers.country
+      alias: country
+    metrics:
+    - function: count_distinct
+      column: customers.customer_id
+      alias: customer_count
+    filters: []
+    order_by:
+    - field: customer_count
+      direction: desc
+    - field: country
+      direction: asc
+    limit: 10
+  expected_result:
+    status: completed
+    columns:
+    - name: country
+      type: string
+    - name: customer_count
+      type: integer
+    rows:
+    - - USA
+      - 13
+    - - France
+      - 11
+    - - Germany
+      - 11
+    - - Brazil
+      - 9
+    - - UK
+      - 7
+    - - Mexico
+      - 5
+    - - Spain
+      - 5
+    - - Venezuela
+      - 4
+    - - Argentina
+      - 3
+    - - Canada
+      - 3
+    row_count: 10
+    column_count: 2
+    null_cells: 0
+  comparison:
+    mode: exact
+    tolerances: []
+- id: freight_by_ship_country
+  question: Which shipping countries have the highest total freight? Return the top
+    10.
+  provider_response:
+    version: 1
+    from: orders
+    relationship_paths: []
+    dimensions:
+    - term: order_ship_country
+      alias: ship_country
+    metrics:
+    - term: freight_total
+      alias: freight_total
+    filters: []
+    order_by:
+    - field: freight_total
+      direction: desc
+    - field: ship_country
+      direction: asc
+    limit: 10
+  expected_request:
+    version: 1
+    question: Which shipping countries have the highest total freight? Return the
+      top 10.
+    from: orders
+    joins: []
+    dimensions:
+    - column: orders.ship_country
+      alias: ship_country
+    metrics:
+    - function: sum
+      column: orders.freight
+      alias: freight_total
+    filters: []
+    order_by:
+    - field: freight_total
+      direction: desc
+    - field: ship_country
+      direction: asc
+    limit: 10
+  expected_result:
+    status: completed
+    columns:
+    - name: ship_country
+      type: string
+    - name: freight_total
+      type: decimal
+    rows:
+    - - USA
+      - '13771.2900'
+    - - Germany
+      - '11283.2800'
+    - - Austria
+      - '7391.5000'
+    - - Brazil
+      - '4880.1900'
+    - - France
+      - '4237.8400'
+    - - Sweden
+      - '3237.6000'
+    - - UK
+      - '2954.2700'
+    - - Ireland
+      - '2755.2400'
+    - - Venezuela
+      - '2735.1800'
+    - - Canada
+      - '2198.0900'
+    row_count: 10
+    column_count: 2
+    null_cells: 0
+  comparison:
+    mode: exact
+    tolerances: []
+- id: orders_placed_in_1997
+  question: How many orders were placed during calendar year 1997?
+  provider_response:
+    version: 1
+    from: orders
+    relationship_paths: []
+    dimensions: []
+    metrics:
+    - term: order_count
+      alias: order_count
+    filters:
+    - term: order_date
+      operator: gte
+      value: '1997-01-01'
+    - term: order_date
+      operator: lt
+      value: '1998-01-01'
+    order_by: []
+    limit: 20
+  expected_request:
+    version: 1
+    question: How many orders were placed during calendar year 1997?
+    from: orders
+    joins: []
+    dimensions: []
+    metrics:
+    - function: count_distinct
+      column: orders.order_id
+      alias: order_count
+    filters:
+    - column: orders.order_date
+      operator: gte
+      value: '1997-01-01'
+    - column: orders.order_date
+      operator: lt
+      value: '1998-01-01'
+    order_by: []
+    limit: 20
+  expected_result:
+    status: completed
+    columns:
+    - name: order_count
+      type: integer
+    rows:
+    - - 408
+    row_count: 1
+    column_count: 1
+    null_cells: 0
+  comparison:
+    mode: exact
+    tolerances: []
+- id: discontinued_product_count
+  question: How many products are discontinued?
+  provider_response:
+    version: 1
+    from: products
+    relationship_paths: []
+    dimensions: []
+    metrics:
+    - term: product_count
+      alias: product_count
+    filters:
+    - term: product_discontinued
+      operator: eq
+      value: true
+    order_by: []
+    limit: 20
+  expected_request:
+    version: 1
+    question: How many products are discontinued?
+    from: products
+    joins: []
+    dimensions: []
+    metrics:
+    - function: count_distinct
+      column: products.product_id
+      alias: product_count
+    filters:
+    - column: products.discontinued
+      operator: eq
+      value: true
+    order_by: []
+    limit: 20
+  expected_result:
+    status: completed
+    columns:
+    - name: product_count
+      type: integer
+    rows:
+    - - 8
+    row_count: 1
+    column_count: 1
+    null_cells: 0
+  comparison:
+    mode: exact
+    tolerances: []
+- id: products_by_category
+  question: How many products are in each product category? Order by product count
+    descending.
+  provider_response:
+    version: 1
+    from: products
+    relationship_paths:
+    - products_to_categories
+    dimensions:
+    - term: category_name
+      alias: category
+    metrics:
+    - term: product_count
+      alias: product_count
+    filters: []
+    order_by:
+    - field: product_count
+      direction: desc
+    - field: category
+      direction: asc
+    limit: 20
+  expected_request:
+    version: 1
+    question: How many products are in each product category? Order by product count
+      descending.
+    from: products
+    joins:
+    - source_table: products
+      source_column: category_id
+      target_table: categories
+      target_column: category_id
+      kind: inner
+    dimensions:
+    - column: categories.category_name
+      alias: category
+    metrics:
+    - function: count_distinct
+      column: products.product_id
+      alias: product_count
+    filters: []
+    order_by:
+    - field: product_count
+      direction: desc
+    - field: category
+      direction: asc
+    limit: 20
+  expected_result:
+    status: completed
+    columns:
+    - name: category
+      type: string
+    - name: product_count
+      type: integer
+    rows:
+    - - Confections
+      - 13
+    - - Beverages
+      - 12
+    - - Condiments
+      - 12
+    - - Seafood
+      - 12
+    - - Dairy Products
+      - 10
+    - - Grains/Cereals
+      - 7
+    - - Meat/Poultry
+      - 6
+    - - Produce
+      - 5
+    row_count: 8
+    column_count: 2
+    null_cells: 0
+  comparison:
+    mode: exact
+    tolerances: []
+- id: units_by_product
+  question: Which products have the highest total units ordered? Return the top 10.
+  provider_response:
+    version: 1
+    from: order_lines
+    relationship_paths:
+    - order_lines_to_products
+    dimensions:
+    - term: product_name
+      alias: product
+    metrics:
+    - term: units_ordered_total
+      alias: units_ordered
+    filters: []
+    order_by:
+    - field: units_ordered
+      direction: desc
+    - field: product
+      direction: asc
+    limit: 10
+  expected_request:
+    version: 1
+    question: Which products have the highest total units ordered? Return the top
+      10.
+    from: order_details
+    joins:
+    - source_table: order_details
+      source_column: product_id
+      target_table: products
+      target_column: product_id
+      kind: inner
+    dimensions:
+    - column: products.product_name
+      alias: product
+    metrics:
+    - function: sum
+      column: order_details.quantity
+      alias: units_ordered
+    filters: []
+    order_by:
+    - field: units_ordered
+      direction: desc
+    - field: product
+      direction: asc
+    limit: 10
+  expected_result:
+    status: completed
+    columns:
+    - name: product
+      type: string
+    - name: units_ordered
+      type: integer
+    rows:
+    - - Camembert Pierrot
+      - 1577
+    - - Raclette Courdavault
+      - 1496
+    - - Gorgonzola Telino
+      - 1397
+    - - Gnocchi di nonna Alice
+      - 1263
+    - - Pavlova
+      - 1158
+    - - "Rh\xF6nbr\xE4u Klosterbier"
+      - 1155
+    - - "Guaran\xE1 Fant\xE1stica"
+      - 1125
+    - - Boston Crab Meat
+      - 1103
+    - - Tarte au sucre
+      - 1083
+    - - Chang
+      - 1057
+    row_count: 10
+    column_count: 2
+    null_cells: 0
+  comparison:
+    mode: exact
+    tolerances: []
+- id: orders_by_shipper
+  question: How many orders were handled by each shipper? Order by order count descending.
+  provider_response:
+    version: 1
+    from: orders
+    relationship_paths:
+    - orders_to_shippers
+    dimensions:
+    - term: shipper_company_name
+      alias: shipper
+    metrics:
+    - term: order_count
+      alias: order_count
+    filters: []
+    order_by:
+    - field: order_count
+      direction: desc
+    - field: shipper
+      direction: asc
+    limit: 20
+  expected_request:
+    version: 1
+    question: How many orders were handled by each shipper? Order by order count descending.
+    from: orders
+    joins:
+    - source_table: orders
+      source_column: ship_via
+      target_table: shippers
+      target_column: shipper_id
+      kind: inner
+    dimensions:
+    - column: shippers.company_name
+      alias: shipper
+    metrics:
+    - function: count_distinct
+      column: orders.order_id
+      alias: order_count
+    filters: []
+    order_by:
+    - field: order_count
+      direction: desc
+    - field: shipper
+      direction: asc
+    limit: 20
+  expected_result:
+    status: completed
+    columns:
+    - name: shipper
+      type: string
+    - name: order_count
+      type: integer
+    rows:
+    - - United Package
+      - 326
+    - - Federal Shipping
+      - 255
+    - - Speedy Express
+      - 249
+    row_count: 3
+    column_count: 2
+    null_cells: 0
+  comparison:
+    mode: exact
+    tolerances: []
+- id: units_by_supplier_country
+  question: Which supplier countries account for the most units ordered? Return the
+    top 10.
+  provider_response:
+    version: 1
+    from: order_lines
+    relationship_paths:
+    - order_lines_to_suppliers
+    dimensions:
+    - term: supplier_country
+      alias: supplier_country
+    metrics:
+    - term: units_ordered_total
+      alias: units_ordered
+    filters: []
+    order_by:
+    - field: units_ordered
+      direction: desc
+    - field: supplier_country
+      direction: asc
+    limit: 10
+  expected_request:
+    version: 1
+    question: Which supplier countries account for the most units ordered? Return
+      the top 10.
+    from: order_details
+    joins:
+    - source_table: order_details
+      source_column: product_id
+      target_table: products
+      target_column: product_id
+      kind: inner
+    - source_table: products
+      source_column: supplier_id
+      target_table: suppliers
+      target_column: supplier_id
+      kind: inner
+    dimensions:
+    - column: suppliers.country
+      alias: supplier_country
+    metrics:
+    - function: sum
+      column: order_details.quantity
+      alias: units_ordered
+    filters: []
+    order_by:
+    - field: units_ordered
+      direction: desc
+    - field: supplier_country
+      direction: asc
+    limit: 10
+  expected_result:
+    status: completed
+    columns:
+    - name: supplier_country
+      type: string
+    - name: units_ordered
+      type: integer
+    rows:
+    - - USA
+      - 6828
+    - - Germany
+      - 6120
+    - - Australia
+      - 6045
+    - - UK
+      - 5064
+    - - France
+      - 5023
+    - - Italy
+      - 4197
+    - - Canada
+      - 3344
+    - - Japan
+      - 2551
+    - - Norway
+      - 2526
+    - - Sweden
+      - 2151
+    row_count: 10
+    column_count: 2
+    null_cells: 0
+  comparison:
+    mode: exact
+    tolerances: []
+- id: assignments_by_sales_region
+  question: How many employee territory assignments belong to each sales region?
+  provider_response:
+    version: 1
+    from: employee_territory_assignments
+    relationship_paths:
+    - employee_assignments_to_regions
+    dimensions:
+    - term: sales_region_name
+      alias: sales_region
+    metrics:
+    - term: employee_territory_assignment_count
+      alias: assignment_count
+    filters: []
+    order_by:
+    - field: assignment_count
+      direction: desc
+    - field: sales_region
+      direction: asc
+    limit: 20
+  expected_request:
+    version: 1
+    question: How many employee territory assignments belong to each sales region?
+    from: employee_territories
+    joins:
+    - source_table: employee_territories
+      source_column: territory_id
+      target_table: territories
+      target_column: territory_id
+      kind: inner
+    - source_table: territories
+      source_column: region_id
+      target_table: region
+      target_column: region_id
+      kind: inner
+    dimensions:
+    - column: region.region_description
+      alias: sales_region
+    metrics:
+    - function: count
+      column: '*'
+      alias: assignment_count
+    filters: []
+    order_by:
+    - field: assignment_count
+      direction: desc
+    - field: sales_region
+      direction: asc
+    limit: 20
+  expected_result:
+    status: completed
+    columns:
+    - name: sales_region
+      type: string
+    - name: assignment_count
+      type: integer
+    rows:
+    - - Eastern
+      - 19
+    - - Western
+      - 15
+    - - Northern
+      - 11
+    - - Southern
+      - 4
+    row_count: 4
+    column_count: 2
+    null_cells: 0
+  comparison:
+    mode: exact
+    tolerances: []
+- id: customers_without_region
+  question: Which customers have no region recorded? List their company names alphabetically.
+  provider_response:
+    version: 1
+    from: customers
+    relationship_paths: []
+    dimensions:
+    - term: customer_company_name
+      alias: customer
+    metrics: []
+    filters:
+    - term: customer_region
+      operator: is_null
+    order_by:
+    - field: customer
+      direction: asc
+    limit: 100
+  expected_request:
+    version: 1
+    question: Which customers have no region recorded? List their company names alphabetically.
+    from: customers
+    joins: []
+    dimensions:
+    - column: customers.company_name
+      alias: customer
+    metrics: []
+    filters:
+    - column: customers.region
+      operator: is_null
+    order_by:
+    - field: customer
+      direction: asc
+    limit: 100
+  expected_result:
+    status: completed
+    columns:
+    - name: customer
+      type: string
+    rows:
+    - - Alfreds Futterkiste
+    - - Ana Trujillo Emparedados y helados
+    - - "Antonio Moreno Taquer\xEDa"
+    - - Around the Horn
+    - - B's Beverages
+    - - "Berglunds snabbk\xF6p"
+    - - Blauer See Delikatessen
+    - - "Blondesddsl p\xE8re et fils"
+    - - Bon app'
+    - - "B\xF3lido Comidas preparadas"
+    - - Cactus Comidas para llevar
+    - - Centro comercial Moctezuma
+    - - Chop-suey Chinese
+    - - Consolidated Holdings
+    - - Die Wandernde Kuh
+    - - Drachenblut Delikatessen
+    - - Du monde entier
+    - - Eastern Connection
+    - - Ernst Handel
+    - - FISSA Fabrica Inter. Salchichas S.A.
+    - - Folies gourmandes
+    - - "Folk och f\xE4 HB"
+    - - France restauration
+    - - Franchi S.p.A.
+    - - Frankenversand
+    - - Furia Bacalhau e Frutos do Mar
+    - - "Galer\xEDa del gastr\xF3nomo"
+    - - "Godos Cocina T\xEDpica"
+    - - "K\xF6niglich Essen"
+    - - La corne d'abondance
+    - - La maison d'Asie
+    - - Lehmanns Marktstand
+    - - Magazzini Alimentari Riuniti
+    - - Maison Dewey
+    - - Morgenstern Gesundkost
+    - - North/South
+    - - "Oc\xE9ano Atl\xE1ntico Ltda."
+    - - "Ottilies K\xE4seladen"
+    - - "Paris sp\xE9cialit\xE9s"
+    - - "Pericles Comidas cl\xE1sicas"
+    - - Piccolo und mehr
+    - - Princesa Isabel Vinhos
+    - - QUICK-Stop
+    - - Rancho grande
+    - - Reggiani Caseifici
+    - - Richter Supermarkt
+    - - Romero y tomillo
+    - - "Sant\xE9 Gourmet"
+    - - Seven Seas Imports
+    - - Simons bistro
+    - - "Sp\xE9cialit\xE9s du monde"
+    - - "Supr\xEAmes d\xE9lices"
+    - - "Toms Spezialit\xE4ten"
+    - - Tortuga Restaurante
+    - - Vaffeljernet
+    - - Victuailles en stock
+    - - Vins et alcools Chevalier
+    - - Wartian Herkku
+    - - Wilman Kala
+    - - Wolski  Zajazd
+    row_count: 60
+    column_count: 1
+    null_cells: 0
+  comparison:
+    mode: exact
+    tolerances: []
+- id: no_orders_for_atlantis
+  question: Which order IDs were shipped to Atlantis?
+  provider_response:
+    version: 1
+    from: orders
+    relationship_paths: []
+    dimensions:
+    - term: order_id
+      alias: order_id
+    metrics: []
+    filters:
+    - term: order_ship_country
+      operator: eq
+      value: Atlantis
+    order_by:
+    - field: order_id
+      direction: asc
+    limit: 20
+  expected_request:
+    version: 1
+    question: Which order IDs were shipped to Atlantis?
+    from: orders
+    joins: []
+    dimensions:
+    - column: orders.order_id
+      alias: order_id
+    metrics: []
+    filters:
+    - column: orders.ship_country
+      operator: eq
+      value: Atlantis
+    order_by:
+    - field: order_id
+      direction: asc
+    limit: 20
+  expected_result:
+    status: completed_no_rows
+    columns:
+    - name: order_id
+      type: integer
+    rows: []
+    row_count: 0
+    column_count: 1
+    null_cells: 0
+  comparison:
+    mode: exact
+    tolerances: []
+- id: average_discount_by_category
+  question: Which product categories have the highest average line discount rate?
+  provider_response:
+    version: 1
+    from: order_lines
+    relationship_paths:
+    - order_lines_to_categories
+    dimensions:
+    - term: category_name
+      alias: category
+    metrics:
+    - term: line_discount_rate_average
+      alias: average_discount_rate
+    filters: []
+    order_by:
+    - field: average_discount_rate
+      direction: desc
+    - field: category
+      direction: asc
+    limit: 20
+  expected_request:
+    version: 1
+    question: Which product categories have the highest average line discount rate?
+    from: order_details
+    joins:
+    - source_table: order_details
+      source_column: product_id
+      target_table: products
+      target_column: product_id
+      kind: inner
+    - source_table: products
+      source_column: category_id
+      target_table: categories
+      target_column: category_id
+      kind: inner
+    dimensions:
+    - column: categories.category_name
+      alias: category
+    metrics:
+    - function: avg
+      column: order_details.discount
+      alias: average_discount_rate
+    filters: []
+    order_by:
+    - field: average_discount_rate
+      direction: desc
+    - field: category
+      direction: asc
+    limit: 20
+  expected_result:
+    status: completed
+    columns:
+    - name: category
+      type: string
+    - name: average_discount_rate
+      type: float
+    rows:
+    - - Meat/Poultry
+      - 0.06445086705202312
+    - - Beverages
+      - 0.061881188118811825
+    - - Seafood
+      - 0.06024242424242425
+    - - Confections
+      - 0.056946107784431155
+    - - Dairy Products
+      - 0.05344262295081969
+    - - Condiments
+      - 0.052638888888888874
+    - - Produce
+      - 0.04544117647058822
+    - - Grains/Cereals
+      - 0.04530612244897959
+    row_count: 8
+    column_count: 2
+    null_cells: 0
+  comparison:
+    mode: numeric_tolerance
+    tolerances:
+    - column: average_discount_rate
+      absolute: 1.0e-09
+      relative: 0.0

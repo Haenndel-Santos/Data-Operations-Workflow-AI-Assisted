@@ -118,6 +118,111 @@ def _read_control_mapping(
     return read_yaml_mapping(path, blockers, field)
 
 
+def _validate_relationship_registry_shape(
+    relationships: dict[str, Any],
+    blockers: list[dict[str, str]],
+) -> None:
+    governed_fields = {
+        "version",
+        "status",
+        "dataset",
+        "authority",
+        "approved_relationships",
+        "rejected_relationship_ids",
+        "non_authorizations",
+    }
+    has_governance = any(name in relationships for name in governed_fields - {"approved_relationships"})
+    _reject_unknown_fields(
+        relationships,
+        governed_fields if has_governance else {"approved_relationships"},
+        blockers,
+        "approved_relationships",
+    )
+    if not has_governance:
+        return
+    if relationships.get("version") != 1 or relationships.get("status") != "approved":
+        add_blocker(
+            blockers,
+            "relationship_registry_not_approved",
+            "A governed relationship registry must be approved and use version 1.",
+            field="approved_relationships.status",
+        )
+    if not isinstance(relationships.get("dataset"), str) or not relationships["dataset"].strip():
+        add_blocker(
+            blockers,
+            "invalid_relationship_registry_dataset",
+            "A governed relationship registry requires a dataset identity.",
+            field="approved_relationships.dataset",
+        )
+    authority = relationships.get("authority")
+    if not isinstance(authority, dict):
+        add_blocker(
+            blockers,
+            "invalid_relationship_registry_authority",
+            "A governed relationship registry requires human-review authority metadata.",
+            field="approved_relationships.authority",
+        )
+    else:
+        allowed_authority = {
+            "source_manifest_sha256",
+            "relationship_candidates_sha256",
+            "completed_review_sha256",
+            "derived_from_completed_human_review",
+            "automatic_approval",
+            "scope",
+        }
+        _reject_unknown_fields(
+            authority,
+            allowed_authority,
+            blockers,
+            "approved_relationships.authority",
+        )
+        for name in (
+            "source_manifest_sha256",
+            "relationship_candidates_sha256",
+            "completed_review_sha256",
+        ):
+            if not _valid_sha256(authority.get(name)):
+                add_blocker(
+                    blockers,
+                    "invalid_relationship_registry_authority_hash",
+                    "Governed relationship authority requires valid SHA-256 evidence.",
+                    field=f"approved_relationships.authority.{name}",
+                )
+        if (
+            authority.get("derived_from_completed_human_review") is not True
+            or authority.get("automatic_approval") is not False
+            or authority.get("scope") != "local_offline_relationship_use"
+        ):
+            add_blocker(
+                blockers,
+                "invalid_relationship_registry_authority",
+                "Relationship authority must derive from completed human review for local offline use only.",
+                field="approved_relationships.authority",
+            )
+    rejected = relationships.get("rejected_relationship_ids")
+    if not isinstance(rejected, list) or any(
+        not isinstance(value, str) or not value for value in rejected
+    ):
+        add_blocker(
+            blockers,
+            "invalid_rejected_relationship_ids",
+            "Governed rejected relationship IDs must be a list of strings.",
+            field="approved_relationships.rejected_relationship_ids",
+        )
+    non_authorizations = relationships.get("non_authorizations")
+    required = {"external_upload", "model_parameter_training", "publication"}
+    if not isinstance(non_authorizations, list) or not required.issubset(
+        {value for value in non_authorizations if isinstance(value, str)}
+    ):
+        add_blocker(
+            blockers,
+            "invalid_relationship_registry_non_authorizations",
+            "Governed relationship authority must preserve upload, training, and publication non-authorizations.",
+            field="approved_relationships.non_authorizations",
+        )
+
+
 def _validate_hash_bindings(
     payload: Any,
     expected: dict[str, str],
@@ -652,12 +757,7 @@ def inspect_analytics_dataset_benchmark_candidate(
     semantic_state = _read_control_mapping(semantic_state_path, blockers, "semantic_state")
     validate_approved_state(semantic_state, blockers)
     relationships = _read_control_mapping(relationships_path, blockers, "approved_relationships")
-    _reject_unknown_fields(
-        relationships,
-        {"approved_relationships"},
-        blockers,
-        "approved_relationships",
-    )
+    _validate_relationship_registry_shape(relationships, blockers)
     relationship_blockers: list[dict[str, str]] = []
     approved = approved_relationships(relationships, relationship_blockers)
     if relationship_blockers:

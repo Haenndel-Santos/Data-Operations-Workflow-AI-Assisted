@@ -3,8 +3,9 @@
 ## Review State
 
 The Phase 5 answer design produced 13 of 13 exact Stage 5A plans with zero
-blockers. The aggregate status is `awaiting_execution_review`. No Stage 5B
-query has run and no Northwind table rows or expected answers were read.
+blockers. On 2026-07-15, the project owner approved every exact hash-bound plan
+for sequential, bounded, local read-only answer collection. That authority is
+complete; it does not approve the collected expected values.
 
 Authority is bound to:
 
@@ -14,10 +15,16 @@ Authority is bound to:
 - approved semantic state SHA-256 `bc2daed705320ae344286cd4678645fe54844e11f8657e55c52e999e046f2d10`;
 - approved relationships SHA-256 `b12b3f19d199c605fb9e88bfabacb8d1ca9369ba54aa91208d393f99de7efd72`.
 
-The authoritative pending review is stored locally at
-`outputs/benchmarks/northwind-phase5-answer-preparation-v1/analytics_dataset_benchmark_execution_review.yml`.
+The authoritative completed review is versioned as
+[northwind.answer-execution-review.yml](../datasets/benchmarks/manifests/northwind.answer-execution-review.yml).
+The original pending template remains unchanged under
+`outputs/benchmarks/northwind-phase5-answer-preparation-v1/`.
 The exact design is
 [northwind.answer-benchmark-design.yml](../datasets/benchmarks/manifests/northwind.answer-benchmark-design.yml).
+
+All 13 queries have since completed through the governed materializer. Review
+the still-unapproved values in the separate
+[Northwind Expected-Answer Review](northwind-expected-answer-review.md).
 
 ## What To Check
 

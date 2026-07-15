@@ -527,3 +527,36 @@ Northwind design produced 13 review-ready plans and zero blockers without
 Stage 5B, table-row reads, answers, a live provider, or network access. Expected
 answers, local read-only collection, live-model comparison, narration, upload,
 publication, and training remain unapproved until their exact later gates.
+
+## 2026-07-15 - Materialize Candidate Answers Sequentially And Preserve Final Review
+
+**Decision:** Record the project owner's approval of all 13 exact Northwind
+plans as a versioned completed execution review authorizing only local read-only
+answer collection. Validate that authority before table-row access, recheck all
+immutable hashes before and after every case, execute Stage 5B sequentially
+with fixed limits, and keep the resulting pack `candidate_for_review` until the
+existing separate per-case benchmark approval workflow is complete.
+
+**Rationale:** Plan correctness and expected-value correctness are distinct
+human decisions. The first gate authorizes known queries; it cannot make their
+outputs gold answers. Sequential execution reduces workstation pressure and
+makes the exact case order auditable, while normal Stage 5B recompilation and
+plan matching preserve the established no-raw-SQL boundary.
+
+**Alternatives:** Execute cases concurrently; let a broad Phase 5 approval
+replace exact decisions; call Ollama while constructing gold answers; write a
+pack directly from ad hoc SQL; auto-approve values that match execution control
+totals; discard a blocked run; reject the governed approved-relationship
+projection because it includes versioned authority metadata.
+
+**Impact:** `analytics-dataset-benchmark-answer-materialize` now requires the
+completed scope and per-case decisions, accepts both the legacy minimal and the
+validated governed relationship-registry shapes, and writes no pack on a
+blocker. The first preserved run completed all queries but blocked pack output
+when the older final validator rejected legitimate registry metadata. After a
+compatible authority-shape fix and focused regression test, a new run completed
+all 13 cases with zero blockers and wrote a hash-bound candidate pack. A second
+pending review now requires independent decisions for the recorded response,
+expected request, expected result, and comparison policy of every case. Live
+provider use, upload, publication, training, and benchmark evaluation remain
+not authorized.

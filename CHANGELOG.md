@@ -18,6 +18,7 @@ All notable user-facing and release-relevant changes will be documented here.
 - Synthetic offline Stage 5D translation evaluation with exact/equivalent intent, clarification, unsafe-output, hallucination, timeout, and failure cases.
 - Synthetic Stage 5E expected-answer evaluation through exact request gating, Stage 5A planning, Stage 5B execution, and CSV/control-total comparison.
 - Pre-execution dataset benchmark answer preparation with immutable source bindings, bounded recorded intents, exact Stage 5A plan batching, and aggregate per-case human review before any real answer collection.
+- Sequential dataset benchmark answer materialization with completed exact-plan authority, per-query immutable hash checks, fixed read-only limits, typed candidate-pack construction, and a separate final human review gate.
 - Dry-run dataset-backed Stage 5E validation with cryptographic dataset, semantic, relationship, pack, and separate approval bindings.
 - Hash-bound per-case dataset benchmark review and explicit immutable approval generation without database access or execution.
 - Approved offline dataset-backed evaluation through recorded Stage 5D, exact Stage 5A request gates, Stage 5B read-only execution, and exact/tolerance metrics.

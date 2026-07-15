@@ -225,6 +225,20 @@ This creates one hash-bound pending review for all exact plans. It does not run
 Stage 5B, read table rows, use Ollama/network, collect expected answers, or
 approve the final benchmark pack.
 
+After every exact plan has a completed hash-bound review approving only local
+read-only collection, materialize a candidate pack sequentially with fixed
+limits:
+
+```powershell
+$env:PYTHONPATH = "src"
+$env:PYTHONDONTWRITEBYTECODE = "1"
+.\.venv\Scripts\python.exe -m data_ops_lab analytics-dataset-benchmark-answer-materialize --design "datasets\benchmarks\manifests\northwind.answer-benchmark-design.yml" --dataset-manifest "datasets\benchmarks\manifests\northwind.dataset-benchmark.yml" --preparation-manifest "outputs\benchmarks\northwind-phase5-answer-preparation-v1\analytics_dataset_benchmark_preparation.yml" --execution-review "datasets\benchmarks\manifests\northwind.answer-execution-review.yml" --database "datasets\benchmarks\derived\northwind\northwind.duckdb" --semantic-state "config\analytics\approved_semantic_catalog.yml" --relationships "outputs\benchmarks\northwind-phase2-reviewed\approved_relationships.yml" --pack-output "datasets\benchmarks\manifests\northwind.answer-benchmark-pack.yml" --output "outputs\benchmarks\northwind-phase5-answer-materialization-v3"
+```
+
+Northwind now has a 13-case `candidate_for_review` pack. Its collected values
+remain unapproved and Ollama has not been evaluated against them. See the
+[expected-answer review guide](docs/northwind-expected-answer-review.md).
+
 To validate immutable dataset-backed benchmark bindings without opening or querying the database:
 
 ```powershell
@@ -233,9 +247,9 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 .\.venv\Scripts\python.exe -m data_ops_lab analytics-dataset-benchmark-validate --dataset-manifest "<manifest.yml>" --database "<dataset.duckdb>" --semantic-state "<semantic.yml>" --relationships "<relationships.yml>" --pack "<pack.yml>" --approval "<approval.yml>" --output "outputs\<run-id>\analytics_dataset_benchmark_validation"
 ```
 
-This is a hash-bound dry-run only. Northwind has review-ready answer-collection
-plans but no collected, reviewed, or approved expected-answer pack yet; EDS also
-does not meet this contract.
+This is a hash-bound dry-run only. Northwind has a collected candidate pack but
+no completed per-case pack review or approval yet; EDS also does not meet this
+contract.
 
 To prepare and validate the separate human review required by that contract:
 
@@ -410,7 +424,7 @@ DuckDB is a good fit for this project because it supports local analytical workf
 
 ## Next Extensions
 
-- Build and approve the English Northwind expected-answer pack for comparative local-model evaluation.
+- Complete the final per-case review and approval of the collected English Northwind expected-answer pack, then run comparative local-model evaluation.
 - Add a governed UI for questions, result tables, evidence, and validation review.
 - Add Tableau workbook screenshots as a final portfolio artifact.
 - Add richer validation checks for totals before and after joins.
@@ -447,6 +461,8 @@ DuckDB is a good fit for this project because it supports local analytical workf
 - [Analytics expected-answer evaluation contract](docs/analytics-answer-evaluation.md)
 - [Dataset benchmark answer preparation contract](docs/analytics-dataset-benchmark-preparation.md)
 - [Northwind expected-answer plan review](docs/northwind-answer-benchmark-review.md)
+- [Dataset benchmark answer materialization contract](docs/analytics-dataset-benchmark-materialization.md)
+- [Northwind expected-answer review](docs/northwind-expected-answer-review.md)
 - [Dataset-backed benchmark validation contract](docs/analytics-dataset-benchmark.md)
 - [Dataset benchmark review and approval contract](docs/analytics-dataset-benchmark-review.md)
 - [Dataset-backed offline benchmark evaluation contract](docs/analytics-dataset-benchmark-evaluation.md)

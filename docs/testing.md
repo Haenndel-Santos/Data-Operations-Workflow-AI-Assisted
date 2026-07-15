@@ -202,6 +202,26 @@ produces exact plans, and stops for aggregate human review. It must not be used
 to infer approval of answer collection or of the values that a later reviewed
 collection may produce.
 
+## Dataset Benchmark Answer Materialization
+
+The focused materialization tests complete a synthetic exact-plan review, then
+verify sequential Stage 5B execution, read-only plan revalidation and query
+connections, typed candidate-pack construction, final contract validation,
+idempotent reuse, source preservation, prohibited-scope refusal before Stage
+5B, prepared-plan drift blocking, and the fixed no-network/no-limit-bypass CLI:
+
+```powershell
+$env:PYTHONPATH = "src"
+$env:PYTHONDONTWRITEBYTECODE = "1"
+.\.venv\Scripts\python.exe -m pytest -p no:cacheprovider tests\analytics_dataset_benchmark_materialization_test.py
+```
+
+Real materialization is allowed only after a completed human review approves
+every exact prepared plan for local read-only collection. It writes candidate
+answers, not final benchmark authority. The generated pack must still complete
+the separate per-case review and approval workflow before any offline or live
+model evaluation.
+
 ## Dataset Benchmark Review And Approval
 
 The same focused synthetic fixture verifies hash-bound pending review,
