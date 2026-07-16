@@ -11,6 +11,7 @@ from typing import Any
 import yaml
 from openpyxl import load_workbook
 
+from .contracts.hashing import file_sha256
 from .product_reference_audit import clean_value
 from .product_refnr_final_review_validation import (
     consolidated_rows,
@@ -47,14 +48,6 @@ class ProductRefnrApplicationResult:
     rejected_decisions: int
     dry_run: bool
     state_changed: bool
-
-
-def file_sha256(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
 
 
 def run_id() -> str:

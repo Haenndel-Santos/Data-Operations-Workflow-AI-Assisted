@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import hashlib
 import re
 import shutil
 from dataclasses import dataclass
@@ -10,6 +9,8 @@ from typing import Any
 
 import duckdb
 import yaml
+
+from .contracts.hashing import file_sha256
 
 
 MODULE_VERSION = 2
@@ -49,14 +50,6 @@ class ReferenceDatasetValidationResult:
     relationship_count: int
     approved_relationship_count: int
     outputs_changed: bool
-
-
-def file_sha256(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
 
 
 def quote_identifier(value: str) -> str:

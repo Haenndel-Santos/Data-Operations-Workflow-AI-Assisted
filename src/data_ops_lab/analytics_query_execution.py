@@ -19,6 +19,7 @@ from .analytics_query_plan import (
     build_plan,
     plan_content,
 )
+from .contracts.blockers import add_blocker
 from .source_onboarding import ensure_dir, file_sha256
 
 
@@ -64,23 +65,6 @@ class ExecutionLimitExceeded(Exception):
         super().__init__(explanation)
         self.blocker_type = blocker_type
         self.explanation = explanation
-
-
-def add_blocker(
-    blockers: list[dict[str, str]],
-    blocker_type: str,
-    explanation: str,
-    *,
-    field: str = "",
-) -> None:
-    blockers.append(
-        {
-            "blocker_id": f"BLOCKER_{len(blockers) + 1:03d}",
-            "blocker_type": blocker_type,
-            "field": field,
-            "explanation": explanation,
-        }
-    )
 
 
 def validate_limits(

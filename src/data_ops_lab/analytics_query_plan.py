@@ -13,6 +13,7 @@ from typing import Any
 import duckdb
 import yaml
 
+from .contracts.blockers import add_blocker
 from .source_onboarding import ensure_dir, file_sha256
 
 
@@ -68,23 +69,6 @@ class AnalyticsQueryPlanResult:
     blocker_count: int
     outputs_changed: bool
     compiled: CompiledAnalyticsQuery | None
-
-
-def add_blocker(
-    blockers: list[dict[str, str]],
-    blocker_type: str,
-    explanation: str,
-    *,
-    field: str = "",
-) -> None:
-    blockers.append(
-        {
-            "blocker_id": f"BLOCKER_{len(blockers) + 1:03d}",
-            "blocker_type": blocker_type,
-            "field": field,
-            "explanation": explanation,
-        }
-    )
 
 
 def read_yaml_mapping(

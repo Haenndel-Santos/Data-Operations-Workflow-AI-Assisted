@@ -20,6 +20,7 @@ from .analytics_query_plan import (
     read_yaml_mapping,
     relationship_is_approved,
 )
+from .contracts.blockers import add_blocker
 from .source_onboarding import ensure_dir, file_sha256
 
 
@@ -72,23 +73,6 @@ class AnalyticsSemanticCatalogResult:
     ambiguity_count: int
     outputs_changed: bool
     catalog: dict[str, Any]
-
-
-def add_blocker(
-    blockers: list[dict[str, str]],
-    blocker_type: str,
-    explanation: str,
-    *,
-    field: str = "",
-) -> None:
-    blockers.append(
-        {
-            "blocker_id": f"BLOCKER_{len(blockers) + 1:03d}",
-            "blocker_type": blocker_type,
-            "field": field,
-            "explanation": explanation,
-        }
-    )
 
 
 def normalize_term(value: str) -> str:

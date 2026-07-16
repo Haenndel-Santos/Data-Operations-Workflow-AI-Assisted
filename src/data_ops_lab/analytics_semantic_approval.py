@@ -18,6 +18,7 @@ from .analytics_semantic_review import (
     semantic_entities,
     validate_reviewable_catalog,
 )
+from .contracts.blockers import add_blocker
 from .source_onboarding import backup_existing, ensure_dir, file_sha256
 
 
@@ -43,23 +44,6 @@ class AnalyticsSemanticApprovalResult:
     state_changed: bool
     outputs_changed: bool
     decision_digest: str
-
-
-def add_blocker(
-    blockers: list[dict[str, str]],
-    blocker_type: str,
-    explanation: str,
-    *,
-    field: str = "",
-) -> None:
-    blockers.append(
-        {
-            "blocker_id": f"BLOCKER_{len(blockers) + 1:03d}",
-            "blocker_type": blocker_type,
-            "field": field,
-            "explanation": explanation,
-        }
-    )
 
 
 def reject_unknown_fields(

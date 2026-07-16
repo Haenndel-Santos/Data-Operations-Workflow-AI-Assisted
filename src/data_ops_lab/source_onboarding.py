@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import csv
-import hashlib
 import shutil
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -13,6 +12,7 @@ import duckdb
 import pandas as pd
 import yaml
 
+from .contracts.hashing import file_sha256
 from .io_utils import ensure_dir, normalize_columns, read_table, slugify, table_name_from_path
 
 
@@ -74,14 +74,6 @@ class TableObservation:
 
 def now_iso() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
-
-
-def file_sha256(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as handle:
-        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
 
 
 def backup_existing(path: Path, run_id: str) -> None:
