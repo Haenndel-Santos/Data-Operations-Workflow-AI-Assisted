@@ -2237,3 +2237,108 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
   samples or as a holdout.
 - Do not enable parallel model requests, training, external providers, upload,
   narration, publication, dynamic dispatch, or production use.
+
+## 2026-07-16 - Codex - Completed soak analyzed and reliability hardened
+
+### Initial Context
+
+- Branch: `main` at `d9ef918`; worktree clean and synchronized with
+  `origin/main`.
+- The user requested the final overnight result, accepted the recommendation to
+  correct the isolated publication failure, and approved the necessary fix.
+- No soak process remained active. Ollama had unloaded the model and the GPU had
+  returned to idle.
+
+### Final Soak Evidence
+
+- The run stopped safely at `2026-07-15T23:55:08+02:00` on
+  `available_system_memory_below_limit`, after approximately 6 hours 38 minutes.
+- It wrote 57 cycle records. Fifty-six cycles produced case evidence; the final
+  cycle made 11 provider calls and skipped its final two cases when the RAM
+  guard triggered.
+- Recorded totals: 726 provider calls, 728 case rows including two guard skips,
+  558 passed cases, 4,531,904 prompt tokens, 91,091 completion tokens, and
+  20,701,794.162 ms provider wall time.
+- There were zero provider timeouts, zero contract blockers, and an empty
+  standard-error log. Generated evidence occupied about 0.596 MB.
+- Fifty-four evidenced cycles passed 10/13; the first and final evidenced cycles
+  passed 9/13.
+- Seven cases passed 56/56. `total_order_count` and
+  `products_by_category` passed 55/56. `average_discount_by_category` passed
+  every one of its 55 actual provider calls.
+- Persistent gaps: `customers_without_region` passed 0/56 because its limit
+  never matched; `orders_placed_in_1997` passed 0/56 because its filter never
+  matched; `no_orders_for_atlantis` passed 1/55 actual calls because order/limit
+  usually did not match.
+- Periodic samples recorded at most 52 degrees Celsius and 7,297 MB VRAM; a
+  separate launch observation saw 58 degrees, 98% GPU utilization, and about
+  172 W. Periodic device samples are not continuous peaks.
+- Available RAM recovered above 14 GB after the process ended and Ollama
+  unloaded. The old evidence cannot attribute the gradual decline to Ollama,
+  Python, Windows cache, Chrome, or another process.
+- Final soak-manifest SHA-256:
+  `72b5e7c7808b3439dd679f62563516e178850a0c3999facfa7fd1747cf371f62`.
+
+### Isolated Technical Failure
+
+- Cycle 27 ran for 375.551 seconds, similar to a full cycle, but returned
+  `PermissionError` before its cycle directory was published.
+- Because the result object/evidence was unavailable, provider calls, tokens,
+  and case outcomes for that cycle were conservatively excluded. It is an
+  inference, not proven evidence, that inference likely occurred before the
+  final publication failure.
+- The harness recovered and completed cycle 28 onward. The error log remained
+  empty because the cycle-level failure was intentionally sanitized and
+  checkpointed.
+
+### Correction Implemented
+
+- Added bounded retries for transient Windows `PermissionError` during final
+  live-evaluation directory publication: delays of 0.1, 0.25, 0.5, 1.0, and
+  2.0 seconds.
+- If the destination appears during retry, publication fails closed and
+  preserves that destination; divergent/unknown evidence is never overwritten.
+- Added separate bounded retries for soak-owned root checkpoint file
+  replacement.
+- Added Windows process-memory attribution without a new dependency:
+  effective soak-process working set/private memory plus aggregate Ollama
+  process count, working set, and private memory.
+- Added those metrics to per-cycle CSV, final aggregate manifest, and report.
+- Preserved the 6,144 MB system-memory guard, concurrency one, existing
+  authority, and all external/training non-authorizations.
+- Created commit `4f6150c` (`fix(ai): harden soak evidence and memory
+  telemetry`).
+
+### Validation
+
+- Permission-retry and soak-focused checks: 10 passed.
+- Complete dataset/live/soak test file: 49 passed in 12.11 seconds.
+- Full offline suite after final source changes: 228 passed and 2 opt-in online
+  tests skipped in 41.85 seconds.
+- Internal links: 109 checked, zero broken.
+- A direct local Windows telemetry probe returned separate Python and Ollama
+  memory values without loading the model.
+- `git diff --check`: no whitespace errors.
+
+### State For Next Agent
+
+- No long soak is active and no rerun was authorized in this session.
+- The original completed evidence remains unchanged under
+  `outputs/benchmarks/northwind-ollama-overnight-soak-20260715-171646/`.
+- The retry fix prevents the observed class of transient publish loss, but its
+  sustained Windows behavior and new memory attribution still need a future
+  bounded diagnostic run for empirical confirmation.
+
+### Next Logical Step
+
+- If endurance diagnosis is still desired, obtain a new authorization for a
+  shorter soak with Chrome closed, retain the 6 GB guard, and compare Ollama
+  private/working memory against Python and system available RAM over time.
+- Then return to fixed Phase 5 thresholds and a fresh holdout pack.
+
+### Do Not Do Yet
+
+- Do not lower the memory guard, infer a memory leak from available-RAM data
+  alone, or enable parallel model requests.
+- Do not reinterpret repeated Northwind runs as holdout/provider-selection
+  evidence or authorize training/external services from this result.
