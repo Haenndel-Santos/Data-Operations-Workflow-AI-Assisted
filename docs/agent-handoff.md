@@ -2541,3 +2541,39 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 - Do not rename blocker codes or columns during taxonomy inventory.
 - Do not combine error taxonomy, run-result, or CLI decomposition.
 - Do not merge to `main` until branch review and revalidation are complete.
+
+## 2026-07-16 - Codex - Phase II branch integrated and published
+
+### Initial Context
+
+- The project owner explicitly requested direct integration of
+  `codex/phase-2-internal-foundations` into `main` and publication to GitHub for
+  continued remote work.
+- The worktree was clean at `ff4c560`.
+- `gh` was authenticated as `Haenndel-Santos` with repository and workflow
+  scopes.
+
+### Integration
+
+- Fetched `origin` and confirmed `origin/main` remained at `31167f0`.
+- Verified `origin/main` was an ancestor of the Phase II branch with zero
+  remote-only commits and seven Phase II commits.
+- Published `codex/phase-2-internal-foundations` to `origin` as a remote backup.
+- Fast-forwarded local `main` from `31167f0` to `ff4c560`; no merge conflict or
+  synthetic merge commit was required.
+- Pushed `main` to
+  `Haenndel-Santos/Data-Operations-Workflow-AI-Assisted`.
+
+### Validation Basis
+
+- The exact integrated commit had already passed the final offline suite with
+  235 tests passed and 2 opt-in live-provider tests skipped.
+- Internal links had passed with 109 checked and zero broken.
+- The integration changed no file content beyond the already validated branch.
+
+### State For Remote Work
+
+- GitHub `main` contains the Phase II hashing, blocker, atomic-publication, and
+  source-binding contracts through `ff4c560`.
+- The remote Phase II branch is retained for traceability.
+- The next logical milestone remains the non-breaking error-taxonomy inventory.
