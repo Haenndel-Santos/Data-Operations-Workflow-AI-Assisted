@@ -25,7 +25,10 @@ from data_ops_lab.contracts.blockers import (
     add_blocker,
 )
 from data_ops_lab.contracts.hashing import FILE_HASH_CHUNK_SIZE, file_sha256
-from data_ops_lab.contracts.source_bindings import existing_file_sha256_bindings
+from data_ops_lab.contracts.source_bindings import (
+    declared_file_sha256_bindings,
+    existing_file_sha256_bindings,
+)
 
 
 def test_file_sha256_preserves_legacy_exports_and_digest(tmp_path):
@@ -173,4 +176,31 @@ def test_existing_file_sha256_bindings_preserves_order_and_omits_missing(tmp_pat
     assert bindings == {
         "second_sha256": file_sha256(second),
         "first_sha256": file_sha256(first),
+    }
+
+
+def test_declared_file_sha256_bindings_preserves_all_keys(tmp_path):
+    existing = tmp_path / "existing.txt"
+    missing = tmp_path / "missing.txt"
+    directory = tmp_path / "directory"
+    existing.write_text("existing\n", encoding="utf-8")
+    directory.mkdir()
+
+    bindings = declared_file_sha256_bindings(
+        {
+            "existing_sha256": existing,
+            "missing_sha256": missing,
+            "directory_sha256": directory,
+        }
+    )
+
+    assert list(bindings) == [
+        "existing_sha256",
+        "missing_sha256",
+        "directory_sha256",
+    ]
+    assert bindings == {
+        "existing_sha256": file_sha256(existing),
+        "missing_sha256": "",
+        "directory_sha256": "",
     }

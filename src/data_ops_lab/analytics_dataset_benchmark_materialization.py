@@ -23,6 +23,7 @@ from .analytics_query_execution import (
 )
 from .analytics_query_plan import add_blocker, read_yaml_mapping
 from .analytics_session import blockers_csv, canonical_yaml, write_outputs
+from .contracts.source_bindings import declared_file_sha256_bindings
 from .source_onboarding import ensure_dir, file_sha256
 
 
@@ -129,10 +130,7 @@ def _source_paths(
 
 
 def _current_hashes(paths: dict[str, Path]) -> dict[str, str]:
-    return {
-        name: file_sha256(path) if path.is_file() else ""
-        for name, path in paths.items()
-    }
+    return declared_file_sha256_bindings(paths)
 
 
 def _hashes_match(expected: dict[str, str], paths: dict[str, Path]) -> bool:

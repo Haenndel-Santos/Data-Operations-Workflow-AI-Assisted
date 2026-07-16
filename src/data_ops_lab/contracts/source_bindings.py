@@ -15,3 +15,13 @@ def existing_file_sha256_bindings(
         for name, path in paths.items()
         if path.is_file()
     }
+
+
+def declared_file_sha256_bindings(
+    paths: Mapping[str, Path],
+) -> dict[str, str]:
+    """Hash every declared file path and use an empty digest when absent."""
+    return {
+        name: file_sha256(path) if path.is_file() else ""
+        for name, path in paths.items()
+    }

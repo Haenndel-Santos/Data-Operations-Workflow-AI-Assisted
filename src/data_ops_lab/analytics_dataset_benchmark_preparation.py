@@ -34,6 +34,7 @@ from .analytics_session import (
     run_analytics_session_prepare,
     write_outputs,
 )
+from .contracts.source_bindings import declared_file_sha256_bindings
 from .source_onboarding import ensure_dir, file_sha256
 
 
@@ -656,10 +657,7 @@ def run_analytics_dataset_benchmark_preparation(
         "approved_semantic_state_sha256": semantic_state_path,
         "approved_relationships_sha256": relationships_path,
     }
-    source_hashes = {
-        name: file_sha256(path) if path.is_file() else ""
-        for name, path in source_paths.items()
-    }
+    source_hashes = declared_file_sha256_bindings(source_paths)
     database_before = database_identity(database_path)
     database_hash = ""
     database_size = 0
@@ -777,10 +775,7 @@ def run_analytics_dataset_benchmark_preparation(
                 }
             )
 
-    current_source_hashes = {
-        name: file_sha256(path) if path.is_file() else ""
-        for name, path in source_paths.items()
-    }
+    current_source_hashes = declared_file_sha256_bindings(source_paths)
     current_database = database_identity(database_path)
     current_database_hash = file_sha256(database_path) if database_path.is_file() else ""
     if (
