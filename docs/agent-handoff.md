@@ -2411,3 +2411,70 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 - Do not retry provider calls through a filesystem publication helper.
 - Do not force distinct blocker schemas into the standard analytics shape.
 - Do not merge to `main` until branch tests and review are complete.
+
+## 2026-07-16 - Codex - Backend Phase II atomic publication consolidated
+
+### Initial Context
+
+- Continued on clean branch `codex/phase-2-internal-foundations` at
+  `a5f846a`.
+- The documented next milestone was Backend Phase II increment 2.2:
+  characterize and consolidate atomic publication without retrying provider
+  calls or changing evidence contracts.
+
+### Characterization
+
+- Identified a new-directory publication contract in the live dataset
+  evaluator: unique staging directory, five bounded Windows delays, target-race
+  refusal, exact idempotent reuse, and staging cleanup.
+- Identified an owned-checkpoint replacement contract in the Ollama soak:
+  same-directory temporary file, five bounded Windows delays, `os.replace`,
+  and cleanup after success or retry exhaustion.
+- Kept benchmark conversion and reference validation `.building` renames local
+  because they use deterministic staging paths and reject stale staging before
+  work.
+
+### Implementation
+
+- Added `src/data_ops_lab/contracts/atomic_publish.py`.
+- Added typed `AtomicPublishTargetAppearedError`,
+  `publish_new_directory`, and `atomic_write_text`.
+- Preserved legacy live-evaluator and soak wrappers, constants, messages, and
+  module-level monkeypatch seams.
+- Added direct tests for transient retry, persistent retry exhaustion,
+  temporary cleanup, target-race preservation, and staging cleanup.
+- Created commit `28e962b` (`refactor(contracts): centralize atomic
+  publication`).
+
+### Validation
+
+- Pre-change Windows retry/race characterization: 3 passed.
+- New contract plus exact retry/race regressions: 8 passed.
+- Full internal-contract and dataset live/soak consumer files: 54 passed in
+  11.35 seconds.
+- Full offline suite: 233 passed and 2 opt-in live-provider tests skipped in
+  37.79 seconds.
+- No live provider, network, database, project data, migration, import,
+  synchronization, approval apply, or generated project output was used.
+
+### State For Next Agent
+
+- Increments 2.1 and 2.2 are implemented on the Phase II branch.
+- Atomic publication does not provide a generic overwrite API and has no
+  provider/database retry capability.
+- Deterministic `.building` workflows remain intentionally explicit.
+
+### Next Logical Step
+
+- Inventory persisted source-binding fields and validation semantics.
+- Start with one compatibility-preserving source-binding slice; keep error
+  taxonomy and run-result work separate.
+
+### Do Not Do Yet
+
+- Do not migrate `.building` workflows without preserving stale-staging
+  refusal.
+- Do not add provider, database, or whole-stage retries to the filesystem
+  helper.
+- Do not combine source-binding extraction with CLI decomposition.
+- Do not merge to `main` until the branch is reviewed and revalidated.

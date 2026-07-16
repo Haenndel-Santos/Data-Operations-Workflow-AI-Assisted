@@ -95,10 +95,13 @@ Backend Phase II has introduced the first shared internal contracts under
 `src/data_ops_lab/contracts/`. File SHA-256 behavior is now shared by source
 onboarding, Product application, and reference-dataset validation. The standard
 four-field analytics blocker append behavior is shared by query planning,
-query execution, semantic catalog validation, and semantic approval. Legacy
-module exports remain compatible. Distinct Product materialization and
+query execution, semantic catalog validation, and semantic approval. Atomic
+new-directory publication and atomic text-checkpoint replacement are shared by
+the live dataset evaluator and Ollama soak with their existing retry schedules.
+Legacy module exports remain compatible. Distinct Product materialization and
 reference-dataset blocker schemas remain local until their contracts and
-consumers are characterized.
+consumers are characterized. Deterministic `.building` directory workflows
+remain separate because their stale-staging failure policy differs.
 
 The first formal module registry now describes the two recorded analytics
 session phases and validates inputs, outputs, dependencies, validation, tests,
@@ -112,9 +115,10 @@ Modeling decisions use distinct states such as candidate, pending review, approv
 
 ## Current Gaps
 
-- Shared hashing and the standard analytics blocker are the first Backend Phase
-  II primitives; atomic publication, source bindings, error taxonomy, a common
-  run-result envelope, and CLI decomposition remain pending.
+- Shared hashing, the standard analytics blocker, and the two characterized
+  atomic-publication variants are implemented Backend Phase II primitives;
+  source bindings, error taxonomy, a common run-result envelope, and CLI
+  decomposition remain pending.
 - The analytics-session registry is validation-only; common discovery, dynamic
   dispatch, and a registry covering other pipelines remain pending.
 - No generic dependency graph, checkpoint, resume, or dry-run engine; only the recorded analytics session has narrow tested checkpoint/resume semantics.

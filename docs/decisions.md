@@ -657,3 +657,29 @@ valid. Product materialization, canonical promotion, and reference validation
 blocker shapes remain distinct. No approval, source, generated artifact, CLI
 entrypoint, dynamic dispatch, provider, database, migration, or public output
 contract changed.
+
+## 2026-07-16 - Keep Atomic Directory And File Publication Semantics Distinct
+
+**Decision:** Implement atomic publication as two explicit internal operations:
+publish a fully prepared new directory without overwriting a target, and
+replace an owned text checkpoint file. Preserve each consumer's existing retry
+schedule and domain error messages. Retry only local `PermissionError`
+failures; never retry provider or database work through the filesystem helper.
+
+**Rationale:** The live benchmark evaluator publishes one immutable evidence
+directory and must fail closed if another target appears. The soak owns a small
+set of mutable root checkpoint files and intentionally replaces them after
+same-directory temporary writes. Treating those operations as one generic
+overwrite API would hide materially different authority and race semantics.
+
+**Alternatives:** Keep both retry loops duplicated; create one untyped
+move/replace helper; migrate deterministic `.building` workflows despite their
+different stale-staging contract; or add provider retries near publication.
+
+**Impact:** `src/data_ops_lab/contracts/atomic_publish.py` now owns both
+characterized operations. The live evaluator retains exact idempotency,
+destination-race refusal, evidence messages, and five-delay schedule. The soak
+retains atomic checkpoint replacement, cleanup, and its five-delay schedule.
+Benchmark conversion and reference validation remain explicit and unchanged.
+No provider call, query, approval, source, persisted schema, or CLI contract
+changed.

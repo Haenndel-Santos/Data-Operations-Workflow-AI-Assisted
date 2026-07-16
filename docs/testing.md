@@ -24,8 +24,9 @@ Repairing the editable install is a separate environment change and should be pe
 ## Internal Contract Compatibility
 
 Backend Phase II compatibility tests verify the common file SHA-256 digest,
-standard analytics blocker ordering/shape, and legacy module exports. Run them
-with the directly affected modules:
+standard analytics blocker ordering/shape, atomic file/directory publication,
+cleanup after retry exhaustion, target-race refusal, and legacy module exports.
+Run them with the directly affected modules:
 
 ```powershell
 $env:PYTHONPATH = "src"
@@ -35,6 +36,14 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 
 These tests use temporary files only. They do not process project data, call a
 provider, connect to an external database, or apply approval state.
+
+The complete live/soak consumer regression is:
+
+```powershell
+$env:PYTHONPATH = "src"
+$env:PYTHONDONTWRITEBYTECODE = "1"
+.\.venv\Scripts\python.exe -m pytest -p no:cacheprovider tests\internal_contracts_test.py tests\analytics_dataset_benchmark_test.py
+```
 
 ## Controlled Analytics Execution Validation
 

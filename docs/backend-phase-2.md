@@ -25,7 +25,7 @@ that is already proven equivalent into small internal contracts.
 | Increment | Scope | Status |
 | --- | --- | --- |
 | 2.1 | Common file hashing and the standard analytics blocker record | Implemented in `082920a` |
-| 2.2 | Common atomic publication with characterized Windows retry and race semantics | Pending |
+| 2.2 | Common atomic publication with characterized Windows retry and race semantics | Implemented in `28e962b` |
 | 2.3 | Common source bindings, error taxonomy, and run-result envelope | Pending |
 | 2.4 | CLI command registration split by domain while preserving `data_ops_lab.cli:main` | Pending |
 
@@ -55,6 +55,27 @@ query planning, query execution, semantic catalog validation, and semantic
 approval re-export the same function, so current consumers do not need an
 immediate import migration.
 
+## Increment 2.2 Contract
+
+`data_ops_lab.contracts.atomic_publish.publish_new_directory` owns publication
+of a fully prepared new directory. It retries only local `PermissionError`
+failures, refuses a target that appears during retry through
+`AtomicPublishTargetAppearedError`, and removes its staging directory after
+success or failure.
+
+`data_ops_lab.contracts.atomic_publish.atomic_write_text` owns same-directory
+temporary text-file creation, bounded `os.replace` retry, replacement of the
+owned checkpoint path, and temporary-file cleanup after success or exhaustion.
+
+The live dataset evaluator and Ollama soak preserve their legacy wrappers,
+retry schedules, domain-specific error messages, and evidence formats. The
+filesystem contract cannot retry provider calls.
+
+Benchmark conversion and reference-dataset validation still use explicit
+`.building` directory semantics. They reject stale deterministic staging paths
+before work and therefore were not migrated into the new-directory helper,
+which uses unique staging and target-race handling.
+
 ## Exit Gate
 
 Backend Phase II is complete only when:
@@ -72,16 +93,19 @@ Backend Phase II is complete only when:
 
 ## Validation Evidence
 
-- Focused compatibility and affected-module tests: 48 passed in 10.44 seconds.
-- Full offline suite: 230 passed and 2 opt-in live-provider tests skipped in
-  44.49 seconds.
+- Increment 2.1 focused compatibility and affected-module tests: 48 passed in
+  10.44 seconds.
+- Increment 2.2 atomic-publication and full live/soak consumer tests: 54 passed
+  in 11.35 seconds.
+- Latest full offline suite: 233 passed and 2 opt-in live-provider tests skipped
+  in 37.79 seconds.
 - No external database, provider, network, production data, migration, import,
   synchronization, or approval apply was used.
 
 ## Next Increment
 
-Characterize every existing atomic-publication implementation and its tests,
-then extract only the shared local filesystem semantics. The bounded Windows
-`PermissionError` retry, destination-race refusal, idempotent reuse, and
-no-overwrite behavior must remain explicit; provider calls must never be
-retried by this utility.
+Inventory source-binding structures already persisted across dataset,
+analytics, Product, and benchmark manifests. Extract only fields with identical
+identity, hash, and validation semantics. Error taxonomy and a common run-result
+envelope remain later substeps of increment 2.3 and must not force distinct
+blocker schemas into one shape.

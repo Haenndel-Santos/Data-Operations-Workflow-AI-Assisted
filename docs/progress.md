@@ -6,21 +6,21 @@ Turn local operational spreadsheets into validated analytical datasets and an ap
 
 ## Current Stage
 
-Four active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases 0-4 passed their gates for Northwind and the selected local Ollama development provider; AI Phase 5 remains active after its recorded, live-development, and endurance evidence; and Backend Phase II is active on branch `codex/phase-2-internal-foundations`. Stage 5A-5F governed analytics retains its applied Northwind semantic catalog, immutable 13-case answer authority, reproducible 13/13 recorded evaluation, governed 9/13 loopback result, and 56 evidenced soak cycles. Backend Phase II has completed its first compatibility-preserving extraction of common file hashing and the standard analytics blocker. A fresh holdout, provider selection, broader internal-contract consolidation, dynamic dispatch, live narration, and a user interface remain pending.
+Four active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases 0-4 passed their gates for Northwind and the selected local Ollama development provider; AI Phase 5 remains active after its recorded, live-development, and endurance evidence; and Backend Phase II is active on branch `codex/phase-2-internal-foundations`. Stage 5A-5F governed analytics retains its applied Northwind semantic catalog, immutable 13-case answer authority, reproducible 13/13 recorded evaluation, governed 9/13 loopback result, and 56 evidenced soak cycles. Backend Phase II has completed compatible common hashing, standard analytics blockers, atomic new-directory publication, and atomic text-checkpoint replacement. A fresh holdout, provider selection, source-binding/error/run-result consolidation, dynamic dispatch, live narration, and a user interface remain pending.
 
 ## Last Completed Milestone
 
-On 2026-07-16, Backend Phase II began on
-`codex/phase-2-internal-foundations` with a compatibility-preserving extraction
-of the repeated file SHA-256 implementation and the standard four-field
-analytics blocker. The new `data_ops_lab.contracts` package is additive;
-source onboarding, Product application, reference-dataset validation,
-analytics query planning/execution, and semantic catalog/approval retain their
-legacy exports and persisted behavior. Distinct Product and reference blocker
-schemas were not generalized. Commit `082920a` passed 48 focused tests and the
-complete offline suite with 230 passed and 2 opt-in live-provider tests skipped.
-No source data, approved state, generated output, provider, external database,
-migration, import, synchronization, or dynamic dispatch was used.
+On 2026-07-16, Backend Phase II increment 2.2 extracted the two proven atomic
+publication variants into `data_ops_lab.contracts.atomic_publish`. The live
+dataset evaluator still publishes a new immutable evidence directory with its
+exact Windows retry and target-race refusal behavior. The Ollama soak still
+replaces only its owned checkpoint files through same-directory temporary
+writes and bounded retries. Deterministic `.building` workflows remain local
+because their stale-staging contract differs. Commit `28e962b` passed 54
+focused consumer tests and the complete offline suite with 233 passed and 2
+opt-in live-provider tests skipped. No provider, network, database, project
+dataset, approval, migration, import, synchronization, or output artifact was
+used.
 
 ## Current Capabilities
 
@@ -121,11 +121,13 @@ migration, import, synchronization, or dynamic dispatch was used.
 - Reuse one common streaming file SHA-256 implementation and one common
   standard analytics blocker implementation through backward-compatible module
   exports.
+- Reuse common atomic new-directory publication and atomic text-checkpoint
+  replacement while preserving consumer-specific retry schedules and errors.
 
 ## Test Status
 
-- Automated suite: 230 tests passed and 2 opt-in live-provider tests skipped offline on 2026-07-16; latest run completed in 44.49 seconds.
-- Backend Phase II focused compatibility suite: 48 passed in 10.44 seconds.
+- Automated suite: 233 tests passed and 2 opt-in live-provider tests skipped offline on 2026-07-16; latest run completed in 37.79 seconds.
+- Backend Phase II atomic-publication and full consumer suite: 54 passed in 11.35 seconds.
 - Isolated local Ollama smoke test: 1 passed in 39.48 seconds on 2026-07-15 with an 8,192-token context; it used no database or SQL execution.
 - All 12 project-local skills passed the official skill validator on 2026-07-13.
 - Internal link check: 109 checked, 0 broken on 2026-07-16.
@@ -151,11 +153,11 @@ migration, import, synchronization, or dynamic dispatch was used.
 - Northwind's two `customer_customer_demo` relationships were explicitly accepted as official structural relationships without positive row coverage; semantic modeling must retain that limitation instead of presenting them as row-validated.
 - AdventureWorks now has a compatible local restore runtime, but the SQL Server-to-DuckDB/Parquet export is not implemented; the Contoso recipe references external data and was not executed.
 - A second SQL Server 2025 Evaluation instance (`DATAOPSLAB`) remains installed but stopped; project work should use the default Developer instance only when an explicitly authorized restore/export task requires it.
-- Backend Phase II has consolidated only proven-equivalent file hashing and the
-  standard analytics blocker. Atomic publication, source bindings, error
-  taxonomy, a common run-result envelope, and CLI decomposition remain pending;
-  distinct blocker schemas must not be coerced without consumer and output
-  characterization.
+- Backend Phase II has consolidated proven-equivalent file hashing, standard
+  analytics blockers, and two atomic-publication variants. Source bindings,
+  error taxonomy, a common run-result envelope, and CLI decomposition remain
+  pending. Deterministic `.building` directory workflows and distinct blocker
+  schemas must not be coerced without consumer and output characterization.
 
 ## Active Blockers
 
@@ -168,19 +170,18 @@ migration, import, synchronization, or dynamic dispatch was used.
 
 ## Next Logical Milestone
 
-Continue Backend Phase II with a characterization-first extraction of atomic
-publication. Inventory each implementation and test its byte reuse,
-destination-race refusal, bounded Windows sharing-violation retry, cleanup, and
-no-overwrite semantics before migrating a module. This work must not retry
-provider calls or combine with CLI decomposition. The independent AI track
-still requires fixed Phase 5 thresholds and a fresh reviewed holdout before
-provider selection.
+Continue Backend Phase II increment 2.3 by inventorying persisted source
+bindings across analytics, benchmark, Product, and dataset manifests. Extract
+only identical local-path, identity, SHA-256, and drift-validation semantics.
+Do not combine source bindings with the error taxonomy, run-result envelope, or
+CLI decomposition in one change. The independent AI track still requires fixed
+Phase 5 thresholds and a fresh reviewed holdout before provider selection.
 
 ## Last Verified Commit
 
-`082920a` (`refactor(contracts): centralize hashing and blockers`).
+`28e962b` (`refactor(contracts): centralize atomic publication`).
 
 ## Last Updated
 
-2026-07-16 by Codex after starting Backend Phase II with compatible shared
-hashing and analytics-blocker contracts.
+2026-07-16 by Codex after completing Backend Phase II increment 2.2 atomic
+publication consolidation.
