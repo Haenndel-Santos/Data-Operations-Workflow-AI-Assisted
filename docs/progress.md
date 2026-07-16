@@ -6,13 +6,21 @@ Turn local operational spreadsheets into validated analytical datasets and an ap
 
 ## Current Stage
 
-Three active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases 0-4 passed their gates for Northwind and the selected local Ollama development provider; and Phase 5 is active after completing the first approved real-dataset recorded baseline, a separately authorized local live comparison, and the first guarded local endurance run. Stage 5A-5F governed analytics has its first applied real semantic catalog, immutable 13-case Northwind answer authority, reproducible 13/13 recorded evaluation, governed 9/13 loopback Ollama result, and 56 cycles of repeated case evidence. A fresh holdout, provider selection, dynamic dispatch, live narration, and a user interface remain pending.
+Four active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases 0-4 passed their gates for Northwind and the selected local Ollama development provider; AI Phase 5 remains active after its recorded, live-development, and endurance evidence; and Backend Phase II is active on branch `codex/phase-2-internal-foundations`. Stage 5A-5F governed analytics retains its applied Northwind semantic catalog, immutable 13-case answer authority, reproducible 13/13 recorded evaluation, governed 9/13 loopback result, and 56 evidenced soak cycles. Backend Phase II has completed its first compatibility-preserving extraction of common file hashing and the standard analytics blocker. A fresh holdout, provider selection, broader internal-contract consolidation, dynamic dispatch, live narration, and a user interface remain pending.
 
 ## Last Completed Milestone
 
-On 2026-07-15, the project owner separately authorized the exact 13-case Northwind loopback Ollama comparison after its recorded offline baseline passed 13/13. The new evaluator dry-runs without provider/database access, requires both explicit live and loopback-network flags, binds every immutable source plus provider/prompt/execution configuration, runs sequentially, and rehashes authority before provider/query use. Authorization v3 SHA-256 is `a47ffac89f91eaa1e48a1024c5d206887e0c1a2e2269d7f1e6617d1d1e70ba81`. Its live `gpt-oss:20b` development run passed 9/13 end to end with zero contract blockers: 11/13 provider acceptance, 9/13 semantic request agreement after reviewed alias-only normalization, 2/13 literal request agreement, and 9/13 result/control agreement. Two provider rejections, one filter mismatch, and one scalar alias/limit mismatch were stopped before query execution. The 13 calls used 82,442 reported tokens and 429.073 seconds provider wall time; hosted API cost was USD 0. Because prompt and alias behavior were refined against these cases, Northwind is now a development set rather than a holdout. External providers, upload, training, publication, narration, concurrency, and dynamic dispatch remained disabled.
-
-The local endurance harness ran from 17:16 to 23:55 Europe/Amsterdam on 2026-07-15 and stopped correctly after approximately 6 hours 38 minutes when available system memory reached 6,089.3 MB, below its 6,144 MB guard. It wrote 57 cycle records; 56 produced case evidence, and the final cycle stopped after 11 provider calls before its last two cases. Recorded totals were 726 provider calls, 558 passed cases, 4,531,904 prompt tokens, 91,091 completion tokens, zero timeouts, zero contract blockers, and an empty error log. Fifty-four evidenced cycles passed 10/13 and two passed 9/13. Seven cases passed 56/56; the stable gaps were `customers_without_region` at 0/56 due to limit selection, `orders_placed_in_1997` at 0/56 due to filter selection, and `no_orders_for_atlantis` at 1/55 provider calls due mainly to order/limit selection. Cycle 27 ended with an isolated `PermissionError` before publishing its cycle directory and the harness recovered on cycle 28. RAM recovered above 14 GB after the process ended and Ollama unloaded, so the completed evidence does not attribute the prior decline to one process. A bounded publication retry and separate Python/Ollama working-set/private-memory telemetry are now implemented for any future separately authorized diagnostic run. Final soak-manifest SHA-256 is `72b5e7c7808b3439dd679f62563516e178850a0c3999facfa7fd1747cf371f62`.
+On 2026-07-16, Backend Phase II began on
+`codex/phase-2-internal-foundations` with a compatibility-preserving extraction
+of the repeated file SHA-256 implementation and the standard four-field
+analytics blocker. The new `data_ops_lab.contracts` package is additive;
+source onboarding, Product application, reference-dataset validation,
+analytics query planning/execution, and semantic catalog/approval retain their
+legacy exports and persisted behavior. Distinct Product and reference blocker
+schemas were not generalized. Commit `082920a` passed 48 focused tests and the
+complete offline suite with 230 passed and 2 opt-in live-provider tests skipped.
+No source data, approved state, generated output, provider, external database,
+migration, import, synchronization, or dynamic dispatch was used.
 
 ## Current Capabilities
 
@@ -110,13 +118,17 @@ The local endurance harness ran from 17:16 to 23:55 Europe/Amsterdam on 2026-07-
   hash-bound approved registry, then compile one real structured semantic intent
   through Stage 5D and Stage 5A without executing its review-ready plan.
 - Restore and integrity-check the official AdventureWorks 2025 backup in an isolated local read-only SQL Server database.
+- Reuse one common streaming file SHA-256 implementation and one common
+  standard analytics blocker implementation through backward-compatible module
+  exports.
 
 ## Test Status
 
-- Automated suite: 228 tests passed and 2 opt-in live-provider tests skipped offline on 2026-07-16; latest run completed in 41.85 seconds.
+- Automated suite: 230 tests passed and 2 opt-in live-provider tests skipped offline on 2026-07-16; latest run completed in 44.49 seconds.
+- Backend Phase II focused compatibility suite: 48 passed in 10.44 seconds.
 - Isolated local Ollama smoke test: 1 passed in 39.48 seconds on 2026-07-15 with an 8,192-token context; it used no database or SQL execution.
 - All 12 project-local skills passed the official skill validator on 2026-07-13.
-- Internal link check: 109 checked, 0 broken on 2026-07-15.
+- Internal link check: 109 checked, 0 broken on 2026-07-16.
 - Main suite is offline and uses temporary directories for generated test artifacts.
 - Documentation link checker is available at `scripts/check_internal_links.py`.
 - The relocated `.venv` has a stale editable-install path; use the `PYTHONPATH=src` command in `docs/testing.md` until environment repair is explicitly approved.
@@ -139,6 +151,11 @@ The local endurance harness ran from 17:16 to 23:55 Europe/Amsterdam on 2026-07-
 - Northwind's two `customer_customer_demo` relationships were explicitly accepted as official structural relationships without positive row coverage; semantic modeling must retain that limitation instead of presenting them as row-validated.
 - AdventureWorks now has a compatible local restore runtime, but the SQL Server-to-DuckDB/Parquet export is not implemented; the Contoso recipe references external data and was not executed.
 - A second SQL Server 2025 Evaluation instance (`DATAOPSLAB`) remains installed but stopped; project work should use the default Developer instance only when an explicitly authorized restore/export task requires it.
+- Backend Phase II has consolidated only proven-equivalent file hashing and the
+  standard analytics blocker. Atomic publication, source bindings, error
+  taxonomy, a common run-result envelope, and CLI decomposition remain pending;
+  distinct blocker schemas must not be coerced without consumer and output
+  characterization.
 
 ## Active Blockers
 
@@ -151,12 +168,19 @@ The local endurance harness ran from 17:16 to 23:55 Europe/Amsterdam on 2026-07-
 
 ## Next Logical Milestone
 
-If more endurance evidence is needed, obtain a new bounded authorization for a shorter diagnostic soak that validates publication retry and Python/Ollama memory attribution without lowering the 6 GB guard. Otherwise define Phase 5 acceptance thresholds before seeing new holdout results, then create and separately review a fresh holdout pack that does not reuse the Northwind development questions. Do not select a provider from repeated development evidence, enable dynamic dispatch, add live narration, upload, publish, or train a model.
+Continue Backend Phase II with a characterization-first extraction of atomic
+publication. Inventory each implementation and test its byte reuse,
+destination-race refusal, bounded Windows sharing-violation retry, cleanup, and
+no-overwrite semantics before migrating a module. This work must not retry
+provider calls or combine with CLI decomposition. The independent AI track
+still requires fixed Phase 5 thresholds and a fresh reviewed holdout before
+provider selection.
 
 ## Last Verified Commit
 
-`4f6150c` (`fix(ai): harden soak evidence and memory telemetry`).
+`082920a` (`refactor(contracts): centralize hashing and blockers`).
 
 ## Last Updated
 
-2026-07-16 by Codex after validating the completed Northwind soak and hardening publication and memory attribution.
+2026-07-16 by Codex after starting Backend Phase II with compatible shared
+hashing and analytics-blocker contracts.

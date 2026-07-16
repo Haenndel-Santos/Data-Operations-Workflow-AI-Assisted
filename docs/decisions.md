@@ -628,3 +628,32 @@ no Codex or hosted-model API, but local electricity/hardware cost remains.
 Repeated Northwind results remain development stability evidence only; external
 providers, upload, training, narration, publication, dynamic dispatch, and
 production use stay unapproved.
+
+## 2026-07-16 - Consolidate Internal Contracts Through Compatible Extraction
+
+**Decision:** Start Backend Phase II by moving only behavior proven equivalent
+into small internal contracts while preserving legacy module exports and
+persisted output shapes. Centralize the existing streaming file SHA-256
+implementation and the standard four-field analytics blocker append behavior
+before attempting atomic publication, source bindings, error taxonomy, common
+run results, or CLI decomposition.
+
+**Rationale:** Safety-critical duplication creates a divergence risk, but a
+broad rewrite would mix contract design with behavior change. Compatibility
+exports and focused identity/shape tests allow gradual adoption without forcing
+all blocker schemas or module consumers into an abstraction that does not yet
+fit them.
+
+**Alternatives:** Keep identical implementations distributed across modules;
+replace every hashing and blocker variant in one refactor; change consumer
+imports immediately; or combine this work with orchestrator dispatch and CLI
+redesign.
+
+**Impact:** `src/data_ops_lab/contracts/` now owns common file hashing and the
+standard analytics blocker. Source onboarding, Product application, reference
+dataset validation, analytics planning/execution, and semantic
+catalog/approval use those implementations while their old import paths remain
+valid. Product materialization, canonical promotion, and reference validation
+blocker shapes remain distinct. No approval, source, generated artifact, CLI
+entrypoint, dynamic dispatch, provider, database, migration, or public output
+contract changed.

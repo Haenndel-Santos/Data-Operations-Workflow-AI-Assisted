@@ -2342,3 +2342,72 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
   alone, or enable parallel model requests.
 - Do not reinterpret repeated Northwind runs as holdout/provider-selection
   evidence or authorize training/external services from this result.
+
+## 2026-07-16 - Codex - Backend Phase II internal foundations started
+
+### Initial Context
+
+- Branch `main` was clean at `31167f0` and matched `origin/main`.
+- The project owner requested the start of Phase II according to the attached
+  backend-first assessment and recommended development on a new `codex/...`
+  branch because `main` is not protected on GitHub.
+- Created branch `codex/phase-2-internal-foundations`.
+- The assessment's Phase II is treated as a backend-platform track separate
+  from Phase 2 of the AI roadmap.
+
+### Alignment And Scope
+
+- Protected all human approvals, candidate/approved separation, private source
+  inputs, generated outputs, CLI entrypoints, and current orchestrator gates.
+- Selected the smallest proven-equivalent extraction: file SHA-256 and the
+  standard four-field analytics blocker.
+- Deferred atomic publication, source bindings, error taxonomy, common run
+  results, and CLI decomposition to separate increments.
+- Did not generalize Product materialization, canonical-promotion, or
+  reference-dataset blocker schemas because their persisted fields differ.
+
+### Implementation
+
+- Added `src/data_ops_lab/contracts/hashing.py` with the existing lowercase
+  SHA-256 implementation and 1 MiB streaming chunks.
+- Added `src/data_ops_lab/contracts/blockers.py` with the existing sequential
+  `BLOCKER_###`, `blocker_type`, `field`, and `explanation` contract.
+- Migrated source onboarding, Product application, reference-dataset
+  validation, analytics query planning/execution, semantic catalog validation,
+  and semantic approval while keeping legacy imports valid.
+- Added direct compatibility tests for function identity, digest equivalence,
+  blocker field order, blocker numbering, and affected regressions.
+- Created commit `082920a` (`refactor(contracts): centralize hashing and
+  blockers`).
+
+### Validation
+
+- Focused compatibility and affected-module suite: 48 passed in 10.44 seconds.
+- Full offline suite: 230 passed and 2 opt-in live-provider tests skipped in
+  44.49 seconds.
+- No network, provider, external database, project dataset, migration, import,
+  synchronization, or approval apply was used.
+- `git diff --check` reported no whitespace errors before the code checkpoint.
+
+### State For Next Agent
+
+- Backend Phase II is active on `codex/phase-2-internal-foundations`.
+- `docs/backend-phase-2.md` defines the scope, delivery sequence, protected
+  boundaries, completed increment 2.1, and phase exit gate.
+- The code checkpoint is complete; documentation updates follow it so
+  `docs/progress.md` can cite the validated code commit.
+
+### Next Logical Step
+
+- Characterize atomic-publication implementations and their tests before
+  extracting a common utility.
+- Preserve Windows bounded retry, destination-race refusal, idempotent reuse,
+  cleanup, and divergent-output refusal.
+
+### Do Not Do Yet
+
+- Do not combine atomic publication with CLI decomposition or orchestrator
+  dispatch.
+- Do not retry provider calls through a filesystem publication helper.
+- Do not force distinct blocker schemas into the standard analytics shape.
+- Do not merge to `main` until branch tests and review are complete.

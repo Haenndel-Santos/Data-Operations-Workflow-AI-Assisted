@@ -31,6 +31,8 @@ See `docs/architecture.md` and `docs/orchestrator.md` for boundaries and flow de
 See `docs/ai-implementation-roadmap.md` for the ordered path from the current
 backend to approved datasets, live-model evaluation, governed UX, EDS pilot,
 and production readiness.
+See `docs/backend-phase-2.md` for the active compatibility-preserving
+consolidation of shared internal backend contracts.
 
 ## Project Stages
 
