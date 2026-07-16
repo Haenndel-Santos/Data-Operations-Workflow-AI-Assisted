@@ -25,8 +25,9 @@ Repairing the editable install is a separate environment change and should be pe
 
 Backend Phase II compatibility tests verify the common file SHA-256 digest,
 standard analytics blocker ordering/shape, atomic file/directory publication,
-cleanup after retry exhaustion, target-race refusal, and legacy module exports.
-Run them with the directly affected modules:
+cleanup after retry exhaustion, target-race refusal, source-binding absence
+semantics, and legacy module exports. Run them with the directly affected
+modules:
 
 ```powershell
 $env:PYTHONPATH = "src"
@@ -43,6 +44,14 @@ The complete live/soak consumer regression is:
 $env:PYTHONPATH = "src"
 $env:PYTHONDONTWRITEBYTECODE = "1"
 .\.venv\Scripts\python.exe -m pytest -p no:cacheprovider tests\internal_contracts_test.py tests\analytics_dataset_benchmark_test.py
+```
+
+Source-binding consumers are covered with:
+
+```powershell
+$env:PYTHONPATH = "src"
+$env:PYTHONDONTWRITEBYTECODE = "1"
+.\.venv\Scripts\python.exe -m pytest -p no:cacheprovider tests\internal_contracts_test.py tests\analytics_result_presentation_test.py tests\analytics_session_test.py tests\analytics_dataset_benchmark_test.py tests\analytics_dataset_benchmark_preparation_test.py tests\analytics_dataset_benchmark_materialization_test.py
 ```
 
 ## Controlled Analytics Execution Validation

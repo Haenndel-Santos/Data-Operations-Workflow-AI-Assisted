@@ -6,21 +6,20 @@ Turn local operational spreadsheets into validated analytical datasets and an ap
 
 ## Current Stage
 
-Four active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases 0-4 passed their gates for Northwind and the selected local Ollama development provider; AI Phase 5 remains active after its recorded, live-development, and endurance evidence; and Backend Phase II is active on branch `codex/phase-2-internal-foundations`. Stage 5A-5F governed analytics retains its applied Northwind semantic catalog, immutable 13-case answer authority, reproducible 13/13 recorded evaluation, governed 9/13 loopback result, and 56 evidenced soak cycles. Backend Phase II has completed compatible common hashing, standard analytics blockers, atomic new-directory publication, and atomic text-checkpoint replacement. A fresh holdout, provider selection, source-binding/error/run-result consolidation, dynamic dispatch, live narration, and a user interface remain pending.
+Four active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases 0-4 passed their gates for Northwind and the selected local Ollama development provider; AI Phase 5 remains active after its recorded, live-development, and endurance evidence; and Backend Phase II is active on branch `codex/phase-2-internal-foundations`. Stage 5A-5F governed analytics retains its applied Northwind semantic catalog, immutable 13-case answer authority, reproducible 13/13 recorded evaluation, governed 9/13 loopback result, and 56 evidenced soak cycles. Backend Phase II has completed compatible common hashing, standard analytics blockers, atomic publication, and the two proven source-binding absence semantics. Error taxonomy, a common run-result envelope, CLI decomposition, a fresh holdout, provider selection, dynamic dispatch, live narration, and a user interface remain pending.
 
 ## Last Completed Milestone
 
-On 2026-07-16, Backend Phase II increment 2.2 extracted the two proven atomic
-publication variants into `data_ops_lab.contracts.atomic_publish`. The live
-dataset evaluator still publishes a new immutable evidence directory with its
-exact Windows retry and target-race refusal behavior. The Ollama soak still
-replaces only its owned checkpoint files through same-directory temporary
-writes and bounded retries. Deterministic `.building` workflows remain local
-because their stale-staging contract differs. Commit `28e962b` passed 54
-focused consumer tests and the complete offline suite with 233 passed and 2
-opt-in live-provider tests skipped. No provider, network, database, project
-dataset, approval, migration, import, synchronization, or output artifact was
-used.
+On 2026-07-16, Backend Phase II increment 2.3 completed its source-binding
+substep. `existing_file_sha256_bindings` now serves presentation, narration,
+session prepare/resume, and soak while omitting absent paths exactly as before.
+`declared_file_sha256_bindings` serves benchmark preparation and
+materialization while preserving all declared keys with empty values for
+missing paths. Equality and required-file policies remain module-owned.
+Commits `2b6a10f` and `51372fd` passed 76 and 19 focused tests respectively;
+the final offline suite passed 235 tests with 2 opt-in live-provider tests
+skipped. No provider, network, database, project dataset, approval, migration,
+import, synchronization, or generated project output was used.
 
 ## Current Capabilities
 
@@ -123,11 +122,14 @@ used.
   exports.
 - Reuse common atomic new-directory publication and atomic text-checkpoint
   replacement while preserving consumer-specific retry schedules and errors.
+- Build source SHA-256 maps through explicit existing-only or fully declared
+  binding semantics without changing module-owned drift policies.
 
 ## Test Status
 
-- Automated suite: 233 tests passed and 2 opt-in live-provider tests skipped offline on 2026-07-16; latest run completed in 37.79 seconds.
-- Backend Phase II atomic-publication and full consumer suite: 54 passed in 11.35 seconds.
+- Automated suite: 235 tests passed and 2 opt-in live-provider tests skipped offline on 2026-07-16; latest run completed in 38.61 seconds.
+- Backend Phase II existing-file binding consumer suite: 76 passed in 17.77 seconds.
+- Backend Phase II declared-file binding consumer suite: 19 passed in 4.73 seconds.
 - Isolated local Ollama smoke test: 1 passed in 39.48 seconds on 2026-07-15 with an 8,192-token context; it used no database or SQL execution.
 - All 12 project-local skills passed the official skill validator on 2026-07-13.
 - Internal link check: 109 checked, 0 broken on 2026-07-16.
@@ -154,10 +156,11 @@ used.
 - AdventureWorks now has a compatible local restore runtime, but the SQL Server-to-DuckDB/Parquet export is not implemented; the Contoso recipe references external data and was not executed.
 - A second SQL Server 2025 Evaluation instance (`DATAOPSLAB`) remains installed but stopped; project work should use the default Developer instance only when an explicitly authorized restore/export task requires it.
 - Backend Phase II has consolidated proven-equivalent file hashing, standard
-  analytics blockers, and two atomic-publication variants. Source bindings,
-  error taxonomy, a common run-result envelope, and CLI decomposition remain
-  pending. Deterministic `.building` directory workflows and distinct blocker
-  schemas must not be coerced without consumer and output characterization.
+  analytics blockers, two atomic-publication variants, and two source-binding
+  absence semantics. Error taxonomy, a common run-result envelope, and CLI
+  decomposition remain pending. Binding comparison policies, deterministic
+  `.building` workflows, and distinct blocker schemas must not be coerced
+  without consumer and output characterization.
 
 ## Active Blockers
 
@@ -170,18 +173,20 @@ used.
 
 ## Next Logical Milestone
 
-Continue Backend Phase II increment 2.3 by inventorying persisted source
-bindings across analytics, benchmark, Product, and dataset manifests. Extract
-only identical local-path, identity, SHA-256, and drift-validation semantics.
-Do not combine source bindings with the error taxonomy, run-result envelope, or
-CLI decomposition in one change. The independent AI track still requires fixed
-Phase 5 thresholds and a fresh reviewed holdout before provider selection.
+Continue Backend Phase II increment 2.3 with an error-taxonomy inventory.
+Classify existing blocker/failure codes without renaming persisted codes or
+changing module-specific blocker columns. Separate contract, authority,
+approval, execution-limit, provider, filesystem, and expected-result failures
+before proposing a common structured classification. Keep the run-result
+envelope and CLI decomposition separate. The independent AI track still
+requires fixed Phase 5 thresholds and a fresh reviewed holdout before provider
+selection.
 
 ## Last Verified Commit
 
-`28e962b` (`refactor(contracts): centralize atomic publication`).
+`51372fd` (`refactor(contracts): centralize declared file bindings`).
 
 ## Last Updated
 
-2026-07-16 by Codex after completing Backend Phase II increment 2.2 atomic
-publication consolidation.
+2026-07-16 by Codex after completing the source-binding substep of Backend
+Phase II increment 2.3.

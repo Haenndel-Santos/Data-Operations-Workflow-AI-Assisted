@@ -26,7 +26,7 @@ that is already proven equivalent into small internal contracts.
 | --- | --- | --- |
 | 2.1 | Common file hashing and the standard analytics blocker record | Implemented in `082920a` |
 | 2.2 | Common atomic publication with characterized Windows retry and race semantics | Implemented in `28e962b` |
-| 2.3 | Common source bindings, error taxonomy, and run-result envelope | Pending |
+| 2.3 | Common source bindings, error taxonomy, and run-result envelope | Source-binding substep implemented in `2b6a10f` and `51372fd`; remaining work pending |
 | 2.4 | CLI command registration split by domain while preserving `data_ops_lab.cli:main` | Pending |
 
 Other blocker shapes remain module-specific until their persisted schemas and
@@ -76,6 +76,22 @@ Benchmark conversion and reference-dataset validation still use explicit
 before work and therefore were not migrated into the new-directory helper,
 which uses unique staging and target-race handling.
 
+## Increment 2.3 Source-Binding Contract
+
+`existing_file_sha256_bindings` preserves input order, hashes only paths that
+are files, and omits missing or directory paths. It is shared by analytics
+presentation, narration, session prepare/resume, and the Ollama soak.
+
+`declared_file_sha256_bindings` preserves every declared key and records `""`
+for a missing or non-file path. It is shared by benchmark answer preparation
+and materialization, where the complete binding key set is part of the
+persisted contract.
+
+The helpers do not decide whether expected bindings may contain extra keys,
+whether the binding set must be exactly equal, or whether a missing file is a
+blocker. Those validation policies remain in their owning modules because the
+current semantics differ.
+
 ## Exit Gate
 
 Backend Phase II is complete only when:
@@ -97,15 +113,18 @@ Backend Phase II is complete only when:
   10.44 seconds.
 - Increment 2.2 atomic-publication and full live/soak consumer tests: 54 passed
   in 11.35 seconds.
-- Latest full offline suite: 233 passed and 2 opt-in live-provider tests skipped
-  in 37.79 seconds.
+- Increment 2.3 existing-file binding consumers: 76 passed in 17.77 seconds.
+- Increment 2.3 declared-file binding consumers: 19 passed in 4.73 seconds.
+- Latest full offline suite: 235 passed and 2 opt-in live-provider tests skipped
+  in 38.61 seconds.
 - No external database, provider, network, production data, migration, import,
   synchronization, or approval apply was used.
 
 ## Next Increment
 
-Inventory source-binding structures already persisted across dataset,
-analytics, Product, and benchmark manifests. Extract only fields with identical
-identity, hash, and validation semantics. Error taxonomy and a common run-result
-envelope remain later substeps of increment 2.3 and must not force distinct
-blocker schemas into one shape.
+Inventory blocker and failure labels before defining an error taxonomy.
+Separate contract failures, authority drift, human-review gates, execution
+limits, provider failures, filesystem failures, and expected-result failures.
+Do not replace persisted blocker codes or module-specific blocker columns in
+the first taxonomy change. A common run-result envelope remains a later,
+separate substep.

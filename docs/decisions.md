@@ -683,3 +683,28 @@ retains atomic checkpoint replacement, cleanup, and its five-delay schedule.
 Benchmark conversion and reference validation remain explicit and unchanged.
 No provider call, query, approval, source, persisted schema, or CLI contract
 changed.
+
+## 2026-07-16 - Source Bindings Preserve Two Missing-Path Semantics
+
+**Decision:** Define separate internal source-binding functions for the two
+proven existing behaviors. Existing-file bindings omit missing and non-file
+paths. Declared-file bindings preserve every key and use an empty digest for
+missing and non-file paths. Keep comparison, extra-key, required-file, and
+blocker policies in the owning modules.
+
+**Rationale:** Presentation, narration, session, and soak bindings intentionally
+represent only evidence that currently exists. Benchmark preparation and
+materialization require the full declared key set so missing evidence remains
+visible as an empty binding. Combining these through a flag or silently
+choosing one absence policy would make drift checks ambiguous.
+
+**Alternatives:** Keep the comprehensions duplicated; expose one configurable
+binding helper; make every missing file an exception; or centralize equality
+rules despite current subset-versus-exact differences.
+
+**Impact:** `src/data_ops_lab/contracts/source_bindings.py` now owns both
+explicit map-construction semantics. Persisted key names, ordering, hashes,
+empty values, drift comparisons, blocker codes, session gates, provider
+boundaries, and benchmark authority remain unchanged. Error taxonomy and a
+common run-result envelope remain pending parts of Backend Phase II increment
+2.3.

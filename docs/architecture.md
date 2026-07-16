@@ -98,7 +98,9 @@ four-field analytics blocker append behavior is shared by query planning,
 query execution, semantic catalog validation, and semantic approval. Atomic
 new-directory publication and atomic text-checkpoint replacement are shared by
 the live dataset evaluator and Ollama soak with their existing retry schedules.
-Legacy module exports remain compatible. Distinct Product materialization and
+Existing-file and fully declared file SHA-256 binding maps are also shared,
+while each module retains its own missing-file and equality policy. Legacy
+module exports remain compatible. Distinct Product materialization and
 reference-dataset blocker schemas remain local until their contracts and
 consumers are characterized. Deterministic `.building` directory workflows
 remain separate because their stale-staging failure policy differs.
@@ -115,10 +117,10 @@ Modeling decisions use distinct states such as candidate, pending review, approv
 
 ## Current Gaps
 
-- Shared hashing, the standard analytics blocker, and the two characterized
-  atomic-publication variants are implemented Backend Phase II primitives;
-  source bindings, error taxonomy, a common run-result envelope, and CLI
-  decomposition remain pending.
+- Shared hashing, the standard analytics blocker, two characterized
+  atomic-publication variants, and two explicit source-binding absence
+  semantics are implemented Backend Phase II primitives. Error taxonomy, a
+  common run-result envelope, and CLI decomposition remain pending.
 - The analytics-session registry is validation-only; common discovery, dynamic
   dispatch, and a registry covering other pipelines remain pending.
 - No generic dependency graph, checkpoint, resume, or dry-run engine; only the recorded analytics session has narrow tested checkpoint/resume semantics.

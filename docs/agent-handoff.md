@@ -2478,3 +2478,66 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
   helper.
 - Do not combine source-binding extraction with CLI decomposition.
 - Do not merge to `main` until the branch is reviewed and revalidated.
+
+## 2026-07-16 - Codex - Backend Phase II source-binding substep completed
+
+### Initial Context
+
+- Continued on `codex/phase-2-internal-foundations` after atomic-publication
+  documentation commit `11c8bf0`.
+- The next authorized substep was to consolidate only identical source-binding
+  construction semantics.
+
+### Characterization
+
+- Existing-file maps omit missing and directory paths in presentation,
+  narration, session prepare/resume, and soak.
+- Declared-file maps preserve every key and use `""` for missing and directory
+  paths in benchmark preparation and materialization.
+- Hash comparison policies differ: exact equality, subset checks, required
+  files, and extra-key handling remain module-owned.
+
+### Implementation
+
+- Added `src/data_ops_lab/contracts/source_bindings.py`.
+- Added `existing_file_sha256_bindings` and migrated four consumer areas.
+- Added `declared_file_sha256_bindings` and migrated benchmark preparation and
+  materialization.
+- Preserved persisted keys, order, empty values, legacy wrappers, drift
+  blockers, and all authority gates.
+- Created commits:
+  - `2b6a10f` (`refactor(contracts): centralize existing file bindings`)
+  - `51372fd` (`refactor(contracts): centralize declared file bindings`)
+
+### Validation
+
+- Existing-file binding consumers: 76 passed in 17.77 seconds.
+- Intermediate full offline suite: 234 passed and 2 opt-in live-provider tests
+  skipped in 42.79 seconds.
+- Declared-file binding consumers: 19 passed in 4.73 seconds.
+- Final full offline suite: 235 passed and 2 opt-in live-provider tests skipped
+  in 38.61 seconds.
+- No provider, network, database, project data, approval apply, migration,
+  import, synchronization, or generated project output was used.
+
+### State For Next Agent
+
+- Backend Phase II source-binding map construction is centralized for the two
+  proven absence semantics.
+- Comparison and validation policies intentionally remain local.
+- Error taxonomy and a common run-result envelope remain pending in increment
+  2.3.
+
+### Next Logical Step
+
+- Inventory blocker and failure codes by category without renaming them.
+- Propose a non-breaking classification layer before changing any persisted
+  error contract.
+
+### Do Not Do Yet
+
+- Do not merge exact and subset hash comparisons.
+- Do not make all missing bindings exceptions or empty strings.
+- Do not rename blocker codes or columns during taxonomy inventory.
+- Do not combine error taxonomy, run-result, or CLI decomposition.
+- Do not merge to `main` until branch review and revalidation are complete.
