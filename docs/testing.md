@@ -299,8 +299,9 @@ The soak tests use the same temporary synthetic benchmark package and injected
 fake live provider. They run no local or hosted model. They cover offline
 preflight, two sequential full-pipeline cycles, safe aggregate/case-stability
 evidence, per-case resource guards, `STOP` during cooldown, authority drift,
-concurrency refusal, content privacy, and a CLI without duration, resource, or
-parallelism bypass flags:
+concurrency refusal, content privacy, bounded transient-permission retries,
+target-race preservation, Python/Ollama process-memory attribution, and a CLI
+without duration, resource, or parallelism bypass flags:
 
 ```powershell
 $env:PYTHONPATH = "src"

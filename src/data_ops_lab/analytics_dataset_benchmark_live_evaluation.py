@@ -45,6 +45,7 @@ BLOCKERS_NAME = "analytics_dataset_benchmark_live_evaluation_blockers.csv"
 REPORT_NAME = "analytics_dataset_benchmark_live_evaluation_report.md"
 OUTPUT_NAMES = {MANIFEST_NAME, CASES_NAME, BLOCKERS_NAME, REPORT_NAME}
 MAX_AUTHORIZATION_BYTES = 64_000
+OUTPUT_PUBLISH_RETRY_DELAYS_SECONDS = (0.1, 0.25, 0.5, 1.0, 2.0)
 
 LIVE_DECISIONS = {
     "local_loopback_provider_evaluation_approved": True,
@@ -901,7 +902,19 @@ def _write_outputs(output_dir: Path, contents: dict[str, str]) -> bool:
     try:
         for name, content in contents.items():
             (staging_dir / name).write_text(content, encoding="utf-8", newline="")
-        staging_dir.replace(output_dir)
+        for attempt in range(len(OUTPUT_PUBLISH_RETRY_DELAYS_SECONDS) + 1):
+            try:
+                staging_dir.replace(output_dir)
+                break
+            except PermissionError:
+                if output_dir.exists():
+                    raise ValueError(
+                        f"Live benchmark evaluation output appeared during atomic publication: "
+                        f"{output_dir}. Existing evidence was not overwritten."
+                    )
+                if attempt >= len(OUTPUT_PUBLISH_RETRY_DELAYS_SECONDS):
+                    raise
+                time.sleep(OUTPUT_PUBLISH_RETRY_DELAYS_SECONDS[attempt])
     finally:
         if staging_dir.exists():
             shutil.rmtree(staging_dir)

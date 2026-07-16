@@ -4,6 +4,7 @@ import csv
 import hashlib
 from copy import deepcopy
 from pathlib import Path
+from types import SimpleNamespace
 
 import duckdb
 import pytest
@@ -1464,6 +1465,60 @@ def test_live_dataset_evaluation_rejects_preexisting_unknown_output(
     assert unknown.read_text(encoding="utf-8") == "preserve me\n"
 
 
+def test_live_dataset_output_publish_retries_transient_permission_error(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    output_dir = tmp_path / "live_evaluation"
+    contents = {name: f"{name}\n" for name in live_evaluation.OUTPUT_NAMES}
+    original_replace = Path.replace
+    attempts = 0
+    delays: list[float] = []
+
+    def transient_replace(path: Path, target: Path) -> Path:
+        nonlocal attempts
+        attempts += 1
+        if attempts == 1:
+            raise PermissionError("synthetic transient lock")
+        return original_replace(path, target)
+
+    monkeypatch.setattr(Path, "replace", transient_replace)
+    monkeypatch.setattr(live_evaluation.time, "sleep", delays.append)
+
+    changed = live_evaluation._write_outputs(output_dir, contents)
+
+    assert changed is True
+    assert attempts == 2
+    assert delays == [live_evaluation.OUTPUT_PUBLISH_RETRY_DELAYS_SECONDS[0]]
+    assert {
+        path.name: path.read_text(encoding="utf-8")
+        for path in output_dir.iterdir()
+    } == contents
+    assert not list(tmp_path.glob(".live_evaluation.*"))
+
+
+def test_live_dataset_output_publish_never_overwrites_target_that_appears_during_retry(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    output_dir = tmp_path / "live_evaluation"
+    contents = {name: f"{name}\n" for name in live_evaluation.OUTPUT_NAMES}
+
+    def colliding_replace(path: Path, target: Path) -> Path:
+        target_path = Path(target)
+        target_path.mkdir()
+        (target_path / "human-notes.txt").write_text("preserve me\n", encoding="utf-8")
+        raise PermissionError("synthetic target race")
+
+    monkeypatch.setattr(Path, "replace", colliding_replace)
+
+    with pytest.raises(ValueError, match="appeared during atomic publication"):
+        live_evaluation._write_outputs(output_dir, contents)
+
+    assert (output_dir / "human-notes.txt").read_text(encoding="utf-8") == "preserve me\n"
+    assert not list(tmp_path.glob(".live_evaluation.*"))
+
+
 def test_live_dataset_request_mismatch_fails_without_query_and_continues(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -1826,7 +1881,89 @@ def good_soak_sample() -> dict[str, int | float | str]:
         "gpu_utilization_percent": 95,
         "gpu_power_w": 220.0,
         "disk_free_mb": 500000.0,
+        "soak_process_working_set_mb": 140.0,
+        "soak_process_private_memory_mb": 800.0,
+        "ollama_process_count": 2,
+        "ollama_process_working_set_mb": 13000.0,
+        "ollama_process_private_memory_mb": 15000.0,
     }
+
+
+def test_ollama_soak_resource_sampler_attributes_process_memory(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        ollama_soak,
+        "sample_local_resources",
+        lambda: {
+            "system_total_memory_mb": 32000.0,
+            "system_available_memory_mb": 12000.0,
+            "gpu_total_memory_mb": 8192,
+            "gpu_used_memory_mb": 7000,
+        },
+    )
+    monkeypatch.setattr(
+        ollama_soak,
+        "_process_memory_samples",
+        lambda: {
+            "soak_process_working_set_mb": 140.0,
+            "soak_process_private_memory_mb": 800.0,
+            "ollama_process_count": 2,
+            "ollama_process_working_set_mb": 13000.0,
+            "ollama_process_private_memory_mb": 15000.0,
+        },
+    )
+    monkeypatch.setattr(
+        ollama_soak.subprocess,
+        "run",
+        lambda *args, **kwargs: SimpleNamespace(
+            returncode=0,
+            stdout="65, 95, 220\n",
+        ),
+    )
+    monkeypatch.setattr(
+        ollama_soak.shutil,
+        "disk_usage",
+        lambda path: SimpleNamespace(free=500000 * 1_048_576),
+    )
+
+    sample = ollama_soak.sample_ollama_soak_resources(tmp_path / "soak")
+
+    assert sample["soak_process_working_set_mb"] == 140.0
+    assert sample["soak_process_private_memory_mb"] == 800.0
+    assert sample["ollama_process_count"] == 2
+    assert sample["ollama_process_working_set_mb"] == 13000.0
+    assert sample["ollama_process_private_memory_mb"] == 15000.0
+    assert sample["gpu_temperature_c"] == 65.0
+    assert sample["disk_free_mb"] == 500000.0
+
+
+def test_ollama_soak_checkpoint_publish_retries_transient_permission_error(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    path = tmp_path / "analytics_ollama_soak.yml"
+    original_replace = ollama_soak.os.replace
+    attempts = 0
+    delays: list[float] = []
+
+    def transient_replace(source: object, target: object) -> None:
+        nonlocal attempts
+        attempts += 1
+        if attempts == 1:
+            raise PermissionError("synthetic checkpoint lock")
+        original_replace(source, target)
+
+    monkeypatch.setattr(ollama_soak.os, "replace", transient_replace)
+    monkeypatch.setattr(ollama_soak.time, "sleep", delays.append)
+
+    ollama_soak._atomic_write(path, "version: 1\n")
+
+    assert attempts == 2
+    assert delays == [ollama_soak.CHECKPOINT_PUBLISH_RETRY_DELAYS_SECONDS[0]]
+    assert path.read_text(encoding="utf-8") == "version: 1\n"
+    assert not list(tmp_path.glob(".analytics_ollama_soak.yml.*.tmp"))
 
 
 def run_soak_fixture(
@@ -1928,6 +2065,9 @@ def test_ollama_soak_runs_two_sequential_cycles_and_aggregates_safe_evidence(
     assert manifest["counts"]["cases_evaluated"] == 4
     assert manifest["counts"]["prompt_tokens"] == 1600
     assert manifest["counts"]["max_gpu_temperature_c"] == 65
+    assert manifest["counts"]["max_soak_process_working_set_mb"] == 140.0
+    assert manifest["counts"]["max_ollama_process_working_set_mb"] == 13000.0
+    assert manifest["counts"]["max_ollama_process_private_memory_mb"] == 15000.0
     assert len(stability) == 2
     assert all(row["observations"] == "2" for row in stability)
     assert all(row["passed"] == "2" for row in stability)

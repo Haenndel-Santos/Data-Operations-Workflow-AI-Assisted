@@ -25,6 +25,7 @@ All notable user-facing and release-relevant changes will be documented here.
 - First immutable real-dataset answer authority and reproducible recorded offline baseline: all 13 approved Northwind cases passed with zero blockers and no live provider or network.
 - Separately authorized loopback Ollama dataset evaluation with offline preflight, immutable authority rechecks, alias-only semantic gating, fixed read-only execution, sanitized telemetry, and the first measured Northwind development result at 9/13.
 - Bounded local Ollama overnight soak with sequential full-pipeline cycles, separate authority, per-case GPU/RAM/disk/STOP guards, atomic checkpoints, stability metrics, and no hosted-model runtime.
+- Bounded retry for transient Windows evidence-publication locks plus separate Python/Ollama working-set and private-memory telemetry for local soak diagnosis.
 - Hash-bound deterministic Stage 5B result presentation plus recorded grounded narration with mandatory citations and exact numeric preservation.
 - Two-phase recorded local analytics sessions with immutable preparation, exact human plan review, safe resume, and last-valid-checkpoint evidence.
 - Versioned static analytics module-registry validation for exact entrypoint

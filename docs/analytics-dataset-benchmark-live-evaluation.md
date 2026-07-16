@@ -89,7 +89,10 @@ Questions, provider responses, expected or actual rows, SQL, parameters, and
 filter values are temporary and are not persisted in evaluator evidence. New
 evidence is staged and published as one directory. Byte-identical reruns are
 reused; an empty, unknown, partial, or divergent existing directory is never
-overwritten. Contract drift blocks and discards case evidence. Expectation
+overwritten. A transient Windows `PermissionError` during the final directory
+rename receives a bounded retry of at most 3.85 seconds. If the destination
+appears during retry, publication fails closed and preserves it. Contract drift
+blocks and discards case evidence. Expectation
 failures remain `failed`, separately from contract-level `blocked` status.
 
 ## Northwind Development Evidence

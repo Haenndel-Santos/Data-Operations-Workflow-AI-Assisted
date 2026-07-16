@@ -62,6 +62,14 @@ evidence rather than a holdout. A separate bounded soak contract can repeat
 that development comparison for local stability/resource measurement without
 turning repetition into holdout or provider-selection evidence.
 
+The first soak produced 56 cycles with case evidence plus one isolated
+publication error before stopping safely on its RAM guard after approximately
+6 hours 38 minutes. It recorded 726 provider calls, 558 passed cases, no
+timeouts, and no contract blockers. Three semantic gaps were systematic across
+repetition. A bounded Windows publication retry and separate Python/Ollama
+process-memory telemetry were added before any future authorized soak. This
+reliability evidence still does not satisfy the fresh-holdout selection gate.
+
 ## Target Architecture
 
 ```text

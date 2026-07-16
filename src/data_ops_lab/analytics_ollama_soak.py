@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import csv
+import ctypes
+from ctypes import wintypes
 import io
 import os
 import shutil
@@ -31,6 +33,7 @@ REPORT_NAME = "analytics_ollama_soak_report.md"
 STOP_FILE_NAME = "STOP"
 OUTPUT_NAMES = {MANIFEST_NAME, CYCLES_NAME, CASES_NAME, REPORT_NAME}
 MAX_AUTHORIZATION_BYTES = 64_000
+CHECKPOINT_PUBLISH_RETRY_DELAYS_SECONDS = (0.05, 0.1, 0.25, 0.5, 1.0)
 SOAK_DECISIONS = {
     "local_loopback_overnight_soak_approved": True,
     "local_read_only_benchmark_queries_approved": True,
@@ -43,6 +46,10 @@ SOAK_DECISIONS = {
     "publication_approved": False,
     "production_use_approved": False,
 }
+TH32CS_SNAPPROCESS = 0x00000002
+PROCESS_QUERY_INFORMATION = 0x0400
+PROCESS_VM_READ = 0x0010
+MAX_PROCESS_PATH = 260
 
 
 @dataclass(frozen=True)
@@ -73,6 +80,37 @@ class AnalyticsOllamaSoakResult:
     blocker_count: int
     stop_reason: str
     outputs_changed: bool
+
+
+class _ProcessEntry32W(ctypes.Structure):
+    _fields_ = [
+        ("dwSize", wintypes.DWORD),
+        ("cntUsage", wintypes.DWORD),
+        ("th32ProcessID", wintypes.DWORD),
+        ("th32DefaultHeapID", ctypes.c_size_t),
+        ("th32ModuleID", wintypes.DWORD),
+        ("cntThreads", wintypes.DWORD),
+        ("th32ParentProcessID", wintypes.DWORD),
+        ("pcPriClassBase", wintypes.LONG),
+        ("dwFlags", wintypes.DWORD),
+        ("szExeFile", wintypes.WCHAR * MAX_PROCESS_PATH),
+    ]
+
+
+class _ProcessMemoryCountersEx(ctypes.Structure):
+    _fields_ = [
+        ("cb", wintypes.DWORD),
+        ("PageFaultCount", wintypes.DWORD),
+        ("PeakWorkingSetSize", ctypes.c_size_t),
+        ("WorkingSetSize", ctypes.c_size_t),
+        ("QuotaPeakPagedPoolUsage", ctypes.c_size_t),
+        ("QuotaPagedPoolUsage", ctypes.c_size_t),
+        ("QuotaPeakNonPagedPoolUsage", ctypes.c_size_t),
+        ("QuotaNonPagedPoolUsage", ctypes.c_size_t),
+        ("PagefileUsage", ctypes.c_size_t),
+        ("PeakPagefileUsage", ctypes.c_size_t),
+        ("PrivateUsage", ctypes.c_size_t),
+    ]
 
 
 def _utc_now() -> str:
@@ -397,6 +435,102 @@ def _validate_authorization(
     return authorization, _policy_from_authorization(authorization, blockers)
 
 
+def _process_memory_samples() -> dict[str, Any]:
+    result: dict[str, Any] = {
+        "soak_process_working_set_mb": None,
+        "soak_process_private_memory_mb": None,
+        "ollama_process_count": 0,
+        "ollama_process_working_set_mb": None,
+        "ollama_process_private_memory_mb": None,
+    }
+    if os.name != "nt":
+        return result
+    try:
+        kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+        psapi = ctypes.WinDLL("psapi", use_last_error=True)
+        create_snapshot = kernel32.CreateToolhelp32Snapshot
+        create_snapshot.argtypes = [wintypes.DWORD, wintypes.DWORD]
+        create_snapshot.restype = wintypes.HANDLE
+        process_first = kernel32.Process32FirstW
+        process_first.argtypes = [wintypes.HANDLE, ctypes.POINTER(_ProcessEntry32W)]
+        process_first.restype = wintypes.BOOL
+        process_next = kernel32.Process32NextW
+        process_next.argtypes = [wintypes.HANDLE, ctypes.POINTER(_ProcessEntry32W)]
+        process_next.restype = wintypes.BOOL
+        open_process = kernel32.OpenProcess
+        open_process.argtypes = [wintypes.DWORD, wintypes.BOOL, wintypes.DWORD]
+        open_process.restype = wintypes.HANDLE
+        close_handle = kernel32.CloseHandle
+        close_handle.argtypes = [wintypes.HANDLE]
+        close_handle.restype = wintypes.BOOL
+        get_process_memory = psapi.GetProcessMemoryInfo
+        get_process_memory.argtypes = [
+            wintypes.HANDLE,
+            ctypes.POINTER(_ProcessMemoryCountersEx),
+            wintypes.DWORD,
+        ]
+        get_process_memory.restype = wintypes.BOOL
+        snapshot = create_snapshot(TH32CS_SNAPPROCESS, 0)
+        invalid_handle = ctypes.c_void_p(-1).value
+        if not snapshot or snapshot == invalid_handle:
+            return result
+        try:
+            entry = _ProcessEntry32W()
+            entry.dwSize = ctypes.sizeof(_ProcessEntry32W)
+            has_entry = bool(process_first(snapshot, ctypes.byref(entry)))
+            ollama_working_set = 0
+            ollama_private = 0
+            ollama_count = 0
+            while has_entry:
+                process_id = int(entry.th32ProcessID)
+                executable = entry.szExeFile.casefold()
+                selected = process_id == os.getpid() or executable.startswith("ollama")
+                if selected:
+                    process = open_process(
+                        PROCESS_QUERY_INFORMATION | PROCESS_VM_READ,
+                        False,
+                        process_id,
+                    )
+                    if process:
+                        try:
+                            counters = _ProcessMemoryCountersEx()
+                            counters.cb = ctypes.sizeof(_ProcessMemoryCountersEx)
+                            if get_process_memory(
+                                process,
+                                ctypes.byref(counters),
+                                counters.cb,
+                            ):
+                                working_set_mb = counters.WorkingSetSize / 1_048_576
+                                private_mb = counters.PrivateUsage / 1_048_576
+                                if process_id == os.getpid():
+                                    result["soak_process_working_set_mb"] = round(
+                                        working_set_mb, 1
+                                    )
+                                    result["soak_process_private_memory_mb"] = round(
+                                        private_mb, 1
+                                    )
+                                if executable.startswith("ollama"):
+                                    ollama_count += 1
+                                    ollama_working_set += counters.WorkingSetSize
+                                    ollama_private += counters.PrivateUsage
+                        finally:
+                            close_handle(process)
+                has_entry = bool(process_next(snapshot, ctypes.byref(entry)))
+            result["ollama_process_count"] = ollama_count
+            if ollama_count:
+                result["ollama_process_working_set_mb"] = round(
+                    ollama_working_set / 1_048_576, 1
+                )
+                result["ollama_process_private_memory_mb"] = round(
+                    ollama_private / 1_048_576, 1
+                )
+        finally:
+            close_handle(snapshot)
+    except (AttributeError, OSError, ValueError):
+        return result
+    return result
+
+
 def sample_ollama_soak_resources(output_dir: Path) -> dict[str, Any]:
     sample = sample_local_resources()
     sample.update(
@@ -406,8 +540,14 @@ def sample_ollama_soak_resources(output_dir: Path) -> dict[str, Any]:
             "gpu_utilization_percent": None,
             "gpu_power_w": None,
             "disk_free_mb": None,
+            "soak_process_working_set_mb": None,
+            "soak_process_private_memory_mb": None,
+            "ollama_process_count": 0,
+            "ollama_process_working_set_mb": None,
+            "ollama_process_private_memory_mb": None,
         }
     )
+    sample.update(_process_memory_samples())
     try:
         completed = subprocess.run(
             [
@@ -540,6 +680,21 @@ def _cycle_row(
         "max_gpu_used_memory_mb": _number_summary(samples, "gpu_used_memory_mb", "max"),
         "max_gpu_utilization_percent": _number_summary(samples, "gpu_utilization_percent", "max"),
         "max_gpu_power_w": _number_summary(samples, "gpu_power_w", "max"),
+        "max_soak_process_working_set_mb": _number_summary(
+            samples, "soak_process_working_set_mb", "max"
+        ),
+        "max_soak_process_private_memory_mb": _number_summary(
+            samples, "soak_process_private_memory_mb", "max"
+        ),
+        "max_ollama_process_count": _number_summary(
+            samples, "ollama_process_count", "max"
+        ),
+        "max_ollama_process_working_set_mb": _number_summary(
+            samples, "ollama_process_working_set_mb", "max"
+        ),
+        "max_ollama_process_private_memory_mb": _number_summary(
+            samples, "ollama_process_private_memory_mb", "max"
+        ),
         "min_available_system_memory_mb": _number_summary(
             samples, "system_available_memory_mb", "min"
         ),
@@ -628,6 +783,21 @@ def _aggregate(
             all_samples, "gpu_utilization_percent", "max"
         ),
         "max_gpu_power_w": _number_summary(all_samples, "gpu_power_w", "max"),
+        "max_soak_process_working_set_mb": _number_summary(
+            all_samples, "soak_process_working_set_mb", "max"
+        ),
+        "max_soak_process_private_memory_mb": _number_summary(
+            all_samples, "soak_process_private_memory_mb", "max"
+        ),
+        "max_ollama_process_count": _number_summary(
+            all_samples, "ollama_process_count", "max"
+        ),
+        "max_ollama_process_working_set_mb": _number_summary(
+            all_samples, "ollama_process_working_set_mb", "max"
+        ),
+        "max_ollama_process_private_memory_mb": _number_summary(
+            all_samples, "ollama_process_private_memory_mb", "max"
+        ),
         "min_available_system_memory_mb": _number_summary(
             all_samples, "system_available_memory_mb", "min"
         ),
@@ -709,6 +879,9 @@ def _render_report(manifest: dict[str, Any]) -> str:
             f"- Completion tokens: {counts['completion_tokens']}",
             f"- Maximum GPU temperature: {counts['max_gpu_temperature_c']}",
             f"- Maximum GPU memory used: {counts['max_gpu_used_memory_mb']}",
+            f"- Maximum soak-process working set: {counts['max_soak_process_working_set_mb']}",
+            f"- Maximum Ollama working set: {counts['max_ollama_process_working_set_mb']}",
+            f"- Maximum Ollama private memory: {counts['max_ollama_process_private_memory_mb']}",
             f"- Minimum available system memory: {counts['min_available_system_memory_mb']}",
             f"- Stop reason: `{runtime['stop_reason'] or 'none'}`",
             "",
@@ -738,7 +911,14 @@ def _atomic_write(path: Path, content: str) -> None:
     try:
         with handle:
             handle.write(content)
-        os.replace(temporary, path)
+        for attempt in range(len(CHECKPOINT_PUBLISH_RETRY_DELAYS_SECONDS) + 1):
+            try:
+                os.replace(temporary, path)
+                break
+            except PermissionError:
+                if attempt >= len(CHECKPOINT_PUBLISH_RETRY_DELAYS_SECONDS):
+                    raise
+                time.sleep(CHECKPOINT_PUBLISH_RETRY_DELAYS_SECONDS[attempt])
     finally:
         if temporary.exists():
             temporary.unlink()
@@ -770,6 +950,11 @@ def _write_state(
         "max_gpu_used_memory_mb",
         "max_gpu_utilization_percent",
         "max_gpu_power_w",
+        "max_soak_process_working_set_mb",
+        "max_soak_process_private_memory_mb",
+        "max_ollama_process_count",
+        "max_ollama_process_working_set_mb",
+        "max_ollama_process_private_memory_mb",
         "min_available_system_memory_mb",
         "min_free_disk_mb",
     ]

@@ -87,7 +87,7 @@ authorization.
 The root run directory is checkpointed atomically after each cycle and contains:
 
 - `analytics_ollama_soak.yml`: status, PID, heartbeat, authority, limits, totals,
-  resource extrema, and stop reason;
+  resource extrema, Python/Ollama process memory, and stop reason;
 - `analytics_ollama_soak_cycles.csv`: one safe aggregate row per cycle;
 - `analytics_ollama_soak_case_stability.csv`: pass/accept/request/result counts
   per case ID; and
@@ -96,6 +96,22 @@ The root run directory is checkpointed atomically after each cycle and contains:
 Each `cycles/cycle-NNNN/` directory contains the existing minimized live
 evaluation evidence. No soak summary copies questions, responses, SQL,
 parameters, filter values, expected rows, or actual rows.
+
+Atomic cycle-directory publication retries only transient `PermissionError`
+failures for a bounded maximum of 3.85 seconds. Any destination that appears
+during retry is preserved and causes failure. Soak-owned root checkpoint files
+use a separate bounded retry of at most 1.9 seconds. The retry policy does not
+relax divergent-output or unknown-file protection.
+
+On Windows, each resource sample attributes:
+
+- working set and private memory for the effective Python soak process;
+- aggregate working set, private memory, and process count for executables whose
+  names begin with `ollama`; and
+- total/available system RAM separately.
+
+This attribution is diagnostic evidence. It does not change the 6,144 MB
+available-system-memory stop gate.
 
 To inspect progress:
 
@@ -112,6 +128,41 @@ New-Item "<run-directory>\STOP" -ItemType File
 
 The process then stops before the next provider call or during cooldown and
 publishes its final checkpoint.
+
+## First Overnight Result
+
+The first authorized run started at 17:16 and stopped safely at 23:55 on
+2026-07-15 after available system memory reached 6,089.3 MB, just below the
+6,144 MB guard. It completed 57 cycle records over approximately 6 hours 38
+minutes. Fifty-six cycles produced case evidence; the last stopped after 11
+provider calls, before its final two cases. Recorded totals were 726 provider
+calls, 558 passed cases, 4,531,904 prompt tokens, 91,091 completion tokens, zero
+timeouts, zero contract blockers, and an empty standard-error log.
+
+Fifty-four evidenced cycles passed 10/13 cases. The first and final evidenced
+cycles passed 9/13. Seven cases passed 56/56 times. The persistent gaps were
+`customers_without_region` at 0/56 due to limit selection,
+`orders_placed_in_1997` at 0/56 due to filter selection, and
+`no_orders_for_atlantis` at 1/55 provider calls due primarily to order/limit
+selection.
+
+Cycle 27 ran for 375.6 seconds but failed with `PermissionError` before its
+cycle directory appeared. Because its result was not published, provider calls,
+tokens, and case outcomes from that cycle are not included in recorded totals.
+The bounded publication retry was added after this observation. The run
+continued successfully from cycle 28.
+
+Point-in-time samples recorded a 52-degree maximum GPU temperature and 7,297 MB
+maximum VRAM, while a separate manual launch observation saw 58 degrees, 98%
+GPU utilization, and about 172 W. Resource samples therefore remain periodic,
+not continuous peak measurements. RAM recovered above 14 GB after the process
+ended and Ollama unloaded, so the prior evidence does not by itself identify
+which process or Windows cache caused the gradual available-memory decline. The
+new process attribution is required for that diagnosis in a future separately
+authorized run.
+
+Final evidence-manifest SHA-256:
+`72b5e7c7808b3439dd679f62563516e178850a0c3999facfa7fd1747cf371f62`.
 
 ## Interpretation
 
