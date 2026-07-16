@@ -25,6 +25,7 @@ from data_ops_lab.contracts.blockers import (
     add_blocker,
 )
 from data_ops_lab.contracts.hashing import FILE_HASH_CHUNK_SIZE, file_sha256
+from data_ops_lab.contracts.source_bindings import existing_file_sha256_bindings
 
 
 def test_file_sha256_preserves_legacy_exports_and_digest(tmp_path):
@@ -148,3 +149,28 @@ def test_publish_new_directory_preserves_target_that_appears_and_cleans_staging(
     assert error.value.target == output
     assert (output / "human-notes.txt").read_text(encoding="utf-8") == "preserve me\n"
     assert not staging.exists()
+
+
+def test_existing_file_sha256_bindings_preserves_order_and_omits_missing(tmp_path):
+    first = tmp_path / "first.txt"
+    second = tmp_path / "second.txt"
+    missing = tmp_path / "missing.txt"
+    directory = tmp_path / "directory"
+    first.write_text("first\n", encoding="utf-8")
+    second.write_text("second\n", encoding="utf-8")
+    directory.mkdir()
+
+    bindings = existing_file_sha256_bindings(
+        {
+            "second_sha256": second,
+            "missing_sha256": missing,
+            "directory_sha256": directory,
+            "first_sha256": first,
+        }
+    )
+
+    assert list(bindings) == ["second_sha256", "first_sha256"]
+    assert bindings == {
+        "second_sha256": file_sha256(second),
+        "first_sha256": file_sha256(first),
+    }

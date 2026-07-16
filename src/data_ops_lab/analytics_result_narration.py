@@ -11,6 +11,7 @@ from typing import Any, Protocol
 import yaml
 
 from .analytics_query_plan import add_blocker, read_yaml_mapping
+from .contracts.source_bindings import existing_file_sha256_bindings
 from .source_onboarding import ensure_dir, file_sha256
 
 
@@ -454,9 +455,7 @@ def run_analytics_result_narration(
         "presentation_manifest": presentation_manifest_path,
         "facts": facts_path,
     }
-    input_hashes = {
-        name: file_sha256(path) for name, path in input_paths.items() if path.is_file()
-    }
+    input_hashes = existing_file_sha256_bindings(input_paths)
     presentation_manifest = read_yaml_mapping(
         presentation_manifest_path,
         blockers,
@@ -523,9 +522,7 @@ def run_analytics_result_narration(
             )
 
     if not blockers:
-        current_hashes = {
-            name: file_sha256(path) for name, path in input_paths.items() if path.is_file()
-        }
+        current_hashes = existing_file_sha256_bindings(input_paths)
         if current_hashes != input_hashes:
             add_blocker(
                 blockers,

@@ -11,6 +11,7 @@ import yaml
 
 from .analytics_query_plan import add_blocker, read_yaml_mapping
 from .analytics_semantic_adapter import MAX_QUESTION_LENGTH
+from .contracts.source_bindings import existing_file_sha256_bindings
 from .source_onboarding import ensure_dir, file_sha256
 
 
@@ -515,9 +516,7 @@ def run_analytics_result_presentation(
         "execution_manifest": execution_manifest_path,
         "result": result_path,
     }
-    input_hashes = {
-        name: file_sha256(path) for name, path in input_paths.items() if path.is_file()
-    }
+    input_hashes = existing_file_sha256_bindings(input_paths)
     request = read_yaml_mapping(request_path, blockers, "request")
     execution_manifest = read_yaml_mapping(
         execution_manifest_path,
@@ -533,9 +532,7 @@ def run_analytics_result_presentation(
         blockers,
     )
     if not blockers:
-        current_hashes = {
-            name: file_sha256(path) for name, path in input_paths.items() if path.is_file()
-        }
+        current_hashes = existing_file_sha256_bindings(input_paths)
         if current_hashes != input_hashes:
             add_blocker(
                 blockers,

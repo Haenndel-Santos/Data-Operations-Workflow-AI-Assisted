@@ -26,6 +26,7 @@ from .contracts.atomic_publish import (
     DEFAULT_FILE_PUBLISH_RETRY_DELAYS_SECONDS,
     atomic_write_text,
 )
+from .contracts.source_bindings import existing_file_sha256_bindings
 from .ollama_provider import validate_loopback_endpoint
 from .source_onboarding import ensure_dir, file_sha256
 
@@ -214,11 +215,7 @@ def _source_hashes(
         "benchmark_approval_sha256": benchmark_approval_path,
         "live_authorization_sha256": live_authorization_path,
     }
-    return {
-        name: file_sha256(path)
-        for name, path in paths.items()
-        if path.is_file()
-    }
+    return existing_file_sha256_bindings(paths)
 
 
 def _provider_config(

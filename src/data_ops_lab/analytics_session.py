@@ -34,6 +34,7 @@ from .analytics_result_presentation import (
     AnalyticsResultPresentationResult,
     run_analytics_result_presentation,
 )
+from .contracts.source_bindings import existing_file_sha256_bindings
 from .source_onboarding import ensure_dir, file_sha256
 
 
@@ -215,9 +216,7 @@ def run_analytics_session_prepare(
         "translation_response": translation_response_path,
         "relationships": relationships_path,
     }
-    input_hashes = {
-        name: file_sha256(path) for name, path in input_paths.items() if path.is_file()
-    }
+    input_hashes = existing_file_sha256_bindings(input_paths)
     database_before = database_identity(database_path)
     translation_result = run_analytics_nl_translation(
         question_path,
@@ -259,9 +258,7 @@ def run_analytics_session_prepare(
             field="translation",
         )
 
-    current_hashes = {
-        name: file_sha256(path) for name, path in input_paths.items() if path.is_file()
-    }
+    current_hashes = existing_file_sha256_bindings(input_paths)
     if current_hashes != input_hashes or database_identity(database_path) != database_before:
         add_blocker(
             blockers,
@@ -611,9 +608,7 @@ def run_analytics_session_resume(
         "relationships": relationships_path,
         "narration_response": narration_response_path,
     }
-    authority_hashes = {
-        name: file_sha256(path) for name, path in authority_paths.items() if path.is_file()
-    }
+    authority_hashes = existing_file_sha256_bindings(authority_paths)
     database_before = database_identity(database_path)
     preflight_existing_resume(output_dir, authority_hashes, database_before)
     prepare, request_path, plan_path = validate_prepare_checkpoint(
@@ -689,9 +684,7 @@ def run_analytics_session_resume(
         else:
             last_valid_checkpoint = "result_narration"
 
-    current_hashes = {
-        name: file_sha256(path) for name, path in authority_paths.items() if path.is_file()
-    }
+    current_hashes = existing_file_sha256_bindings(authority_paths)
     if not blockers and (
         current_hashes != authority_hashes or database_identity(database_path) != database_before
     ):
