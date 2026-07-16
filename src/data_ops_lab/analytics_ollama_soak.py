@@ -22,6 +22,10 @@ from .analytics_dataset_benchmark_live_evaluation import (
     sample_local_resources,
 )
 from .analytics_nl_translation import SemanticIntentProvider
+from .contracts.atomic_publish import (
+    DEFAULT_FILE_PUBLISH_RETRY_DELAYS_SECONDS,
+    atomic_write_text,
+)
 from .ollama_provider import validate_loopback_endpoint
 from .source_onboarding import ensure_dir, file_sha256
 
@@ -33,7 +37,7 @@ REPORT_NAME = "analytics_ollama_soak_report.md"
 STOP_FILE_NAME = "STOP"
 OUTPUT_NAMES = {MANIFEST_NAME, CYCLES_NAME, CASES_NAME, REPORT_NAME}
 MAX_AUTHORIZATION_BYTES = 64_000
-CHECKPOINT_PUBLISH_RETRY_DELAYS_SECONDS = (0.05, 0.1, 0.25, 0.5, 1.0)
+CHECKPOINT_PUBLISH_RETRY_DELAYS_SECONDS = DEFAULT_FILE_PUBLISH_RETRY_DELAYS_SECONDS
 SOAK_DECISIONS = {
     "local_loopback_overnight_soak_approved": True,
     "local_read_only_benchmark_queries_approved": True,
@@ -897,31 +901,13 @@ def _render_report(manifest: dict[str, Any]) -> str:
 
 
 def _atomic_write(path: Path, content: str) -> None:
-    ensure_dir(path.parent)
-    handle = tempfile.NamedTemporaryFile(
-        mode="w",
-        encoding="utf-8",
-        newline="",
-        prefix=f".{path.name}.",
-        suffix=".tmp",
-        dir=path.parent,
-        delete=False,
+    atomic_write_text(
+        path,
+        content,
+        retry_delays=CHECKPOINT_PUBLISH_RETRY_DELAYS_SECONDS,
+        sleep_fn=time.sleep,
+        replace_fn=os.replace,
     )
-    temporary = Path(handle.name)
-    try:
-        with handle:
-            handle.write(content)
-        for attempt in range(len(CHECKPOINT_PUBLISH_RETRY_DELAYS_SECONDS) + 1):
-            try:
-                os.replace(temporary, path)
-                break
-            except PermissionError:
-                if attempt >= len(CHECKPOINT_PUBLISH_RETRY_DELAYS_SECONDS):
-                    raise
-                time.sleep(CHECKPOINT_PUBLISH_RETRY_DELAYS_SECONDS[attempt])
-    finally:
-        if temporary.exists():
-            temporary.unlink()
 
 
 def _write_state(

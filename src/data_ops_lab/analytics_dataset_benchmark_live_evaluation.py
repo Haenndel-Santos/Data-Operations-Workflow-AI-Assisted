@@ -35,6 +35,11 @@ from .analytics_nl_translation import (
 )
 from .analytics_query_execution import run_analytics_query_execution
 from .analytics_query_plan import add_blocker, read_yaml_mapping, run_analytics_query_plan
+from .contracts.atomic_publish import (
+    DEFAULT_DIRECTORY_PUBLISH_RETRY_DELAYS_SECONDS,
+    AtomicPublishTargetAppearedError,
+    publish_new_directory,
+)
 from .ollama_provider import validate_loopback_endpoint
 from .source_onboarding import ensure_dir, file_sha256
 
@@ -45,7 +50,9 @@ BLOCKERS_NAME = "analytics_dataset_benchmark_live_evaluation_blockers.csv"
 REPORT_NAME = "analytics_dataset_benchmark_live_evaluation_report.md"
 OUTPUT_NAMES = {MANIFEST_NAME, CASES_NAME, BLOCKERS_NAME, REPORT_NAME}
 MAX_AUTHORIZATION_BYTES = 64_000
-OUTPUT_PUBLISH_RETRY_DELAYS_SECONDS = (0.1, 0.25, 0.5, 1.0, 2.0)
+OUTPUT_PUBLISH_RETRY_DELAYS_SECONDS = (
+    DEFAULT_DIRECTORY_PUBLISH_RETRY_DELAYS_SECONDS
+)
 
 LIVE_DECISIONS = {
     "local_loopback_provider_evaluation_approved": True,
@@ -902,19 +909,18 @@ def _write_outputs(output_dir: Path, contents: dict[str, str]) -> bool:
     try:
         for name, content in contents.items():
             (staging_dir / name).write_text(content, encoding="utf-8", newline="")
-        for attempt in range(len(OUTPUT_PUBLISH_RETRY_DELAYS_SECONDS) + 1):
-            try:
-                staging_dir.replace(output_dir)
-                break
-            except PermissionError:
-                if output_dir.exists():
-                    raise ValueError(
-                        f"Live benchmark evaluation output appeared during atomic publication: "
-                        f"{output_dir}. Existing evidence was not overwritten."
-                    )
-                if attempt >= len(OUTPUT_PUBLISH_RETRY_DELAYS_SECONDS):
-                    raise
-                time.sleep(OUTPUT_PUBLISH_RETRY_DELAYS_SECONDS[attempt])
+        try:
+            publish_new_directory(
+                staging_dir,
+                output_dir,
+                retry_delays=OUTPUT_PUBLISH_RETRY_DELAYS_SECONDS,
+                sleep_fn=time.sleep,
+            )
+        except AtomicPublishTargetAppearedError as error:
+            raise ValueError(
+                f"Live benchmark evaluation output appeared during atomic publication: "
+                f"{output_dir}. Existing evidence was not overwritten."
+            ) from error
     finally:
         if staging_dir.exists():
             shutil.rmtree(staging_dir)
