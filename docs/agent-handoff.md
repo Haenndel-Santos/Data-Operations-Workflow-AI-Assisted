@@ -3882,3 +3882,40 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 1. Open the final CLI registration pull request as a draft.
 2. Inspect the complete automated Windows/Python 3.13 gate.
 3. Correct any regression before closing increment 2.4 or Backend Phase II.
+
+## 2026-07-20 - Codex - Validate final CLI split and close Backend Phase II
+
+### Git Checkpoint
+
+- Validated GitHub PR #16 at `ff485ac`.
+- GitHub Actions workflow run: `29777375415`; job: `88469944752`.
+
+### Validation
+
+- Full offline suite: 276 passed and 2 opt-in live-provider tests skipped in
+  93.00 seconds on Windows/Python 3.13.
+- Internal links: 111 checked, 0 broken.
+- Pull-request diff check: passed against exact base `4780f4b` and head
+  `ff485ac`.
+- All 47 command registrations remain in their original order across ten
+  domain registrars; `build_parser` contains no direct subparser declaration.
+- Checkout, Python setup, dependency installation, cache finalization, and
+  cleanup steps passed.
+- No registry validation, performance baseline, Ollama soak, provider/network
+  call, project data, external database, approval apply, migration, import,
+  synchronization, upload, or generated-output publication ran.
+
+### Phase Result
+
+- Backend Phase II increments 2.1 through 2.4 satisfy their documented exit
+  gate.
+- Persisted contracts, public entrypoints, human-review authority, explicit
+  dispatch, result formatting, network gates, and intentionally distinct
+  blocker/publication semantics remain preserved.
+
+### Next Logical Step
+
+1. Revalidate this documentation-only closure commit through the same workflow.
+2. Mark PR #16 ready and merge only after that final run passes.
+3. Define a new versioned scope before dynamic dispatch, service/UI expansion,
+   concurrency, or further generic result semantics.
