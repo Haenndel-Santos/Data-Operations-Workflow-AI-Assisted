@@ -3378,3 +3378,44 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
   retain the exact parser signature as a compatibility gate.
 - Keep registration modules declarative; do not move dispatch, result
   formatting, or specialized execution semantics without a separate contract.
+
+## 2026-07-20 - Codex - Extract query and session CLI registration
+
+### Git Checkpoint
+
+- Committed the semantic/translation registration slice as `968b062`
+  (`refactor(cli): extract semantic registration`).
+- Published `codex/split-cli-semantic-registration`, opened GitHub PR #8, and
+  merged it into `main` as `ddd4d6b`.
+- Continued increment 2.4 on
+  `codex/split-cli-query-session-registration`.
+
+### Implementation
+
+- Added `cli_commands.analytics_query_session` for six query planning,
+  execution, result presentation, recorded narration, and two-phase analytics
+  session parser declarations.
+- Invoked the registrar at the original location in `build_parser`; the three
+  extracted registration modules now own 21 of the 47 command declarations.
+- Kept execution limits, recorded providers, run-function imports, explicit
+  dispatch, result formatting, human-review checkpoints, and the public
+  `data_ops_lab.cli:main` entrypoint unchanged.
+- Did not execute a provider, network call, external database operation,
+  approval apply, migration, import, synchronization, or private-data read.
+
+### Validation
+
+- The complete pre/post parser signature remained exactly
+  `ddfc7ba0a1cfe91fbe0e7e6baf084c14cbe665100f1cb7260c56e27f5b634b37`
+  across all 47 commands; all six extracted command signatures also matched.
+- Focused query, execution, presentation, narration, and session suite: 36
+  passed in 9.52 seconds.
+- Full offline suite: 276 passed and 2 opt-in live-provider tests skipped in
+  47.91 seconds on Windows.
+
+### Next Logical Step
+
+- Continue increment 2.4 with the next coherent CLI registration family and
+  retain the exact parser signature as a compatibility gate.
+- Keep execution limits, checkpoints, provider controls, dispatch, and result
+  formatting outside registration modules.
