@@ -3338,3 +3338,43 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
   require the same complete parser signature before and after extraction.
 - Keep dispatch and result formatting out of registration modules unless a
   separate, versioned execution contract is approved.
+
+## 2026-07-20 - Codex - Extract semantic and translation CLI registration
+
+### Git Checkpoint
+
+- Committed the dataset-benchmark registration slice as `55bba1a`
+  (`refactor(cli): extract dataset benchmark registration`).
+- Published `codex/split-cli-registration`, opened GitHub PR #7, and merged it
+  into `main` as `79952e7`.
+- Continued increment 2.4 on `codex/split-cli-semantic-registration`.
+
+### Implementation
+
+- Added `cli_commands.analytics_semantic` for eight semantic
+  catalog/review/approval, adapter, natural-language translation, and offline
+  evaluation parser declarations.
+- Invoked the registrar at the original location in `build_parser`; the two
+  extracted registration modules now own 15 of the 47 command declarations.
+- Kept all domain run-function imports, explicit dispatch, result formatting,
+  human-review gates, provider/network controls, and the public
+  `data_ops_lab.cli:main` entrypoint unchanged.
+- Did not execute an evaluation, provider, network call, database operation,
+  approval apply, migration, import, synchronization, or private-data read.
+
+### Validation
+
+- The complete pre/post parser signature remained exactly
+  `ddfc7ba0a1cfe91fbe0e7e6baf084c14cbe665100f1cb7260c56e27f5b634b37`
+  across all 47 commands.
+- Focused semantic, translation, and offline evaluation suite: 60 passed in
+  9.00 seconds.
+- Full offline suite: 276 passed and 2 opt-in live-provider tests skipped in
+  44.60 seconds on Windows.
+
+### Next Logical Step
+
+- Continue increment 2.4 with the next coherent CLI registration family and
+  retain the exact parser signature as a compatibility gate.
+- Keep registration modules declarative; do not move dispatch, result
+  formatting, or specialized execution semantics without a separate contract.

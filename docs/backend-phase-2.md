@@ -27,7 +27,7 @@ that is already proven equivalent into small internal contracts.
 | 2.1 | Common file hashing and the standard analytics blocker record | Implemented in `082920a` |
 | 2.2 | Common atomic publication with characterized Windows retry and race semantics | Implemented in `28e962b` |
 | 2.3 | Common source bindings, error taxonomy, and run-result envelope | Implemented; the additive projection remains opt-in after the consumer audit found no semantics-neutral runtime adopter |
-| 2.4 | CLI command registration split by domain while preserving `data_ops_lab.cli:main` | In progress; the seven dataset-benchmark registrations are the first extracted domain slice |
+| 2.4 | CLI command registration split by domain while preserving `data_ops_lab.cli:main` | In progress; 15 registrations are extracted across dataset-benchmark and semantic/translation slices |
 
 Other blocker shapes remain module-specific until their persisted schemas and
 consumers are characterized. Product materialization and reference-dataset
@@ -141,8 +141,11 @@ Backend Phase II is complete only when:
   passed in 15.25 seconds; the complete parser signature remained
   `ddfc7ba0a1cfe91fbe0e7e6baf084c14cbe665100f1cb7260c56e27f5b634b37`
   across all 47 commands.
+- Increment 2.4 semantic/translation CLI registration slice: 60 focused tests
+  passed in 9.00 seconds; the same complete 47-command parser signature was
+  preserved.
 - Latest full offline suite: 276 passed and 2 opt-in live-provider tests skipped
-  in 46.32 seconds on Windows.
+  in 44.60 seconds on Windows.
 - No external database, provider, network, production data, migration, import,
   synchronization, or approval apply was used.
 
@@ -350,16 +353,18 @@ runtime adoption.
 ## Increment 2.4 CLI Registration Contract
 
 `data_ops_lab.cli_commands.analytics_dataset_benchmark` now owns registration
-of the seven dataset-backed benchmark commands. `build_parser` calls that
-registration function at the original position, so command order, names,
-options, types, required flags, defaults, help text, and root help remain
+of the seven dataset-backed benchmark commands. The adjacent
+`analytics_semantic` registrar owns eight semantic catalog/review/approval,
+adapter, translation, and offline evaluation commands. `build_parser` calls
+both registration functions at their original positions, so command order,
+names, options, types, required flags, defaults, help text, and root help remain
 unchanged.
 
-The extracted module imports only `argparse`, `Path`, and the existing Ollama
-CLI defaults. It does not import or call benchmark run functions. Dispatch,
-result formatting, execution gates, network flags, approval semantics, and the
-public `data_ops_lab.cli:main` entrypoint remain in their prior locations. This
-is a registration-only boundary, not dynamic dispatch or a new orchestrator.
+The extracted modules import only `argparse`, `Path`, and the existing Ollama
+CLI defaults. They do not import or call domain run functions. Dispatch, result
+formatting, execution gates, network flags, approval semantics, and the public
+`data_ops_lab.cli:main` entrypoint remain in their prior locations. This is a
+registration-only boundary, not dynamic dispatch or a new orchestrator.
 
 ## Next Increment
 
