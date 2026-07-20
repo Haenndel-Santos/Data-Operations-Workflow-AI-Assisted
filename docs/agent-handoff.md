@@ -3459,3 +3459,42 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
   retain the exact parser signature as a compatibility gate.
 - Keep conversion, review authority, dispatch, and result formatting outside
   registration modules.
+
+
+## 2026-07-20 - Codex - Add automated GitHub Actions validation
+
+### Initial Context
+
+- GitHub base: `main` at `c28bb3a`.
+- The repository had no workflow in the standard GitHub Actions locations and
+  recent pull requests had no automated check runs.
+- Objective received: continue safely from mobile without a connected local
+  checkout.
+
+### Implementation
+
+- Added `.github/workflows/ci.yml` for pull requests, pushes to `main`, and
+  manual dispatch.
+- Configured `windows-latest`, Python 3.13, pip caching, read-only repository
+  permissions, concurrency cancellation, and a 30-minute timeout.
+- Added project installation, the complete offline suite, internal-link
+  validation, and event-appropriate diff checks.
+- Added no secret, external provider, database, project-data, migration, import,
+  synchronization, approval, upload, or artifact-publishing capability.
+
+### Validation
+
+- Workflow run `29772240350` completed successfully.
+- Full offline suite: 276 passed and 2 opt-in live-provider tests skipped in
+  93.18 seconds on Windows/Python 3.13.
+- Internal links: 110 checked, 0 broken.
+- Pull-request diff check: passed.
+- Checkout, Python setup, dependency installation, cache finalization, and all
+  cleanup steps completed successfully.
+
+### Next Logical Step
+
+1. Revalidate this documentation commit through the same workflow.
+2. Merge the CI pull request only after the second run passes.
+3. Update the ERP modeling registration pull request from the new `main` so
+   its full regression checks run automatically.
