@@ -3594,3 +3594,98 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 2. Mark PR #11 ready and merge only after that final run passes.
 3. Continue increment 2.4 with the next coherent registration family from the
    resulting `main`.
+
+## 2026-07-20 - Codex - Extract Product reference CLI registration (draft)
+
+### Git Checkpoint
+
+- GitHub PR #11 merged the ERP modeling registration slice into `main` as
+  `b61d811`.
+- Continued Backend Phase II increment 2.4 on
+  `agent/split-cli-product-reference`.
+
+### Implementation
+
+- Added `cli_commands.product_reference` for nine contiguous Product reference
+  audit, reconciliation, human-review, validation, and explicit-apply parser
+  declarations.
+- Invoked the registrar at the original position in `build_parser`;
+  registration modules now own 39 of the 47 command declarations.
+- Kept all Product run-function imports, explicit dispatch, result formatting,
+  dry-run/apply authority, replacement controls, private-data boundaries, and
+  `data_ops_lab.cli:main` unchanged.
+- Corrected the Backend Phase II ERP validation checkpoint to the already
+  completed automated evidence from PR #11.
+- Did not open Product data, run a Product workflow, access a database, apply a
+  decision, use a provider/network call, migrate, import, synchronize, upload,
+  or publish generated output.
+
+### Validation
+
+- New registrar syntax compilation passed under Python 3.
+- Exact isolated equivalence preserved the nine command names, order, actions,
+  options, destinations, types, required flags, defaults, choices, metavars,
+  and help text; signature SHA-256:
+  `d009a2f816384d915b7284a2e3b0e20bdeb22928c3d1abb27e13a193c1d4d958`.
+- Reconstructed registration order remained identical across all 47 commands.
+- The complete GitHub Actions suite, link checker, and pull-request diff gate
+  are pending; this change remains a draft until they pass.
+
+### Next Logical Step
+
+1. Open the Product reference registration pull request as a draft.
+2. Inspect the complete automated Windows/Python 3.13 gate.
+3. Correct any regression before marking the pull request ready or merging.
+
+## 2026-07-20 - Codex - Correct Product registrar EOF
+
+### Validation Result
+
+- GitHub Actions run `29774298374` installed the project successfully.
+- Full offline suite: 276 passed and 2 opt-in live-provider tests skipped in
+  58.72 seconds on Windows/Python 3.13.
+- Internal links: 111 checked, 0 broken.
+- The pull-request diff check alone failed because
+  `cli_commands/product_reference.py` ended with one extra blank line.
+
+### Correction
+
+- Removed only the extra blank line at the new module EOF and updated the
+  factual validation checkpoint.
+- Extended the pre-publication content check for this correction to require
+  exactly one final newline.
+- No Product runtime code, parser declaration, provider control, project data,
+  database, approval state, migration, import, synchronization, upload, or
+  generated output was changed or executed.
+
+### Next Logical Step
+
+1. Re-run the complete GitHub Actions gate.
+2. Inspect all steps and proceed only if the workflow is fully green.
+
+## 2026-07-20 - Codex - Validate Product reference registration PR
+
+### Git Checkpoint
+
+- Revalidated GitHub PR #13 at `e4f1c10` after correcting the new registrar's
+  extra EOF blank line.
+- GitHub Actions workflow run: `29774570985`; job: `88460738617`.
+
+### Validation
+
+- Full offline suite: 276 passed and 2 opt-in live-provider tests skipped in
+  49.48 seconds on Windows/Python 3.13.
+- Internal links: 111 checked, 0 broken.
+- Pull-request diff check: passed against exact base `b61d811` and head
+  `e4f1c10`.
+- Checkout, Python setup, dependency installation, cache finalization, and
+  cleanup steps passed.
+- No Product data, live provider, external database, approval apply, migration,
+  import, synchronization, upload, or generated-output publication ran.
+
+### Next Logical Step
+
+1. Revalidate this documentation-only evidence commit through the same workflow.
+2. Mark PR #13 ready and merge only after that final run passes.
+3. Continue increment 2.4 with the next coherent registration family from the
+   resulting `main`.
