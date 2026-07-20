@@ -734,3 +734,28 @@ registry and lookup. Existing blocker dictionaries and CSV files are unchanged.
 Dynamic call sites, direct blocker dictionaries, exception messages, free-text
 statuses, module-specific blocker schemas, and the common run-result envelope
 remain separate follow-up work.
+
+## 2026-07-20 - Project Common Run Results Through A Structural Core
+
+**Decision:** Define the common run-result envelope as an additive projection of
+exactly four fields already shared by 23 frozen result classes: `output_dir`,
+opaque `status`, `blocker_count`, and `outputs_changed`. Use a structural
+protocol and immutable projected value rather than changing existing class
+inheritance or return types.
+
+**Rationale:** The source-only taxonomy audit covers all 658 literal labels and
+all 22 recognized blocker-consumer files, so run-result design can proceed from
+complete source evidence. The four selected fields have equivalent structural
+meaning for orchestration, while status values, blocker record formats,
+artifact paths, checkpoints, and authority semantics remain module-specific.
+
+**Alternatives:** Introduce a shared base class across every module; replace
+specific results with dictionaries; include every artifact path in one sparse
+schema; infer a generic success boolean from status text; or wait for dynamic
+orchestration before defining any shared result boundary.
+
+**Impact:** `data_ops_lab.contracts.run_results` now exposes `RunResultLike`,
+`RunResultEnvelope`, and `project_run_result`. Existing Python/CLI entrypoints,
+result instances, status values, manifests, reports, CSVs, blocker records,
+private data, approvals, and authority gates are unchanged. A first runtime
+consumer and CLI decomposition remain separate follow-up work.
