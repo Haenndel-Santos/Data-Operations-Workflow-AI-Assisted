@@ -3662,3 +3662,30 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 
 1. Re-run the complete GitHub Actions gate.
 2. Inspect all steps and proceed only if the workflow is fully green.
+
+## 2026-07-20 - Codex - Validate Product reference registration PR
+
+### Git Checkpoint
+
+- Revalidated GitHub PR #13 at `e4f1c10` after correcting the new registrar's
+  extra EOF blank line.
+- GitHub Actions workflow run: `29774570985`; job: `88460738617`.
+
+### Validation
+
+- Full offline suite: 276 passed and 2 opt-in live-provider tests skipped in
+  49.48 seconds on Windows/Python 3.13.
+- Internal links: 111 checked, 0 broken.
+- Pull-request diff check: passed against exact base `b61d811` and head
+  `e4f1c10`.
+- Checkout, Python setup, dependency installation, cache finalization, and
+  cleanup steps passed.
+- No Product data, live provider, external database, approval apply, migration,
+  import, synchronization, upload, or generated-output publication ran.
+
+### Next Logical Step
+
+1. Revalidate this documentation-only evidence commit through the same workflow.
+2. Mark PR #13 ready and merge only after that final run passes.
+3. Continue increment 2.4 with the next coherent registration family from the
+   resulting `main`.
