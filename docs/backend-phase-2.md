@@ -156,10 +156,10 @@ Backend Phase II is complete only when:
 - Increment 2.4 Product reference registration slice: 276 tests passed and 2
   opt-in live-provider tests skipped in 52.44 seconds on Windows/Python 3.13;
   111 internal links checked, 0 broken; the complete parser and diff gates passed.
-- Increment 2.4 Product publication registration slice: isolated syntax and
-  exact signature equivalence preserved all three command signatures;
-  reconstructed registration order preserved the complete 47-command surface.
-  Automated repository validation is pending.
+- Increment 2.4 Product publication registration slice: 276 tests passed and
+  2 opt-in live-provider tests skipped in 47.78 seconds on Windows/Python 3.13;
+  111 internal links checked, 0 broken; exact isolated signatures, complete
+  parser order, and pull-request diff gates passed.
 - Latest full offline suite: 276 passed and 2 opt-in live-provider tests skipped
   in 44.98 seconds on Windows.
 - No external database, provider, network, production data, migration, import,
@@ -393,8 +393,7 @@ registration-only boundary, not dynamic dispatch or a new orchestrator.
 
 ## Next Increment
 
-Validate the Product publication registration slice through GitHub Actions,
-then continue increment 2.4 with the next coherent registration slice while
+Continue increment 2.4 with the next coherent registration slice while
 preserving the complete parser signature and `data_ops_lab.cli:main`. Keep
 domain execution and result formatting in their existing modules until a
 separate dispatch contract is approved. Do not add a generic success predicate

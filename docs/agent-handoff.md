@@ -3734,3 +3734,30 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 1. Open the Product publication registration pull request as a draft.
 2. Inspect the complete automated Windows/Python 3.13 gate.
 3. Correct any regression before marking the pull request ready or merging.
+
+## 2026-07-20 - Codex - Validate Product publication registration PR
+
+### Git Checkpoint
+
+- Validated GitHub PR #14 at `2f94101`.
+- GitHub Actions workflow run: `29775660574`; job: `88464292140`.
+
+### Validation
+
+- Full offline suite: 276 passed and 2 opt-in live-provider tests skipped in
+  47.78 seconds on Windows/Python 3.13.
+- Internal links: 111 checked, 0 broken.
+- Pull-request diff check: passed against exact base `83ef90b` and head
+  `2f94101`.
+- Checkout, Python setup, dependency installation, cache finalization, and
+  cleanup steps passed.
+- No Product data, materialization, promotion, live provider, external
+  database, approval apply, migration, import, synchronization, upload, or
+  generated-output publication ran.
+
+### Next Logical Step
+
+1. Revalidate this documentation-only evidence commit through the same workflow.
+2. Mark PR #14 ready and merge only after that final run passes.
+3. Continue increment 2.4 with the remaining model-documentation and analytics
+   operations registration families from the resulting `main`.
