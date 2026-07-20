@@ -3459,3 +3459,48 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
   retain the exact parser signature as a compatibility gate.
 - Keep conversion, review authority, dispatch, and result formatting outside
   registration modules.
+
+
+## 2026-07-20 - Codex - Extract ERP modeling CLI registration (draft)
+
+### Initial Context
+
+- GitHub base: `main` at `c28bb3a`; no open pull request was present.
+- The mobile Work environment had GitHub connector access but no local checkout
+  and no `gh` executable.
+- Objective received: correct the recorded progress checkpoint and continue the
+  next necessary implementation.
+
+### Implementation
+
+- Added `cli_commands.erp_modeling` for seven Step 3 source onboarding,
+  human-review, serial-rule, approval-spreadsheet, and canonical-model parser
+  declarations.
+- Replaced the original declaration block at the same position in
+  `build_parser`; registration modules now own 30 of the 47 commands.
+- Kept all run-function imports, explicit dispatch, result formatting, approval
+  behavior, private-data boundaries, and `data_ops_lab.cli:main` unchanged.
+- Advanced the consolidated `Last Verified Commit` checkpoint to the current
+  `main` base and updated Backend Phase II/orchestrator progress counts.
+
+### Validation
+
+- New registrar syntax compilation passed under Python 3.
+- An isolated seven-command comparison preserved names, order, options, types,
+  required flags, defaults, and help text; signature SHA-256:
+  `57c3e376ab3c1a9141c577c05eec0b2f9179bb48bd8eed6f72df242e6c7d27c4`.
+- A reconstructed full-parser comparison preserved the complete 47-command
+  structural/help surface before and after extraction.
+- The full repository suite and internal-link checker were not run because this
+  environment has no project checkout. The change must remain a draft until
+  those checks run on the connected Windows host.
+- No project data, provider, network workflow, database, approval apply,
+  migration, import, synchronization, or generated output was executed.
+
+### Next Logical Step
+
+1. Run the focused ERP/source-modeling tests on the connected checkout.
+2. Run the complete offline suite and internal-link checker.
+3. Correct any regression before marking the pull request ready or merging.
+4. Continue increment 2.4 with the next coherent registration family only after
+   that gate passes.

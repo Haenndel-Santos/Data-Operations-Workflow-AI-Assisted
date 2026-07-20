@@ -6,19 +6,19 @@ Turn local operational spreadsheets into validated analytical datasets and an ap
 
 ## Current Stage
 
-Four active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases 0-4 passed their gates for Northwind and the selected local Ollama development provider; AI Phase 5 remains active after its recorded, live-development, and endurance evidence; and Backend Phase II is active in increment 2.4 after completing increment 2.3. Stage 5A-5F governed analytics retains its applied Northwind semantic catalog, immutable 13-case answer authority, reproducible 13/13 recorded evaluation, governed 9/13 loopback result, and 56 evidenced soak cycles. Backend Phase II has completed compatible common hashing, standard analytics blockers, atomic publication, the two proven source-binding absence semantics, explicit classification of 675 labels used by 22 complete blocker consumers, and exact provenance for all dynamic/direct and separate status/format/authority surfaces. The 658-literal audit found no remaining recognized consumer, and 23 existing result classes now conform structurally to the additive `output_dir`/opaque `status`/`blocker_count`/`outputs_changed` projection. A consumer audit found no honest runtime adoption point before generic dispatch or run recording, so the projection remains opt-in. CLI decomposition has moved 23 registrations across four coherent domain registrars while preserving the full 47-command parser surface. Further CLI decomposition, a fresh holdout, provider selection, dynamic dispatch, live narration, and a user interface remain pending.
+Four active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases 0-4 passed their gates for Northwind and the selected local Ollama development provider; AI Phase 5 remains active after its recorded, live-development, and endurance evidence; and Backend Phase II is active in increment 2.4 after completing increment 2.3. Stage 5A-5F governed analytics retains its applied Northwind semantic catalog, immutable 13-case answer authority, reproducible 13/13 recorded evaluation, governed 9/13 loopback result, and 56 evidenced soak cycles. Backend Phase II has completed compatible common hashing, standard analytics blockers, atomic publication, the two proven source-binding absence semantics, explicit classification of 675 labels used by 22 complete blocker consumers, and exact provenance for all dynamic/direct and separate status/format/authority surfaces. The 658-literal audit found no remaining recognized consumer, and 23 existing result classes now conform structurally to the additive `output_dir`/opaque `status`/`blocker_count`/`outputs_changed` projection. A consumer audit found no honest runtime adoption point before generic dispatch or run recording, so the projection remains opt-in. CLI decomposition has moved 30 registrations across five coherent domain registrars while preserving the full 47-command parser surface. The newest ERP modeling slice has isolated parser-equivalence evidence and still requires the full connected-checkout suite before merge. Further CLI decomposition, a fresh holdout, provider selection, dynamic dispatch, live narration, and a user interface remain pending.
 
 ## Last Completed Milestone
 
-On 2026-07-20, Backend Phase II increment 2.4 extracted its fourth coherent CLI
-registration family. Local benchmark SQL conversion and reference-dataset
-validation now register through `data_ops_lab.cli_commands.reference_dataset`.
-Together with the prior families, 23 registrations have moved while
-`build_parser` still exposes the same 47-command surface and
-`data_ops_lab.cli:main` still owns explicit dispatch and result formatting. The
-complete structural/help signature and both individual command signatures are
-unchanged; no conversion, database, review, approval, or persisted-output
-behavior moved.
+On 2026-07-20, Backend Phase II increment 2.4 implemented its fifth coherent
+CLI registration family. Seven Step 3 source onboarding, human-review,
+serial-rule, approval-spreadsheet, and canonical-model commands now register
+through `data_ops_lab.cli_commands.erp_modeling`. Together with the prior
+families, 30 registrations have moved while `build_parser` still exposes the
+same 47-command surface and `data_ops_lab.cli:main` still owns explicit
+dispatch and result formatting. Syntax and reconstructed parser equivalence
+passed in the cloud work environment; the complete repository suite and link
+check remain required on the connected Windows checkout before merge.
 
 ## Current Capabilities
 
@@ -168,6 +168,9 @@ behavior moved.
 ## Test Status
 
 - Automated suite: 276 tests passed and 2 opt-in live-provider tests skipped offline on 2026-07-20; latest run completed in 44.98 seconds on Windows.
+- Current ERP modeling registration slice: isolated syntax and reconstructed
+  parser equivalence passed for all 47 commands; the full repository suite and
+  internal-link check are pending a connected checkout before merge.
 - Backend Phase II run-result compatibility and registered-consumer suite: 238
   passed in 39.63 seconds.
 - Backend Phase II existing-file binding consumer suite: 76 passed in 17.77 seconds.
@@ -208,8 +211,10 @@ behavior moved.
   complete, and 23 result classes expose the additive four-field run-result
   core. The consumer audit intentionally deferred runtime projection until a
   generic dispatcher or run recorder needs all four fields; CLI decomposition
-  is now in progress with 23 registrations extracted across four coherent
-  domain modules. Dispatch remains explicit and centralized. Free-text
+  is now in progress with 30 registrations extracted across five coherent
+  domain modules. The ERP modeling slice is structurally equivalent but still
+  requires the connected-checkout regression suite before merge. Dispatch
+  remains explicit and centralized. Free-text
   statuses remain intentionally separate. Binding comparison policies,
   deterministic `.building` workflows, and distinct blocker schemas must not
   be coerced without consumer and output characterization.
@@ -225,7 +230,9 @@ behavior moved.
 
 ## Next Logical Milestone
 
-Continue Backend Phase II increment 2.4 with the next coherent CLI registration
+Run the focused and full offline suites plus the internal-link check for the ERP
+modeling registration slice on the connected Windows checkout. After that gate,
+continue Backend Phase II increment 2.4 with the next coherent CLI registration
 slice while preserving the complete 47-command parser signature and
 `data_ops_lab.cli:main`. Keep execution and result formatting in the existing
 domain modules, and keep the run-result projection opt-in until a generic
@@ -241,9 +248,9 @@ files in a separate private store or encrypted artifact workflow.
 
 ## Last Verified Commit
 
-`8866fca` (merge of `refactor(cli): extract query session registration`).
+`c28bb3a` (merge of `refactor(cli): extract reference dataset registration`).
 
 ## Last Updated
 
-2026-07-20 by Codex after extracting the reference-dataset CLI registration
-slice with unchanged global and per-command parser signatures.
+2026-07-20 by Codex after implementing the ERP modeling CLI registration slice
+with isolated parser equivalence; connected-checkout validation remains pending.

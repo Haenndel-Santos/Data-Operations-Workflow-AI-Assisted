@@ -7,13 +7,14 @@
 `src/data_ops_lab/cli.py` separately dispatches ERP modeling and human-review commands. These commands are explicit and testable, but they do not yet share dependency resolution, checkpoint state, or resume behavior. Step 3E.4 provides a command-local decision digest; Step 3E.5 adds a deterministic ready/blocked materialization checkpoint; Step 3E.6 binds that complete snapshot to applied state in a dry-run promotion plan. None is yet shared orchestrator infrastructure.
 
 CLI registration decomposition has started without changing that dispatch
-boundary. The `src/data_ops_lab/cli_commands/` package now owns 23 parser
+boundary. The `src/data_ops_lab/cli_commands/` package now owns 30 parser
 declarations: seven dataset-benchmark commands, eight semantic catalog,
-approval, adapter, translation, and offline evaluation commands, and six query
-planning, execution, presentation, narration, and session commands, plus two
-reference-dataset conversion and validation commands. `build_parser` invokes
-all four registrars in the original command order, while
-`data_ops_lab.cli:main` retains execution and result formatting. This is static
+approval, adapter, translation, and offline evaluation commands, six query
+planning, execution, presentation, narration, and session commands, two
+reference-dataset conversion and validation commands, and seven Step 3 ERP
+modeling and human-review commands. `build_parser` invokes all five registrars
+in the original command order, while `data_ops_lab.cli:main` retains execution
+and result formatting. This is static
 registration organization, not module discovery or dynamic dispatch.
 
 Stage 5A separately introduces a dry-run analytics query planner. Stage 5B adds
