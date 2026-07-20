@@ -3544,3 +3544,26 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 3. Record exact validation evidence, mark PR #11 ready, and merge only after
    the gate passes.
 
+## 2026-07-20 - Codex - Correct ERP PR trailing blank line
+
+### Validation Result
+
+- GitHub Actions run `29773199824` installed the project successfully.
+- Full offline suite: 276 passed and 2 opt-in live-provider tests skipped in
+  47.37 seconds on Windows/Python 3.13.
+- Internal links: 111 checked, 0 broken.
+- The pull-request diff check alone failed because
+  `docs/agent-handoff.md` ended with one extra blank line.
+
+### Correction
+
+- Removed only the extra trailing blank line and updated the factual validation
+  checkpoint.
+- No runtime code, parser declaration, provider control, project data, database,
+  approval state, migration, import, synchronization, or generated output was
+  changed or executed.
+
+### Next Logical Step
+
+1. Re-run the complete GitHub Actions gate.
+2. Inspect all steps and proceed only if the workflow is fully green.
