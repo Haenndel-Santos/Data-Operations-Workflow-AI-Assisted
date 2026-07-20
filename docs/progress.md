@@ -6,16 +6,20 @@ Turn local operational spreadsheets into validated analytical datasets and an ap
 
 ## Current Stage
 
-Four active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases 0-4 passed their gates for Northwind and the selected local Ollama development provider; AI Phase 5 remains active after its recorded, live-development, and endurance evidence; and Backend Phase II is active after implementing its first additive error-classification registry. Stage 5A-5F governed analytics retains its applied Northwind semantic catalog, immutable 13-case answer authority, reproducible 13/13 recorded evaluation, governed 9/13 loopback result, and 56 evidenced soak cycles. Backend Phase II has completed compatible common hashing, standard analytics blockers, atomic publication, the two proven source-binding absence semantics, a source-only baseline of 658 literal blocker labels with 10 dynamic call sites, and explicit classification of the 102 labels used by the four standard blocker consumers. Taxonomy expansion, a common run-result envelope, CLI decomposition, a fresh holdout, provider selection, dynamic dispatch, live narration, and a user interface remain pending.
+Four active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases 0-4 passed their gates for Northwind and the selected local Ollama development provider; AI Phase 5 remains active after its recorded, live-development, and endurance evidence; and Backend Phase II is active after its fifth additive error-classification slice. Stage 5A-5F governed analytics retains its applied Northwind semantic catalog, immutable 13-case answer authority, reproducible 13/13 recorded evaluation, governed 9/13 loopback result, and 56 evidenced soak cycles. Backend Phase II has completed compatible common hashing, standard analytics blockers, atomic publication, the two proven source-binding absence semantics, a source-only baseline of 658 literal blocker labels, exact provenance for all 10 dynamic call sites and two direct blocker-list reuses, and explicit classification of 438 labels used by 14 complete standard-blocker consumers. Exception-to-blocker/status mappings and text statuses remain separate provenance surfaces. Further taxonomy expansion, a common run-result envelope, CLI decomposition, a fresh holdout, provider selection, dynamic dispatch, live narration, and a user interface remain pending.
 
 ## Last Completed Milestone
 
-On 2026-07-16, Backend Phase II increment 2.3 added an explicit classification
-registry for all 102 labels used by query planning, query execution, semantic
-catalog validation, and semantic approval. The lookup preserves the original
-code and reports category plus registration state; unknown labels remain
-unregistered and `unclassified`. No persisted blocker code, CSV column, module
-shape, failure behavior, authority, or output changed.
+On 2026-07-20, Backend Phase II increment 2.3 admitted the synthetic
+`analytics_answer_evaluation.py` consumer and expanded the registry from 389 to
+438 codes by classifying all 49 literal Stage 5E labels. Exact provenance binds
+three inherited YAML/semantic-adapter blocker flows, the compound temporary
+dataset exception catch, the per-case `evaluation_error` fallback, and four
+persisted status fields. `synthetic_dataset_materialization_failed` remains
+registered but `unclassified` because it aggregates DuckDB, filesystem, and
+value failures. Exception messages and all translation/planning/execution/result
+statuses remain separate. No persisted blocker code, CSV column, exception
+behavior, module shape, authority, or output changed.
 
 ## Current Capabilities
 
@@ -122,18 +126,32 @@ shape, failure behavior, authority, or output changed.
   binding semantics without changing module-owned drift policies.
 - Classify standard analytics blocker codes as separate additive metadata while
   preserving the original persisted code and blocker shape.
+- Bind all 10 dynamic blocker call sites to reviewed provenance and expand the
+  registry only through complete consumer families, while keeping exception
+  behavior, free-text statuses, and Product's `artifact` blocker format
+  separate.
+- Classify the complete dataset-benchmark family, including exact provenance
+  for two direct blocker-list reuses, without converting its live
+  `provider_outcome` values into blocker codes.
+- Classify natural-language translation and its offline evaluator as one
+  complete family while keeping provider exceptions and result statuses as
+  separately provenanced surfaces.
+- Classify the synthetic answer evaluator while preserving inherited blockers,
+  compound exception fallbacks, and pipeline statuses as distinct surfaces.
 - Govern private local artifacts for cloud-first work by versioning only safe
   metadata and keeping raw sources, generated outputs, completed sensitive
   reviews, and secrets outside any repository that may become public.
 
 ## Test Status
 
-- Automated suite: 238 tests passed and 2 opt-in live-provider tests skipped offline on 2026-07-20; latest run completed in 43.63 seconds on Windows.
+- Automated suite: 249 tests passed and 2 opt-in live-provider tests skipped offline on 2026-07-20; latest run completed in 40.20 seconds on Windows.
+- Backend Phase II synthetic answer-evaluation taxonomy and
+  registered-consumer suite: 157 passed in 26.10 seconds.
 - Backend Phase II existing-file binding consumer suite: 76 passed in 17.77 seconds.
 - Backend Phase II declared-file binding consumer suite: 19 passed in 4.73 seconds.
 - Isolated local Ollama smoke test: 1 passed in 39.48 seconds on 2026-07-15 with an 8,192-token context; it used no database or SQL execution.
 - All 12 project-local skills passed the official skill validator on 2026-07-13.
-- Internal link check: 109 checked, 0 broken on 2026-07-16.
+- Internal link check: 110 checked, 0 broken on 2026-07-20.
 - Main suite is offline and uses temporary directories for generated test artifacts.
 - Documentation link checker is available at `scripts/check_internal_links.py`.
 - The relocated `.venv` has a stale editable-install path; use the `PYTHONPATH=src` command in `docs/testing.md` until environment repair is explicitly approved.
@@ -158,10 +176,14 @@ shape, failure behavior, authority, or output changed.
 - A second SQL Server 2025 Evaluation instance (`DATAOPSLAB`) remains installed but stopped; project work should use the default Developer instance only when an explicitly authorized restore/export task requires it.
 - Backend Phase II has consolidated proven-equivalent file hashing, standard
   analytics blockers, two atomic-publication variants, and two source-binding
-  absence semantics. Error taxonomy, a common run-result envelope, and CLI
-  decomposition remain pending. Binding comparison policies, deterministic
-  `.building` workflows, and distinct blocker schemas must not be coerced
-  without consumer and output characterization.
+  absence semantics. Its error taxonomy covers 14 complete consumers; all
+  dynamic sites and dataset-benchmark direct blocker-list reuses have
+  provenance; nine inherited blocker flows and four sanitized exception
+  mappings are explicit. Remaining consumer families, direct blocker surfaces, a common
+  run-result envelope, and CLI decomposition remain pending. Free-text statuses
+  remain intentionally separate. Binding comparison policies,
+  deterministic `.building` workflows, and distinct blocker schemas must not
+  be coerced without consumer and output characterization.
 
 ## Active Blockers
 
@@ -174,14 +196,14 @@ shape, failure behavior, authority, or output changed.
 
 ## Next Logical Milestone
 
-Continue Backend Phase II increment 2.3 by reviewing the 10 dynamic blocker
-call sites and expanding the explicit registry one coherent consumer family at
-a time. Characterize direct blocker dictionaries, exception classes, and
-free-text statuses separately. Do not infer categories from prefixes, rename
-persisted codes, add blocker columns, or change module-specific blocker shapes.
-Keep the run-result envelope and CLI decomposition separate. The independent AI
-track still requires fixed Phase 5 thresholds and a fresh reviewed holdout
-before provider selection.
+Continue Backend Phase II increment 2.3 with result presentation and narration
+as one coherent consumer family. Keep narration-provider exception messages,
+presentation/narration statuses, live `provider_outcome` text statuses,
+Product's `artifact` blocker format, the run-result envelope, and CLI
+decomposition separate. Do not infer categories from prefixes, rename persisted
+codes, add blocker columns, or change module-specific blocker shapes. The
+independent AI track still requires fixed Phase 5 thresholds and a fresh
+reviewed holdout before provider selection.
 
 For cloud-first repository management, inventory local-only artifacts and commit
 only safe manifests/hashes before any public visibility change; keep sensitive
@@ -193,5 +215,5 @@ files in a separate private store or encrypted artifact workflow.
 
 ## Last Updated
 
-2026-07-20 by Codex after validating the initial error taxonomy on Windows and
-documenting private-artifact governance for cloud-first GitHub work.
+2026-07-20 by Codex after classifying the synthetic answer-evaluation consumer
+and preserving its inherited-blocker, exception, and text-status boundaries.

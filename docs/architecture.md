@@ -107,12 +107,22 @@ reference-dataset blocker schemas remain local until their contracts and
 consumers are characterized. Deterministic `.building` directory workflows
 remain separate because their stale-staging failure policy differs.
 
-The additive error-taxonomy registry classifies the 102 labels used by the four
-standard analytics blocker consumers without changing their persisted codes or
-CSV shape. Callers may request category metadata separately; unknown codes
-remain unregistered and `unclassified`. This registry is not yet a common
-run-result envelope and does not coerce exception messages, dynamic labels, or
-module-specific blocker records into the standard shape.
+The additive error-taxonomy registry classifies 438 labels used by 14 complete
+standard-blocker consumers: query planning, query execution, semantic catalog,
+semantic approval, the semantic adapter, the six-module dataset-benchmark
+family, natural-language translation, its synthetic offline evaluator, and the
+synthetic exact-answer evaluator. All 10 dynamic call sites and both direct
+blocker-list reuses have exact provenance and disposition metadata. Nine exact
+flows record standard blockers inherited from the YAML and semantic-adapter
+producer families. Provider exception translation, answer-dataset
+materialization failure, and per-case evaluation fallback have separate
+exception provenance without persisted exception messages. Translation,
+planning, execution, evaluation, and live `provider_outcome` status fields
+remain separate text surfaces. Callers may request category metadata
+separately, while unknown codes remain unregistered and `unclassified`. This
+registry is not yet a common run-result envelope and does not coerce exception
+messages, text statuses, or Product's module-specific `artifact` records into
+one shape.
 
 The first formal module registry now describes the two recorded analytics
 session phases and validates inputs, outputs, dependencies, validation, tests,

@@ -27,14 +27,18 @@ Backend Phase II compatibility tests verify the common file SHA-256 digest,
 standard analytics blocker ordering/shape, atomic file/directory publication,
 cleanup after retry exhaustion, target-race refusal, source-binding absence
 semantics, additive error classification, and legacy module exports. The
-inventory regression also verifies that the initial registry covers exactly
-the labels used by the four standard blocker consumers. Run them with the
-directly affected modules:
+inventory regression also verifies exact provenance for all 10 dynamic call
+sites, both direct blocker-list reuses, nine inherited standard-blocker flows,
+provider-exception translations, answer-evaluation exception fallbacks, and
+the separate translation, planning, execution, evaluation, and live
+provider-outcome status surfaces. The 438-code registry covers only the 14
+complete registered consumer modules. Run them with the directly affected
+modules:
 
 ```powershell
 $env:PYTHONPATH = "src"
 $env:PYTHONDONTWRITEBYTECODE = "1"
-.\.venv\Scripts\python.exe -m pytest -p no:cacheprovider tests\internal_contracts_test.py tests\source_onboarding_test.py tests\product_refnr_application_test.py tests\reference_dataset_validation_test.py tests\analytics_query_plan_test.py tests\analytics_query_execution_test.py tests\analytics_semantic_catalog_test.py tests\analytics_semantic_approval_test.py
+.\.venv\Scripts\python.exe -m pytest -p no:cacheprovider tests\failure_label_inventory_test.py tests\internal_contracts_test.py tests\source_onboarding_test.py tests\product_refnr_application_test.py tests\reference_dataset_validation_test.py tests\analytics_query_plan_test.py tests\analytics_query_execution_test.py tests\analytics_semantic_catalog_test.py tests\analytics_semantic_approval_test.py tests\analytics_semantic_adapter_test.py tests\analytics_dataset_benchmark_test.py tests\analytics_dataset_benchmark_preparation_test.py tests\analytics_dataset_benchmark_materialization_test.py tests\analytics_nl_translation_test.py tests\analytics_translation_evaluation_test.py tests\analytics_answer_evaluation_test.py
 ```
 
 These tests use temporary files only. They do not process project data, call a
@@ -48,7 +52,8 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 .\.venv\Scripts\python.exe scripts\inventory_failure_labels.py
 ```
 
-Its focused parser and registry-coverage regressions are in
+Its focused parser, exact dynamic/direct provenance, separate-status, and
+registered-family coverage regressions are in
 `tests/failure_label_inventory_test.py`.
 
 The complete live/soak consumer regression is:
