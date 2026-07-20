@@ -6,17 +6,19 @@ Turn local operational spreadsheets into validated analytical datasets and an ap
 
 ## Current Stage
 
-Four active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases 0-4 passed their gates for Northwind and the selected local Ollama development provider; AI Phase 5 remains active after its recorded, live-development, and endurance evidence; and Backend Phase II is active in increment 2.4 after completing increment 2.3. Stage 5A-5F governed analytics retains its applied Northwind semantic catalog, immutable 13-case answer authority, reproducible 13/13 recorded evaluation, governed 9/13 loopback result, and 56 evidenced soak cycles. Backend Phase II has completed compatible common hashing, standard analytics blockers, atomic publication, the two proven source-binding absence semantics, explicit classification of 675 labels used by 22 complete blocker consumers, and exact provenance for all dynamic/direct and separate status/format/authority surfaces. The 658-literal audit found no remaining recognized consumer, and 23 existing result classes now conform structurally to the additive `output_dir`/opaque `status`/`blocker_count`/`outputs_changed` projection. A consumer audit found no honest runtime adoption point before generic dispatch or run recording, so the projection remains opt-in. The first CLI decomposition slice moves seven dataset-benchmark registrations behind a domain registrar while preserving the full 47-command parser surface. Further CLI decomposition, a fresh holdout, provider selection, dynamic dispatch, live narration, and a user interface remain pending.
+Four active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases 0-4 passed their gates for Northwind and the selected local Ollama development provider; AI Phase 5 remains active after its recorded, live-development, and endurance evidence; and Backend Phase II is active in increment 2.4 after completing increment 2.3. Stage 5A-5F governed analytics retains its applied Northwind semantic catalog, immutable 13-case answer authority, reproducible 13/13 recorded evaluation, governed 9/13 loopback result, and 56 evidenced soak cycles. Backend Phase II has completed compatible common hashing, standard analytics blockers, atomic publication, the two proven source-binding absence semantics, explicit classification of 675 labels used by 22 complete blocker consumers, and exact provenance for all dynamic/direct and separate status/format/authority surfaces. The 658-literal audit found no remaining recognized consumer, and 23 existing result classes now conform structurally to the additive `output_dir`/opaque `status`/`blocker_count`/`outputs_changed` projection. A consumer audit found no honest runtime adoption point before generic dispatch or run recording, so the projection remains opt-in. CLI decomposition has moved 15 registrations across dataset-benchmark and semantic/translation domain registrars while preserving the full 47-command parser surface. Further CLI decomposition, a fresh holdout, provider selection, dynamic dispatch, live narration, and a user interface remain pending.
 
 ## Last Completed Milestone
 
-On 2026-07-20, Backend Phase II increment 2.4 extracted the first coherent CLI
-registration family. Seven dataset-benchmark commands now register through
-`data_ops_lab.cli_commands.analytics_dataset_benchmark`; `build_parser` still
-exposes the same 47-command surface and `data_ops_lab.cli:main` still owns the
-same explicit dispatch and result formatting. The complete structural/help
-signature is unchanged, and no benchmark execution, approval, provider,
-network, database, or persisted-output behavior moved.
+On 2026-07-20, Backend Phase II increment 2.4 extracted its second coherent CLI
+registration family. Eight semantic catalog/review/approval, adapter,
+translation, and offline evaluation commands now register through
+`data_ops_lab.cli_commands.analytics_semantic`. Together with the seven
+dataset-benchmark commands, 15 registrations have moved while `build_parser`
+still exposes the same 47-command surface and `data_ops_lab.cli:main` still
+owns explicit dispatch and result formatting. The complete structural/help
+signature is unchanged, and no execution, approval, provider, network,
+database, or persisted-output behavior moved.
 
 ## Current Capabilities
 
@@ -206,11 +208,12 @@ network, database, or persisted-output behavior moved.
   complete, and 23 result classes expose the additive four-field run-result
   core. The consumer audit intentionally deferred runtime projection until a
   generic dispatcher or run recorder needs all four fields; CLI decomposition
-  is now in progress with the seven dataset-benchmark registrations extracted
-  from `cli.py`. Dispatch remains explicit and centralized. Free-text statuses
-  remain intentionally separate. Binding comparison policies, deterministic
-  `.building` workflows, and distinct blocker schemas must not be coerced
-  without consumer and output characterization.
+  is now in progress with 15 dataset-benchmark and semantic/translation
+  registrations extracted from `cli.py`. Dispatch remains explicit and
+  centralized. Free-text statuses remain intentionally separate. Binding
+  comparison policies, deterministic `.building` workflows, and distinct
+  blocker schemas must not be coerced without consumer and output
+  characterization.
 
 ## Active Blockers
 
@@ -239,9 +242,9 @@ files in a separate private store or encrypted artifact workflow.
 
 ## Last Verified Commit
 
-`d028cb4` (merge of `docs(backend): close run-result adoption audit`).
+`79952e7` (merge of `refactor(cli): extract dataset benchmark registration`).
 
 ## Last Updated
 
-2026-07-20 by Codex after extracting the dataset-benchmark CLI registration
+2026-07-20 by Codex after extracting the semantic/translation CLI registration
 slice with an unchanged 47-command parser and unchanged public entrypoint.
