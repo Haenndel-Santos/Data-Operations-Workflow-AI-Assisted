@@ -759,3 +759,27 @@ orchestration before defining any shared result boundary.
 result instances, status values, manifests, reports, CSVs, blocker records,
 private data, approvals, and authority gates are unchanged. A first runtime
 consumer and CLI decomposition remain separate follow-up work.
+
+## 2026-07-20 - Keep The Run-Result Projection Opt-In Until A Generic Consumer Exists
+
+**Decision:** Do not wrap current CLI branches or analytics-session child
+results with `project_run_result`. Treat the additive projection as available
+infrastructure for a future generic dispatcher or run recorder, and close
+Backend Phase II increment 2.3 without a forced runtime adoption.
+
+**Rationale:** All 24 compatible CLI branches still render module-specific
+fields; none reads `output_dir`, and replacing their direct reads would not
+reduce registration or formatting concentration. The analytics-session
+coordinator uses specialized status values as gates and specialized artifact
+paths to connect stages. Its only common aggregation is `outputs_changed`,
+which does not justify allocating a second object for each child result.
+
+**Alternatives:** Project every compatible CLI result before printing; project
+every analytics-session child solely for change aggregation; normalize status
+into a generic success value; or add a generic runtime consumer before its
+dispatch, persistence, and failure semantics are defined.
+
+**Impact:** Existing runtime behavior and public output remain unchanged. The
+four-field contract stays tested and opt-in, increment 2.3 is complete, and
+increment 2.4 may focus independently on splitting CLI command registration by
+domain without moving execution logic or changing result semantics.

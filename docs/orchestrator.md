@@ -25,8 +25,13 @@ It cannot dispatch or execute a module.
 `data_ops_lab.contracts.run_results` now exposes an additive structural
 projection for the four fields shared by 23 existing blocker-producing result
 classes: `output_dir`, opaque `status`, `blocker_count`, and `outputs_changed`.
-No current workflow dispatches through this contract; module-specific artifact
-paths, blocker records, statuses, checkpoints, and authority remain local.
+No current workflow dispatches through this contract. A consumer audit found
+that all 24 compatible CLI branches still render module-specific fields, while
+the analytics-session coordinator uses child-specific statuses and artifacts
+for stage gates and only aggregates the shared `outputs_changed` flag. The
+projection therefore remains opt-in until a generic dispatcher or run recorder
+needs its complete four-field view; blocker records, statuses, checkpoints,
+artifacts, and authority remain local.
 
 `reference-dataset-validate` remains a separate explicit Phase 2 entrypoint. It
 orders provenance/license/use preflight before any read-only DuckDB profiling

@@ -26,7 +26,7 @@ that is already proven equivalent into small internal contracts.
 | --- | --- | --- |
 | 2.1 | Common file hashing and the standard analytics blocker record | Implemented in `082920a` |
 | 2.2 | Common atomic publication with characterized Windows retry and race semantics | Implemented in `28e962b` |
-| 2.3 | Common source bindings, error taxonomy, and run-result envelope | Source bindings, complete source-only taxonomy coverage, and an additive four-field projection shared structurally by 23 result classes implemented; first runtime adoption pending |
+| 2.3 | Common source bindings, error taxonomy, and run-result envelope | Implemented; the additive projection remains opt-in after the consumer audit found no semantics-neutral runtime adopter |
 | 2.4 | CLI command registration split by domain while preserving `data_ops_lab.cli:main` | Pending |
 
 Other blocker shapes remain module-specific until their persisted schemas and
@@ -327,11 +327,26 @@ inferring success, reading blocker records, or copying module-specific artifact
 paths. Existing Python return types, CLI text, manifests, CSVs, reports,
 checkpoints, approvals, and private-data boundaries remain unchanged.
 
+The follow-up consumer audit reviewed all 24 CLI branches backed by those 23
+result types. Every branch reads `status` and `blocker_count`, 23 read
+`outputs_changed`, none reads `output_dir`, and every branch also renders
+module-specific counts, modes, checkpoints, or artifact paths. Projecting the
+common fields inside those branches would therefore duplicate local reads
+without creating a generic consumer or simplifying registration.
+
+The recorded analytics-session coordinator also remains specialized. It uses
+child status values as stage-specific gates, child artifact paths to start the
+next stage, and child manifests as persisted evidence. Its only generic
+aggregation is `outputs_changed`; allocating envelopes solely to read that
+boolean would not improve the boundary. The projection therefore remains
+available for a future dispatcher or run recorder that actually consumes the
+four-field core. This evidence closes increment 2.3 without a decorative
+runtime adoption.
+
 ## Next Increment
 
-Characterize current CLI and coordinator consumers to select the first real
-read-only adoption point for `project_run_result` without changing CLI text or
-persisted evidence. If no runtime consumer needs the projection yet, record the
-core of increment 2.3 complete and proceed to the separately scoped CLI
-decomposition in increment 2.4. Do not add a generic success predicate or merge
-module-specific status, blocker, artifact, checkpoint, or authority semantics.
+Proceed to increment 2.4 by decomposing CLI command registration by coherent
+domain while preserving `data_ops_lab.cli:main`, parser behavior, command
+names, defaults, help text, and output text. Keep domain execution in existing
+modules. Do not add a generic success predicate or merge module-specific
+status, blocker, artifact, checkpoint, or authority semantics.
