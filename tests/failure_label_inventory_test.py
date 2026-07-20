@@ -8,6 +8,7 @@ from data_ops_lab.contracts.error_taxonomy import (
     AUTHORITY_BOUNDARY_PROVENANCE,
     BLOCKER_RECORD_FORMAT_PROVENANCE,
     CONTROL_TEXT_PROVENANCE,
+    DIRECT_BLOCKER_CONSTRUCTION_PROVENANCE,
     DIRECT_BLOCKER_REUSE_PROVENANCE,
     DYNAMIC_ERROR_CODE_PROVENANCE,
     ERROR_CLASSIFICATION_REGISTRY,
@@ -1401,6 +1402,196 @@ def test_product_canonical_status_and_apply_authority_remain_separate():
     assert authority.disposition is TaxonomyDisposition.SEPARATE_AUTHORITY_BOUNDARY
 
 
+def test_product_materialization_is_a_complete_family_with_local_blocker_formats():
+    root = Path(__file__).parents[1] / "src" / "data_ops_lab"
+    labels, dynamic_sites = MODULE.inventory(root)
+    consumer_files = REGISTERED_ERROR_CONSUMER_FILES["product_materialization"]
+    literal_codes = {
+        label
+        for label, locations in labels.items()
+        if any(
+            any(f"/{filename}:" in location for filename in consumer_files)
+            for location in locations
+        )
+    }
+    direct_constructions = {
+        location: provenance
+        for location, provenance in DIRECT_BLOCKER_CONSTRUCTION_PROVENANCE.items()
+        if provenance.consumer_family == "product_materialization"
+    }
+    family_codes = literal_codes | {
+        code
+        for provenance in direct_constructions.values()
+        for code in provenance.possible_codes
+    }
+
+    assert consumer_files == frozenset({"product_materialization.py"})
+    assert len(literal_codes) == 15
+    assert len(family_codes) == 16
+    assert family_codes <= set(ERROR_CLASSIFICATION_REGISTRY)
+    assert not {
+        location
+        for location in dynamic_sites
+        if "/product_materialization.py:" in location
+    }
+    assert not {
+        location
+        for location, provenance in STANDARD_BLOCKER_FLOW_PROVENANCE.items()
+        if provenance.consumer_family == "product_materialization"
+    }
+    assert not {
+        location
+        for location, provenance in DIRECT_BLOCKER_REUSE_PROVENANCE.items()
+        if provenance.consumer_family == "product_materialization"
+    }
+
+    construction_location = "src/data_ops_lab/product_materialization.py:145"
+    assert set(direct_constructions) == {construction_location}
+    construction = direct_constructions[construction_location]
+    relative, line_text = construction_location.rsplit(":", 1)
+    source_line = (
+        Path(__file__).parents[1] / relative
+    ).read_text(encoding="utf-8").splitlines()[int(line_text) - 1]
+    assert source_line == "            blockers.append("
+    assert construction.possible_codes == ("invalid_source_identifier_count",)
+    assert construction.record_format == "product_materialization_candidate_blocker_v1"
+    assert construction.disposition is TaxonomyDisposition.REGISTERED
+
+    expected_formats = {
+        "src/data_ops_lab/product_materialization.py:174": (
+            "    blockers.append(",
+            "internal materialization blocker candidates",
+            "product_materialization_candidate_blocker_v1",
+            ("issue_ids", "source_identifier", "blocker_type", "explanation"),
+            None,
+        ),
+        "src/data_ops_lab/product_materialization.py:223": (
+            "        normalized.append(",
+            "manifest.blockers + product_materialization_blockers.csv",
+            "product_materialization_blocker_v1",
+            (
+                "blocker_id",
+                "issue_ids",
+                "source_identifier",
+                "blocker_type",
+                "explanation",
+            ),
+            "BLOCKER_{ordinal:03d}",
+        ),
+    }
+    family_formats = {
+        location: provenance
+        for location, provenance in BLOCKER_RECORD_FORMAT_PROVENANCE.items()
+        if provenance.consumer_family == "product_materialization"
+    }
+    assert set(family_formats) == set(expected_formats)
+    for location, expected in expected_formats.items():
+        expected_line, output_surface, record_format, record_fields, identifier = expected
+        relative, line_text = location.rsplit(":", 1)
+        source_line = (
+            Path(__file__).parents[1] / relative
+        ).read_text(encoding="utf-8").splitlines()[int(line_text) - 1]
+        provenance = family_formats[location]
+
+        assert source_line == expected_line
+        assert provenance.output_surface == output_surface
+        assert provenance.record_format == record_format
+        assert provenance.record_fields == record_fields
+        assert provenance.identifier_format == identifier
+        assert provenance.disposition is TaxonomyDisposition.SEPARATE_RECORD_FORMAT
+
+
+def test_product_materialization_status_controls_and_authority_remain_separate():
+    family_exceptions = {
+        location
+        for location, provenance in EXCEPTION_FALLBACK_PROVENANCE.items()
+        if provenance.consumer_family == "product_materialization"
+    }
+    assert not family_exceptions
+    assert not {
+        location
+        for location, provenance in PROVIDER_EXCEPTION_TRANSLATION_PROVENANCE.items()
+        if provenance.consumer_family == "product_materialization"
+    }
+
+    status_location = "src/data_ops_lab/product_materialization.py:649"
+    status = TEXT_STATUS_PROVENANCE[status_location]
+    relative, line_text = status_location.rsplit(":", 1)
+    source_line = (
+        Path(__file__).parents[1] / relative
+    ).read_text(encoding="utf-8").splitlines()[int(line_text) - 1]
+    assert source_line == '    status = "blocked" if blockers else "ready_for_local_preview"'
+    assert status.consumer_family == "product_materialization"
+    assert status.output_field == "manifest.status"
+    assert status.status_values == ("blocked", "ready_for_local_preview")
+    assert status.disposition is TaxonomyDisposition.SEPARATE_TEXT_STATUS
+    assert all(value not in ERROR_CLASSIFICATION_REGISTRY for value in status.status_values)
+
+    expected_controls = {
+        "src/data_ops_lab/product_materialization.py:48": (
+            'SUPPORTED_RETAIN_ACTION = "apply_corrected_product_ref_nr"',
+            "applied_decision.action",
+        ),
+        "src/data_ops_lab/product_materialization.py:427": (
+            '                "materialization_action": action,',
+            "lineage.materialization_action",
+        ),
+    }
+    family_controls = {
+        location: provenance
+        for location, provenance in CONTROL_TEXT_PROVENANCE.items()
+        if provenance.consumer_family == "product_materialization"
+    }
+    assert set(family_controls) == set(expected_controls)
+    for location, (expected_line, output_field) in expected_controls.items():
+        relative, line_text = location.rsplit(":", 1)
+        source_line = (
+            Path(__file__).parents[1] / relative
+        ).read_text(encoding="utf-8").splitlines()[int(line_text) - 1]
+        provenance = family_controls[location]
+
+        assert source_line == expected_line
+        assert provenance.output_field == output_field
+        assert provenance.value_domain
+        assert provenance.disposition is TaxonomyDisposition.SEPARATE_CONTROL_TEXT
+        assert provenance.value_domain not in ERROR_CLASSIFICATION_REGISTRY
+
+    expected_authority = {
+        "src/data_ops_lab/product_materialization.py:127": (
+            "    if applied_state != expected_state:",
+            "materialization_preflight",
+            ("applied_state_matches_validated_workbook=true",),
+            "the exact applied Product reconciliation state",
+        ),
+        "src/data_ops_lab/product_materialization.py:662": (
+            '        "contract": {',
+            "manifest.contract",
+            ("exclusion_precedence=true", "preview_only=true"),
+            "separate canonical-promotion review and explicit apply contracts",
+        ),
+    }
+    family_authority = {
+        location: provenance
+        for location, provenance in AUTHORITY_BOUNDARY_PROVENANCE.items()
+        if provenance.consumer_family == "product_materialization"
+    }
+    assert set(family_authority) == set(expected_authority)
+    for location, expected in expected_authority.items():
+        expected_line, output_surface, authority_values, next_authority = expected
+        relative, line_text = location.rsplit(":", 1)
+        source_line = (
+            Path(__file__).parents[1] / relative
+        ).read_text(encoding="utf-8").splitlines()[int(line_text) - 1]
+        provenance = family_authority[location]
+
+        assert source_line == expected_line
+        assert provenance.output_surface == output_surface
+        assert provenance.authority_values == authority_values
+        assert provenance.required_next_authority == next_authority
+        assert provenance.disposition is TaxonomyDisposition.SEPARATE_AUTHORITY_BOUNDARY
+        assert all(value not in ERROR_CLASSIFICATION_REGISTRY for value in authority_values)
+
+
 def test_registry_covers_only_complete_registered_consumer_families():
     root = Path(__file__).parents[1] / "src" / "data_ops_lab"
     labels, _ = MODULE.inventory(root)
@@ -1422,7 +1613,14 @@ def test_registry_covers_only_complete_registered_consumer_families():
             and row.disposition is TaxonomyDisposition.REGISTERED
             for code in row.possible_codes
         )
+        family_codes.update(
+            code
+            for row in DIRECT_BLOCKER_CONSTRUCTION_PROVENANCE.values()
+            if row.consumer_family == family
+            and row.disposition is TaxonomyDisposition.REGISTERED
+            for code in row.possible_codes
+        )
         expected_codes.update(family_codes)
 
     assert set(ERROR_CLASSIFICATION_REGISTRY) == expected_codes
-    assert len(ERROR_CLASSIFICATION_REGISTRY) == 659
+    assert len(ERROR_CLASSIFICATION_REGISTRY) == 675

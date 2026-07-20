@@ -3147,3 +3147,64 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 - Keep its five-field blocker format, issue/source identifiers,
   preview/readiness status, private row artifacts, canonical-promotion
   authority, the common run-result envelope, and CLI decomposition separate.
+
+## 2026-07-20 - Codex - Classify Product materialization
+
+### Git Checkpoint
+
+- Committed Product canonical-promotion taxonomy as `0cc1bb6`
+  (`refactor(contracts): classify product promotion errors`).
+- Published `codex/classify-product-canonical-promotion`, opened GitHub PR #3,
+  and merged it into `main` as `30d954f` before starting this increment.
+- Started Product materialization work on
+  `codex/classify-product-materialization`; this increment is not yet committed.
+
+### Implementation
+
+- Admitted `product_materialization.py` as one complete module-specific blocker
+  consumer.
+- Reviewed 15 literal codes plus the directly constructed
+  `invalid_source_identifier_count`, adding all 16 and expanding the registry
+  from 659 to 675 codes across 22 complete consumers.
+- Recorded the direct construction separately because the source-only inventory
+  intentionally recognizes only `add_blocker`/`_add_blocker` call sites.
+- Recorded the internal four-field blocker-candidate format and the normalized
+  persisted five-field format with deterministic `BLOCKER_{ordinal:03d}` IDs.
+- Recorded preview readiness as text status; applied decision and lineage
+  actions as control text; and the exact applied-state match plus preview-only
+  manifest as separate authority boundaries.
+
+### Classification Boundaries
+
+- Classified malformed identifiers/actions/schema as `contract`; applied-state
+  alignment and immutable row identity drift as `authority`; unsupported or
+  rejected human-decision paths as `approval`; and missing/duplicate governed
+  Product values as `expected_result`.
+- Kept `approved_decision_not_materialized` and
+  `retained_original_product_unresolved` registered but `unclassified` because
+  each aggregates multiple possible causes.
+- Preserved persisted blocker fields, identifiers, status, action domains,
+  Python/CLI behavior, fail-closed no-partial-preview policy, and output schemas.
+- Did not read private Product sources, materialize a preview, apply an approval,
+  promote canonical state, or authorize a database operation.
+
+### Validation
+
+- Focused taxonomy and Product materialization suite: 50 passed in 6.07 seconds.
+- Full registered-consumer suite: 235 passed in 40.91 seconds.
+- Full offline suite: 273 passed and 2 opt-in live-provider tests skipped in
+  45.66 seconds on Windows.
+- Registry evidence: 675 codes across 22 complete consumer modules; 10 dynamic
+  sites, two direct blocker-list reuses, one direct construction, 15 inherited
+  flows, 33 exception/fallback mappings, 38 status entries, four control-text
+  entries, five separate blocker-record formats, one approval projection, and
+  three authority boundaries.
+
+### Next Logical Step
+
+- Audit remaining source-only blocker consumers against the 658-literal
+  inventory before selecting another coherent family or designing the common
+  run-result envelope.
+- Keep exceptions, statuses, control values, authority gates, and
+  module-specific blocker records separate unless exact consumer/output
+  contracts prove equivalence.

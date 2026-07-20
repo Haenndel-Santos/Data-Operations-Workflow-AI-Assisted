@@ -28,20 +28,21 @@ standard analytics blocker ordering/shape, atomic file/directory publication,
 cleanup after retry exhaustion, target-race refusal, source-binding absence
 semantics, additive error classification, and legacy module exports. The
 inventory regression also verifies exact provenance for all 10 dynamic call
-sites, both direct blocker-list reuses, 15 inherited standard-blocker flows,
-33 exception/fallback mappings, and the separate translation, planning,
+sites, both direct blocker-list reuses, the one direct blocker construction, 15
+inherited standard-blocker flows, 33 exception/fallback mappings, two provider
+exception translations, and the separate translation, planning,
 execution, evaluation, presentation, narration, session-checkpoint, and live
 provider-outcome, registry-validation, soak, and reference validation/review
-and Product promotion status surfaces. Soak mode/stop reason, three
-module-specific blocker formats, the reference approval projection, and the
-Product no-apply authority boundary have separate provenance. The 659-code
-registry covers only the 21 complete registered consumer modules. Run them
-with the directly affected modules:
+and Product promotion/materialization status surfaces. Four control-text
+surfaces, five module-specific blocker formats, the reference approval
+projection, and three Product authority boundaries have separate provenance.
+The 675-code registry covers only the 22 complete registered consumer modules.
+Run them with the directly affected modules:
 
 ```powershell
 $env:PYTHONPATH = "src"
 $env:PYTHONDONTWRITEBYTECODE = "1"
-.\.venv\Scripts\python.exe -m pytest -p no:cacheprovider tests\failure_label_inventory_test.py tests\internal_contracts_test.py tests\source_onboarding_test.py tests\product_refnr_application_test.py tests\product_canonical_promotion_test.py tests\reference_dataset_validation_test.py tests\analytics_query_plan_test.py tests\analytics_query_execution_test.py tests\analytics_semantic_catalog_test.py tests\analytics_semantic_approval_test.py tests\analytics_semantic_adapter_test.py tests\analytics_dataset_benchmark_test.py tests\analytics_dataset_benchmark_preparation_test.py tests\analytics_dataset_benchmark_materialization_test.py tests\analytics_nl_translation_test.py tests\analytics_translation_evaluation_test.py tests\analytics_answer_evaluation_test.py tests\analytics_result_presentation_test.py tests\analytics_session_test.py tests\module_registry_test.py
+.\.venv\Scripts\python.exe -m pytest -p no:cacheprovider tests\failure_label_inventory_test.py tests\internal_contracts_test.py tests\source_onboarding_test.py tests\product_refnr_application_test.py tests\product_canonical_promotion_test.py tests\product_materialization_test.py tests\reference_dataset_validation_test.py tests\analytics_query_plan_test.py tests\analytics_query_execution_test.py tests\analytics_semantic_catalog_test.py tests\analytics_semantic_approval_test.py tests\analytics_semantic_adapter_test.py tests\analytics_dataset_benchmark_test.py tests\analytics_dataset_benchmark_preparation_test.py tests\analytics_dataset_benchmark_materialization_test.py tests\analytics_nl_translation_test.py tests\analytics_translation_evaluation_test.py tests\analytics_answer_evaluation_test.py tests\analytics_result_presentation_test.py tests\analytics_session_test.py tests\module_registry_test.py
 ```
 
 These tests use temporary files only. They do not process project data, call a

@@ -6,19 +6,18 @@ Turn local operational spreadsheets into validated analytical datasets and an ap
 
 ## Current Stage
 
-Four active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases 0-4 passed their gates for Northwind and the selected local Ollama development provider; AI Phase 5 remains active after its recorded, live-development, and endurance evidence; and Backend Phase II is active after its eleventh additive error-classification slice. Stage 5A-5F governed analytics retains its applied Northwind semantic catalog, immutable 13-case answer authority, reproducible 13/13 recorded evaluation, governed 9/13 loopback result, and 56 evidenced soak cycles. Backend Phase II has completed compatible common hashing, standard analytics blockers, atomic publication, the two proven source-binding absence semantics, a source-only baseline of 658 literal blocker labels, exact provenance for all 10 dynamic call sites and two direct blocker-list reuses, and explicit classification of 659 labels used by 21 complete blocker consumers. Exception, text-status, control-text, record-format, approval-projection, and authority-boundary surfaces remain separately provenanced. Further taxonomy expansion, a common run-result envelope, CLI decomposition, a fresh holdout, provider selection, dynamic dispatch, live narration, and a user interface remain pending.
+Four active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases 0-4 passed their gates for Northwind and the selected local Ollama development provider; AI Phase 5 remains active after its recorded, live-development, and endurance evidence; and Backend Phase II is active after its twelfth additive error-classification slice. Stage 5A-5F governed analytics retains its applied Northwind semantic catalog, immutable 13-case answer authority, reproducible 13/13 recorded evaluation, governed 9/13 loopback result, and 56 evidenced soak cycles. Backend Phase II has completed compatible common hashing, standard analytics blockers, atomic publication, the two proven source-binding absence semantics, a source-only baseline of 658 literal blocker labels, exact provenance for all 10 dynamic call sites, two direct blocker-list reuses, and one direct blocker construction, and explicit classification of 675 labels used by 22 complete blocker consumers. Exception, text-status, control-text, record-format, approval-projection, and authority-boundary surfaces remain separately provenanced. A remaining-consumer audit, a common run-result envelope, CLI decomposition, a fresh holdout, provider selection, dynamic dispatch, live narration, and a user interface remain pending.
 
 ## Last Completed Milestone
 
 On 2026-07-20, Backend Phase II increment 2.3 admitted
-`product_canonical_promotion.py` as a complete consumer and expanded the
-registry from 637 to 659 codes across 21 consumers by reviewing 19 literal and
-five finite dynamic codes. Four catches, three status surfaces, the local
-four-field `artifact` blocker format, and the explicit no-apply authority
-boundary now have provenance. `materialization_blockers_present` remains
-registered but `unclassified` because it aggregates causes owned by the
-materialization stage. No Product row, approval, canonical state, database, or
-persisted promotion output changed.
+`product_materialization.py` as a complete consumer and expanded the registry
+from 659 to 675 codes across 22 consumers by reviewing 15 literal codes and one
+directly constructed code. Its internal four-field candidates, persisted
+five-field blockers, preview status, two control-text domains, and two authority
+gates now have exact provenance. The two aggregate materialization failures
+remain registered but `unclassified`. No private Product row, approval,
+materialized preview, canonical state, or database changed.
 
 ## Current Capabilities
 
@@ -155,15 +154,18 @@ persisted promotion output changed.
 - Classify Product canonical promotion while preserving its dynamic integrity
   tuple, `artifact` blockers, dry-run status, private data boundary, and
   explicit requirement for a separate apply contract.
+- Classify Product materialization while preserving its candidate and persisted
+  blocker formats, issue/source identifiers, preview status, action domains,
+  exact applied-state gate, private data boundary, and preview-only authority.
 - Govern private local artifacts for cloud-first work by versioning only safe
   metadata and keeping raw sources, generated outputs, completed sensitive
   reviews, and secrets outside any repository that may become public.
 
 ## Test Status
 
-- Automated suite: 270 tests passed and 2 opt-in live-provider tests skipped offline on 2026-07-20; latest run completed in 42.81 seconds on Windows.
-- Backend Phase II Product canonical-promotion taxonomy and
-  registered-consumer suite: 227 passed in 38.03 seconds.
+- Automated suite: 273 tests passed and 2 opt-in live-provider tests skipped offline on 2026-07-20; latest run completed in 45.66 seconds on Windows.
+- Backend Phase II Product materialization taxonomy and registered-consumer
+  suite: 235 passed in 40.91 seconds.
 - Backend Phase II existing-file binding consumer suite: 76 passed in 17.77 seconds.
 - Backend Phase II declared-file binding consumer suite: 19 passed in 4.73 seconds.
 - Isolated local Ollama smoke test: 1 passed in 39.48 seconds on 2026-07-15 with an 8,192-token context; it used no database or SQL execution.
@@ -193,12 +195,13 @@ persisted promotion output changed.
 - A second SQL Server 2025 Evaluation instance (`DATAOPSLAB`) remains installed but stopped; project work should use the default Developer instance only when an explicitly authorized restore/export task requires it.
 - Backend Phase II has consolidated proven-equivalent file hashing, standard
   analytics blockers, two atomic-publication variants, and two source-binding
-  absence semantics. Its error taxonomy covers 21 complete consumers; all
-  dynamic sites and dataset-benchmark direct blocker-list reuses have
-  provenance; 15 inherited blocker flows and 33 exception/fallback mappings
-  are explicit. Soak control text, three local blocker formats, the reference
-  approval projection, and Product's no-apply authority boundary are separate.
-  Remaining consumer families, direct blocker surfaces, a common run-result
+  absence semantics. Its error taxonomy covers 22 complete consumers; all
+  dynamic sites, dataset-benchmark direct blocker-list reuses, and the Product
+  materialization direct construction have provenance; 15 inherited blocker
+  flows and 33 exception/fallback mappings are explicit. Four control-text
+  surfaces, five local blocker formats, the reference approval projection, and
+  three Product authority boundaries are separate. Remaining consumer
+  families, a common run-result
   envelope, and CLI decomposition remain pending. Free-text statuses remain
   intentionally separate. Binding comparison policies,
   deterministic `.building` workflows, and distinct blocker schemas must not
@@ -215,12 +218,13 @@ persisted promotion output changed.
 
 ## Next Logical Milestone
 
-Continue Backend Phase II increment 2.3 with Product materialization as the
-next complete consumer. Keep its five-field blocker format, issue/source
-identifiers, preview/readiness status, private row artifacts, canonical
-promotion authority, the run-result envelope, and CLI decomposition separate.
-Do not infer categories from prefixes, rename persisted codes, add blocker
-fields, or change module-specific blocker shapes. The independent AI track
+Continue Backend Phase II increment 2.3 by auditing the remaining source-only
+blocker consumers against the 658-literal baseline, then select the next
+coherent family or determine whether consumer coverage is complete before
+designing a common run-result envelope. Do not infer categories from prefixes,
+rename persisted codes, add blocker fields, or change module-specific blocker
+shapes. Keep exception, status, control, authority, and record-format surfaces
+separate. The independent AI track
 still requires fixed Phase 5 thresholds and a fresh reviewed holdout before
 provider selection.
 
@@ -230,10 +234,10 @@ files in a separate private store or encrypted artifact workflow.
 
 ## Last Verified Commit
 
-`a7c3d66` (merge of `refactor(contracts): classify additional error families`).
+`30d954f` (merge of `refactor(contracts): classify product promotion errors`).
 
 ## Last Updated
 
-2026-07-20 by Codex after classifying Product canonical promotion while
-preserving its dry-run, private-data, exception, format, and no-apply authority
-boundaries.
+2026-07-20 by Codex after classifying Product materialization while preserving
+its private-data, candidate/persisted format, status, control, and preview-only
+authority boundaries.

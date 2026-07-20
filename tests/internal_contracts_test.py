@@ -276,6 +276,25 @@ def test_product_canonical_taxonomy_keeps_apply_authority_and_status_distinct():
     assert classify_error("canonical_state_applied=false").registered is False
 
 
+def test_product_materialization_taxonomy_keeps_preview_authority_and_controls_distinct():
+    expected = {
+        "invalid_source_identifier_count": ErrorCategory.CONTRACT,
+        "approved_conflict_alignment_changed": ErrorCategory.AUTHORITY,
+        "retained_product_uses_rejected_reference_row": ErrorCategory.APPROVAL,
+        "approved_authoritative_row_empty": ErrorCategory.EXPECTED_RESULT,
+        "approved_decision_not_materialized": ErrorCategory.UNCLASSIFIED,
+    }
+
+    assert {
+        code: classify_error(code).category for code in expected
+    } == expected
+    assert all(classify_error(code).registered for code in expected)
+    assert classify_error("ready_for_local_preview").registered is False
+    assert classify_error("apply_corrected_product_ref_nr").registered is False
+    assert classify_error("matched_authoritative_correction").registered is False
+    assert classify_error("preview_only=true").registered is False
+
+
 def test_atomic_write_text_retries_and_cleans_temporary_file(tmp_path):
     path = tmp_path / "checkpoint.yml"
     path.write_text("old\n", encoding="utf-8")
