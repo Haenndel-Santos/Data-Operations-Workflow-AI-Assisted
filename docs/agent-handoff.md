@@ -3761,3 +3761,76 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 2. Mark PR #14 ready and merge only after that final run passes.
 3. Continue increment 2.4 with the remaining model-documentation and analytics
    operations registration families from the resulting `main`.
+
+## 2026-07-20 - Codex - Extract model-documentation CLI registration (draft)
+
+### Git Checkpoint
+
+- GitHub PR #14 passed its final workflow run `29775876729` with 276 tests
+  passed, 2 opt-in live-provider tests skipped, 111 internal links checked, 0
+  broken, and a clean pull-request diff.
+- PR #14 merged the Product publication registration slice into `main` as
+  `3c9883d`.
+- Continued Backend Phase II increment 2.4 on
+  `agent/split-cli-model-documentation`.
+
+### Implementation
+
+- Added `cli_commands.model_documentation` for conceptual schema overview and
+  confirmed business-flow mapping documentation parser declarations.
+- Invoked the registrar at the original position in `build_parser`;
+  registration modules now own 44 of the 47 command declarations.
+- Kept the root parser `--input` and `--output` arguments in `build_parser`.
+- Kept all run-function imports, explicit dispatch, result formatting, approval
+  boundaries, private-data boundaries, and `data_ops_lab.cli:main` unchanged.
+- Did not generate documentation, open project data, access a database, apply a
+  decision, use a provider/network call, migrate, import, synchronize, upload,
+  or publish generated output.
+
+### Validation
+
+- New registrar syntax compilation passed under Python 3.
+- Exact isolated equivalence preserved both command names, order, actions,
+  options, destinations, types, required flags, defaults, choices, metavars,
+  and help text; signature SHA-256:
+  `529886eb2802990c90daa1101375d79898917ae7f1963b9b3ce85a2a15f40060`.
+- Reconstructed registration order remained identical across all 47 commands;
+  root parser arguments remained in their original function.
+- Exactly one final newline and no trailing whitespace were verified for every
+  changed file.
+- The complete GitHub Actions suite, link checker, and pull-request diff gate
+  are pending; this change remains a draft until they pass.
+
+### Next Logical Step
+
+1. Open the model-documentation registration pull request as a draft.
+2. Inspect the complete automated Windows/Python 3.13 gate.
+3. Correct any regression before marking the pull request ready or merging.
+
+## 2026-07-20 - Codex - Validate model-documentation registration PR
+
+### Git Checkpoint
+
+- Validated GitHub PR #15 at `9c8a1da`.
+- GitHub Actions workflow run: `29776329104`; job: `88466461437`.
+
+### Validation
+
+- Full offline suite: 276 passed and 2 opt-in live-provider tests skipped in
+  54.57 seconds on Windows/Python 3.13.
+- Internal links: 111 checked, 0 broken.
+- Pull-request diff check: passed against exact base `3c9883d` and head
+  `9c8a1da`.
+- Root parser argument placement remained covered by the complete suite.
+- Checkout, Python setup, dependency installation, cache finalization, and
+  cleanup steps passed.
+- No documentation generation, project data, live provider, external database,
+  approval apply, migration, import, synchronization, upload, or
+  generated-output publication ran.
+
+### Next Logical Step
+
+1. Revalidate this documentation-only evidence commit through the same workflow.
+2. Mark PR #15 ready and merge only after that final run passes.
+3. Complete increment 2.4 by extracting the remaining analytics operations
+   registrations from the resulting `main`.

@@ -56,6 +56,7 @@ from .cli_commands import (
     register_analytics_query_session_commands,
     register_analytics_semantic_commands,
     register_erp_modeling_commands,
+    register_model_documentation_commands,
     register_product_publication_commands,
     register_product_reference_commands,
     register_reference_dataset_commands,
@@ -186,33 +187,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     register_product_publication_commands(subparsers)
 
-    schema_overview = subparsers.add_parser(
-        "schema-overview",
-        help="Generate conceptual main database schema overview documentation and SQL.",
-    )
-    schema_overview.add_argument(
-        "--output",
-        type=Path,
-        default=Path("outputs/originaldatabase_analysis/schema_overview"),
-        help="Directory for conceptual schema overview outputs.",
-    )
-
-    business_flow_mapping = subparsers.add_parser(
-        "business-flow-mapping",
-        help="Register confirmed business-flow mapping as pending validation config and documentation.",
-    )
-    business_flow_mapping.add_argument(
-        "--config",
-        type=Path,
-        default=Path("config/data_model"),
-        help="Data model config directory. Approved files are not modified.",
-    )
-    business_flow_mapping.add_argument(
-        "--output",
-        type=Path,
-        default=Path("outputs/originaldatabase_analysis/schema_overview"),
-        help="Directory for business-flow mapping outputs.",
-    )
+    register_model_documentation_commands(subparsers)
 
     parser.add_argument("--input", type=Path, help="Directory containing raw CSV/XLSX files.")
     parser.add_argument("--output", type=Path, default=Path("outputs/run"), help="Directory for generated outputs.")
