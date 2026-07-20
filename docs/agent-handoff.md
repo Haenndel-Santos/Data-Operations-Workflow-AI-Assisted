@@ -2857,3 +2857,234 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 - Review result presentation and narration as one coherent consumer family.
 - Keep narration-provider exceptions, text statuses, Product blocker formats,
   the common run-result envelope, and CLI decomposition separate.
+
+## 2026-07-20 - Codex - Classify result presentation and narration
+
+### Implementation
+
+- Admitted `analytics_result_presentation.py` and
+  `analytics_result_narration.py` as one complete standard-blocker consumer
+  family.
+- Reviewed all 41 unique family codes, reused nine existing classifications,
+  and expanded the additive registry from 438 to 470 codes across 16 complete
+  consumers.
+- Recorded four exact flows that write already-classified blockers from shared
+  YAML inputs into presentation and narration evidence.
+- Recorded the result-CSV parsing catch and both narration-provider catches as
+  sanitized exception surfaces without persisted exception messages.
+- Recorded facts, presentation, and narration readiness values as text-status
+  surfaces rather than blocker codes.
+
+### Classification Boundaries
+
+- Classified evidence/hash drift as `authority`, shape and prerequisite state
+  as `contract`, result bounds as `execution_limit`, result-file failures as
+  `filesystem`, control-total mismatches as `expected_result`, and invalid
+  narrative claims/citations as `provider`.
+- Reused existing request, provider-response, timeout, and failure codes rather
+  than duplicating global entries.
+- Preserved Stage 5B facts and controls as numeric authority, cited narration
+  as non-authoritative, and every persisted label, field, entrypoint, exception
+  behavior, and generated-output contract.
+
+### Validation
+
+- Taxonomy and inventory contract suite: 24 passed in 3.86 seconds.
+- Focused presentation/narration and taxonomy suite: 37 passed in 6.76 seconds.
+- Full registered-consumer suite: 190 passed in 33.82 seconds.
+- Full offline suite: 252 passed and 2 opt-in live-provider tests skipped in
+  42.68 seconds on Windows.
+- Internal link check: 110 checked, 0 broken.
+- Registry evidence: 470 codes across 16 complete consumer modules; the source
+  inventory remains 658 literal labels and 10/10 dynamic call sites.
+
+### Next Logical Step
+
+- Review the analytics-session coordinator as the next complete consumer.
+- Keep checkpoint statuses, nested stage results, Product blocker formats, the
+  common run-result envelope, and CLI decomposition separate.
+
+## 2026-07-20 - Codex - Classify the analytics-session coordinator
+
+### Implementation
+
+- Admitted `analytics_session.py` as one complete standard-blocker consumer.
+- Reviewed and classified all 23 literal session codes, expanding the additive
+  registry from 470 to 493 codes across 17 complete consumers.
+- Recorded the two exact shared-YAML blocker flows used by preparation-manifest
+  and execution-review validation.
+- Recorded artifact-path normalization, review-time parsing, and existing
+  resume-manifest preflight as separate catch-site fallback surfaces.
+- Recorded 14 review-template, prepare, nested-stage, resume, and
+  last-valid-checkpoint text sources rather than treating their values as
+  blocker codes.
+
+### Classification Boundaries
+
+- Classified immutable checkpoint and input drift as `authority`, human review
+  completeness as `approval`, malformed review or stage prerequisites as
+  `contract`, and the missing recorded narration response as `filesystem`.
+- Kept five aggregate stage-blocked codes registered but `unclassified`
+  because their specialized stages can fail with causes from multiple
+  categories.
+- Preserved the mandatory exact human-review gate, stop-before-execution
+  behavior, last-valid-checkpoint policy, persisted evidence, entrypoints, and
+  specialized stage contracts.
+
+### Validation
+
+- Taxonomy and inventory contract suite: 27 passed in 3.36 seconds.
+- Focused analytics-session and taxonomy suite: 35 passed in 5.79 seconds.
+- Full registered-consumer suite: 201 passed in 36.44 seconds.
+- Full offline suite: 255 passed and 2 opt-in live-provider tests skipped in
+  41.89 seconds on Windows.
+- Internal link check: 110 checked, 0 broken.
+- Registry evidence: 493 codes across 17 complete consumer modules; the source
+  inventory remains 658 literal labels and 10/10 dynamic call sites.
+
+### Next Logical Step
+
+- Review the static module-registry validator as the next complete consumer.
+- Keep registry statuses, generated validation evidence, Product blocker
+  formats, the common run-result envelope, and CLI decomposition separate.
+
+## 2026-07-20 - Codex - Classify the static module-registry validator
+
+### Implementation
+
+- Admitted `module_registry.py` as one complete standard-blocker consumer.
+- Reviewed and classified all 49 literal validator codes, expanding the
+  additive registry from 493 to 542 codes across 18 complete consumers.
+- Recorded all six file-size, YAML, module-spec, source-AST, initial-hash, and
+  final-drift catches as sanitized standard-blocker mappings.
+- Recorded the generated `valid`/`blocked` validation status as a text surface
+  rather than a blocker code.
+- Confirmed that the family has no dynamic code site, inherited blocker flow,
+  or direct blocker-record reuse.
+
+### Classification Boundaries
+
+- Classified registry/module/workflow shape as `contract`, bounded collection
+  sizes as `execution_limit`, source or declared-file access as `filesystem`,
+  disabled-control/drift checks as `authority`, and the required human gate as
+  `approval`.
+- Preserved static source inspection, disabled dynamic execution, concurrency,
+  network, and review auto-approval, and the non-executing registry contract.
+- Preserved every persisted label, field, CLI/Python entrypoint, exception
+  behavior, output schema, and generated evidence contract.
+
+### Validation
+
+- Taxonomy and inventory contract suite: 30 passed in 3.71 seconds.
+- Focused module-registry and taxonomy suite: 36 passed in 4.89 seconds.
+- Full registered-consumer suite: 210 passed in 36.84 seconds.
+- Full offline suite: 258 passed and 2 opt-in live-provider tests skipped in
+  43.35 seconds on Windows.
+- Internal link check: 110 checked, 0 broken.
+- Registry evidence: 542 codes across 18 complete consumer modules; the source
+  inventory remains 658 literal labels and 10/10 dynamic call sites.
+
+### Next Logical Step
+
+- Review the bounded local Ollama soak controller as the next complete
+  analytics consumer.
+- Keep cycle/provider/resource statuses, stop evidence, Product blocker
+  formats, the common run-result envelope, and CLI decomposition separate.
+
+## 2026-07-20 - Codex - Classify the bounded local Ollama soak
+
+### Implementation
+
+- Admitted `analytics_ollama_soak.py` as one complete module-specific blocker
+  consumer.
+- Reviewed and classified all 21 literal soak codes, expanding the additive
+  registry from 542 to 563 codes across 19 complete consumers.
+- Recorded all ten authorization, policy, provider, telemetry, cycle-evidence,
+  and live-cycle catches with exact sanitized fallback provenance.
+- Recorded the overall and per-cycle statuses, mode, and stop reason as
+  separate text/control surfaces.
+- Recorded the embedded `blocker_001` schema as a separate four-field record
+  format rather than treating it as the shared `BLOCKER_001` format.
+
+### Classification Boundaries
+
+- Classified malformed authorization/policy structure as `contract`, source
+  binding and stop-policy constraints as `authority`, explicit human
+  authorization requirements as `approval`, bounded policy limits as
+  `execution_limit`, loopback/provider constraints as `provider`, and the
+  missing authorization file as `filesystem`.
+- Kept `ollama_soak_live_authority_preflight_failed` registered but
+  `unclassified` because the nested preflight spans multiple categories.
+- Preserved every persisted label, blocker field and identifier, status,
+  exception behavior, authority gate, entrypoint, and generated output.
+- Did not run or authorize a soak, network call, provider call, database
+  operation, concurrency, or broader execution scope.
+
+### Validation
+
+- Taxonomy and inventory contract suite: 34 passed in 4.80 seconds.
+- Focused offline soak and taxonomy suite: 8 passed and 41 deselected in 3.94
+  seconds.
+- Full registered-consumer suite: 214 passed in 36.98 seconds.
+- Full offline suite: 262 passed and 2 opt-in live-provider tests skipped in
+  42.63 seconds on Windows.
+- Registry evidence: 563 codes across 19 complete consumer modules; 15
+  inherited flows, 24 exception/fallback mappings, 28 status entries, two
+  control-text entries, and one separate blocker-record format.
+
+### Next Logical Step
+
+- Review `reference_dataset_validation.py` as the next complete consumer.
+- Keep its `code`/`message`/`field` blocker format, statuses, approval
+  projection, Product blocker formats, the common run-result envelope, and CLI
+  decomposition separate.
+
+## 2026-07-20 - Codex - Classify reference-dataset validation
+
+### Implementation
+
+- Admitted `reference_dataset_validation.py` as one complete module-specific
+  blocker consumer.
+- Reviewed all 79 literal family codes and added the 74 not already classified,
+  expanding the registry from 563 to 637 codes across 20 complete consumers.
+- Recorded all five YAML, approval-time, DuckDB, review-time, and staged-output
+  catches with exact fallback or re-raise provenance.
+- Recorded six conversion, review, decision, approved-registry, and overall
+  status surfaces outside the blocker registry.
+- Recorded the local `code`/`message`/`field` blocker schema and the exact
+  completed-review approved-relationship projection as separate contracts.
+
+### Classification Boundaries
+
+- Classified malformed versions/shapes/identifiers as `contract`; provenance,
+  hashes, reproduction, evidence source, and immutable drift as `authority`;
+  human use/review/scope requirements as `approval`; missing local files as
+  `filesystem`; and configured-count or technical data failures as
+  `expected_result`.
+- Kept `invalid_relationship_review` registered but `unclassified` because its
+  single condition combines version shape, dataset identity, and completed
+  review state.
+- Preserved every persisted code, message, field, status, exception/re-raise
+  behavior, review authority, Python/CLI entrypoint, and output schema.
+- Did not process project datasets, promote a relationship candidate, apply an
+  approved registry, connect externally, or expand upload/publication/training
+  authority.
+
+### Validation
+
+- Taxonomy and inventory contract suite: 38 passed in 4.61 seconds.
+- Focused taxonomy and reference-validation suite: 46 passed in 8.14 seconds.
+- Full registered-consumer suite: 218 passed in 37.67 seconds.
+- Full offline suite: 266 passed and 2 opt-in live-provider tests skipped in
+  43.54 seconds on Windows.
+- Registry evidence: 637 codes across 20 complete consumer modules; 15
+  inherited flows, 29 exception/fallback mappings, 34 status entries, two
+  control-text entries, two separate blocker-record formats, and one approval
+  projection.
+
+### Next Logical Step
+
+- Review `product_canonical_promotion.py` as the next complete consumer.
+- Keep its dynamic integrity-check provenance, `artifact` blocker format,
+  readiness/plan statuses, canonical apply authority, Product materialization
+  format, the common run-result envelope, and CLI decomposition separate.

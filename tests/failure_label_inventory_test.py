@@ -4,6 +4,9 @@ import importlib.util
 from pathlib import Path
 
 from data_ops_lab.contracts.error_taxonomy import (
+    APPROVAL_PROJECTION_PROVENANCE,
+    BLOCKER_RECORD_FORMAT_PROVENANCE,
+    CONTROL_TEXT_PROVENANCE,
     DIRECT_BLOCKER_REUSE_PROVENANCE,
     DYNAMIC_ERROR_CODE_PROVENANCE,
     ERROR_CLASSIFICATION_REGISTRY,
@@ -373,6 +376,855 @@ def test_answer_evaluation_exceptions_and_statuses_remain_separate():
         assert all(value not in ERROR_CLASSIFICATION_REGISTRY for value in status_values)
 
 
+def test_result_presentation_narration_is_a_complete_registered_family():
+    root = Path(__file__).parents[1] / "src" / "data_ops_lab"
+    labels, _ = MODULE.inventory(root)
+    consumer_files = REGISTERED_ERROR_CONSUMER_FILES[
+        "result_presentation_narration"
+    ]
+    family_codes = {
+        label
+        for label, locations in labels.items()
+        if any(
+            any(f"/{filename}:" in location for filename in consumer_files)
+            for location in locations
+        )
+    }
+
+    assert consumer_files == frozenset(
+        {
+            "analytics_result_narration.py",
+            "analytics_result_presentation.py",
+        }
+    )
+    assert len(family_codes) == 41
+    assert family_codes <= set(ERROR_CLASSIFICATION_REGISTRY)
+
+    expected_flow_lines = {
+        "src/data_ops_lab/analytics_result_presentation.py:520": (
+            '    request = read_yaml_mapping(request_path, blockers, "request")',
+            "standard_analytics",
+        ),
+        "src/data_ops_lab/analytics_result_presentation.py:521": (
+            "    execution_manifest = read_yaml_mapping(",
+            "standard_analytics",
+        ),
+        "src/data_ops_lab/analytics_result_narration.py:459": (
+            "    presentation_manifest = read_yaml_mapping(",
+            "standard_analytics",
+        ),
+        "src/data_ops_lab/analytics_result_narration.py:464": (
+            '    facts_bundle = read_yaml_mapping(facts_path, blockers, "facts")',
+            "standard_analytics",
+        ),
+    }
+    family_flows = {
+        location: provenance
+        for location, provenance in STANDARD_BLOCKER_FLOW_PROVENANCE.items()
+        if provenance.consumer_family == "result_presentation_narration"
+    }
+    assert set(family_flows) == set(expected_flow_lines)
+    for location, (expected_line, producer_family) in expected_flow_lines.items():
+        relative, line_text = location.rsplit(":", 1)
+        source_line = (
+            Path(__file__).parents[1] / relative
+        ).read_text(encoding="utf-8").splitlines()[int(line_text) - 1]
+        provenance = family_flows[location]
+
+        assert source_line == expected_line
+        assert provenance.producer_family == producer_family
+        assert producer_family in REGISTERED_ERROR_CONSUMER_FILES
+        assert provenance.record_format == "standard_blocker"
+        assert provenance.disposition is TaxonomyDisposition.REGISTERED
+
+
+def test_result_presentation_narration_exceptions_and_statuses_remain_separate():
+    expected_exceptions = {
+        "src/data_ops_lab/analytics_result_presentation.py:269": (
+            "    except (OSError, UnicodeError, csv.Error):",
+            ("OSError", "UnicodeError", "csv.Error"),
+            "invalid_result_csv",
+        ),
+        "src/data_ops_lab/analytics_result_narration.py:514": (
+            "        except TimeoutError:",
+            ("TimeoutError",),
+            "provider_timeout",
+        ),
+        "src/data_ops_lab/analytics_result_narration.py:516": (
+            "        except Exception:",
+            ("Exception",),
+            "provider_failure",
+        ),
+    }
+    family_exceptions = {
+        location: provenance
+        for location, provenance in EXCEPTION_FALLBACK_PROVENANCE.items()
+        if provenance.consumer_family == "result_presentation_narration"
+    }
+    assert set(family_exceptions) == set(expected_exceptions)
+    for location, expected in expected_exceptions.items():
+        expected_line, caught_exceptions, output_value = expected
+        relative, line_text = location.rsplit(":", 1)
+        source_line = (
+            Path(__file__).parents[1] / relative
+        ).read_text(encoding="utf-8").splitlines()[int(line_text) - 1]
+        provenance = family_exceptions[location]
+
+        assert source_line == expected_line
+        assert provenance.value_source
+        assert provenance.caught_exceptions == caught_exceptions
+        assert provenance.output_surface == "standard_blocker"
+        assert provenance.output_field == "blocker_type"
+        assert provenance.output_value == output_value
+        assert provenance.exception_message_persisted is False
+        assert provenance.disposition is TaxonomyDisposition.SEPARATE_EXCEPTION_SURFACE
+        assert output_value in ERROR_CLASSIFICATION_REGISTRY
+
+    expected_statuses = {
+        "src/data_ops_lab/analytics_result_presentation.py:369": (
+            '        "status": "ready_for_recorded_narration",',
+            "facts.status",
+            ("ready_for_recorded_narration",),
+        ),
+        "src/data_ops_lab/analytics_result_presentation.py:544": (
+            '    status = "blocked" if blockers else "ready_for_recorded_narration"',
+            "status",
+            ("blocked", "ready_for_recorded_narration"),
+        ),
+        "src/data_ops_lab/analytics_result_narration.py:535": (
+            '    status = "blocked" if blockers else "ready_for_user"',
+            "status",
+            ("blocked", "ready_for_user"),
+        ),
+    }
+    for location, (expected_line, output_field, status_values) in expected_statuses.items():
+        relative, line_text = location.rsplit(":", 1)
+        source_line = (
+            Path(__file__).parents[1] / relative
+        ).read_text(encoding="utf-8").splitlines()[int(line_text) - 1]
+        provenance = TEXT_STATUS_PROVENANCE[location]
+
+        assert source_line == expected_line
+        assert provenance.consumer_family == "result_presentation_narration"
+        assert provenance.output_field == output_field
+        assert provenance.status_values == status_values
+        assert provenance.disposition is TaxonomyDisposition.SEPARATE_TEXT_STATUS
+        assert all(value not in ERROR_CLASSIFICATION_REGISTRY for value in status_values)
+
+
+def test_analytics_session_is_a_complete_registered_family():
+    root = Path(__file__).parents[1] / "src" / "data_ops_lab"
+    labels, _ = MODULE.inventory(root)
+    consumer_files = REGISTERED_ERROR_CONSUMER_FILES["analytics_session"]
+    family_codes = {
+        label
+        for label, locations in labels.items()
+        if any(
+            any(f"/{filename}:" in location for filename in consumer_files)
+            for location in locations
+        )
+    }
+
+    assert consumer_files == frozenset({"analytics_session.py"})
+    assert len(family_codes) == 23
+    assert family_codes <= set(ERROR_CLASSIFICATION_REGISTRY)
+
+    expected_flow_lines = {
+        "src/data_ops_lab/analytics_session.py:460": (
+            '    prepare = read_yaml_mapping(prepare_manifest_path, blockers, "prepare_manifest")',
+            "standard_analytics",
+        ),
+        "src/data_ops_lab/analytics_session.py:620": (
+            '    review = read_yaml_mapping(review_path, blockers, "review")',
+            "standard_analytics",
+        ),
+    }
+    family_flows = {
+        location: provenance
+        for location, provenance in STANDARD_BLOCKER_FLOW_PROVENANCE.items()
+        if provenance.consumer_family == "analytics_session"
+    }
+    assert set(family_flows) == set(expected_flow_lines)
+    for location, (expected_line, producer_family) in expected_flow_lines.items():
+        relative, line_text = location.rsplit(":", 1)
+        source_line = (
+            Path(__file__).parents[1] / relative
+        ).read_text(encoding="utf-8").splitlines()[int(line_text) - 1]
+        provenance = family_flows[location]
+
+        assert source_line == expected_line
+        assert provenance.producer_family == producer_family
+        assert producer_family in REGISTERED_ERROR_CONSUMER_FILES
+        assert provenance.record_format == "standard_blocker"
+        assert provenance.disposition is TaxonomyDisposition.REGISTERED
+
+
+def test_analytics_session_exceptions_and_statuses_remain_separate():
+    expected_exceptions = {
+        "src/data_ops_lab/analytics_session.py:108": (
+            "    except ValueError:",
+            ("ValueError",),
+            "artifact_metadata",
+            "path",
+            "",
+        ),
+        "src/data_ops_lab/analytics_session.py:443": (
+            "    except ValueError:",
+            ("ValueError",),
+            "standard_blocker",
+            "blocker_type",
+            "invalid_execution_review_time",
+        ),
+        "src/data_ops_lab/analytics_session.py:574": (
+            "    except (OSError, UnicodeError, yaml.YAMLError) as error:",
+            ("OSError", "UnicodeError", "yaml.YAMLError"),
+            "exception",
+            "exception_type",
+            "ValueError",
+        ),
+    }
+    family_exceptions = {
+        location: provenance
+        for location, provenance in EXCEPTION_FALLBACK_PROVENANCE.items()
+        if provenance.consumer_family == "analytics_session"
+    }
+    assert set(family_exceptions) == set(expected_exceptions)
+    for location, expected in expected_exceptions.items():
+        expected_line, caught, output_surface, output_field, output_value = expected
+        relative, line_text = location.rsplit(":", 1)
+        source_line = (
+            Path(__file__).parents[1] / relative
+        ).read_text(encoding="utf-8").splitlines()[int(line_text) - 1]
+        provenance = family_exceptions[location]
+
+        assert source_line == expected_line
+        assert provenance.value_source
+        assert provenance.caught_exceptions == caught
+        assert provenance.output_surface == output_surface
+        assert provenance.output_field == output_field
+        assert provenance.output_value == output_value
+        assert provenance.exception_message_persisted is False
+        assert provenance.disposition is TaxonomyDisposition.SEPARATE_EXCEPTION_SURFACE
+
+    assert "invalid_execution_review_time" in ERROR_CLASSIFICATION_REGISTRY
+    assert "ValueError" not in ERROR_CLASSIFICATION_REGISTRY
+
+    expected_statuses = {
+        "src/data_ops_lab/analytics_session.py:188": (
+            '        "status": "pending_review",',
+            "review_template.status",
+            ("pending_review",),
+        ),
+        "src/data_ops_lab/analytics_session.py:196": (
+            '            "decision": "pending",',
+            "review_template.review.decision",
+            ("pending",),
+        ),
+        "src/data_ops_lab/analytics_session.py:271": (
+            '        status = "clarification_required"',
+            "prepare.status",
+            ("awaiting_execution_review", "blocked", "clarification_required"),
+        ),
+        "src/data_ops_lab/analytics_session.py:298": (
+            '                "status": translation_result.status,',
+            "prepare.stages.translation.status",
+            ("blocked", "clarification_required", "ready_for_query_plan"),
+        ),
+        "src/data_ops_lab/analytics_session.py:302": (
+            '                "status": plan_result.status if plan_result else "not_started",',
+            "prepare.stages.query_plan.status",
+            ("blocked", "not_started", "ready_for_execution_review"),
+        ),
+        "src/data_ops_lab/analytics_session.py:305": (
+            '            "query_execution": {"status": "not_authorized"},',
+            "prepare.stages.query_execution.status",
+            ("not_authorized",),
+        ),
+        "src/data_ops_lab/analytics_session.py:306": (
+            '            "result_presentation": {"status": "not_started"},',
+            "prepare.stages.result_presentation.status",
+            ("not_started",),
+        ),
+        "src/data_ops_lab/analytics_session.py:307": (
+            '            "result_narration": {"status": "not_started"},',
+            "prepare.stages.result_narration.status",
+            ("not_started",),
+        ),
+        "src/data_ops_lab/analytics_session.py:635": (
+            '    last_valid_checkpoint = "execution_review" '
+            'if review_validated else "prepare"',
+            "last_valid_checkpoint",
+            (
+                "execution_review",
+                "prepare",
+                "query_execution",
+                "result_narration",
+                "result_presentation",
+            ),
+        ),
+        "src/data_ops_lab/analytics_session.py:699": (
+            '    status = "completed" if not blockers else "blocked"',
+            "resume.status",
+            ("blocked", "completed"),
+        ),
+        "src/data_ops_lab/analytics_session.py:702": (
+            '        "execution_review": '
+            '{"status": "approved" if review_validated else "blocked"},',
+            "resume.stages.execution_review.status",
+            ("approved", "blocked"),
+        ),
+        "src/data_ops_lab/analytics_session.py:704": (
+            '            "status": execution_result.status '
+            'if execution_result else "not_started",',
+            "resume.stages.query_execution.status",
+            ("blocked", "completed", "completed_no_rows", "not_started"),
+        ),
+        "src/data_ops_lab/analytics_session.py:708": (
+            '            "status": presentation_result.status '
+            'if presentation_result else "not_started",',
+            "resume.stages.result_presentation.status",
+            ("blocked", "not_started", "ready_for_recorded_narration"),
+        ),
+        "src/data_ops_lab/analytics_session.py:714": (
+            '            "status": narration_result.status '
+            'if narration_result else "not_started",',
+            "resume.stages.result_narration.status",
+            ("blocked", "not_started", "ready_for_user"),
+        ),
+    }
+    family_statuses = {
+        location: provenance
+        for location, provenance in TEXT_STATUS_PROVENANCE.items()
+        if provenance.consumer_family == "analytics_session"
+    }
+    assert set(family_statuses) == set(expected_statuses)
+    for location, (expected_line, output_field, status_values) in expected_statuses.items():
+        relative, line_text = location.rsplit(":", 1)
+        source_line = (
+            Path(__file__).parents[1] / relative
+        ).read_text(encoding="utf-8").splitlines()[int(line_text) - 1]
+        provenance = family_statuses[location]
+
+        assert source_line == expected_line
+        assert provenance.output_field == output_field
+        assert provenance.status_values == status_values
+        assert provenance.disposition is TaxonomyDisposition.SEPARATE_TEXT_STATUS
+        assert all(value not in ERROR_CLASSIFICATION_REGISTRY for value in status_values)
+
+
+def test_module_registry_is_a_complete_registered_family():
+    root = Path(__file__).parents[1] / "src" / "data_ops_lab"
+    labels, _ = MODULE.inventory(root)
+    consumer_files = REGISTERED_ERROR_CONSUMER_FILES["module_registry"]
+    family_codes = {
+        label
+        for label, locations in labels.items()
+        if any(
+            any(f"/{filename}:" in location for filename in consumer_files)
+            for location in locations
+        )
+    }
+
+    assert consumer_files == frozenset({"module_registry.py"})
+    assert len(family_codes) == 49
+    assert family_codes <= set(ERROR_CLASSIFICATION_REGISTRY)
+    assert not {
+        location
+        for location, provenance in STANDARD_BLOCKER_FLOW_PROVENANCE.items()
+        if provenance.consumer_family == "module_registry"
+    }
+
+
+def test_module_registry_exceptions_and_status_remain_separate():
+    expected_exceptions = {
+        "src/data_ops_lab/module_registry.py:114": (
+            "    except OSError:",
+            ("OSError",),
+            "registry_unreadable",
+        ),
+        "src/data_ops_lab/module_registry.py:127": (
+            "    except (OSError, UnicodeError, yaml.YAMLError):",
+            ("OSError", "UnicodeError", "yaml.YAMLError"),
+            "invalid_registry_yaml",
+        ),
+        "src/data_ops_lab/module_registry.py:208": (
+            "    except (ImportError, AttributeError, ModuleNotFoundError, ValueError):",
+            ("ImportError", "AttributeError", "ModuleNotFoundError", "ValueError"),
+            "entrypoint_not_resolvable",
+        ),
+        "src/data_ops_lab/module_registry.py:223": (
+            "    except (OSError, UnicodeError, SyntaxError):",
+            ("OSError", "UnicodeError", "SyntaxError"),
+            "entrypoint_source_unreadable",
+        ),
+        "src/data_ops_lab/module_registry.py:736": (
+            "    except OSError:",
+            ("OSError",),
+            "registry_unreadable",
+        ),
+        "src/data_ops_lab/module_registry.py:772": (
+            "    except OSError:",
+            ("OSError",),
+            "registry_changed_during_validation",
+        ),
+    }
+    family_exceptions = {
+        location: provenance
+        for location, provenance in EXCEPTION_FALLBACK_PROVENANCE.items()
+        if provenance.consumer_family == "module_registry"
+    }
+    assert set(family_exceptions) == set(expected_exceptions)
+    for location, (expected_line, caught, output_value) in expected_exceptions.items():
+        relative, line_text = location.rsplit(":", 1)
+        source_line = (
+            Path(__file__).parents[1] / relative
+        ).read_text(encoding="utf-8").splitlines()[int(line_text) - 1]
+        provenance = family_exceptions[location]
+
+        assert source_line == expected_line
+        assert provenance.value_source
+        assert provenance.caught_exceptions == caught
+        assert provenance.output_surface == "standard_blocker"
+        assert provenance.output_field == "blocker_type"
+        assert provenance.output_value == output_value
+        assert provenance.exception_message_persisted is False
+        assert provenance.disposition is TaxonomyDisposition.SEPARATE_EXCEPTION_SURFACE
+        assert output_value in ERROR_CLASSIFICATION_REGISTRY
+
+    status_location = "src/data_ops_lab/module_registry.py:781"
+    status = TEXT_STATUS_PROVENANCE[status_location]
+    relative, line_text = status_location.rsplit(":", 1)
+    source_line = (
+        Path(__file__).parents[1] / relative
+    ).read_text(encoding="utf-8").splitlines()[int(line_text) - 1]
+
+    assert source_line == '    status = "valid" if not blockers else "blocked"'
+    assert status.consumer_family == "module_registry"
+    assert status.output_field == "status"
+    assert status.status_values == ("blocked", "valid")
+    assert status.disposition is TaxonomyDisposition.SEPARATE_TEXT_STATUS
+    assert all(value not in ERROR_CLASSIFICATION_REGISTRY for value in status.status_values)
+
+
+def test_ollama_soak_is_a_complete_family_with_a_separate_record_format():
+    root = Path(__file__).parents[1] / "src" / "data_ops_lab"
+    labels, _ = MODULE.inventory(root)
+    consumer_files = REGISTERED_ERROR_CONSUMER_FILES["ollama_soak"]
+    family_codes = {
+        label
+        for label, locations in labels.items()
+        if any(
+            any(f"/{filename}:" in location for filename in consumer_files)
+            for location in locations
+        )
+    }
+
+    assert consumer_files == frozenset({"analytics_ollama_soak.py"})
+    assert len(family_codes) == 21
+    assert family_codes <= set(ERROR_CLASSIFICATION_REGISTRY)
+    assert not {
+        location
+        for location, provenance in STANDARD_BLOCKER_FLOW_PROVENANCE.items()
+        if provenance.consumer_family == "ollama_soak"
+    }
+
+    location = "src/data_ops_lab/analytics_ollama_soak.py:132"
+    provenance = BLOCKER_RECORD_FORMAT_PROVENANCE[location]
+    relative, line_text = location.rsplit(":", 1)
+    source_line = (
+        Path(__file__).parents[1] / relative
+    ).read_text(encoding="utf-8").splitlines()[int(line_text) - 1]
+
+    assert source_line == "    blockers.append("
+    assert provenance.consumer_family == "ollama_soak"
+    assert provenance.output_surface == "manifest.contract_blockers"
+    assert provenance.record_format == "ollama_soak_embedded_blocker_v1"
+    assert provenance.record_fields == (
+        "blocker_id",
+        "blocker_type",
+        "field",
+        "explanation",
+    )
+    assert provenance.identifier_format == "blocker_{ordinal:03d}"
+    assert provenance.disposition is TaxonomyDisposition.SEPARATE_RECORD_FORMAT
+
+
+def test_ollama_soak_exceptions_remain_separate():
+    expected_exceptions = {
+        "src/data_ops_lab/analytics_ollama_soak.py:161": (
+            "    except (OSError, UnicodeError, yaml.YAMLError):",
+            ("OSError", "UnicodeError", "yaml.YAMLError"),
+            "authorization_payload",
+            "mapping",
+            "empty_mapping",
+        ),
+        "src/data_ops_lab/analytics_ollama_soak.py:195": (
+            "    except ValueError:",
+            ("ValueError",),
+            "module_specific_blocker",
+            "blocker_type",
+            "ollama_soak_authorized_at_invalid",
+        ),
+        "src/data_ops_lab/analytics_ollama_soak.py:296": (
+            "    except KeyError:",
+            ("KeyError",),
+            "module_specific_blocker",
+            "blocker_type",
+            "ollama_soak_policy_incomplete",
+        ),
+        "src/data_ops_lab/analytics_ollama_soak.py:395": (
+            "    except ValueError:",
+            ("ValueError",),
+            "module_specific_blocker",
+            "blocker_type",
+            "ollama_soak_provider_not_loopback",
+        ),
+        "src/data_ops_lab/analytics_ollama_soak.py:530": (
+            "    except (AttributeError, OSError, ValueError):",
+            ("AttributeError", "OSError", "ValueError"),
+            "resource_sample",
+            "process_memory",
+            "partial_unavailable_process_memory",
+        ),
+        "src/data_ops_lab/analytics_ollama_soak.py:572": (
+            "    except (FileNotFoundError, OSError, subprocess.SubprocessError, ValueError):",
+            ("FileNotFoundError", "OSError", "subprocess.SubprocessError", "ValueError"),
+            "resource_sample",
+            "gpu_telemetry",
+            "unavailable_gpu_telemetry",
+        ),
+        "src/data_ops_lab/analytics_ollama_soak.py:577": (
+            "    except OSError:",
+            ("OSError",),
+            "resource_sample",
+            "disk_free_mb",
+            "unavailable_disk_free_mb",
+        ),
+        "src/data_ops_lab/analytics_ollama_soak.py:630": (
+            "    except (OSError, UnicodeError, yaml.YAMLError):",
+            ("OSError", "UnicodeError", "yaml.YAMLError"),
+            "cycle_summary",
+            "manifest",
+            "empty_mapping",
+        ),
+        "src/data_ops_lab/analytics_ollama_soak.py:641": (
+            "    except (OSError, UnicodeError):",
+            ("OSError", "UnicodeError"),
+            "cycle_summary",
+            "cases",
+            "empty_list",
+        ),
+        "src/data_ops_lab/analytics_ollama_soak.py:1209": (
+            "            except Exception as error:",
+            ("Exception",),
+            "cycle_text",
+            "failure_type",
+            "<exception_class_name>",
+        ),
+    }
+    family_exceptions = {
+        location: provenance
+        for location, provenance in EXCEPTION_FALLBACK_PROVENANCE.items()
+        if provenance.consumer_family == "ollama_soak"
+    }
+    assert set(family_exceptions) == set(expected_exceptions)
+    for location, expected in expected_exceptions.items():
+        expected_line, caught, output_surface, output_field, output_value = expected
+        relative, line_text = location.rsplit(":", 1)
+        source_line = (
+            Path(__file__).parents[1] / relative
+        ).read_text(encoding="utf-8").splitlines()[int(line_text) - 1]
+        provenance = family_exceptions[location]
+
+        assert source_line == expected_line
+        assert provenance.value_source
+        assert provenance.caught_exceptions == caught
+        assert provenance.output_surface == output_surface
+        assert provenance.output_field == output_field
+        assert provenance.output_value == output_value
+        assert provenance.exception_message_persisted is False
+        assert provenance.disposition is TaxonomyDisposition.SEPARATE_EXCEPTION_SURFACE
+        if output_field == "blocker_type":
+            assert output_value in ERROR_CLASSIFICATION_REGISTRY
+
+    assert "<exception_class_name>" not in ERROR_CLASSIFICATION_REGISTRY
+
+
+def test_ollama_soak_status_and_control_text_remain_separate():
+    expected_statuses = {
+        "src/data_ops_lab/analytics_ollama_soak.py:669": (
+            '        "status": result.status if result is not None else "evaluation_error",',
+            "cycle.status",
+            ("blocked", "evaluation_error", "failed", "passed"),
+        ),
+        "src/data_ops_lab/analytics_ollama_soak.py:829": (
+            '        "status": status,',
+            "status",
+            (
+                "blocked",
+                "completed",
+                "ready_for_overnight_soak",
+                "running",
+                "stopped_by_request",
+                "stopped_error_limit",
+                "stopped_provider_timeout",
+                "stopped_resource_guard",
+            ),
+        ),
+    }
+    family_statuses = {
+        location: provenance
+        for location, provenance in TEXT_STATUS_PROVENANCE.items()
+        if provenance.consumer_family == "ollama_soak"
+    }
+    assert set(family_statuses) == set(expected_statuses)
+    for location, (expected_line, output_field, status_values) in expected_statuses.items():
+        relative, line_text = location.rsplit(":", 1)
+        source_line = (
+            Path(__file__).parents[1] / relative
+        ).read_text(encoding="utf-8").splitlines()[int(line_text) - 1]
+        provenance = family_statuses[location]
+
+        assert source_line == expected_line
+        assert provenance.output_field == output_field
+        assert provenance.status_values == status_values
+        assert provenance.disposition is TaxonomyDisposition.SEPARATE_TEXT_STATUS
+        assert all(value not in ERROR_CLASSIFICATION_REGISTRY for value in status_values)
+
+    expected_controls = {
+        "src/data_ops_lab/analytics_ollama_soak.py:830": (
+            '        "mode": mode,',
+            "mode",
+        ),
+        "src/data_ops_lab/analytics_ollama_soak.py:858": (
+            '            "stop_reason": stop_reason,',
+            "runtime.stop_reason",
+        ),
+    }
+    family_controls = {
+        location: provenance
+        for location, provenance in CONTROL_TEXT_PROVENANCE.items()
+        if provenance.consumer_family == "ollama_soak"
+    }
+    assert set(family_controls) == set(expected_controls)
+    for location, (expected_line, output_field) in expected_controls.items():
+        relative, line_text = location.rsplit(":", 1)
+        source_line = (
+            Path(__file__).parents[1] / relative
+        ).read_text(encoding="utf-8").splitlines()[int(line_text) - 1]
+        provenance = family_controls[location]
+
+        assert source_line == expected_line
+        assert provenance.output_field == output_field
+        assert provenance.value_domain
+        assert provenance.disposition is TaxonomyDisposition.SEPARATE_CONTROL_TEXT
+
+    assert all(
+        value not in ERROR_CLASSIFICATION_REGISTRY
+        for value in (
+            "dry-run",
+            "live",
+            "stop_file_detected",
+            "gpu_temperature_limit_reached",
+        )
+    )
+
+
+def test_reference_dataset_validation_is_a_complete_family_with_a_local_format():
+    root = Path(__file__).parents[1] / "src" / "data_ops_lab"
+    labels, dynamic = MODULE.inventory(root)
+    consumer_files = REGISTERED_ERROR_CONSUMER_FILES[
+        "reference_dataset_validation"
+    ]
+    family_codes = {
+        label
+        for label, locations in labels.items()
+        if any(
+            any(f"/{filename}:" in location for filename in consumer_files)
+            for location in locations
+        )
+    }
+
+    assert consumer_files == frozenset({"reference_dataset_validation.py"})
+    assert len(family_codes) == 79
+    assert family_codes <= set(ERROR_CLASSIFICATION_REGISTRY)
+    assert not [
+        location
+        for location in dynamic
+        if "/reference_dataset_validation.py:" in location
+    ]
+    assert not {
+        location
+        for location, provenance in STANDARD_BLOCKER_FLOW_PROVENANCE.items()
+        if provenance.consumer_family == "reference_dataset_validation"
+    }
+
+    location = "src/data_ops_lab/reference_dataset_validation.py:67"
+    provenance = BLOCKER_RECORD_FORMAT_PROVENANCE[location]
+    relative, line_text = location.rsplit(":", 1)
+    source_line = (
+        Path(__file__).parents[1] / relative
+    ).read_text(encoding="utf-8").splitlines()[int(line_text) - 1]
+
+    assert source_line == (
+        '    blockers.append({"code": code, "message": message, "field": field})'
+    )
+    assert provenance.consumer_family == "reference_dataset_validation"
+    assert provenance.output_surface == "manifest.blockers"
+    assert provenance.record_format == "reference_dataset_blocker_v1"
+    assert provenance.record_fields == ("code", "message", "field")
+    assert provenance.identifier_format is None
+    assert provenance.disposition is TaxonomyDisposition.SEPARATE_RECORD_FORMAT
+
+
+def test_reference_dataset_validation_exceptions_remain_separate():
+    expected_exceptions = {
+        "src/data_ops_lab/reference_dataset_validation.py:76": (
+            "    except (OSError, UnicodeError, yaml.YAMLError):",
+            ("OSError", "UnicodeError", "yaml.YAMLError"),
+            "module_specific_blocker",
+            "code",
+            "invalid_yaml",
+        ),
+        "src/data_ops_lab/reference_dataset_validation.py:281": (
+            "    except ValueError:",
+            ("ValueError",),
+            "module_specific_blocker",
+            "code",
+            "invalid_benchmark_approval_time",
+        ),
+        "src/data_ops_lab/reference_dataset_validation.py:485": (
+            "    except duckdb.Error:",
+            ("duckdb.Error",),
+            "module_specific_blocker",
+            "code",
+            "database_unreadable",
+        ),
+        "src/data_ops_lab/reference_dataset_validation.py:540": (
+            "        except ValueError:",
+            ("ValueError",),
+            "module_specific_blocker",
+            "code",
+            "invalid_review_time",
+        ),
+        "src/data_ops_lab/reference_dataset_validation.py:701": (
+            "    except Exception:",
+            ("Exception",),
+            "exception",
+            "failure_policy",
+            "cleanup_staging_and_reraise",
+        ),
+    }
+    family_exceptions = {
+        location: provenance
+        for location, provenance in EXCEPTION_FALLBACK_PROVENANCE.items()
+        if provenance.consumer_family == "reference_dataset_validation"
+    }
+    assert set(family_exceptions) == set(expected_exceptions)
+    for location, expected in expected_exceptions.items():
+        expected_line, caught, output_surface, output_field, output_value = expected
+        relative, line_text = location.rsplit(":", 1)
+        source_line = (
+            Path(__file__).parents[1] / relative
+        ).read_text(encoding="utf-8").splitlines()[int(line_text) - 1]
+        provenance = family_exceptions[location]
+
+        assert source_line == expected_line
+        assert provenance.value_source
+        assert provenance.caught_exceptions == caught
+        assert provenance.output_surface == output_surface
+        assert provenance.output_field == output_field
+        assert provenance.output_value == output_value
+        assert provenance.exception_message_persisted is False
+        assert provenance.disposition is TaxonomyDisposition.SEPARATE_EXCEPTION_SURFACE
+        if output_field == "code":
+            assert output_value in ERROR_CLASSIFICATION_REGISTRY
+
+    assert "cleanup_staging_and_reraise" not in ERROR_CLASSIFICATION_REGISTRY
+
+
+def test_reference_dataset_statuses_and_approval_projection_remain_separate():
+    expected_statuses = {
+        "src/data_ops_lab/reference_dataset_validation.py:211": (
+            "def conversion_projection(manifest: dict[str, Any]) -> dict[str, Any]:",
+            "conversion_projection.status",
+            ("ready_for_local_benchmark",),
+        ),
+        "src/data_ops_lab/reference_dataset_validation.py:493": (
+            "def validate_completed_review(",
+            "relationships.review_status",
+            ("completed", "incomplete", "invalid", "pending_review"),
+        ),
+        "src/data_ops_lab/reference_dataset_validation.py:560": (
+            '        "status": "pending_review",',
+            "relationship_review.status",
+            ("pending_review",),
+        ),
+        "src/data_ops_lab/reference_dataset_validation.py:592": (
+            '                "decision": "pending",',
+            "relationship_review.decisions[].decision",
+            ("accepted", "pending", "rejected"),
+        ),
+        "src/data_ops_lab/reference_dataset_validation.py:632": (
+            '        "status": "approved" if authority_complete else "pending_review",',
+            "approved_relationships.status",
+            ("approved", "pending_review"),
+        ),
+        "src/data_ops_lab/reference_dataset_validation.py:778": (
+            '        "status": status,',
+            "status",
+            (
+                "blocked",
+                "ready_for_relationship_review",
+                "ready_for_semantic_modeling",
+            ),
+        ),
+    }
+    family_statuses = {
+        location: provenance
+        for location, provenance in TEXT_STATUS_PROVENANCE.items()
+        if provenance.consumer_family == "reference_dataset_validation"
+    }
+    assert set(family_statuses) == set(expected_statuses)
+    for location, (expected_line, output_field, status_values) in expected_statuses.items():
+        relative, line_text = location.rsplit(":", 1)
+        source_line = (
+            Path(__file__).parents[1] / relative
+        ).read_text(encoding="utf-8").splitlines()[int(line_text) - 1]
+        provenance = family_statuses[location]
+
+        assert source_line == expected_line
+        assert provenance.output_field == output_field
+        assert provenance.status_values == status_values
+        assert provenance.disposition is TaxonomyDisposition.SEPARATE_TEXT_STATUS
+        assert all(value not in ERROR_CLASSIFICATION_REGISTRY for value in status_values)
+
+    location = "src/data_ops_lab/reference_dataset_validation.py:612"
+    projection = APPROVAL_PROJECTION_PROVENANCE[location]
+    relative, line_text = location.rsplit(":", 1)
+    source_line = (
+        Path(__file__).parents[1] / relative
+    ).read_text(encoding="utf-8").splitlines()[int(line_text) - 1]
+
+    assert source_line == (
+        '    authority_complete = status == "ready_for_semantic_modeling"'
+    )
+    assert projection.consumer_family == "reference_dataset_validation"
+    assert projection.output_surface == "approved_relationships.yml"
+    assert projection.authority_gate == "status == 'ready_for_semantic_modeling'"
+    assert projection.decision_domain == ("accepted", "rejected")
+    assert projection.projected_fields == (
+        "status",
+        "authority.completed_review_sha256",
+        "authority.derived_from_completed_human_review",
+        "authority.automatic_approval",
+        "authority.scope",
+        "approved_relationships",
+        "rejected_relationship_ids",
+    )
+    assert projection.disposition is TaxonomyDisposition.SEPARATE_APPROVAL_PROJECTION
+
+
 def test_registry_covers_only_complete_registered_consumer_families():
     root = Path(__file__).parents[1] / "src" / "data_ops_lab"
     labels, _ = MODULE.inventory(root)
@@ -397,4 +1249,4 @@ def test_registry_covers_only_complete_registered_consumer_families():
         expected_codes.update(family_codes)
 
     assert set(ERROR_CLASSIFICATION_REGISTRY) == expected_codes
-    assert len(ERROR_CLASSIFICATION_REGISTRY) == 438
+    assert len(ERROR_CLASSIFICATION_REGISTRY) == 637

@@ -9,6 +9,9 @@ from .atomic_publish import (
 )
 from .blockers import STANDARD_BLOCKER_FIELDS, StandardBlocker, add_blocker
 from .error_taxonomy import (
+    APPROVAL_PROJECTION_PROVENANCE,
+    BLOCKER_RECORD_FORMAT_PROVENANCE,
+    CONTROL_TEXT_PROVENANCE,
     DIRECT_BLOCKER_REUSE_PROVENANCE,
     DYNAMIC_ERROR_CODE_PROVENANCE,
     ERROR_CLASSIFICATION_REGISTRY,
@@ -17,6 +20,9 @@ from .error_taxonomy import (
     REGISTERED_ERROR_CONSUMER_FILES,
     STANDARD_BLOCKER_FLOW_PROVENANCE,
     TEXT_STATUS_PROVENANCE,
+    ApprovalProjectionProvenance,
+    BlockerRecordFormatProvenance,
+    ControlTextProvenance,
     DirectBlockerReuseProvenance,
     DynamicCodeSurface,
     DynamicErrorCodeProvenance,
@@ -36,6 +42,9 @@ from .source_bindings import (
 )
 
 __all__ = [
+    "APPROVAL_PROJECTION_PROVENANCE",
+    "BLOCKER_RECORD_FORMAT_PROVENANCE",
+    "CONTROL_TEXT_PROVENANCE",
     "DEFAULT_DIRECTORY_PUBLISH_RETRY_DELAYS_SECONDS",
     "DEFAULT_FILE_PUBLISH_RETRY_DELAYS_SECONDS",
     "FILE_HASH_CHUNK_SIZE",
@@ -49,6 +58,9 @@ __all__ = [
     "TEXT_STATUS_PROVENANCE",
     "STANDARD_BLOCKER_FIELDS",
     "AtomicPublishTargetAppearedError",
+    "ApprovalProjectionProvenance",
+    "BlockerRecordFormatProvenance",
+    "ControlTextProvenance",
     "DirectBlockerReuseProvenance",
     "DynamicCodeSurface",
     "DynamicErrorCodeProvenance",

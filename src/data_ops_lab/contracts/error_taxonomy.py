@@ -28,6 +28,8 @@ class TaxonomyDisposition(str, Enum):
     SEPARATE_EXCEPTION_SURFACE = "separate_exception_surface"
     SEPARATE_RECORD_FORMAT = "separate_record_format"
     SEPARATE_TEXT_STATUS = "separate_text_status"
+    SEPARATE_CONTROL_TEXT = "separate_control_text"
+    SEPARATE_APPROVAL_PROJECTION = "separate_approval_projection"
 
 
 @dataclass(frozen=True)
@@ -60,6 +62,37 @@ class TextStatusProvenance:
     value_source: str
     output_field: str
     status_values: tuple[str, ...]
+    disposition: TaxonomyDisposition
+
+
+@dataclass(frozen=True)
+class ControlTextProvenance:
+    consumer_family: str
+    value_source: str
+    output_field: str
+    value_domain: str
+    disposition: TaxonomyDisposition
+
+
+@dataclass(frozen=True)
+class BlockerRecordFormatProvenance:
+    consumer_family: str
+    value_source: str
+    output_surface: str
+    record_format: str
+    record_fields: tuple[str, ...]
+    identifier_format: str | None
+    disposition: TaxonomyDisposition
+
+
+@dataclass(frozen=True)
+class ApprovalProjectionProvenance:
+    consumer_family: str
+    value_source: str
+    output_surface: str
+    authority_gate: str
+    decision_domain: tuple[str, ...]
+    projected_fields: tuple[str, ...]
     disposition: TaxonomyDisposition
 
 
@@ -126,6 +159,18 @@ REGISTERED_ERROR_CONSUMER_FILES = {
     ),
     "synthetic_answer_evaluation": frozenset(
         {"analytics_answer_evaluation.py"}
+    ),
+    "result_presentation_narration": frozenset(
+        {
+            "analytics_result_narration.py",
+            "analytics_result_presentation.py",
+        }
+    ),
+    "analytics_session": frozenset({"analytics_session.py"}),
+    "module_registry": frozenset({"module_registry.py"}),
+    "ollama_soak": frozenset({"analytics_ollama_soak.py"}),
+    "reference_dataset_validation": frozenset(
+        {"reference_dataset_validation.py"}
     ),
 }
 
@@ -288,6 +333,311 @@ EXCEPTION_FALLBACK_PROVENANCE = {
         exception_message_persisted=False,
         disposition=TaxonomyDisposition.SEPARATE_EXCEPTION_SURFACE,
     ),
+    "src/data_ops_lab/analytics_result_presentation.py:269": ExceptionFallbackProvenance(
+        consumer_family="result_presentation_narration",
+        value_source="bounded Stage 5B result CSV read and parse",
+        caught_exceptions=("OSError", "UnicodeError", "csv.Error"),
+        output_surface="standard_blocker",
+        output_field="blocker_type",
+        output_value="invalid_result_csv",
+        exception_message_persisted=False,
+        disposition=TaxonomyDisposition.SEPARATE_EXCEPTION_SURFACE,
+    ),
+    "src/data_ops_lab/analytics_result_narration.py:514": ExceptionFallbackProvenance(
+        consumer_family="result_presentation_narration",
+        value_source="TimeoutError raised by an injected ResultNarrationProvider",
+        caught_exceptions=("TimeoutError",),
+        output_surface="standard_blocker",
+        output_field="blocker_type",
+        output_value="provider_timeout",
+        exception_message_persisted=False,
+        disposition=TaxonomyDisposition.SEPARATE_EXCEPTION_SURFACE,
+    ),
+    "src/data_ops_lab/analytics_result_narration.py:516": ExceptionFallbackProvenance(
+        consumer_family="result_presentation_narration",
+        value_source=(
+            "non-timeout Exception raised by an injected ResultNarrationProvider, "
+            "including recorded-response file and validation failures"
+        ),
+        caught_exceptions=("Exception",),
+        output_surface="standard_blocker",
+        output_field="blocker_type",
+        output_value="provider_failure",
+        exception_message_persisted=False,
+        disposition=TaxonomyDisposition.SEPARATE_EXCEPTION_SURFACE,
+    ),
+    "src/data_ops_lab/analytics_session.py:108": ExceptionFallbackProvenance(
+        consumer_family="analytics_session",
+        value_source="artifact path normalization outside the owned session directory",
+        caught_exceptions=("ValueError",),
+        output_surface="artifact_metadata",
+        output_field="path",
+        output_value="",
+        exception_message_persisted=False,
+        disposition=TaxonomyDisposition.SEPARATE_EXCEPTION_SURFACE,
+    ),
+    "src/data_ops_lab/analytics_session.py:443": ExceptionFallbackProvenance(
+        consumer_family="analytics_session",
+        value_source="human execution-review timestamp parsing",
+        caught_exceptions=("ValueError",),
+        output_surface="standard_blocker",
+        output_field="blocker_type",
+        output_value="invalid_execution_review_time",
+        exception_message_persisted=False,
+        disposition=TaxonomyDisposition.SEPARATE_EXCEPTION_SURFACE,
+    ),
+    "src/data_ops_lab/analytics_session.py:574": ExceptionFallbackProvenance(
+        consumer_family="analytics_session",
+        value_source="existing resume-manifest read and YAML parse preflight",
+        caught_exceptions=("OSError", "UnicodeError", "yaml.YAMLError"),
+        output_surface="exception",
+        output_field="exception_type",
+        output_value="ValueError",
+        exception_message_persisted=False,
+        disposition=TaxonomyDisposition.SEPARATE_EXCEPTION_SURFACE,
+    ),
+    "src/data_ops_lab/module_registry.py:114": ExceptionFallbackProvenance(
+        consumer_family="module_registry",
+        value_source="registry file-size preflight",
+        caught_exceptions=("OSError",),
+        output_surface="standard_blocker",
+        output_field="blocker_type",
+        output_value="registry_unreadable",
+        exception_message_persisted=False,
+        disposition=TaxonomyDisposition.SEPARATE_EXCEPTION_SURFACE,
+    ),
+    "src/data_ops_lab/module_registry.py:127": ExceptionFallbackProvenance(
+        consumer_family="module_registry",
+        value_source="registry UTF-8 read and YAML parse",
+        caught_exceptions=("OSError", "UnicodeError", "yaml.YAMLError"),
+        output_surface="standard_blocker",
+        output_field="blocker_type",
+        output_value="invalid_registry_yaml",
+        exception_message_persisted=False,
+        disposition=TaxonomyDisposition.SEPARATE_EXCEPTION_SURFACE,
+    ),
+    "src/data_ops_lab/module_registry.py:208": ExceptionFallbackProvenance(
+        consumer_family="module_registry",
+        value_source="static module-spec resolution without importing the entrypoint",
+        caught_exceptions=(
+            "ImportError",
+            "AttributeError",
+            "ModuleNotFoundError",
+            "ValueError",
+        ),
+        output_surface="standard_blocker",
+        output_field="blocker_type",
+        output_value="entrypoint_not_resolvable",
+        exception_message_persisted=False,
+        disposition=TaxonomyDisposition.SEPARATE_EXCEPTION_SURFACE,
+    ),
+    "src/data_ops_lab/module_registry.py:223": ExceptionFallbackProvenance(
+        consumer_family="module_registry",
+        value_source="bounded entrypoint source read and AST parse",
+        caught_exceptions=("OSError", "UnicodeError", "SyntaxError"),
+        output_surface="standard_blocker",
+        output_field="blocker_type",
+        output_value="entrypoint_source_unreadable",
+        exception_message_persisted=False,
+        disposition=TaxonomyDisposition.SEPARATE_EXCEPTION_SURFACE,
+    ),
+    "src/data_ops_lab/module_registry.py:736": ExceptionFallbackProvenance(
+        consumer_family="module_registry",
+        value_source="initial registry SHA-256 binding",
+        caught_exceptions=("OSError",),
+        output_surface="standard_blocker",
+        output_field="blocker_type",
+        output_value="registry_unreadable",
+        exception_message_persisted=False,
+        disposition=TaxonomyDisposition.SEPARATE_EXCEPTION_SURFACE,
+    ),
+    "src/data_ops_lab/module_registry.py:772": ExceptionFallbackProvenance(
+        consumer_family="module_registry",
+        value_source="final registry SHA-256 drift check",
+        caught_exceptions=("OSError",),
+        output_surface="standard_blocker",
+        output_field="blocker_type",
+        output_value="registry_changed_during_validation",
+        exception_message_persisted=False,
+        disposition=TaxonomyDisposition.SEPARATE_EXCEPTION_SURFACE,
+    ),
+    "src/data_ops_lab/analytics_ollama_soak.py:161": ExceptionFallbackProvenance(
+        consumer_family="ollama_soak",
+        value_source="overnight-soak authorization UTF-8 read and YAML parse",
+        caught_exceptions=("OSError", "UnicodeError", "yaml.YAMLError"),
+        output_surface="authorization_payload",
+        output_field="mapping",
+        output_value="empty_mapping",
+        exception_message_persisted=False,
+        disposition=TaxonomyDisposition.SEPARATE_EXCEPTION_SURFACE,
+    ),
+    "src/data_ops_lab/analytics_ollama_soak.py:195": ExceptionFallbackProvenance(
+        consumer_family="ollama_soak",
+        value_source="human soak-authorization timestamp parsing",
+        caught_exceptions=("ValueError",),
+        output_surface="module_specific_blocker",
+        output_field="blocker_type",
+        output_value="ollama_soak_authorized_at_invalid",
+        exception_message_persisted=False,
+        disposition=TaxonomyDisposition.SEPARATE_EXCEPTION_SURFACE,
+    ),
+    "src/data_ops_lab/analytics_ollama_soak.py:296": ExceptionFallbackProvenance(
+        consumer_family="ollama_soak",
+        value_source="required execution/resource policy field extraction",
+        caught_exceptions=("KeyError",),
+        output_surface="module_specific_blocker",
+        output_field="blocker_type",
+        output_value="ollama_soak_policy_incomplete",
+        exception_message_persisted=False,
+        disposition=TaxonomyDisposition.SEPARATE_EXCEPTION_SURFACE,
+    ),
+    "src/data_ops_lab/analytics_ollama_soak.py:395": ExceptionFallbackProvenance(
+        consumer_family="ollama_soak",
+        value_source="literal loopback endpoint normalization",
+        caught_exceptions=("ValueError",),
+        output_surface="module_specific_blocker",
+        output_field="blocker_type",
+        output_value="ollama_soak_provider_not_loopback",
+        exception_message_persisted=False,
+        disposition=TaxonomyDisposition.SEPARATE_EXCEPTION_SURFACE,
+    ),
+    "src/data_ops_lab/analytics_ollama_soak.py:530": ExceptionFallbackProvenance(
+        consumer_family="ollama_soak",
+        value_source="Windows soak/Ollama process-memory sampling",
+        caught_exceptions=("AttributeError", "OSError", "ValueError"),
+        output_surface="resource_sample",
+        output_field="process_memory",
+        output_value="partial_unavailable_process_memory",
+        exception_message_persisted=False,
+        disposition=TaxonomyDisposition.SEPARATE_EXCEPTION_SURFACE,
+    ),
+    "src/data_ops_lab/analytics_ollama_soak.py:572": ExceptionFallbackProvenance(
+        consumer_family="ollama_soak",
+        value_source="bounded nvidia-smi telemetry collection",
+        caught_exceptions=(
+            "FileNotFoundError",
+            "OSError",
+            "subprocess.SubprocessError",
+            "ValueError",
+        ),
+        output_surface="resource_sample",
+        output_field="gpu_telemetry",
+        output_value="unavailable_gpu_telemetry",
+        exception_message_persisted=False,
+        disposition=TaxonomyDisposition.SEPARATE_EXCEPTION_SURFACE,
+    ),
+    "src/data_ops_lab/analytics_ollama_soak.py:577": ExceptionFallbackProvenance(
+        consumer_family="ollama_soak",
+        value_source="soak output-volume free-disk sampling",
+        caught_exceptions=("OSError",),
+        output_surface="resource_sample",
+        output_field="disk_free_mb",
+        output_value="unavailable_disk_free_mb",
+        exception_message_persisted=False,
+        disposition=TaxonomyDisposition.SEPARATE_EXCEPTION_SURFACE,
+    ),
+    "src/data_ops_lab/analytics_ollama_soak.py:630": ExceptionFallbackProvenance(
+        consumer_family="ollama_soak",
+        value_source="completed live-cycle manifest read and YAML parse",
+        caught_exceptions=("OSError", "UnicodeError", "yaml.YAMLError"),
+        output_surface="cycle_summary",
+        output_field="manifest",
+        output_value="empty_mapping",
+        exception_message_persisted=False,
+        disposition=TaxonomyDisposition.SEPARATE_EXCEPTION_SURFACE,
+    ),
+    "src/data_ops_lab/analytics_ollama_soak.py:641": ExceptionFallbackProvenance(
+        consumer_family="ollama_soak",
+        value_source="completed live-cycle case CSV read",
+        caught_exceptions=("OSError", "UnicodeError"),
+        output_surface="cycle_summary",
+        output_field="cases",
+        output_value="empty_list",
+        exception_message_persisted=False,
+        disposition=TaxonomyDisposition.SEPARATE_EXCEPTION_SURFACE,
+    ),
+    "src/data_ops_lab/analytics_ollama_soak.py:1209": ExceptionFallbackProvenance(
+        consumer_family="ollama_soak",
+        value_source="one governed live-evaluation cycle invocation",
+        caught_exceptions=("Exception",),
+        output_surface="cycle_text",
+        output_field="failure_type",
+        output_value="<exception_class_name>",
+        exception_message_persisted=False,
+        disposition=TaxonomyDisposition.SEPARATE_EXCEPTION_SURFACE,
+    ),
+    "src/data_ops_lab/reference_dataset_validation.py:76": ExceptionFallbackProvenance(
+        consumer_family="reference_dataset_validation",
+        value_source="required local YAML UTF-8 read and parse",
+        caught_exceptions=("OSError", "UnicodeError", "yaml.YAMLError"),
+        output_surface="module_specific_blocker",
+        output_field="code",
+        output_value="invalid_yaml",
+        exception_message_persisted=False,
+        disposition=TaxonomyDisposition.SEPARATE_EXCEPTION_SURFACE,
+    ),
+    "src/data_ops_lab/reference_dataset_validation.py:281": ExceptionFallbackProvenance(
+        consumer_family="reference_dataset_validation",
+        value_source="benchmark-use human approval timestamp parsing",
+        caught_exceptions=("ValueError",),
+        output_surface="module_specific_blocker",
+        output_field="code",
+        output_value="invalid_benchmark_approval_time",
+        exception_message_persisted=False,
+        disposition=TaxonomyDisposition.SEPARATE_EXCEPTION_SURFACE,
+    ),
+    "src/data_ops_lab/reference_dataset_validation.py:485": ExceptionFallbackProvenance(
+        consumer_family="reference_dataset_validation",
+        value_source="read-only DuckDB technical-evidence profiling",
+        caught_exceptions=("duckdb.Error",),
+        output_surface="module_specific_blocker",
+        output_field="code",
+        output_value="database_unreadable",
+        exception_message_persisted=False,
+        disposition=TaxonomyDisposition.SEPARATE_EXCEPTION_SURFACE,
+    ),
+    "src/data_ops_lab/reference_dataset_validation.py:540": ExceptionFallbackProvenance(
+        consumer_family="reference_dataset_validation",
+        value_source="per-relationship human review timestamp parsing",
+        caught_exceptions=("ValueError",),
+        output_surface="module_specific_blocker",
+        output_field="code",
+        output_value="invalid_review_time",
+        exception_message_persisted=False,
+        disposition=TaxonomyDisposition.SEPARATE_EXCEPTION_SURFACE,
+    ),
+    "src/data_ops_lab/reference_dataset_validation.py:701": ExceptionFallbackProvenance(
+        consumer_family="reference_dataset_validation",
+        value_source="staged validation-evidence publication",
+        caught_exceptions=("Exception",),
+        output_surface="exception",
+        output_field="failure_policy",
+        output_value="cleanup_staging_and_reraise",
+        exception_message_persisted=False,
+        disposition=TaxonomyDisposition.SEPARATE_EXCEPTION_SURFACE,
+    ),
+}
+
+
+BLOCKER_RECORD_FORMAT_PROVENANCE = {
+    "src/data_ops_lab/analytics_ollama_soak.py:132": BlockerRecordFormatProvenance(
+        consumer_family="ollama_soak",
+        value_source="local _add_blocker appends embedded soak contract blockers",
+        output_surface="manifest.contract_blockers",
+        record_format="ollama_soak_embedded_blocker_v1",
+        record_fields=("blocker_id", "blocker_type", "field", "explanation"),
+        identifier_format="blocker_{ordinal:03d}",
+        disposition=TaxonomyDisposition.SEPARATE_RECORD_FORMAT,
+    ),
+    "src/data_ops_lab/reference_dataset_validation.py:67": BlockerRecordFormatProvenance(
+        consumer_family="reference_dataset_validation",
+        value_source="local add_blocker appends reference-validation blockers",
+        output_surface="manifest.blockers",
+        record_format="reference_dataset_blocker_v1",
+        record_fields=("code", "message", "field"),
+        identifier_format=None,
+        disposition=TaxonomyDisposition.SEPARATE_RECORD_FORMAT,
+    ),
 }
 
 
@@ -356,6 +706,48 @@ STANDARD_BLOCKER_FLOW_PROVENANCE = {
         consumer_family="synthetic_answer_evaluation",
         producer_family="semantic_adapter",
         value_source="validate_approved_state writes semantic-state blockers",
+        record_format="standard_blocker",
+        disposition=TaxonomyDisposition.REGISTERED,
+    ),
+    "src/data_ops_lab/analytics_result_presentation.py:520": StandardBlockerFlowProvenance(
+        consumer_family="result_presentation_narration",
+        producer_family="standard_analytics",
+        value_source="read_yaml_mapping writes request input blockers",
+        record_format="standard_blocker",
+        disposition=TaxonomyDisposition.REGISTERED,
+    ),
+    "src/data_ops_lab/analytics_result_presentation.py:521": StandardBlockerFlowProvenance(
+        consumer_family="result_presentation_narration",
+        producer_family="standard_analytics",
+        value_source="read_yaml_mapping writes execution-manifest input blockers",
+        record_format="standard_blocker",
+        disposition=TaxonomyDisposition.REGISTERED,
+    ),
+    "src/data_ops_lab/analytics_result_narration.py:459": StandardBlockerFlowProvenance(
+        consumer_family="result_presentation_narration",
+        producer_family="standard_analytics",
+        value_source="read_yaml_mapping writes presentation-manifest input blockers",
+        record_format="standard_blocker",
+        disposition=TaxonomyDisposition.REGISTERED,
+    ),
+    "src/data_ops_lab/analytics_result_narration.py:464": StandardBlockerFlowProvenance(
+        consumer_family="result_presentation_narration",
+        producer_family="standard_analytics",
+        value_source="read_yaml_mapping writes facts input blockers",
+        record_format="standard_blocker",
+        disposition=TaxonomyDisposition.REGISTERED,
+    ),
+    "src/data_ops_lab/analytics_session.py:460": StandardBlockerFlowProvenance(
+        consumer_family="analytics_session",
+        producer_family="standard_analytics",
+        value_source="read_yaml_mapping writes preparation-manifest input blockers",
+        record_format="standard_blocker",
+        disposition=TaxonomyDisposition.REGISTERED,
+    ),
+    "src/data_ops_lab/analytics_session.py:620": StandardBlockerFlowProvenance(
+        consumer_family="analytics_session",
+        producer_family="standard_analytics",
+        value_source="read_yaml_mapping writes execution-review input blockers",
         record_format="standard_blocker",
         disposition=TaxonomyDisposition.REGISTERED,
     ),
@@ -481,6 +873,262 @@ TEXT_STATUS_PROVENANCE = {
             "passed",
         ),
         disposition=TaxonomyDisposition.SEPARATE_TEXT_STATUS,
+    ),
+    "src/data_ops_lab/analytics_result_presentation.py:369": TextStatusProvenance(
+        consumer_family="result_presentation_narration",
+        value_source="validated deterministic facts construction",
+        output_field="facts.status",
+        status_values=("ready_for_recorded_narration",),
+        disposition=TaxonomyDisposition.SEPARATE_TEXT_STATUS,
+    ),
+    "src/data_ops_lab/analytics_result_presentation.py:544": TextStatusProvenance(
+        consumer_family="result_presentation_narration",
+        value_source="presentation blockers after exact Stage 5B evidence validation",
+        output_field="status",
+        status_values=(
+            "blocked",
+            "ready_for_recorded_narration",
+        ),
+        disposition=TaxonomyDisposition.SEPARATE_TEXT_STATUS,
+    ),
+    "src/data_ops_lab/analytics_result_narration.py:535": TextStatusProvenance(
+        consumer_family="result_presentation_narration",
+        value_source="narration blockers after exact fact and citation validation",
+        output_field="status",
+        status_values=(
+            "blocked",
+            "ready_for_user",
+        ),
+        disposition=TaxonomyDisposition.SEPARATE_TEXT_STATUS,
+    ),
+    "src/data_ops_lab/analytics_session.py:188": TextStatusProvenance(
+        consumer_family="analytics_session",
+        value_source="new execution-review template before human action",
+        output_field="review_template.status",
+        status_values=("pending_review",),
+        disposition=TaxonomyDisposition.SEPARATE_TEXT_STATUS,
+    ),
+    "src/data_ops_lab/analytics_session.py:196": TextStatusProvenance(
+        consumer_family="analytics_session",
+        value_source="new execution-review decision before human action",
+        output_field="review_template.review.decision",
+        status_values=("pending",),
+        disposition=TaxonomyDisposition.SEPARATE_TEXT_STATUS,
+    ),
+    "src/data_ops_lab/analytics_session.py:271": TextStatusProvenance(
+        consumer_family="analytics_session",
+        value_source="preparation blockers and nested translation/planning outcomes",
+        output_field="prepare.status",
+        status_values=(
+            "awaiting_execution_review",
+            "blocked",
+            "clarification_required",
+        ),
+        disposition=TaxonomyDisposition.SEPARATE_TEXT_STATUS,
+    ),
+    "src/data_ops_lab/analytics_session.py:298": TextStatusProvenance(
+        consumer_family="analytics_session",
+        value_source="nested Stage 5D translation result",
+        output_field="prepare.stages.translation.status",
+        status_values=("blocked", "clarification_required", "ready_for_query_plan"),
+        disposition=TaxonomyDisposition.SEPARATE_TEXT_STATUS,
+    ),
+    "src/data_ops_lab/analytics_session.py:302": TextStatusProvenance(
+        consumer_family="analytics_session",
+        value_source="nested Stage 5A planning result or not-started sentinel",
+        output_field="prepare.stages.query_plan.status",
+        status_values=("blocked", "not_started", "ready_for_execution_review"),
+        disposition=TaxonomyDisposition.SEPARATE_TEXT_STATUS,
+    ),
+    "src/data_ops_lab/analytics_session.py:305": TextStatusProvenance(
+        consumer_family="analytics_session",
+        value_source="prepare-phase execution authorization boundary",
+        output_field="prepare.stages.query_execution.status",
+        status_values=("not_authorized",),
+        disposition=TaxonomyDisposition.SEPARATE_TEXT_STATUS,
+    ),
+    "src/data_ops_lab/analytics_session.py:306": TextStatusProvenance(
+        consumer_family="analytics_session",
+        value_source="prepare-phase presentation sentinel",
+        output_field="prepare.stages.result_presentation.status",
+        status_values=("not_started",),
+        disposition=TaxonomyDisposition.SEPARATE_TEXT_STATUS,
+    ),
+    "src/data_ops_lab/analytics_session.py:307": TextStatusProvenance(
+        consumer_family="analytics_session",
+        value_source="prepare-phase narration sentinel",
+        output_field="prepare.stages.result_narration.status",
+        status_values=("not_started",),
+        disposition=TaxonomyDisposition.SEPARATE_TEXT_STATUS,
+    ),
+    "src/data_ops_lab/analytics_session.py:635": TextStatusProvenance(
+        consumer_family="analytics_session",
+        value_source="last successfully validated resume checkpoint",
+        output_field="last_valid_checkpoint",
+        status_values=(
+            "execution_review",
+            "prepare",
+            "query_execution",
+            "result_narration",
+            "result_presentation",
+        ),
+        disposition=TaxonomyDisposition.SEPARATE_TEXT_STATUS,
+    ),
+    "src/data_ops_lab/analytics_session.py:699": TextStatusProvenance(
+        consumer_family="analytics_session",
+        value_source="resume blockers after exact stage coordination",
+        output_field="resume.status",
+        status_values=("blocked", "completed"),
+        disposition=TaxonomyDisposition.SEPARATE_TEXT_STATUS,
+    ),
+    "src/data_ops_lab/analytics_session.py:702": TextStatusProvenance(
+        consumer_family="analytics_session",
+        value_source="exact execution-review validation outcome",
+        output_field="resume.stages.execution_review.status",
+        status_values=("approved", "blocked"),
+        disposition=TaxonomyDisposition.SEPARATE_TEXT_STATUS,
+    ),
+    "src/data_ops_lab/analytics_session.py:704": TextStatusProvenance(
+        consumer_family="analytics_session",
+        value_source="nested Stage 5B execution result or not-started sentinel",
+        output_field="resume.stages.query_execution.status",
+        status_values=("blocked", "completed", "completed_no_rows", "not_started"),
+        disposition=TaxonomyDisposition.SEPARATE_TEXT_STATUS,
+    ),
+    "src/data_ops_lab/analytics_session.py:708": TextStatusProvenance(
+        consumer_family="analytics_session",
+        value_source="nested result-presentation outcome or not-started sentinel",
+        output_field="resume.stages.result_presentation.status",
+        status_values=("blocked", "not_started", "ready_for_recorded_narration"),
+        disposition=TaxonomyDisposition.SEPARATE_TEXT_STATUS,
+    ),
+    "src/data_ops_lab/analytics_session.py:714": TextStatusProvenance(
+        consumer_family="analytics_session",
+        value_source="nested result-narration outcome or not-started sentinel",
+        output_field="resume.stages.result_narration.status",
+        status_values=("blocked", "not_started", "ready_for_user"),
+        disposition=TaxonomyDisposition.SEPARATE_TEXT_STATUS,
+    ),
+    "src/data_ops_lab/module_registry.py:781": TextStatusProvenance(
+        consumer_family="module_registry",
+        value_source="complete static contract validation blocker outcome",
+        output_field="status",
+        status_values=("blocked", "valid"),
+        disposition=TaxonomyDisposition.SEPARATE_TEXT_STATUS,
+    ),
+    "src/data_ops_lab/analytics_ollama_soak.py:669": TextStatusProvenance(
+        consumer_family="ollama_soak",
+        value_source="nested live-evaluation cycle result or sanitized exception fallback",
+        output_field="cycle.status",
+        status_values=("blocked", "evaluation_error", "failed", "passed"),
+        disposition=TaxonomyDisposition.SEPARATE_TEXT_STATUS,
+    ),
+    "src/data_ops_lab/analytics_ollama_soak.py:829": TextStatusProvenance(
+        consumer_family="ollama_soak",
+        value_source="contract preflight and bounded live-soak runtime state",
+        output_field="status",
+        status_values=(
+            "blocked",
+            "completed",
+            "ready_for_overnight_soak",
+            "running",
+            "stopped_by_request",
+            "stopped_error_limit",
+            "stopped_provider_timeout",
+            "stopped_resource_guard",
+        ),
+        disposition=TaxonomyDisposition.SEPARATE_TEXT_STATUS,
+    ),
+    "src/data_ops_lab/reference_dataset_validation.py:211": TextStatusProvenance(
+        consumer_family="reference_dataset_validation",
+        value_source="validated benchmark-conversion manifest projection",
+        output_field="conversion_projection.status",
+        status_values=("ready_for_local_benchmark",),
+        disposition=TaxonomyDisposition.SEPARATE_TEXT_STATUS,
+    ),
+    "src/data_ops_lab/reference_dataset_validation.py:493": TextStatusProvenance(
+        consumer_family="reference_dataset_validation",
+        value_source="optional exact relationship-review validation outcome",
+        output_field="relationships.review_status",
+        status_values=("completed", "incomplete", "invalid", "pending_review"),
+        disposition=TaxonomyDisposition.SEPARATE_TEXT_STATUS,
+    ),
+    "src/data_ops_lab/reference_dataset_validation.py:560": TextStatusProvenance(
+        consumer_family="reference_dataset_validation",
+        value_source="generated relationship-review template",
+        output_field="relationship_review.status",
+        status_values=("pending_review",),
+        disposition=TaxonomyDisposition.SEPARATE_TEXT_STATUS,
+    ),
+    "src/data_ops_lab/reference_dataset_validation.py:592": TextStatusProvenance(
+        consumer_family="reference_dataset_validation",
+        value_source="generated pending or preserved completed human decision",
+        output_field="relationship_review.decisions[].decision",
+        status_values=("accepted", "pending", "rejected"),
+        disposition=TaxonomyDisposition.SEPARATE_TEXT_STATUS,
+    ),
+    "src/data_ops_lab/reference_dataset_validation.py:632": TextStatusProvenance(
+        consumer_family="reference_dataset_validation",
+        value_source="human-review-gated approved-relationship projection",
+        output_field="approved_relationships.status",
+        status_values=("approved", "pending_review"),
+        disposition=TaxonomyDisposition.SEPARATE_TEXT_STATUS,
+    ),
+    "src/data_ops_lab/reference_dataset_validation.py:778": TextStatusProvenance(
+        consumer_family="reference_dataset_validation",
+        value_source="blocker outcome and completed exact relationship review",
+        output_field="status",
+        status_values=(
+            "blocked",
+            "ready_for_relationship_review",
+            "ready_for_semantic_modeling",
+        ),
+        disposition=TaxonomyDisposition.SEPARATE_TEXT_STATUS,
+    ),
+}
+
+
+CONTROL_TEXT_PROVENANCE = {
+    "src/data_ops_lab/analytics_ollama_soak.py:830": ControlTextProvenance(
+        consumer_family="ollama_soak",
+        value_source="explicit execute flag",
+        output_field="mode",
+        value_domain="one of: dry-run, live",
+        disposition=TaxonomyDisposition.SEPARATE_CONTROL_TEXT,
+    ),
+    "src/data_ops_lab/analytics_ollama_soak.py:858": ControlTextProvenance(
+        consumer_family="ollama_soak",
+        value_source=(
+            "bounded duration/cycle/provider/STOP sentinels or a stable comma-separated "
+            "subset of resource-guard reason tokens"
+        ),
+        output_field="runtime.stop_reason",
+        value_domain="bounded soak stop-reason control text",
+        disposition=TaxonomyDisposition.SEPARATE_CONTROL_TEXT,
+    ),
+}
+
+
+APPROVAL_PROJECTION_PROVENANCE = {
+    "src/data_ops_lab/reference_dataset_validation.py:612": ApprovalProjectionProvenance(
+        consumer_family="reference_dataset_validation",
+        value_source=(
+            "accepted/rejected decisions from the exact completed human review, "
+            "bound to manifest, candidate, and review hashes"
+        ),
+        output_surface="approved_relationships.yml",
+        authority_gate="status == 'ready_for_semantic_modeling'",
+        decision_domain=("accepted", "rejected"),
+        projected_fields=(
+            "status",
+            "authority.completed_review_sha256",
+            "authority.derived_from_completed_human_review",
+            "authority.automatic_approval",
+            "authority.scope",
+            "approved_relationships",
+            "rejected_relationship_ids",
+        ),
+        disposition=TaxonomyDisposition.SEPARATE_APPROVAL_PROJECTION,
     ),
 }
 
@@ -1000,6 +1648,283 @@ _SYNTHETIC_ANSWER_EVALUATION_CLASSIFICATIONS = {
 }
 
 
+_RESULT_PRESENTATION_NARRATION_CLASSIFICATIONS = {
+    ErrorCategory.AUTHORITY: {
+        "facts_hash_mismatch",
+        "facts_source_mismatch",
+        "narration_inputs_changed",
+        "presentation_inputs_changed",
+        "request_hash_mismatch",
+        "result_artifact_mismatch",
+        "result_hash_mismatch",
+        "unsafe_execution_evidence",
+        "unsafe_presentation_evidence",
+    },
+    ErrorCategory.EXECUTION_LIMIT: {
+        "result_size_invalid",
+        "truncated_result_not_allowed",
+    },
+    ErrorCategory.PROVIDER: {
+        "invalid_claim",
+        "invalid_claim_citations",
+        "invalid_claim_text",
+        "invalid_claims",
+        "invalid_headline",
+        "required_controls_not_cited",
+        "ungrounded_numeric_value",
+    },
+    ErrorCategory.FILESYSTEM: {
+        "invalid_result_csv",
+        "result_missing",
+    },
+    ErrorCategory.EXPECTED_RESULT: {
+        "no_rows_control_mismatch",
+        "result_controls_mismatch",
+    },
+    ErrorCategory.CONTRACT: {
+        "execution_has_blockers",
+        "execution_not_presentable",
+        "facts_not_ready",
+        "invalid_execution_columns",
+        "invalid_execution_manifest",
+        "invalid_fact",
+        "invalid_facts",
+        "invalid_null_control",
+        "presentation_not_ready",
+        "unsupported_execution_manifest_version",
+    },
+}
+
+
+_ANALYTICS_SESSION_CLASSIFICATIONS = {
+    ErrorCategory.AUTHORITY: {
+        "database_changed_after_prepare",
+        "prepare_artifact_mismatch",
+        "prepare_manifest_review_mismatch",
+        "relationships_changed_after_prepare",
+        "reviewed_plan_hash_mismatch",
+        "session_authority_changed",
+        "session_prepare_inputs_changed",
+        "unsafe_prepare_checkpoint",
+    },
+    ErrorCategory.APPROVAL: {
+        "execution_not_approved",
+        "execution_review_incomplete",
+        "invalid_execution_review_text",
+        "invalid_execution_review_time",
+    },
+    ErrorCategory.FILESYSTEM: {
+        "narration_response_missing",
+    },
+    ErrorCategory.CONTRACT: {
+        "invalid_execution_review",
+        "invalid_execution_review_decision",
+        "invalid_execution_review_source",
+        "prepare_checkpoint_not_ready",
+        "translation_request_missing",
+    },
+    ErrorCategory.UNCLASSIFIED: {
+        "query_execution_blocked",
+        "query_plan_blocked",
+        "result_narration_blocked",
+        "result_presentation_blocked",
+        "translation_blocked",
+    },
+}
+
+
+_MODULE_REGISTRY_CLASSIFICATIONS = {
+    ErrorCategory.AUTHORITY: {
+        "registry_changed_during_validation",
+        "unsafe_registry_controls",
+        "unsafe_stage_failure_policy",
+        "unsafe_workflow_gate",
+    },
+    ErrorCategory.APPROVAL: {
+        "missing_human_review_gate",
+    },
+    ErrorCategory.EXECUTION_LIMIT: {
+        "registry_too_large",
+        "too_many_modules",
+        "too_many_workflow_gates",
+        "too_many_workflow_stages",
+        "too_many_workflows",
+    },
+    ErrorCategory.FILESYSTEM: {
+        "entrypoint_source_unreadable",
+        "registry_missing",
+        "registry_unreadable",
+        "test_file_missing",
+    },
+    ErrorCategory.CONTRACT: {
+        "entrypoint_input_mismatch",
+        "entrypoint_not_resolvable",
+        "entrypoint_variadic",
+        "invalid_entrypoint",
+        "invalid_identifier_list",
+        "invalid_module_contract",
+        "invalid_module_dependency",
+        "invalid_module_failure_policy",
+        "invalid_module_name",
+        "invalid_module_text",
+        "invalid_registry_contract",
+        "invalid_registry_mapping",
+        "invalid_registry_yaml",
+        "invalid_stage_id",
+        "invalid_stage_module",
+        "invalid_stage_order",
+        "invalid_string_list",
+        "invalid_test_path",
+        "invalid_workflow_contract",
+        "invalid_workflow_coordinator",
+        "invalid_workflow_failure_policy",
+        "invalid_workflow_gate",
+        "invalid_workflow_gates",
+        "invalid_workflow_metadata",
+        "invalid_workflow_name",
+        "invalid_workflow_stage",
+        "missing_module_workflow",
+        "module_dependency_cycle",
+        "modules_missing",
+        "unknown_module_workflow",
+        "unsupported_module_state",
+        "unsupported_registry_state",
+        "unused_module_workflow",
+        "workflow_stages_missing",
+        "workflows_missing",
+    },
+}
+
+
+_OLLAMA_SOAK_CLASSIFICATIONS = {
+    ErrorCategory.AUTHORITY: {
+        "ollama_soak_parallel_or_stop_policy_invalid",
+        "ollama_soak_source_mismatch",
+    },
+    ErrorCategory.APPROVAL: {
+        "ollama_soak_authorized_at_invalid",
+        "ollama_soak_authorizer_missing",
+        "ollama_soak_network_flag_not_allowed_in_dry_run",
+        "ollama_soak_network_not_authorized_for_invocation",
+        "ollama_soak_not_approved",
+        "ollama_soak_notes_missing",
+        "ollama_soak_scope_not_bounded",
+    },
+    ErrorCategory.EXECUTION_LIMIT: {
+        "ollama_soak_authorization_too_large",
+        "ollama_soak_policy_value_invalid",
+    },
+    ErrorCategory.PROVIDER: {
+        "ollama_soak_provider_mismatch",
+        "ollama_soak_provider_not_loopback",
+    },
+    ErrorCategory.FILESYSTEM: {
+        "ollama_soak_authorization_missing",
+    },
+    ErrorCategory.CONTRACT: {
+        "ollama_soak_authorization_invalid",
+        "ollama_soak_execution_policy_missing",
+        "ollama_soak_policy_incomplete",
+        "ollama_soak_resource_policy_missing",
+        "unsupported_ollama_soak_authorization_field",
+        "unsupported_ollama_soak_authorization_version",
+    },
+    ErrorCategory.UNCLASSIFIED: {
+        "ollama_soak_live_authority_preflight_failed",
+    },
+}
+
+
+_REFERENCE_DATASET_VALIDATION_CLASSIFICATIONS = {
+    ErrorCategory.AUTHORITY: {
+        "conversion_dataset_mismatch",
+        "conversion_source_mismatch",
+        "database_column_drift",
+        "database_hash_drift",
+        "database_row_count_drift",
+        "database_table_drift",
+        "invalid_primary_key_evidence",
+        "invalid_relationship_authority",
+        "missing_reproduction",
+        "reproduction_mismatch",
+        "review_candidate_drift",
+        "review_manifest_drift",
+        "sha256_mismatch",
+        "source_size_mismatch",
+        "unverified_license",
+        "unverified_provenance",
+    },
+    ErrorCategory.APPROVAL: {
+        "benchmark_use_not_approved",
+        "duplicate_review_decision",
+        "incomplete_relationship_review",
+        "invalid_benchmark_scopes",
+        "invalid_review_decisions",
+        "invalid_review_time",
+        "local_scope_not_approved",
+        "missing_benchmark_approver",
+        "missing_benchmark_use",
+        "missing_review_notes",
+        "pending_review_decision",
+        "relationship_scope_not_approved",
+        "unsafe_review_scope",
+        "unsafe_scope_state",
+        "unknown_review_decision",
+    },
+    ErrorCategory.FILESYSTEM: {
+        "missing_file",
+    },
+    ErrorCategory.EXPECTED_RESULT: {
+        "invalid_primary_key_data",
+        "invalid_relationship_data",
+        "primary_key_count_mismatch",
+        "relationship_count_mismatch",
+    },
+    ErrorCategory.CONTRACT: {
+        "artifact_path_escape",
+        "conversion_not_ready",
+        "duplicate_primary_key",
+        "duplicate_relationship",
+        "invalid_artifact_path",
+        "invalid_conversion",
+        "invalid_conversion_artifact",
+        "invalid_conversion_artifacts",
+        "invalid_conversion_column",
+        "invalid_conversion_columns",
+        "invalid_conversion_table",
+        "invalid_conversion_tables",
+        "invalid_dataset",
+        "invalid_license",
+        "invalid_license_commit",
+        "invalid_license_permalink",
+        "invalid_local_path",
+        "invalid_official_source",
+        "invalid_parquet_artifact",
+        "invalid_parquet_artifacts",
+        "invalid_primary_key",
+        "invalid_primary_keys",
+        "invalid_relationship",
+        "invalid_relationship_candidates",
+        "invalid_relationship_config",
+        "invalid_relationship_identifier",
+        "invalid_schema_review",
+        "invalid_sha256",
+        "invalid_source",
+        "invalid_source_commit",
+        "invalid_spdx",
+        "missing_official_source_field",
+        "unknown_primary_key",
+        "unknown_primary_key_column",
+        "unknown_relationship_column",
+        "unknown_relationship_table",
+        "unsupported_reference_version",
+    },
+    ErrorCategory.UNCLASSIFIED: {
+        "invalid_relationship_review",
+    },
+}
+
+
 def _build_registry() -> dict[str, ErrorCategory]:
     initial_groups = {
         ErrorCategory.CONTRACT: _CONTRACT_CODES,
@@ -1015,6 +1940,11 @@ def _build_registry() -> dict[str, ErrorCategory]:
         _DATASET_BENCHMARK_CLASSIFICATIONS,
         _NATURAL_LANGUAGE_TRANSLATION_CLASSIFICATIONS,
         _SYNTHETIC_ANSWER_EVALUATION_CLASSIFICATIONS,
+        _RESULT_PRESENTATION_NARRATION_CLASSIFICATIONS,
+        _ANALYTICS_SESSION_CLASSIFICATIONS,
+        _MODULE_REGISTRY_CLASSIFICATIONS,
+        _OLLAMA_SOAK_CLASSIFICATIONS,
+        _REFERENCE_DATASET_VALIDATION_CLASSIFICATIONS,
     ):
         for category, codes in groups.items():
             for code in codes:
