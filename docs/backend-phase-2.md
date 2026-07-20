@@ -160,10 +160,10 @@ Backend Phase II is complete only when:
   2 opt-in live-provider tests skipped in 47.78 seconds on Windows/Python 3.13;
   111 internal links checked, 0 broken; exact isolated signatures, complete
   parser order, and pull-request diff gates passed.
-- Increment 2.4 model-documentation registration slice: isolated syntax and
-  exact signature equivalence preserved both command signatures; reconstructed
-  registration order preserved the complete 47-command surface. Automated
-  repository validation is pending.
+- Increment 2.4 model-documentation registration slice: 276 tests passed and
+  2 opt-in live-provider tests skipped in 54.57 seconds on Windows/Python 3.13;
+  111 internal links checked, 0 broken; exact isolated signatures, complete
+  parser order, root-argument placement, and pull-request diff gates passed.
 - Latest full offline suite: 276 passed and 2 opt-in live-provider tests skipped
   in 44.98 seconds on Windows.
 - No external database, provider, network, production data, migration, import,
@@ -399,8 +399,8 @@ registration-only boundary, not dynamic dispatch or a new orchestrator.
 
 ## Next Increment
 
-Validate the model-documentation registration slice through GitHub Actions,
-then continue increment 2.4 with the next coherent registration slice while
+Continue increment 2.4 with the remaining analytics-operations registration
+slices while
 preserving the complete parser signature and `data_ops_lab.cli:main`. Keep
 domain execution and result formatting in their existing modules until a
 separate dispatch contract is approved. Do not add a generic success predicate

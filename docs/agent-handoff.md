@@ -3806,3 +3806,31 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 1. Open the model-documentation registration pull request as a draft.
 2. Inspect the complete automated Windows/Python 3.13 gate.
 3. Correct any regression before marking the pull request ready or merging.
+
+## 2026-07-20 - Codex - Validate model-documentation registration PR
+
+### Git Checkpoint
+
+- Validated GitHub PR #15 at `9c8a1da`.
+- GitHub Actions workflow run: `29776329104`; job: `88466461437`.
+
+### Validation
+
+- Full offline suite: 276 passed and 2 opt-in live-provider tests skipped in
+  54.57 seconds on Windows/Python 3.13.
+- Internal links: 111 checked, 0 broken.
+- Pull-request diff check: passed against exact base `3c9883d` and head
+  `9c8a1da`.
+- Root parser argument placement remained covered by the complete suite.
+- Checkout, Python setup, dependency installation, cache finalization, and
+  cleanup steps passed.
+- No documentation generation, project data, live provider, external database,
+  approval apply, migration, import, synchronization, upload, or
+  generated-output publication ran.
+
+### Next Logical Step
+
+1. Revalidate this documentation-only evidence commit through the same workflow.
+2. Mark PR #15 ready and merge only after that final run passes.
+3. Complete increment 2.4 by extracting the remaining analytics operations
+   registrations from the resulting `main`.
