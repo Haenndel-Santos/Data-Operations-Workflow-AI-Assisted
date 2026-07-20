@@ -102,27 +102,36 @@ new-directory publication and atomic text-checkpoint replacement are shared by
 the live dataset evaluator and Ollama soak with their existing retry schedules.
 Existing-file and fully declared file SHA-256 binding maps are also shared,
 while each module retains its own missing-file and equality policy. Legacy
-module exports remain compatible. Distinct Product materialization and
-reference-dataset blocker schemas remain local until their contracts and
-consumers are characterized. Deterministic `.building` directory workflows
-remain separate because their stale-staging failure policy differs.
+module exports remain compatible. Distinct Product materialization blocker
+schemas remain local until their contracts and consumers are characterized.
+The reference-dataset blocker schema remains local but now has exact format
+and consumer provenance. Deterministic `.building` directory workflows remain
+separate because their stale-staging failure policy differs.
 
-The additive error-taxonomy registry classifies 438 labels used by 14 complete
-standard-blocker consumers: query planning, query execution, semantic catalog,
+The additive error-taxonomy registry classifies 637 labels used by 20 complete
+blocker consumers: query planning, query execution, semantic catalog,
 semantic approval, the semantic adapter, the six-module dataset-benchmark
 family, natural-language translation, its synthetic offline evaluator, and the
-synthetic exact-answer evaluator. All 10 dynamic call sites and both direct
-blocker-list reuses have exact provenance and disposition metadata. Nine exact
+synthetic exact-answer evaluator, followed by deterministic result presentation
+and recorded narration, the two-phase analytics-session coordinator, and the
+static module-registry validator, the bounded local Ollama soak, and exact
+reference-dataset validation. All 10
+dynamic call sites and both direct blocker-list reuses have exact provenance
+and disposition metadata. Fifteen exact
 flows record standard blockers inherited from the YAML and semantic-adapter
-producer families. Provider exception translation, answer-dataset
-materialization failure, and per-case evaluation fallback have separate
-exception provenance without persisted exception messages. Translation,
-planning, execution, evaluation, and live `provider_outcome` status fields
-remain separate text surfaces. Callers may request category metadata
+producer families. Twenty-nine exact catch-site fallbacks have separate exception
+provenance without persisted source exception messages. Translation, planning,
+execution, evaluation, presentation, narration, session checkpoints, and live
+`provider_outcome`, registry-validation, and reference validation/review status
+fields remain separate text surfaces. Soak mode and stop-reason controls are
+separate control text. Its embedded lowercase blocker identifiers and the
+reference validator's `code`/`message`/`field` blockers are two separately
+provenanced record formats. The review-gated approved-relationship projection
+also remains separate taxonomy metadata. Callers may request category metadata
 separately, while unknown codes remain unregistered and `unclassified`. This
 registry is not yet a common run-result envelope and does not coerce exception
-messages, text statuses, or Product's module-specific `artifact` records into
-one shape.
+messages, text statuses, approval projections, or module-specific blocker
+records into one shape.
 
 The first formal module registry now describes the two recorded analytics
 session phases and validates inputs, outputs, dependencies, validation, tests,

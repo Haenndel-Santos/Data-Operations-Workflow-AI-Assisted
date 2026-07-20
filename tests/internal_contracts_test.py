@@ -163,6 +163,99 @@ def test_synthetic_answer_taxonomy_keeps_failure_surfaces_distinct():
     assert classify_error("completed").registered is False
 
 
+def test_result_presentation_narration_taxonomy_keeps_failure_surfaces_distinct():
+    expected = {
+        "invalid_execution_manifest": ErrorCategory.CONTRACT,
+        "result_hash_mismatch": ErrorCategory.AUTHORITY,
+        "result_size_invalid": ErrorCategory.EXECUTION_LIMIT,
+        "invalid_claim_text": ErrorCategory.PROVIDER,
+        "result_missing": ErrorCategory.FILESYSTEM,
+        "result_controls_mismatch": ErrorCategory.EXPECTED_RESULT,
+    }
+
+    assert {
+        code: classify_error(code).category for code in expected
+    } == expected
+    assert all(classify_error(code).registered for code in expected)
+    assert classify_error("ready_for_recorded_narration").registered is False
+    assert classify_error("ready_for_user").registered is False
+
+
+def test_analytics_session_taxonomy_keeps_failure_surfaces_distinct():
+    expected = {
+        "invalid_execution_review": ErrorCategory.CONTRACT,
+        "session_authority_changed": ErrorCategory.AUTHORITY,
+        "execution_review_incomplete": ErrorCategory.APPROVAL,
+        "narration_response_missing": ErrorCategory.FILESYSTEM,
+        "query_execution_blocked": ErrorCategory.UNCLASSIFIED,
+    }
+
+    assert {
+        code: classify_error(code).category for code in expected
+    } == expected
+    assert all(classify_error(code).registered for code in expected)
+    assert classify_error("awaiting_execution_review").registered is False
+    assert classify_error("result_narration").registered is False
+
+
+def test_module_registry_taxonomy_keeps_failure_surfaces_distinct():
+    expected = {
+        "invalid_module_contract": ErrorCategory.CONTRACT,
+        "registry_changed_during_validation": ErrorCategory.AUTHORITY,
+        "missing_human_review_gate": ErrorCategory.APPROVAL,
+        "registry_too_large": ErrorCategory.EXECUTION_LIMIT,
+        "registry_missing": ErrorCategory.FILESYSTEM,
+    }
+
+    assert {
+        code: classify_error(code).category for code in expected
+    } == expected
+    assert all(classify_error(code).registered for code in expected)
+    assert classify_error("valid").registered is False
+    assert classify_error("active").registered is False
+    assert classify_error("implemented").registered is False
+
+
+def test_ollama_soak_taxonomy_keeps_failure_surfaces_distinct():
+    expected = {
+        "ollama_soak_authorization_invalid": ErrorCategory.CONTRACT,
+        "ollama_soak_source_mismatch": ErrorCategory.AUTHORITY,
+        "ollama_soak_not_approved": ErrorCategory.APPROVAL,
+        "ollama_soak_authorization_too_large": ErrorCategory.EXECUTION_LIMIT,
+        "ollama_soak_provider_not_loopback": ErrorCategory.PROVIDER,
+        "ollama_soak_authorization_missing": ErrorCategory.FILESYSTEM,
+        "ollama_soak_live_authority_preflight_failed": ErrorCategory.UNCLASSIFIED,
+    }
+
+    assert {
+        code: classify_error(code).category for code in expected
+    } == expected
+    assert all(classify_error(code).registered for code in expected)
+    assert classify_error("ready_for_overnight_soak").registered is False
+    assert classify_error("stopped_resource_guard").registered is False
+    assert classify_error("stop_file_detected").registered is False
+
+
+def test_reference_dataset_taxonomy_keeps_authority_and_review_state_distinct():
+    expected = {
+        "invalid_conversion_table": ErrorCategory.CONTRACT,
+        "review_manifest_drift": ErrorCategory.AUTHORITY,
+        "local_scope_not_approved": ErrorCategory.APPROVAL,
+        "missing_file": ErrorCategory.FILESYSTEM,
+        "invalid_relationship_data": ErrorCategory.EXPECTED_RESULT,
+        "invalid_relationship_review": ErrorCategory.UNCLASSIFIED,
+    }
+
+    assert {
+        code: classify_error(code).category for code in expected
+    } == expected
+    assert all(classify_error(code).registered for code in expected)
+    assert classify_error("ready_for_relationship_review").registered is False
+    assert classify_error("ready_for_semantic_modeling").registered is False
+    assert classify_error("pending_review").registered is False
+    assert classify_error("cleanup_staging_and_reraise").registered is False
+
+
 def test_atomic_write_text_retries_and_cleans_temporary_file(tmp_path):
     path = tmp_path / "checkpoint.yml"
     path.write_text("old\n", encoding="utf-8")

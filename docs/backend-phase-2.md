@@ -26,7 +26,7 @@ that is already proven equivalent into small internal contracts.
 | --- | --- | --- |
 | 2.1 | Common file hashing and the standard analytics blocker record | Implemented in `082920a` |
 | 2.2 | Common atomic publication with characterized Windows retry and race semantics | Implemented in `28e962b` |
-| 2.3 | Common source bindings, error taxonomy, and run-result envelope | Source bindings, reviewed dynamic/direct/exception provenance, and a 438-label classification registry implemented; further taxonomy expansion and run-result envelope pending |
+| 2.3 | Common source bindings, error taxonomy, and run-result envelope | Source bindings, reviewed dynamic/direct/exception/format/projection provenance, and a 637-label classification registry implemented; further taxonomy expansion and run-result envelope pending |
 | 2.4 | CLI command registration split by domain while preserving `data_ops_lab.cli:main` | Pending |
 
 Other blocker shapes remain module-specific until their persisted schemas and
@@ -121,8 +121,18 @@ Backend Phase II is complete only when:
   146 passed in 21.66 seconds.
 - Increment 2.3 synthetic answer-evaluation taxonomy and registered-consumer
   suite: 157 passed in 26.10 seconds.
-- Latest full offline suite: 249 passed and 2 opt-in live-provider tests skipped
-  in 40.20 seconds on Windows.
+- Increment 2.3 result-presentation/narration taxonomy and
+  registered-consumer suite: 190 passed in 33.82 seconds.
+- Increment 2.3 analytics-session taxonomy and registered-consumer suite: 201
+  passed in 36.44 seconds.
+- Increment 2.3 module-registry taxonomy and registered-consumer suite: 210
+  passed in 36.84 seconds.
+- Increment 2.3 Ollama-soak taxonomy and registered-consumer suite: 214 passed
+  in 36.98 seconds.
+- Increment 2.3 reference-dataset-validation taxonomy and registered-consumer
+  suite: 218 passed in 37.67 seconds.
+- Latest full offline suite: 266 passed and 2 opt-in live-provider tests skipped
+  in 43.54 seconds on Windows.
 - No external database, provider, network, production data, migration, import,
   synchronization, or approval apply was used.
 
@@ -141,13 +151,16 @@ messages, free-text status values, provider payloads, or blocker dictionaries
 constructed without the two recognized append functions. Those separate
 failure surfaces must be characterized before inclusion.
 
-The additive registry now classifies 438 labels used by 14 complete consumer
-modules across five slices: the four initial standard analytics consumers, the
+The additive registry now classifies 637 labels used by 20 complete consumer
+modules across ten slices: the four initial standard analytics consumers, the
 semantic adapter, six dataset-benchmark modules, and the natural-language
 translation plus synthetic offline evaluation pair, followed by the synthetic
-exact-answer evaluator. The latest slice explicitly classifies all 49 literal
-Stage 5E codes. It does not classify isolated labels from a partially reviewed
-family. It uses these top-level categories:
+exact-answer evaluator, the result-presentation/narration pair, and the
+analytics-session coordinator, static module-registry validator, bounded local
+Ollama soak, and reference-dataset validator. The latest slice reviewed all 79
+reference-validation codes and added the 74 that were not already registered.
+It does not classify isolated labels from a partially reviewed family. It uses
+these top-level categories:
 
 | Category | Boundary |
 | --- | --- |
@@ -206,8 +219,58 @@ outside the registry. The compound
 `synthetic_dataset_materialization_failed`, remain explicitly `unclassified`
 because their current meanings span more than one category.
 
+Four additional inherited flows bind result presentation and narration to the
+shared YAML producer. The result-CSV parsing catch emits the sanitized
+`invalid_result_csv` blocker. Narration maps `TimeoutError` to
+`provider_timeout` and all other provider failures to `provider_failure` while
+dropping exception messages. Facts readiness, presentation readiness, and
+narration readiness remain text-status surfaces outside the registry. Stage 5B
+facts and controls retain numeric authority; narration remains cited and
+non-authoritative.
+
+Two further inherited flows bind session preparation and resume to the shared
+YAML blocker producer. The coordinator's artifact-path normalization,
+human-review timestamp parsing, and existing-resume preflight catches have
+separate provenance. Fourteen preparation, nested-stage, review-template,
+resume, and last-valid-checkpoint text sources remain outside the registry.
+Five aggregate stage-blocked codes are registered but `unclassified` because
+their underlying specialized stage can fail in multiple categories. The
+coordinator preserves its stop-before-execution gate and last-valid-checkpoint
+failure policy.
+
+The static validator has no inherited or dynamic blocker sources. Its six file,
+YAML, module-spec, AST, and hash catches map to fixed sanitized blockers with
+exact provenance. The generated `valid`/`blocked` status remains a separate
+text surface. Registry safety controls and human-review gates remain authority
+and approval boundaries; the validator remains non-executing and cannot import
+or call declared entrypoints.
+
+The soak has no inherited or dynamic blocker sources. Its ten authorization,
+telemetry, cycle-evidence, and live-cycle catches have exact provenance without
+persisted exception messages; only the exception class name is retained for a
+cycle failure. Overall and per-cycle statuses remain text surfaces, while mode
+and stop reason are separately provenanced control text. Its embedded
+`blocker_001` records are classified without coercing them into the shared
+`BLOCKER_001` standard analytics format. The aggregate live-authority preflight
+failure remains explicitly `unclassified` because its nested validator spans
+multiple categories. No soak, provider, network, or database execution is
+authorized by taxonomy metadata.
+
+The reference validator has no inherited, dynamic, or direct blocker-record
+reuse. Its five YAML, timestamp, DuckDB, and staged-publication catches have
+exact provenance; staged-publication failure cleans its `.building` directory
+and re-raises the original exception. Six conversion, review, decision,
+projection, and overall status surfaces remain outside the registry. Its local
+`code`/`message`/`field` blocker record and the exact completed-review approval
+projection are separately provenanced without changing either output.
+`invalid_relationship_review` remains registered but `unclassified` because
+one code currently combines version shape, dataset identity, and completed
+review state. Classification does not approve candidates, apply relationships,
+open project data, or expand local, upload, publication, or training authority.
+
 ## Next Increment
 
-Review the result-presentation/narration consumers next as one coherent family.
-Keep narration-provider exceptions, presentation/narration statuses, Product's
-`artifact` blocker format, and the common run-result envelope separate.
+Review Product canonical promotion as the next complete consumer. Keep its
+dynamic integrity-check provenance, module-specific `artifact` blocker format,
+readiness/plan statuses, canonical apply authority, Product materialization
+format, and the common run-result envelope separate.
