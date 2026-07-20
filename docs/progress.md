@@ -6,7 +6,7 @@ Turn local operational spreadsheets into validated analytical datasets and an ap
 
 ## Current Stage
 
-Four active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases 0-4 passed their gates for Northwind and the selected local Ollama development provider; AI Phase 5 remains active after its recorded, live-development, and endurance evidence; and Backend Phase II is active in increment 2.4 after completing increment 2.3. Stage 5A-5F governed analytics retains its applied Northwind semantic catalog, immutable 13-case answer authority, reproducible 13/13 recorded evaluation, governed 9/13 loopback result, and 56 evidenced soak cycles. Backend Phase II has completed compatible common hashing, standard analytics blockers, atomic publication, the two proven source-binding absence semantics, explicit classification of 675 labels used by 22 complete blocker consumers, and exact provenance for all dynamic/direct and separate status/format/authority surfaces. The 658-literal audit found no remaining recognized consumer, and 23 existing result classes now conform structurally to the additive `output_dir`/opaque `status`/`blocker_count`/`outputs_changed` projection. A consumer audit found no honest runtime adoption point before generic dispatch or run recording, so the projection remains opt-in. CLI decomposition has moved 23 registrations across four coherent domain registrars while preserving the full 47-command parser surface. Further CLI decomposition, a fresh holdout, provider selection, dynamic dispatch, live narration, and a user interface remain pending.
+Four active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases 0-4 passed their gates for Northwind and the selected local Ollama development provider; AI Phase 5 remains active after its recorded, live-development, and endurance evidence; and Backend Phase II is active in increment 2.4 after completing increment 2.3. Stage 5A-5F governed analytics retains its applied Northwind semantic catalog, immutable 13-case answer authority, reproducible 13/13 recorded evaluation, governed 9/13 loopback result, and 56 evidenced soak cycles. Backend Phase II has completed compatible common hashing, standard analytics blockers, atomic publication, the two proven source-binding absence semantics, explicit classification of 675 labels used by 22 complete blocker consumers, and exact provenance for all dynamic/direct and separate status/format/authority surfaces. The 658-literal audit found no remaining recognized consumer, and 23 existing result classes now conform structurally to the additive `output_dir`/opaque `status`/`blocker_count`/`outputs_changed` projection. A consumer audit found no honest runtime adoption point before generic dispatch or run recording, so the projection remains opt-in. CLI decomposition has moved 23 registrations across four coherent domain registrars while preserving the full 47-command parser surface. GitHub Actions now provides an automated read-only Windows/Python 3.13 gate for the offline suite, internal links, and pull-request diffs. Further CLI decomposition, a fresh holdout, provider selection, dynamic dispatch, live narration, and a user interface remain pending.
 
 ## Last Completed Milestone
 
@@ -168,6 +168,9 @@ behavior moved.
 ## Test Status
 
 - Automated suite: 276 tests passed and 2 opt-in live-provider tests skipped offline on 2026-07-20; latest run completed in 44.98 seconds on Windows.
+- First GitHub Actions CI run: 276 passed and 2 opt-in live-provider tests
+  skipped in 93.18 seconds on Windows/Python 3.13; 110 internal links checked,
+  0 broken; pull-request diff check passed.
 - Backend Phase II run-result compatibility and registered-consumer suite: 238
   passed in 39.63 seconds.
 - Backend Phase II existing-file binding consumer suite: 76 passed in 17.77 seconds.
@@ -241,9 +244,9 @@ files in a separate private store or encrypted artifact workflow.
 
 ## Last Verified Commit
 
-`8866fca` (merge of `refactor(cli): extract query session registration`).
+`c28bb3a` (merge of `refactor(cli): extract reference dataset registration`).
 
 ## Last Updated
 
-2026-07-20 by Codex after extracting the reference-dataset CLI registration
-slice with unchanged global and per-command parser signatures.
+2026-07-20 by Codex after validating the first automated GitHub Actions
+Windows/Python 3.13 offline regression gate.

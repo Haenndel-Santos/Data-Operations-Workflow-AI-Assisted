@@ -21,6 +21,20 @@ Remove-Item Env:PYTHONPATH
 
 Repairing the editable install is a separate environment change and should be performed only when explicitly approved.
 
+## Automated GitHub Validation
+
+The [GitHub Actions workflow](../.github/workflows/ci.yml) runs on every pull
+request, every push to `main`, and manual dispatch. It uses
+`windows-latest`, Python 3.13, read-only repository permissions, pip caching,
+and the same offline suite and internal-link checker documented above. Pull
+requests also run `git diff --check` against their exact base and head commits.
+
+The workflow installs only the versioned project and development dependencies.
+It requires no secret, provider, external database, production data, migration,
+import, synchronization, approval apply, upload, or private generated artifact.
+A passing check is regression evidence for the committed repository state; it
+does not authorize live-provider execution or any project-data operation.
+
 ## Internal Contract Compatibility
 
 Backend Phase II compatibility tests verify the common file SHA-256 digest,
