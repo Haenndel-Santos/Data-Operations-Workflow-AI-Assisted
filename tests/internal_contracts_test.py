@@ -87,18 +87,80 @@ def test_standard_blocker_preserves_legacy_exports_and_shape():
 
 def test_error_taxonomy_is_additive_and_preserves_codes():
     authority = classify_error("database_changed_during_execution")
+    approval = classify_error("semantic_adapter_not_authorized")
+    contract = classify_error("invalid_measure")
+    execution_limit = classify_error("query_timeout")
     unknown = classify_error("future_module_specific_failure")
     reviewed_without_category = classify_error("query_execution_failed")
 
     assert authority.code == "database_changed_during_execution"
     assert authority.category is ErrorCategory.AUTHORITY
     assert authority.registered is True
+    assert approval.category is ErrorCategory.APPROVAL
+    assert contract.category is ErrorCategory.CONTRACT
+    assert execution_limit.category is ErrorCategory.EXECUTION_LIMIT
     assert unknown.code == "future_module_specific_failure"
     assert unknown.category is ErrorCategory.UNCLASSIFIED
     assert unknown.registered is False
     assert reviewed_without_category.category is ErrorCategory.UNCLASSIFIED
     assert reviewed_without_category.registered is True
     assert len(ERROR_CLASSIFICATION_REGISTRY) == len(set(ERROR_CLASSIFICATION_REGISTRY))
+
+
+def test_dataset_benchmark_taxonomy_keeps_failure_surfaces_distinct():
+    expected = {
+        "benchmark_hash_binding_mismatch": ErrorCategory.AUTHORITY,
+        "benchmark_case_review_not_approved": ErrorCategory.APPROVAL,
+        "benchmark_answer_design_too_large": ErrorCategory.EXECUTION_LIMIT,
+        "live_evaluation_provider_mismatch": ErrorCategory.PROVIDER,
+        "benchmark_review_unreadable": ErrorCategory.FILESYSTEM,
+        "materialized_answer_schema_mismatch": ErrorCategory.EXPECTED_RESULT,
+        "invalid_benchmark_pack_id": ErrorCategory.CONTRACT,
+        "benchmark_answer_result_integrity_failed": ErrorCategory.UNCLASSIFIED,
+    }
+
+    assert {
+        code: classify_error(code).category for code in expected
+    } == expected
+    assert all(classify_error(code).registered for code in expected)
+    assert classify_error("accepted").registered is False
+    assert classify_error("timeout").registered is False
+
+
+def test_translation_provider_taxonomy_keeps_failure_surfaces_distinct():
+    expected = {
+        "invalid_evaluation_case": ErrorCategory.CONTRACT,
+        "network_provider_not_authorized": ErrorCategory.APPROVAL,
+        "question_file_too_large": ErrorCategory.EXECUTION_LIMIT,
+        "provider_timeout": ErrorCategory.PROVIDER,
+        "question_file_missing": ErrorCategory.FILESYSTEM,
+        "evaluation_category_status_mismatch": ErrorCategory.EXPECTED_RESULT,
+    }
+
+    assert {
+        code: classify_error(code).category for code in expected
+    } == expected
+    assert all(classify_error(code).registered for code in expected)
+    assert classify_error("ready_for_query_plan").registered is False
+    assert classify_error("evaluation_error").registered is False
+
+
+def test_synthetic_answer_taxonomy_keeps_failure_surfaces_distinct():
+    expected = {
+        "invalid_synthetic_table": ErrorCategory.CONTRACT,
+        "expected_question_mismatch": ErrorCategory.AUTHORITY,
+        "synthetic_row_limit_exceeded": ErrorCategory.EXECUTION_LIMIT,
+        "invalid_answer_provider_response": ErrorCategory.PROVIDER,
+        "expected_row_count_mismatch": ErrorCategory.EXPECTED_RESULT,
+        "synthetic_dataset_materialization_failed": ErrorCategory.UNCLASSIFIED,
+    }
+
+    assert {
+        code: classify_error(code).category for code in expected
+    } == expected
+    assert all(classify_error(code).registered for code in expected)
+    assert classify_error("not_run").registered is False
+    assert classify_error("completed").registered is False
 
 
 def test_atomic_write_text_retries_and_cleans_temporary_file(tmp_path):

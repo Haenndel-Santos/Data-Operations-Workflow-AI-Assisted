@@ -2678,3 +2678,182 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
   remain ignored local artifacts and were not read or changed.
 - Continue Backend Phase II with explicit review of the 10 dynamic blocker call
   sites; keep the common run-result envelope and CLI decomposition separate.
+
+## 2026-07-20 - Codex - Review dynamic blocker provenance
+
+### Implementation
+
+- Registered exact provenance, consumer family, value surface, possible bounded
+  codes, and taxonomy disposition for all 10 syntactically dynamic blocker call
+  sites.
+- Expanded the additive registry from 102 to 136 codes by admitting the
+  complete semantic-adapter consumer family and the three controlled
+  execution-limit codes carried by the existing query-execution exception.
+- Added exact inventory-to-provenance and complete-consumer coverage
+  regressions, so moved/new dynamic sites and partial family additions fail
+  validation.
+
+### Preserved Boundaries
+
+- Dataset-benchmark forwarding and scope-decision sites remain deferred until
+  their complete consumer family and direct blocker dictionaries are reviewed.
+- `ExecutionLimitExceeded` remains a local exception; only its three persisted
+  blocker codes received additive categories.
+- Free-text statuses remain outside the code inventory, and Product canonical
+  promotion retains its module-specific blocker record with `artifact`.
+- No persisted blocker label, CSV column, exception behavior, public entrypoint,
+  authority, source data, approved state, or generated output changed.
+
+### Validation
+
+- Focused contract and affected-consumer suite: 65 passed in 8.56 seconds.
+- Full offline suite: 239 passed and 2 opt-in live-provider tests skipped in
+  41.76 seconds on Windows.
+- Internal link check: 110 checked, 0 broken.
+- Registry evidence: 136 classified codes and 10/10 dynamic call sites with
+  exact provenance.
+
+### Next Logical Step
+
+- Review the dataset-benchmark consumers as one bounded family, starting from
+  the five provenanced forwarding/scope-decision sites and their direct blocker
+  dictionaries.
+- Keep provider exception messages, free-text statuses, Product blocker
+  formats, the common run-result envelope, and CLI decomposition separate.
+
+## 2026-07-20 - Codex - Classify the dataset-benchmark family
+
+### Implementation
+
+- Admitted six complete dataset-benchmark consumers: base validation,
+  preparation, review/approval, materialization, offline evaluation, and live
+  evaluation.
+- Expanded the additive registry from 136 to 350 codes: 203 literal family
+  labels plus 11 bounded dynamic/fallback codes.
+- Added source-only inventory and exact provenance for the two direct
+  `candidate.blockers` list reuses in benchmark validation and approval.
+- Recorded the live evaluator's `provider_outcome` as a separate text-status
+  surface derived from translation status and nested provider blockers.
+
+### Classification Boundaries
+
+- Dataset codes now populate contract, authority, approval, execution-limit,
+  provider, filesystem, and expected-result categories through explicit label
+  sets rather than prefix inference.
+- `benchmark_answer_execution_incomplete` and
+  `benchmark_answer_result_integrity_failed` remain registered but
+  `unclassified` because each is an umbrella spanning multiple causes.
+- `provider_timeout` and `provider_failure` remain outside this consumer slice;
+  reading them to derive `provider_outcome` does not classify their producer
+  family implicitly.
+- Provider exception messages, Product's `artifact` blocker record, persisted
+  labels/columns, entrypoints, authority gates, and outputs remain unchanged.
+
+### Validation
+
+- Dataset-benchmark and internal-contract slice: 75 passed in 16.05 seconds.
+- Full registered-consumer suite: 129 passed in 24.02 seconds.
+- Full offline suite: 242 passed and 2 opt-in live-provider tests skipped in
+  42.05 seconds on Windows.
+- Internal link check: 110 checked, 0 broken.
+- Inventory evidence: 658 literal labels, 10/10 dynamic call sites, and 2/2
+  direct blocker-record reuses.
+- Registry evidence: 350 codes across 11 complete consumer modules.
+
+### Next Logical Step
+
+- Review the natural-language translation/provider consumer family, including
+  `provider_timeout` and `provider_failure`.
+- Keep provider exception messages, live `provider_outcome` statuses, Product
+  blocker formats, the common run-result envelope, and CLI decomposition
+  separate.
+
+## 2026-07-20 - Codex - Classify the natural-language translation/provider family
+
+### Implementation
+
+- Admitted `analytics_nl_translation.py` and
+  `analytics_translation_evaluation.py` as one complete standard-blocker
+  consumer family.
+- Reviewed all 46 unique literal family codes, reused seven existing global
+  classifications, and expanded the additive registry from 350 to 389 codes.
+- Recorded six exact flows that write already-classified YAML and
+  semantic-adapter blockers into translation/evaluation evidence.
+- Recorded exact provenance at both translation catch sites: `TimeoutError`
+  becomes `provider_timeout`, and the remaining provider exceptions become
+  `provider_failure`, with exception messages never persisted.
+- Kept `ollama_provider.py` outside the registered consumer set because it
+  emits exceptions but does not persist standard blockers.
+- Recorded translation result, evaluation result, and per-case observed status
+  values as text-status surfaces separate from blocker codes.
+
+### Classification Boundaries
+
+- Explicitly classified the new codes across contract, approval,
+  execution-limit, provider, filesystem, and expected-result categories.
+- Reused the already-reviewed provider-response and `invalid_question`
+  classifications instead of duplicating global code entries.
+- Preserved the live evaluator's `provider_outcome`, Product's `artifact`
+  blocker record, all persisted columns, entrypoints, exception behavior,
+  authority gates, and generated-output behavior.
+
+### Validation
+
+- Focused taxonomy, translation, and evaluation suite: 48 passed in 4.06
+  seconds.
+- Full registered-consumer suite: 146 passed in 21.66 seconds.
+- Full offline suite: 246 passed and 2 opt-in live-provider tests skipped in
+  41.10 seconds on Windows.
+- Internal link check: 110 checked, 0 broken.
+- Registry evidence: 389 codes across 13 complete consumer modules; the source
+  inventory remains 658 literal labels and 10/10 dynamic call sites.
+
+### Next Logical Step
+
+- Review the synthetic answer-evaluation consumer, including inherited blocker
+  writes from shared YAML and semantic-validation helpers.
+- Keep result statuses, exception fallbacks, Product blocker formats, the
+  common run-result envelope, and CLI decomposition separate.
+
+## 2026-07-20 - Codex - Classify the synthetic answer-evaluation consumer
+
+### Implementation
+
+- Admitted `analytics_answer_evaluation.py` as the complete synthetic
+  answer-evaluation standard-blocker consumer.
+- Classified all 49 literal Stage 5E codes and expanded the additive registry
+  from 389 to 438 codes across 14 complete consumers.
+- Recorded three exact standard-blocker flows inherited from shared YAML and
+  semantic-state validation helpers.
+- Recorded the temporary dataset materialization catch as a sanitized blocker
+  surface and the per-case catch as the separate `evaluation_error` text-status
+  fallback; neither persists exception messages.
+- Recorded translation, Stage 5A planning, Stage 5B execution, and overall
+  evaluator statuses as text surfaces rather than blocker codes.
+
+### Classification Boundaries
+
+- Classified pack/dataset shapes as `contract`, authoritative question drift as
+  `authority`, bounded pack/row limits as `execution_limit`, provider-response
+  failures as `provider`, and exact-answer expectations as `expected_result`.
+- Kept `synthetic_dataset_materialization_failed` registered but
+  `unclassified` because its catch combines DuckDB, filesystem, and value
+  failures.
+- Preserved every persisted label/column, CLI/Python entrypoint, Stage 5D/5A/5B
+  gate, temporary-data policy, exception behavior, and generated output.
+
+### Validation
+
+- Focused taxonomy and answer-evaluation suite: 29 passed in 8.14 seconds.
+- Full registered-consumer suite: 157 passed in 26.10 seconds.
+- Full offline suite: 249 passed and 2 opt-in live-provider tests skipped in
+  40.20 seconds on Windows.
+- Internal link check: 110 checked, 0 broken.
+- Registry evidence: 438 codes across 14 complete consumer modules; the source
+  inventory remains 658 literal labels and 10/10 dynamic call sites.
+
+### Next Logical Step
+
+- Review result presentation and narration as one coherent consumer family.
+- Keep narration-provider exceptions, text statuses, Product blocker formats,
+  the common run-result envelope, and CLI decomposition separate.

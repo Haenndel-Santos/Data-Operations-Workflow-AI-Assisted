@@ -26,7 +26,7 @@ that is already proven equivalent into small internal contracts.
 | --- | --- | --- |
 | 2.1 | Common file hashing and the standard analytics blocker record | Implemented in `082920a` |
 | 2.2 | Common atomic publication with characterized Windows retry and race semantics | Implemented in `28e962b` |
-| 2.3 | Common source bindings, error taxonomy, and run-result envelope | Source bindings and initial 102-label classification registry implemented; taxonomy expansion and run-result envelope pending |
+| 2.3 | Common source bindings, error taxonomy, and run-result envelope | Source bindings, reviewed dynamic/direct/exception provenance, and a 438-label classification registry implemented; further taxonomy expansion and run-result envelope pending |
 | 2.4 | CLI command registration split by domain while preserving `data_ops_lab.cli:main` | Pending |
 
 Other blocker shapes remain module-specific until their persisted schemas and
@@ -115,8 +115,14 @@ Backend Phase II is complete only when:
   in 11.35 seconds.
 - Increment 2.3 existing-file binding consumers: 76 passed in 17.77 seconds.
 - Increment 2.3 declared-file binding consumers: 19 passed in 4.73 seconds.
-- Latest full offline suite: 238 passed and 2 opt-in live-provider tests skipped
-  in 43.63 seconds on Windows.
+- Increment 2.3 dataset-benchmark taxonomy and registered-consumer suite: 129
+  passed in 24.02 seconds.
+- Increment 2.3 translation/provider taxonomy and registered-consumer suite:
+  146 passed in 21.66 seconds.
+- Increment 2.3 synthetic answer-evaluation taxonomy and registered-consumer
+  suite: 157 passed in 26.10 seconds.
+- Latest full offline suite: 249 passed and 2 opt-in live-provider tests skipped
+  in 40.20 seconds on Windows.
 - No external database, provider, network, production data, migration, import,
   synchronization, or approval apply was used.
 
@@ -125,8 +131,9 @@ Backend Phase II is complete only when:
 The first repository-wide blocker-label inventory is now reproducible with
 `scripts/inventory_failure_labels.py`. Its 2026-07-16 baseline found 658
 distinct literal labels passed to `add_blocker` or `_add_blocker`, plus 10
-dynamic call sites requiring manual review. The inventory parses Python source
-without importing modules, opening datasets, or executing workflows.
+dynamic call sites. Their manual provenance review is now versioned separately
+from the source-only parser. The inventory parses Python source without
+importing modules, opening datasets, or executing workflows.
 
 This baseline is evidence, not yet a runtime taxonomy. It intentionally does
 not infer categories from label prefixes and does not include exception
@@ -134,10 +141,13 @@ messages, free-text status values, provider payloads, or blocker dictionaries
 constructed without the two recognized append functions. Those separate
 failure surfaces must be characterized before inclusion.
 
-The first additive registry classifies the 102 labels used by the four modules
-that already share the standard blocker contract: analytics query planning,
-query execution, semantic catalog validation, and semantic approval. It uses
-these top-level categories:
+The additive registry now classifies 438 labels used by 14 complete consumer
+modules across five slices: the four initial standard analytics consumers, the
+semantic adapter, six dataset-benchmark modules, and the natural-language
+translation plus synthetic offline evaluation pair, followed by the synthetic
+exact-answer evaluator. The latest slice explicitly classifies all 49 literal
+Stage 5E codes. It does not classify isolated labels from a partially reviewed
+family. It uses these top-level categories:
 
 | Category | Boundary |
 | --- | --- |
@@ -150,20 +160,54 @@ these top-level categories:
 | `expected_result` | Exact-answer, comparison, or governed expectation mismatch |
 
 `classify_error` returns the original code, its category, and whether that code
-was explicitly registered. Classification is explicit per label; unknown and
-dynamic labels remain unregistered and `unclassified` rather than being guessed
-from spelling. Two reviewed umbrella failures, `plan_revalidation_failed` and
-`query_execution_failed`, are registered as `unclassified` because none of the
-initial seven categories describes them without losing meaning.
+was explicitly registered. Classification is explicit per label; unknown codes
+remain unregistered and `unclassified` rather than being guessed from spelling.
+Two reviewed umbrella failures, `plan_revalidation_failed` and
+`query_execution_failed`, remain registered as `unclassified` because none of
+the seven categories describes them without losing meaning.
+
+All 10 syntactically dynamic call sites now have exact, versioned provenance.
+The regression binds the registry to each current source location, so a moved
+or newly introduced dynamic site requires another explicit review.
+
+| Consumer | Calls | Value provenance and surface | Taxonomy disposition |
+| --- | ---: | --- | --- |
+| Dataset benchmark evaluation | 1 | Standard blocker rows copied from prerequisite validation CSV evidence | Registered with the complete dataset-benchmark family |
+| Dataset benchmark materialization | 2 | One finite scope-decision branch and candidate blocker rows returned by benchmark inspection | Registered with the complete dataset-benchmark family |
+| Dataset benchmark preparation | 1 | Provider-response blocker rows returned by the existing response validator | Registered with the complete dataset-benchmark family |
+| Dataset benchmark review | 1 | Finite benchmark-scope decision branch | Registered with the complete dataset-benchmark family |
+| Analytics query execution | 1 | Three codes transported by `ExecutionLimitExceeded` and persisted as standard blockers | Codes registered as `execution_limit`; exception behavior remains local |
+| Semantic adapter | 3 | Six codes derived from the bounded `dimensions`/`metrics` and `dimension`/`measure` parameters | Registered with the complete semantic-adapter consumer family |
+| Product canonical promotion | 1 | Five codes selected from a local integrity-check tuple | Kept separate with the module-specific `artifact` blocker format |
 
 The registry exposes metadata alongside the existing code. It does not rename
 persisted labels, add columns to existing blocker CSVs, coerce module-specific
-blocker shapes, or change failure behavior. `provider` and `expected_result`
-remain valid categories with no labels in this initial standard-consumer slice.
+blocker shapes, or change failure behavior. Exception objects and their
+messages remain distinct from the blocker code persisted by the catch site.
+The two direct `candidate.blockers` list reuses in validation and approval now
+have exact provenance and remain the standard four-field record. The live
+evaluator's `provider_outcome` values remain a separate text-status surface;
+the natural-language translation result, its evaluator result, and per-case
+observed statuses are also separate text surfaces. Six exact flows record the
+already-classified blockers written by shared YAML and semantic-adapter helpers
+into translation/evaluation evidence. The two translation catch sites have
+explicit provenance from injected-provider exceptions to the sanitized
+`provider_timeout` and `provider_failure` blockers. The local Ollama adapter
+itself has no standard-blocker call sites and remains an exception producer
+rather than a registered blocker consumer. Three further inherited flows bind
+the answer evaluator to those same complete producer families. Its temporary
+dataset catch emits the sanitized
+`synthetic_dataset_materialization_failed` blocker, while its per-case catch
+emits only the `evaluation_error` text status; neither persists the exception
+message. Translation, planning, execution, and overall evaluator statuses stay
+outside the registry. The compound
+`benchmark_answer_execution_incomplete` and
+`benchmark_answer_result_integrity_failed` codes, together with
+`synthetic_dataset_materialization_failed`, remain explicitly `unclassified`
+because their current meanings span more than one category.
 
 ## Next Increment
 
-Review the 10 dynamic call sites and expand the explicit registry by coherent
-consumer family. Characterize direct blocker dictionaries, exception classes,
-and free-text statuses separately rather than treating them as equivalent
-codes. A common run-result envelope remains a later, separate substep.
+Review the result-presentation/narration consumers next as one coherent family.
+Keep narration-provider exceptions, presentation/narration statuses, Product's
+`artifact` blocker format, and the common run-result envelope separate.
