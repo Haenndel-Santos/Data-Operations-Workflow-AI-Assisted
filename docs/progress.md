@@ -6,17 +6,20 @@ Turn local operational spreadsheets into validated analytical datasets and an ap
 
 ## Current Stage
 
-Four active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases 0-4 passed their gates for Northwind and the selected local Ollama development provider; AI Phase 5 remains active after its recorded, live-development, and endurance evidence; and Backend Phase II is active after complete source-only taxonomy coverage and its first additive run-result contract. Stage 5A-5F governed analytics retains its applied Northwind semantic catalog, immutable 13-case answer authority, reproducible 13/13 recorded evaluation, governed 9/13 loopback result, and 56 evidenced soak cycles. Backend Phase II has completed compatible common hashing, standard analytics blockers, atomic publication, the two proven source-binding absence semantics, explicit classification of 675 labels used by 22 complete blocker consumers, and exact provenance for all dynamic/direct and separate status/format/authority surfaces. The 658-literal audit found no remaining recognized consumer, and 23 existing result classes now conform structurally to the additive `output_dir`/opaque `status`/`blocker_count`/`outputs_changed` projection. First runtime adoption, CLI decomposition, a fresh holdout, provider selection, dynamic dispatch, live narration, and a user interface remain pending.
+Four active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases 0-4 passed their gates for Northwind and the selected local Ollama development provider; AI Phase 5 remains active after its recorded, live-development, and endurance evidence; and Backend Phase II is active after completing increment 2.3. Stage 5A-5F governed analytics retains its applied Northwind semantic catalog, immutable 13-case answer authority, reproducible 13/13 recorded evaluation, governed 9/13 loopback result, and 56 evidenced soak cycles. Backend Phase II has completed compatible common hashing, standard analytics blockers, atomic publication, the two proven source-binding absence semantics, explicit classification of 675 labels used by 22 complete blocker consumers, and exact provenance for all dynamic/direct and separate status/format/authority surfaces. The 658-literal audit found no remaining recognized consumer, and 23 existing result classes now conform structurally to the additive `output_dir`/opaque `status`/`blocker_count`/`outputs_changed` projection. A consumer audit found no honest runtime adoption point before generic dispatch or run recording, so the projection remains opt-in. CLI decomposition, a fresh holdout, provider selection, dynamic dispatch, live narration, and a user interface remain pending.
 
 ## Last Completed Milestone
 
 On 2026-07-20, Backend Phase II increment 2.3 completed the source-only taxonomy
-audit and added the first common run-result projection. All 658 literal labels
-and all 22 recognized consumer files are covered. Twenty-three existing frozen
-result classes share exactly `output_dir`, opaque `status`, `blocker_count`, and
-`outputs_changed`; `project_run_result` copies only those fields into an
-immutable envelope without changing existing result types, CLI output,
-persisted evidence, status meaning, blocker formats, approvals, or authority.
+audit, added the first common run-result projection, and audited its current
+consumers. All 658 literal labels and all 22 recognized consumer files are
+covered. Twenty-three existing frozen result classes share exactly
+`output_dir`, opaque `status`, `blocker_count`, and `outputs_changed`;
+`project_run_result` copies only those fields into an immutable envelope. The
+24 compatible CLI branches and the recorded analytics-session coordinator
+still require module-specific fields and stage-specific status meanings, so no
+runtime wrapper was forced into them. Existing result types, CLI output,
+persisted evidence, blocker formats, approvals, and authority remain unchanged.
 
 ## Current Capabilities
 
@@ -204,10 +207,12 @@ persisted evidence, status meaning, blocker formats, approvals, or authority.
   surfaces, five local blocker formats, the reference approval projection, and
   three Product authority boundaries are separate. The source-only audit is
   complete, and 23 result classes expose the additive four-field run-result
-  core. Runtime adoption and CLI decomposition remain pending. Free-text
-  statuses remain intentionally separate. Binding comparison policies,
-  deterministic `.building` workflows, and distinct blocker schemas must not
-  be coerced without consumer and output characterization.
+  core. The consumer audit intentionally deferred runtime projection until a
+  generic dispatcher or run recorder needs all four fields; CLI decomposition
+  remains pending. Free-text statuses remain intentionally separate. Binding
+  comparison policies, deterministic `.building` workflows, and distinct
+  blocker schemas must not be coerced without consumer and output
+  characterization.
 
 ## Active Blockers
 
@@ -220,14 +225,14 @@ persisted evidence, status meaning, blocker formats, approvals, or authority.
 
 ## Next Logical Milestone
 
-Continue Backend Phase II by characterizing current CLI and coordinator result
-consumers, then choose the first read-only adoption point for
-`project_run_result` without changing public CLI text or persisted artifacts.
-If no runtime consumer currently needs it, record increment 2.3 complete and
-proceed to the separately scoped CLI decomposition. Do not infer generic
-success from status, rename persisted codes, add blocker fields, or combine
-module-specific blocker, artifact, checkpoint, or authority semantics. The
-independent AI track still requires fixed Phase 5 thresholds and a fresh
+Continue Backend Phase II with increment 2.4: split CLI command registration by
+coherent domain while preserving `data_ops_lab.cli:main`, parser behavior,
+command names, defaults, help text, and output text. Keep execution in the
+existing domain modules and keep the run-result projection opt-in until a
+generic dispatcher or run recorder has a real four-field use. Do not infer
+generic success from status, rename persisted codes, add blocker fields, or
+combine module-specific blocker, artifact, checkpoint, or authority semantics.
+The independent AI track still requires fixed Phase 5 thresholds and a fresh
 reviewed holdout before provider selection.
 
 For cloud-first repository management, inventory local-only artifacts and commit
@@ -236,10 +241,9 @@ files in a separate private store or encrypted artifact workflow.
 
 ## Last Verified Commit
 
-`ba20785` (merge of `refactor(contracts): classify product materialization errors`).
+`308ad71` (merge of `feat(contracts): add run result envelope`).
 
 ## Last Updated
 
-2026-07-20 by Codex after completing the source-only taxonomy audit and adding
-the non-normalizing four-field run-result projection across 23 compatible
-result classes.
+2026-07-20 by Codex after closing the run-result consumer audit and Backend
+Phase II increment 2.3 without forcing a semantics-free runtime wrapper.

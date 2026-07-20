@@ -3259,3 +3259,43 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
   persisted evidence.
 - If no current runtime consumer needs the projection, record increment 2.3
   complete and proceed to the separately scoped CLI decomposition.
+
+## 2026-07-20 - Codex - Close the run-result consumer-adoption audit
+
+### Git Checkpoint
+
+- Committed the common run-result structural core as `4e5bab0`
+  (`feat(contracts): add run result envelope`).
+- Published `codex/add-run-result-envelope`, opened GitHub PR #5, and merged it
+  into `main` as `308ad71`.
+- Started the consumer audit on `codex/audit-run-result-adoption`.
+
+### Audit And Decision
+
+- Reviewed all 24 CLI branches backed by the 23 compatible result types. Every
+  branch reads `status` and `blocker_count`, 23 read `outputs_changed`, none
+  reads `output_dir`, and every branch also renders module-owned fields.
+- Reviewed analytics-session preparation and resume. Their stage gates depend
+  on module-specific status values and artifact paths; the only generic child
+  aggregation is `outputs_changed`.
+- Decided not to allocate envelopes merely to repeat direct CLI reads or one
+  boolean aggregation. `project_run_result` remains available for a future
+  generic dispatcher or run recorder with a real four-field consumer.
+- Closed Backend Phase II increment 2.3 without changing runtime code, CLI
+  output, persisted evidence, status meaning, blocker formats, checkpoints,
+  approvals, or authority.
+
+### Validation
+
+- Focused run-result contract suite: 3 passed in 1.08 seconds.
+- Internal documentation links: 110 checked, 0 broken.
+- `git diff --check` passed.
+
+### Next Logical Step
+
+- Begin Backend Phase II increment 2.4 by splitting CLI command registration by
+  coherent domain while preserving `data_ops_lab.cli:main`, parser behavior,
+  command names, defaults, help text, and output text.
+- Keep execution in existing domain modules and the run-result projection
+  opt-in until generic dispatch or run recording defines its actual consumer
+  semantics.
