@@ -3299,3 +3299,42 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 - Keep execution in existing domain modules and the run-result projection
   opt-in until generic dispatch or run recording defines its actual consumer
   semantics.
+
+## 2026-07-20 - Codex - Extract dataset-benchmark CLI registration
+
+### Git Checkpoint
+
+- Committed the run-result consumer audit as `c6b49dc`
+  (`docs(backend): close run-result adoption audit`).
+- Published `codex/audit-run-result-adoption`, opened GitHub PR #6, and merged
+  it into `main` as `d028cb4`.
+- Started Backend Phase II increment 2.4 on
+  `codex/split-cli-registration`.
+
+### Implementation
+
+- Added `data_ops_lab.cli_commands` as the package for domain-grouped parser
+  registration.
+- Moved the seven dataset-benchmark parser declarations into
+  `cli_commands.analytics_dataset_benchmark` and invoked that registrar from
+  the original location in `build_parser`.
+- Kept all run-function imports, explicit dispatch, result formatting, approval
+  gates, network flags, and the public `data_ops_lab.cli:main` entrypoint in
+  their existing runtime boundary.
+- Did not execute a benchmark, provider, network call, database operation,
+  approval apply, migration, import, synchronization, or private-data read.
+
+### Validation
+
+- Pre/post complete parser signature matched exactly across all 47 commands:
+  `ddfc7ba0a1cfe91fbe0e7e6baf084c14cbe665100f1cb7260c56e27f5b634b37`.
+- Dataset-benchmark focused suite: 61 passed in 15.25 seconds.
+- Full offline suite: 276 passed and 2 opt-in live-provider tests skipped in
+  46.32 seconds on Windows.
+
+### Next Logical Step
+
+- Continue increment 2.4 with the next coherent CLI registration family and
+  require the same complete parser signature before and after extraction.
+- Keep dispatch and result formatting out of registration modules unless a
+  separate, versioned execution contract is approved.

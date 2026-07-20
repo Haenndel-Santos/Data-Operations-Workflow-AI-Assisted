@@ -27,7 +27,7 @@ that is already proven equivalent into small internal contracts.
 | 2.1 | Common file hashing and the standard analytics blocker record | Implemented in `082920a` |
 | 2.2 | Common atomic publication with characterized Windows retry and race semantics | Implemented in `28e962b` |
 | 2.3 | Common source bindings, error taxonomy, and run-result envelope | Implemented; the additive projection remains opt-in after the consumer audit found no semantics-neutral runtime adopter |
-| 2.4 | CLI command registration split by domain while preserving `data_ops_lab.cli:main` | Pending |
+| 2.4 | CLI command registration split by domain while preserving `data_ops_lab.cli:main` | In progress; the seven dataset-benchmark registrations are the first extracted domain slice |
 
 Other blocker shapes remain module-specific until their persisted schemas and
 consumers are characterized. Product materialization and reference-dataset
@@ -137,8 +137,12 @@ Backend Phase II is complete only when:
   235 passed in 40.91 seconds.
 - Increment 2.3 run-result compatibility and registered-consumer suite: 238
   passed in 39.63 seconds.
+- Increment 2.4 dataset-benchmark CLI registration slice: 61 focused tests
+  passed in 15.25 seconds; the complete parser signature remained
+  `ddfc7ba0a1cfe91fbe0e7e6baf084c14cbe665100f1cb7260c56e27f5b634b37`
+  across all 47 commands.
 - Latest full offline suite: 276 passed and 2 opt-in live-provider tests skipped
-  in 44.37 seconds on Windows.
+  in 46.32 seconds on Windows.
 - No external database, provider, network, production data, migration, import,
   synchronization, or approval apply was used.
 
@@ -343,10 +347,25 @@ available for a future dispatcher or run recorder that actually consumes the
 four-field core. This evidence closes increment 2.3 without a decorative
 runtime adoption.
 
+## Increment 2.4 CLI Registration Contract
+
+`data_ops_lab.cli_commands.analytics_dataset_benchmark` now owns registration
+of the seven dataset-backed benchmark commands. `build_parser` calls that
+registration function at the original position, so command order, names,
+options, types, required flags, defaults, help text, and root help remain
+unchanged.
+
+The extracted module imports only `argparse`, `Path`, and the existing Ollama
+CLI defaults. It does not import or call benchmark run functions. Dispatch,
+result formatting, execution gates, network flags, approval semantics, and the
+public `data_ops_lab.cli:main` entrypoint remain in their prior locations. This
+is a registration-only boundary, not dynamic dispatch or a new orchestrator.
+
 ## Next Increment
 
-Proceed to increment 2.4 by decomposing CLI command registration by coherent
-domain while preserving `data_ops_lab.cli:main`, parser behavior, command
-names, defaults, help text, and output text. Keep domain execution in existing
-modules. Do not add a generic success predicate or merge module-specific
-status, blocker, artifact, checkpoint, or authority semantics.
+Continue increment 2.4 with the next coherent registration slice while
+preserving the complete parser signature and `data_ops_lab.cli:main`. Keep
+domain execution and result formatting in their existing modules until a
+separate dispatch contract is approved. Do not add a generic success predicate
+or merge module-specific status, blocker, artifact, checkpoint, or authority
+semantics.
