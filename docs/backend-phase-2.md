@@ -27,7 +27,7 @@ that is already proven equivalent into small internal contracts.
 | 2.1 | Common file hashing and the standard analytics blocker record | Implemented in `082920a` |
 | 2.2 | Common atomic publication with characterized Windows retry and race semantics | Implemented in `28e962b` |
 | 2.3 | Common source bindings, error taxonomy, and run-result envelope | Implemented; the additive projection remains opt-in after the consumer audit found no semantics-neutral runtime adopter |
-| 2.4 | CLI command registration split by domain while preserving `data_ops_lab.cli:main` | In progress; 42 registrations are extracted across seven coherent domain slices |
+| 2.4 | CLI command registration split by domain while preserving `data_ops_lab.cli:main` | In progress; 44 registrations are extracted across eight coherent domain slices |
 
 Other blocker shapes remain module-specific until their persisted schemas and
 consumers are characterized. Product materialization and reference-dataset
@@ -160,6 +160,10 @@ Backend Phase II is complete only when:
   2 opt-in live-provider tests skipped in 47.78 seconds on Windows/Python 3.13;
   111 internal links checked, 0 broken; exact isolated signatures, complete
   parser order, and pull-request diff gates passed.
+- Increment 2.4 model-documentation registration slice: isolated syntax and
+  exact signature equivalence preserved both command signatures; reconstructed
+  registration order preserved the complete 47-command surface. Automated
+  repository validation is pending.
 - Latest full offline suite: 276 passed and 2 opt-in live-provider tests skipped
   in 44.98 seconds on Windows.
 - No external database, provider, network, production data, migration, import,
@@ -380,10 +384,12 @@ source onboarding, human-review, serial-rule, approval-spreadsheet, and canonica
 model commands. The `product_reference` registrar owns nine contiguous Product
 reference audit, reconciliation, human-review, validation, and explicit-apply
 commands. The `product_publication` registrar owns Product materialization
-preview, dry-run canonical promotion planning, and missing-notes repair.
-`build_parser` calls all seven registration functions at their original
-positions, so command order, names, options, types, required flags, defaults,
-help text, and root help remain unchanged.
+preview, dry-run canonical promotion planning, and missing-notes repair. The
+`model_documentation` registrar owns conceptual schema overview and confirmed
+business-flow mapping documentation. `build_parser` calls all eight
+registration functions at their original positions, so command order, names,
+options, types, required flags, defaults, help text, and root help remain
+unchanged.
 
 The extracted modules import only `argparse`, `Path`, and the existing Ollama
 CLI defaults. They do not import or call domain run functions. Dispatch, result
@@ -393,7 +399,8 @@ registration-only boundary, not dynamic dispatch or a new orchestrator.
 
 ## Next Increment
 
-Continue increment 2.4 with the next coherent registration slice while
+Validate the model-documentation registration slice through GitHub Actions,
+then continue increment 2.4 with the next coherent registration slice while
 preserving the complete parser signature and `data_ops_lab.cli:main`. Keep
 domain execution and result formatting in their existing modules until a
 separate dispatch contract is approved. Do not add a generic success predicate
