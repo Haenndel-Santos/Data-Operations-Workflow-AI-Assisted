@@ -3594,3 +3594,45 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 2. Mark PR #11 ready and merge only after that final run passes.
 3. Continue increment 2.4 with the next coherent registration family from the
    resulting `main`.
+
+## 2026-07-20 - Codex - Extract Product reference CLI registration (draft)
+
+### Git Checkpoint
+
+- GitHub PR #11 merged the ERP modeling registration slice into `main` as
+  `b61d811`.
+- Continued Backend Phase II increment 2.4 on
+  `agent/split-cli-product-reference`.
+
+### Implementation
+
+- Added `cli_commands.product_reference` for nine contiguous Product reference
+  audit, reconciliation, human-review, validation, and explicit-apply parser
+  declarations.
+- Invoked the registrar at the original position in `build_parser`;
+  registration modules now own 39 of the 47 command declarations.
+- Kept all Product run-function imports, explicit dispatch, result formatting,
+  dry-run/apply authority, replacement controls, private-data boundaries, and
+  `data_ops_lab.cli:main` unchanged.
+- Corrected the Backend Phase II ERP validation checkpoint to the already
+  completed automated evidence from PR #11.
+- Did not open Product data, run a Product workflow, access a database, apply a
+  decision, use a provider/network call, migrate, import, synchronize, upload,
+  or publish generated output.
+
+### Validation
+
+- New registrar syntax compilation passed under Python 3.
+- Exact isolated equivalence preserved the nine command names, order, actions,
+  options, destinations, types, required flags, defaults, choices, metavars,
+  and help text; signature SHA-256:
+  `d009a2f816384d915b7284a2e3b0e20bdeb22928c3d1abb27e13a193c1d4d958`.
+- Reconstructed registration order remained identical across all 47 commands.
+- The complete GitHub Actions suite, link checker, and pull-request diff gate
+  are pending; this change remains a draft until they pass.
+
+### Next Logical Step
+
+1. Open the Product reference registration pull request as a draft.
+2. Inspect the complete automated Windows/Python 3.13 gate.
+3. Correct any regression before marking the pull request ready or merging.
