@@ -256,6 +256,26 @@ def test_reference_dataset_taxonomy_keeps_authority_and_review_state_distinct():
     assert classify_error("cleanup_staging_and_reraise").registered is False
 
 
+def test_product_canonical_taxonomy_keeps_apply_authority_and_status_distinct():
+    expected = {
+        "materialization_not_ready": ErrorCategory.CONTRACT,
+        "decision_digest_mismatch": ErrorCategory.AUTHORITY,
+        "product_state_not_applied": ErrorCategory.APPROVAL,
+        "invalid_csv": ErrorCategory.FILESYSTEM,
+        "invalid_product_id": ErrorCategory.EXPECTED_RESULT,
+        "materialization_blockers_present": ErrorCategory.UNCLASSIFIED,
+    }
+
+    assert {
+        code: classify_error(code).category for code in expected
+    } == expected
+    assert all(classify_error(code).registered for code in expected)
+    assert classify_error("applied").registered is False
+    assert classify_error("ready_for_local_preview").registered is False
+    assert classify_error("ready_for_canonical_state_review").registered is False
+    assert classify_error("canonical_state_applied=false").registered is False
+
+
 def test_atomic_write_text_retries_and_cleans_temporary_file(tmp_path):
     path = tmp_path / "checkpoint.yml"
     path.write_text("old\n", encoding="utf-8")

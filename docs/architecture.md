@@ -108,30 +108,32 @@ The reference-dataset blocker schema remains local but now has exact format
 and consumer provenance. Deterministic `.building` directory workflows remain
 separate because their stale-staging failure policy differs.
 
-The additive error-taxonomy registry classifies 637 labels used by 20 complete
+The additive error-taxonomy registry classifies 659 labels used by 21 complete
 blocker consumers: query planning, query execution, semantic catalog,
 semantic approval, the semantic adapter, the six-module dataset-benchmark
 family, natural-language translation, its synthetic offline evaluator, and the
 synthetic exact-answer evaluator, followed by deterministic result presentation
 and recorded narration, the two-phase analytics-session coordinator, and the
 static module-registry validator, the bounded local Ollama soak, and exact
-reference-dataset validation. All 10
+reference-dataset validation, plus Product canonical promotion. All 10
 dynamic call sites and both direct blocker-list reuses have exact provenance
 and disposition metadata. Fifteen exact
 flows record standard blockers inherited from the YAML and semantic-adapter
-producer families. Twenty-nine exact catch-site fallbacks have separate exception
+producer families. Thirty-three exact catch-site fallbacks have separate exception
 provenance without persisted source exception messages. Translation, planning,
 execution, evaluation, presentation, narration, session checkpoints, and live
-`provider_outcome`, registry-validation, and reference validation/review status
-fields remain separate text surfaces. Soak mode and stop-reason controls are
-separate control text. Its embedded lowercase blocker identifiers and the
-reference validator's `code`/`message`/`field` blockers are two separately
-provenanced record formats. The review-gated approved-relationship projection
-also remains separate taxonomy metadata. Callers may request category metadata
-separately, while unknown codes remain unregistered and `unclassified`. This
-registry is not yet a common run-result envelope and does not coerce exception
-messages, text statuses, approval projections, or module-specific blocker
-records into one shape.
+`provider_outcome`, registry-validation, reference validation/review, and
+Product promotion status fields remain separate text surfaces. Soak mode and
+stop-reason controls are separate control text. Its embedded lowercase blocker
+identifiers, the reference validator's `code`/`message`/`field` blockers, and
+Product promotion's `artifact` blockers are three separately provenanced record
+formats. The review-gated approved-relationship projection and Product's
+explicit no-apply authority boundary also remain separate taxonomy metadata.
+Callers may request category metadata separately, while unknown codes remain
+unregistered and `unclassified`. This registry is not yet a common run-result
+envelope and does not coerce exception messages, text statuses, authority
+boundaries, approval projections, or module-specific blocker records into one
+shape.
 
 The first formal module registry now describes the two recorded analytics
 session phases and validates inputs, outputs, dependencies, validation, tests,

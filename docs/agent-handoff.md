@@ -3088,3 +3088,62 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 - Keep its dynamic integrity-check provenance, `artifact` blocker format,
   readiness/plan statuses, canonical apply authority, Product materialization
   format, the common run-result envelope, and CLI decomposition separate.
+
+## 2026-07-20 - Codex - Classify Product canonical promotion
+
+### Git Checkpoint
+
+- Committed the prior five-family taxonomy increment as `eabd52b`
+  (`refactor(contracts): classify additional error families`).
+- Published `codex/classify-error-consumer-families`, opened GitHub PR #2, and
+  merged it into `main` as `a7c3d66` before starting this increment.
+
+### Implementation
+
+- Admitted `product_canonical_promotion.py` as one complete module-specific
+  blocker consumer.
+- Reviewed 19 literal codes plus five finite dynamic integrity codes and added
+  the 22 not already classified, expanding the registry from 637 to 659 codes
+  across 21 complete consumers.
+- Changed the existing dynamic call-site disposition to registered while
+  preserving its module-specific blocker surface and exact finite value set.
+- Recorded all four YAML, UUID, integer-count, and CSV catches with exact
+  fallback provenance.
+- Recorded applied-state, materialization-readiness, and dry-run-plan statuses,
+  the four-field `artifact` blocker schema, and the explicit no-apply authority
+  boundary as separate contracts.
+
+### Classification Boundaries
+
+- Classified malformed preview schema/readiness as `contract`; hashes,
+  manifests, immutable state, and preview-only contract drift as `authority`;
+  the unapplied reconciliation checkpoint as `approval`; missing/unreadable
+  artifacts as `filesystem`; and snapshot integrity failures as
+  `expected_result`.
+- Kept `materialization_blockers_present` registered but `unclassified`
+  because it aggregates blocker causes owned by the prior materialization
+  stage.
+- Preserved every persisted blocker ID/type/artifact/explanation, status,
+  exception/fallback behavior, Python/CLI entrypoint, output schema, and dry-run
+  failure policy.
+- Did not read private project Product rows, apply canonical state, modify an
+  approval, or authorize database/import/migration/synchronization behavior.
+
+### Validation
+
+- Taxonomy and inventory contract suite: 42 passed in 4.96 seconds.
+- Focused taxonomy and Product promotion suite: 47 passed in 5.92 seconds.
+- Full registered-consumer suite: 227 passed in 38.03 seconds.
+- Full offline suite: 270 passed and 2 opt-in live-provider tests skipped in
+  42.81 seconds on Windows.
+- Registry evidence: 659 codes across 21 complete consumer modules; 15
+  inherited flows, 33 exception/fallback mappings, 37 status entries, two
+  control-text entries, three separate blocker-record formats, one approval
+  projection, and one authority boundary.
+
+### Next Logical Step
+
+- Review `product_materialization.py` as the next complete consumer.
+- Keep its five-field blocker format, issue/source identifiers,
+  preview/readiness status, private row artifacts, canonical-promotion
+  authority, the common run-result envelope, and CLI decomposition separate.
