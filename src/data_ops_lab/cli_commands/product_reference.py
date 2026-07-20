@@ -183,4 +183,3 @@ def register_product_reference_commands(
         action="store_true",
         help="Replace a different existing state after preserving a history copy. Requires --apply.",
     )
-

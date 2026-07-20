@@ -3636,3 +3636,29 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 1. Open the Product reference registration pull request as a draft.
 2. Inspect the complete automated Windows/Python 3.13 gate.
 3. Correct any regression before marking the pull request ready or merging.
+
+## 2026-07-20 - Codex - Correct Product registrar EOF
+
+### Validation Result
+
+- GitHub Actions run `29774298374` installed the project successfully.
+- Full offline suite: 276 passed and 2 opt-in live-provider tests skipped in
+  58.72 seconds on Windows/Python 3.13.
+- Internal links: 111 checked, 0 broken.
+- The pull-request diff check alone failed because
+  `cli_commands/product_reference.py` ended with one extra blank line.
+
+### Correction
+
+- Removed only the extra blank line at the new module EOF and updated the
+  factual validation checkpoint.
+- Extended the pre-publication content check for this correction to require
+  exactly one final newline.
+- No Product runtime code, parser declaration, provider control, project data,
+  database, approval state, migration, import, synchronization, upload, or
+  generated output was changed or executed.
+
+### Next Logical Step
+
+1. Re-run the complete GitHub Actions gate.
+2. Inspect all steps and proceed only if the workflow is fully green.
