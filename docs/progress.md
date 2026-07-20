@@ -6,20 +6,22 @@ Turn local operational spreadsheets into validated analytical datasets and an ap
 
 ## Current Stage
 
-Four active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases 0-4 passed their gates for Northwind and the selected local Ollama development provider; AI Phase 5 remains active after its recorded, live-development, and endurance evidence; and Backend Phase II is active in increment 2.4 after completing increment 2.3. Stage 5A-5F governed analytics retains its applied Northwind semantic catalog, immutable 13-case answer authority, reproducible 13/13 recorded evaluation, governed 9/13 loopback result, and 56 evidenced soak cycles. Backend Phase II has completed compatible common hashing, standard analytics blockers, atomic publication, the two proven source-binding absence semantics, explicit classification of 675 labels used by 22 complete blocker consumers, and exact provenance for all dynamic/direct and separate status/format/authority surfaces. The 658-literal audit found no remaining recognized consumer, and 23 existing result classes now conform structurally to the additive `output_dir`/opaque `status`/`blocker_count`/`outputs_changed` projection. A consumer audit found no honest runtime adoption point before generic dispatch or run recording, so the projection remains opt-in. CLI decomposition has moved 44 registrations across eight coherent domain registrars while preserving the full 47-command parser surface. GitHub Actions provides an automated read-only Windows/Python 3.13 gate for the offline suite, internal links, and pull-request diffs. The model-documentation slice passed the full automated Windows/Python 3.13 regression gate. Further CLI decomposition, a fresh holdout, provider selection, dynamic dispatch, live narration, and a user interface remain pending.
+Four active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases 0-4 passed their gates for Northwind and the selected local Ollama development provider; AI Phase 5 remains active after its recorded, live-development, and endurance evidence; and Backend Phase II completed increment 2.4 and its documented exit gate. Stage 5A-5F governed analytics retains its applied Northwind semantic catalog, immutable 13-case answer authority, reproducible 13/13 recorded evaluation, governed 9/13 loopback result, and 56 evidenced soak cycles. Backend Phase II has completed compatible common hashing, standard analytics blockers, atomic publication, the two proven source-binding absence semantics, explicit classification of 675 labels used by 22 complete blocker consumers, and exact provenance for all dynamic/direct and separate status/format/authority surfaces. The 658-literal audit found no remaining recognized consumer, and 23 existing result classes now conform structurally to the additive `output_dir`/opaque `status`/`blocker_count`/`outputs_changed` projection. A consumer audit found no honest runtime adoption point before generic dispatch or run recording, so the projection remains opt-in. CLI decomposition has moved all 47 registrations across ten coherent domain registrars while preserving the full parser surface; `build_parser` contains no direct subparser declarations. GitHub Actions provides an automated read-only Windows/Python 3.13 gate for the offline suite, internal links, and pull-request diffs. The final analytics-operations slices passed the complete automated Windows/Python 3.13 gate, closing Backend Phase II. A fresh holdout, provider selection, dynamic dispatch, live narration, and a user interface remain pending.
 
 ## Last Completed Milestone
 
-On 2026-07-20, Backend Phase II increment 2.4 implemented its eighth coherent
-CLI registration family. Conceptual schema overview and confirmed business-flow
-mapping documentation now register through
-`data_ops_lab.cli_commands.model_documentation`. Together with the prior
-families, 44 registrations have moved while `build_parser` still exposes the
-same ordered 47-command surface and retains its root `--input`/`--output`
-arguments. `data_ops_lab.cli:main` still owns explicit dispatch and result
-formatting. Syntax and exact two-command signature equivalence passed. The complete
-Windows/Python 3.13 gate passed with 276 tests and 2 opt-in live-provider skips,
-111 valid internal links, and a clean pull-request diff.
+On 2026-07-20, Backend Phase II increment 2.4 implemented its ninth and tenth
+coherent CLI registration families. Local analytics module-contract validation
+and synthetic pipeline performance measurement now register through
+`data_ops_lab.cli_commands.analytics_foundation`; the separately authorized
+bounded local Ollama soak now registers through
+`data_ops_lab.cli_commands.analytics_soak`. All 47 command registrations now
+live in ten domain registrars, in their original order, while
+`data_ops_lab.cli:main` still owns explicit dispatch and result formatting.
+The soak's `--execute`/`--allow-network` gates and loopback defaults remain
+unchanged. Syntax and exact three-command signature equivalence passed. The
+complete Windows/Python 3.13 gate passed with 276 tests and 2 opt-in
+live-provider skips, 111 valid internal links, and a clean pull-request diff.
 
 ## Current Capabilities
 
@@ -184,9 +186,12 @@ Windows/Python 3.13 gate passed with 276 tests and 2 opt-in live-provider skips,
 - Product publication final validation: 276 tests passed and 2 opt-in
   live-provider tests skipped in 46.73 seconds on Windows/Python 3.13; 111
   internal links checked, 0 broken; pull-request diff check passed.
-- Model-documentation registration validation: 276 tests passed and 2 opt-in
-  live-provider tests skipped in 54.57 seconds on Windows/Python 3.13; 111
+- Model-documentation final validation: 276 tests passed and 2 opt-in
+  live-provider tests skipped in 53.27 seconds on Windows/Python 3.13; 111
   internal links checked, 0 broken; pull-request diff check passed.
+- Final analytics-operations registration validation: 276 tests passed and 2
+  opt-in live-provider tests skipped in 93.00 seconds on Windows/Python 3.13;
+  111 internal links checked, 0 broken; pull-request diff check passed.
 - Backend Phase II run-result compatibility and registered-consumer suite: 238
   passed in 39.63 seconds.
 - Backend Phase II existing-file binding consumer suite: 76 passed in 17.77 seconds.
@@ -227,9 +232,9 @@ Windows/Python 3.13 gate passed with 276 tests and 2 opt-in live-provider skips,
   complete, and 23 result classes expose the additive four-field run-result
   core. The consumer audit intentionally deferred runtime projection until a
   generic dispatcher or run recorder needs all four fields; CLI decomposition
-  is now in progress with 44 registrations extracted across eight coherent
-  domain modules. The model-documentation slice passed the complete automated Windows regression
-  gate. Dispatch remains explicit and
+  has moved all 47 registrations across ten coherent domain modules. The final
+  analytics-operations slices passed the complete automated Windows regression
+  gate, and Backend Phase II is complete. Dispatch remains explicit and
   centralized. Free-text
   statuses remain intentionally separate. Binding comparison policies,
   deterministic `.building` workflows, and distinct blocker schemas must not
@@ -246,9 +251,11 @@ Windows/Python 3.13 gate passed with 276 tests and 2 opt-in live-provider skips,
 
 ## Next Logical Milestone
 
-Continue Backend Phase II increment 2.4 with the remaining
-analytics-operations registration slices while preserving
-the complete 47-command parser signature and `data_ops_lab.cli:main`. Keep
+Backend Phase II is complete; there is no remaining CLI registration slice.
+Before further backend implementation, define a separately versioned scope that
+preserves the complete 47-command parser signature, `data_ops_lab.cli:main`,
+and the established hashing, blocker, publication, binding, taxonomy, and
+run-result contracts. Keep
 execution and result formatting in the existing domain modules, and keep the
 run-result projection opt-in until a generic dispatcher or run recorder has a
 real four-field use. Do not infer generic success from status, rename persisted
@@ -262,9 +269,9 @@ files in a separate private store or encrypted artifact workflow.
 
 ## Last Verified Commit
 
-`9c8a1da` (`refactor(cli): extract model documentation registration`).
+`ff485ac` (`refactor(cli): complete domain registration split`).
 
 ## Last Updated
 
-2026-07-20 by Codex after the model-documentation registration slice passed
-the complete automated Windows/Python 3.13 regression gate.
+2026-07-20 by Codex after the complete analytics-operations regression gate
+closed Backend Phase II with all 47 registrations in domain modules.

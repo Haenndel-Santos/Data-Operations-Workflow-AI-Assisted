@@ -3834,3 +3834,88 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 2. Mark PR #15 ready and merge only after that final run passes.
 3. Complete increment 2.4 by extracting the remaining analytics operations
    registrations from the resulting `main`.
+
+## 2026-07-20 - Codex - Extract final analytics CLI registrations (draft)
+
+### Git Checkpoint
+
+- GitHub PR #15 passed its final workflow run `29776685985` with 276 tests
+  passed, 2 opt-in live-provider tests skipped, 111 internal links checked, 0
+  broken, and a clean pull-request diff.
+- PR #15 merged the model-documentation registration slice into `main` as
+  `4780f4b`.
+- Continued Backend Phase II increment 2.4 on
+  `agent/complete-cli-registration-split`.
+
+### Implementation
+
+- Added `cli_commands.analytics_foundation` for local analytics module-contract
+  validation and synthetic pipeline performance measurement declarations.
+- Added `cli_commands.analytics_soak` for the separately authorized bounded
+  local Ollama soak declaration at its original parser position.
+- Registration modules now own all 47 command declarations across ten
+  registrars; `build_parser` retains only parser composition and root
+  `--input`/`--output` arguments.
+- Kept all run-function imports, explicit dispatch, result formatting,
+  `--execute`/`--allow-network` gates, loopback defaults, authority checks,
+  private-data boundaries, and `data_ops_lab.cli:main` unchanged.
+- Did not run registry validation, a performance baseline, an Ollama soak,
+  project data, a provider/network call, an external database, approval apply,
+  migration, import, synchronization, upload, or generated-output publication.
+
+### Validation
+
+- Both new registrar modules passed syntax compilation under Python 3.
+- Exact isolated equivalence preserved all three command names, actions,
+  options, destinations, types, required flags, defaults, choices, metavars,
+  and help text; combined signature SHA-256:
+  `9d5082ab4959a317d4182fdcc1c33caca081b52fc225f8d5ac5f791c2a7300d3`.
+- Reconstructed registration order remained identical across all 47 commands;
+  no direct `subparsers.add_parser` declaration remains in `build_parser`.
+- Exactly one final newline and no trailing whitespace were verified for every
+  changed file.
+- The complete GitHub Actions suite, link checker, and pull-request diff gate
+  are pending; Backend Phase II remains open until they pass.
+
+### Next Logical Step
+
+1. Open the final CLI registration pull request as a draft.
+2. Inspect the complete automated Windows/Python 3.13 gate.
+3. Correct any regression before closing increment 2.4 or Backend Phase II.
+
+## 2026-07-20 - Codex - Validate final CLI split and close Backend Phase II
+
+### Git Checkpoint
+
+- Validated GitHub PR #16 at `ff485ac`.
+- GitHub Actions workflow run: `29777375415`; job: `88469944752`.
+
+### Validation
+
+- Full offline suite: 276 passed and 2 opt-in live-provider tests skipped in
+  93.00 seconds on Windows/Python 3.13.
+- Internal links: 111 checked, 0 broken.
+- Pull-request diff check: passed against exact base `4780f4b` and head
+  `ff485ac`.
+- All 47 command registrations remain in their original order across ten
+  domain registrars; `build_parser` contains no direct subparser declaration.
+- Checkout, Python setup, dependency installation, cache finalization, and
+  cleanup steps passed.
+- No registry validation, performance baseline, Ollama soak, provider/network
+  call, project data, external database, approval apply, migration, import,
+  synchronization, upload, or generated-output publication ran.
+
+### Phase Result
+
+- Backend Phase II increments 2.1 through 2.4 satisfy their documented exit
+  gate.
+- Persisted contracts, public entrypoints, human-review authority, explicit
+  dispatch, result formatting, network gates, and intentionally distinct
+  blocker/publication semantics remain preserved.
+
+### Next Logical Step
+
+1. Revalidate this documentation-only closure commit through the same workflow.
+2. Mark PR #16 ready and merge only after that final run passes.
+3. Define a new versioned scope before dynamic dispatch, service/UI expansion,
+   concurrency, or further generic result semantics.

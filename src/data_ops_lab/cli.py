@@ -53,8 +53,10 @@ from .business_flow_mapping import run_business_flow_mapping
 from .canonical_model import run_canonical_model_alignment
 from .cli_commands import (
     register_analytics_dataset_benchmark_commands,
+    register_analytics_foundation_commands,
     register_analytics_query_session_commands,
     register_analytics_semantic_commands,
+    register_analytics_soak_commands,
     register_erp_modeling_commands,
     register_model_documentation_commands,
     register_product_publication_commands,
@@ -91,54 +93,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     subparsers = parser.add_subparsers(dest="command")
 
-    analytics_module_registry = subparsers.add_parser(
-        "analytics-module-registry-validate",
-        help="Validate analytics module contracts and workflow dependencies without executing them.",
-    )
-    analytics_module_registry.add_argument(
-        "--registry",
-        type=Path,
-        default=Path("config/orchestrator/analytics_module_registry.yml"),
-        help="Version-1 declarative analytics module registry YAML.",
-    )
-    analytics_module_registry.add_argument(
-        "--project-root",
-        type=Path,
-        default=Path("."),
-        help="Project root used only to validate declared test-file paths.",
-    )
-    analytics_module_registry.add_argument(
-        "--output",
-        type=Path,
-        default=Path("outputs/analytics_module_registry_validation"),
-        help="New or byte-identical directory for dry-run registry validation evidence.",
-    )
-
-    pipeline_performance_baseline = subparsers.add_parser(
-        "pipeline-performance-baseline",
-        help="Measure Pandas-heavy pipeline stages with generated synthetic Parquet only.",
-    )
-    pipeline_performance_baseline.add_argument(
-        "--rows-per-table",
-        type=int,
-        default=50_000,
-    )
-    pipeline_performance_baseline.add_argument(
-        "--table-count",
-        type=int,
-        default=3,
-    )
-    pipeline_performance_baseline.add_argument(
-        "--stage-timeout-seconds",
-        type=int,
-        default=120,
-    )
-    pipeline_performance_baseline.add_argument(
-        "--output",
-        type=Path,
-        default=Path("outputs/pipeline_performance_baseline"),
-        help="New or empty directory for run-specific synthetic measurement evidence.",
-    )
+    register_analytics_foundation_commands(subparsers)
 
     register_analytics_query_session_commands(subparsers)
 
@@ -146,38 +101,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     register_analytics_dataset_benchmark_commands(subparsers)
 
-    analytics_ollama_soak = subparsers.add_parser(
-        "analytics-ollama-soak",
-        help="Preflight or run a separately authorized bounded local Ollama overnight soak.",
-    )
-    analytics_ollama_soak.add_argument("--dataset-manifest", type=Path, required=True)
-    analytics_ollama_soak.add_argument("--database", type=Path, required=True)
-    analytics_ollama_soak.add_argument("--semantic-state", type=Path, required=True)
-    analytics_ollama_soak.add_argument("--relationships", type=Path, required=True)
-    analytics_ollama_soak.add_argument("--pack", type=Path, required=True)
-    analytics_ollama_soak.add_argument("--approval", type=Path, required=True)
-    analytics_ollama_soak.add_argument("--live-authorization", type=Path, required=True)
-    analytics_ollama_soak.add_argument("--soak-authorization", type=Path, required=True)
-    analytics_ollama_soak.add_argument("--endpoint", default=DEFAULT_OLLAMA_ENDPOINT)
-    analytics_ollama_soak.add_argument("--model", default=DEFAULT_OLLAMA_MODEL)
-    analytics_ollama_soak.add_argument(
-        "--context-tokens", type=int, default=DEFAULT_CONTEXT_TOKENS
-    )
-    analytics_ollama_soak.add_argument(
-        "--max-output-tokens", type=int, default=DEFAULT_MAX_OUTPUT_TOKENS
-    )
-    analytics_ollama_soak.add_argument("--timeout-seconds", type=int, default=120)
-    analytics_ollama_soak.add_argument("--output", type=Path, required=True)
-    analytics_ollama_soak.add_argument(
-        "--execute",
-        action="store_true",
-        help="Run the authorized bounded soak after successful offline preflight.",
-    )
-    analytics_ollama_soak.add_argument(
-        "--allow-network",
-        action="store_true",
-        help="Authorize literal-loopback Ollama HTTP for this invocation only.",
-    )
+    register_analytics_soak_commands(subparsers)
 
     register_reference_dataset_commands(subparsers)
 
