@@ -2577,3 +2577,104 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
   source-binding contracts through `ff4c560`.
 - The remote Phase II branch is retained for traceability.
 - The next logical milestone remains the non-breaking error-taxonomy inventory.
+
+## 2026-07-16 - Codex - Backend Phase II error-label inventory
+
+### Scope
+
+- Continued increment 2.3 with inventory only; no persisted blocker code,
+  blocker schema, runtime failure behavior, authority, or output changed.
+- Added a source-only AST inventory for literal labels passed to the two known
+  blocker append functions.
+
+### Evidence
+
+- The baseline found 658 distinct literal labels and 10 dynamic call sites
+  requiring manual review.
+- The focused parser regression passed.
+- The full offline suite passed 236 tests with 2 opt-in live-provider tests
+  skipped; the internal link checker found 109 valid links and zero broken.
+- The inventory imports no project module and opens no dataset or workflow.
+
+### Next Logical Step
+
+- Add an explicit classification registry for reviewed labels, with unknown
+  and dynamic labels remaining unclassified.
+- Keep the run-result envelope and CLI decomposition as separate later work.
+
+## 2026-07-16 - Codex - Initial additive error classification
+
+### Implementation
+
+- Added a separate error-taxonomy contract with seven domain categories plus
+  `unclassified` and explicit registration state.
+- Classified exactly the 102 labels used by the four consumers of the standard
+  analytics blocker contract.
+- Preserved every persisted code, blocker field, CSV shape, and legacy helper.
+- Added exact inventory-to-registry coverage so new labels cannot enter those
+  four consumers without an intentional taxonomy decision.
+
+### Boundaries
+
+- Unknown labels remain unregistered and `unclassified`.
+- Two reviewed umbrella execution failures remain explicitly `unclassified`.
+- Dynamic labels, direct dictionaries, exception messages, free-text statuses,
+  module-specific blockers, and a common run-result envelope remain pending.
+
+### Next Logical Step
+
+- Review the 10 dynamic call sites and expand classification by coherent
+  consumer family without changing persisted evidence.
+
+### Validation
+
+- Focused internal-contract and inventory coverage: 10 passed.
+- Full offline suite: 238 passed and 2 opt-in live-provider tests skipped.
+
+## 2026-07-20 - Codex - Private artifact governance for cloud-first work
+
+### Implementation
+
+- Added `docs/private-artifact-governance.md` to define how local-only project files can be represented safely when GitHub becomes the primary repository.
+- Linked the policy from architecture storage boundaries and updated current project state to record that sensitive files should stay outside any repository that may become public.
+
+### Boundaries
+
+- No private data, generated outputs, review workbooks, secrets, approved YAML, migrations, or runtime contracts were changed.
+- The guidance authorizes safe metadata and manifests only; it does not authorize uploading raw private artifacts, publication, external sync, or history rewriting.
+
+### Next Logical Step
+
+- Inventory ignored/local-only project paths, decide which safe manifests are needed, and scan Git history before changing repository visibility from private to public.
+
+### Validation
+
+- Full offline suite: 238 passed and 2 opt-in live-provider tests skipped.
+- Internal link check: 110 checked, 0 broken.
+
+## 2026-07-20 - Codex - Reconcile local Backend Phase II work on main
+
+### Scope
+
+- Reviewed the 12 modified or new files left on `main` from the error-taxonomy
+  and private-artifact-governance increments.
+- Confirmed that the change set contains no private source rows, generated
+  outputs, credentials, external synchronization, or approval-state changes.
+- Normalized inventory locations to POSIX-style separators so the evidence and
+  standard-consumer coverage test are deterministic on Windows and Linux.
+
+### Validation
+
+- Focused contract and inventory suite: 10 passed.
+- Source-only inventory: 658 literal labels and 10 dynamic call sites.
+- Full offline suite: 238 passed and 2 opt-in live-provider tests skipped in
+  43.63 seconds on Windows.
+- Internal link check: 110 checked, 0 broken.
+- `git diff --check` completed without errors.
+
+### Boundaries and next step
+
+- `originaldatabase/`, `outputs/`, and downloaded or derived benchmark data
+  remain ignored local artifacts and were not read or changed.
+- Continue Backend Phase II with explicit review of the 10 dynamic blocker call
+  sites; keep the common run-result envelope and CLI decomposition separate.

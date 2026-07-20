@@ -6,20 +6,16 @@ Turn local operational spreadsheets into validated analytical datasets and an ap
 
 ## Current Stage
 
-Four active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases 0-4 passed their gates for Northwind and the selected local Ollama development provider; AI Phase 5 remains active after its recorded, live-development, and endurance evidence; and Backend Phase II is active on `main` after the validated branch `codex/phase-2-internal-foundations` was fast-forward integrated and published to GitHub. Stage 5A-5F governed analytics retains its applied Northwind semantic catalog, immutable 13-case answer authority, reproducible 13/13 recorded evaluation, governed 9/13 loopback result, and 56 evidenced soak cycles. Backend Phase II has completed compatible common hashing, standard analytics blockers, atomic publication, and the two proven source-binding absence semantics. Error taxonomy, a common run-result envelope, CLI decomposition, a fresh holdout, provider selection, dynamic dispatch, live narration, and a user interface remain pending.
+Four active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases 0-4 passed their gates for Northwind and the selected local Ollama development provider; AI Phase 5 remains active after its recorded, live-development, and endurance evidence; and Backend Phase II is active after implementing its first additive error-classification registry. Stage 5A-5F governed analytics retains its applied Northwind semantic catalog, immutable 13-case answer authority, reproducible 13/13 recorded evaluation, governed 9/13 loopback result, and 56 evidenced soak cycles. Backend Phase II has completed compatible common hashing, standard analytics blockers, atomic publication, the two proven source-binding absence semantics, a source-only baseline of 658 literal blocker labels with 10 dynamic call sites, and explicit classification of the 102 labels used by the four standard blocker consumers. Taxonomy expansion, a common run-result envelope, CLI decomposition, a fresh holdout, provider selection, dynamic dispatch, live narration, and a user interface remain pending.
 
 ## Last Completed Milestone
 
-On 2026-07-16, Backend Phase II increment 2.3 completed its source-binding
-substep. `existing_file_sha256_bindings` now serves presentation, narration,
-session prepare/resume, and soak while omitting absent paths exactly as before.
-`declared_file_sha256_bindings` serves benchmark preparation and
-materialization while preserving all declared keys with empty values for
-missing paths. Equality and required-file policies remain module-owned.
-Commits `2b6a10f` and `51372fd` passed 76 and 19 focused tests respectively;
-the final offline suite passed 235 tests with 2 opt-in live-provider tests
-skipped. No provider, network, database, project dataset, approval, migration,
-import, synchronization, or generated project output was used.
+On 2026-07-16, Backend Phase II increment 2.3 added an explicit classification
+registry for all 102 labels used by query planning, query execution, semantic
+catalog validation, and semantic approval. The lookup preserves the original
+code and reports category plus registration state; unknown labels remain
+unregistered and `unclassified`. No persisted blocker code, CSV column, module
+shape, failure behavior, authority, or output changed.
 
 ## Current Capabilities
 
@@ -124,10 +120,15 @@ import, synchronization, or generated project output was used.
   replacement while preserving consumer-specific retry schedules and errors.
 - Build source SHA-256 maps through explicit existing-only or fully declared
   binding semantics without changing module-owned drift policies.
+- Classify standard analytics blocker codes as separate additive metadata while
+  preserving the original persisted code and blocker shape.
+- Govern private local artifacts for cloud-first work by versioning only safe
+  metadata and keeping raw sources, generated outputs, completed sensitive
+  reviews, and secrets outside any repository that may become public.
 
 ## Test Status
 
-- Automated suite: 235 tests passed and 2 opt-in live-provider tests skipped offline on 2026-07-16; latest run completed in 38.61 seconds.
+- Automated suite: 238 tests passed and 2 opt-in live-provider tests skipped offline on 2026-07-20; latest run completed in 43.63 seconds on Windows.
 - Backend Phase II existing-file binding consumer suite: 76 passed in 17.77 seconds.
 - Backend Phase II declared-file binding consumer suite: 19 passed in 4.73 seconds.
 - Isolated local Ollama smoke test: 1 passed in 39.48 seconds on 2026-07-15 with an 8,192-token context; it used no database or SQL execution.
@@ -173,20 +174,24 @@ import, synchronization, or generated project output was used.
 
 ## Next Logical Milestone
 
-Continue Backend Phase II increment 2.3 with an error-taxonomy inventory.
-Classify existing blocker/failure codes without renaming persisted codes or
-changing module-specific blocker columns. Separate contract, authority,
-approval, execution-limit, provider, filesystem, and expected-result failures
-before proposing a common structured classification. Keep the run-result
-envelope and CLI decomposition separate. The independent AI track still
-requires fixed Phase 5 thresholds and a fresh reviewed holdout before provider
-selection.
+Continue Backend Phase II increment 2.3 by reviewing the 10 dynamic blocker
+call sites and expanding the explicit registry one coherent consumer family at
+a time. Characterize direct blocker dictionaries, exception classes, and
+free-text statuses separately. Do not infer categories from prefixes, rename
+persisted codes, add blocker columns, or change module-specific blocker shapes.
+Keep the run-result envelope and CLI decomposition separate. The independent AI
+track still requires fixed Phase 5 thresholds and a fresh reviewed holdout
+before provider selection.
+
+For cloud-first repository management, inventory local-only artifacts and commit
+only safe manifests/hashes before any public visibility change; keep sensitive
+files in a separate private store or encrypted artifact workflow.
 
 ## Last Verified Commit
 
-`51372fd` (`refactor(contracts): centralize declared file bindings`).
+`b1e0e05` (`refactor(contracts): classify standard analytics errors`).
 
 ## Last Updated
 
-2026-07-16 by Codex after fast-forward integrating the validated Phase II
-branch into `main` and publishing it to GitHub.
+2026-07-20 by Codex after validating the initial error taxonomy on Windows and
+documenting private-artifact governance for cloud-first GitHub work.

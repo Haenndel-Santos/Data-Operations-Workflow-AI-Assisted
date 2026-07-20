@@ -87,6 +87,8 @@ CLI
 | `outputs/` | Reproducible generated artifacts | Excluded from Git; do not hand-edit. |
 | `.codex/` | Domain guidance, skills, and agent profiles | Guidance only; cannot override code, tests, or human approvals. |
 
+Private source exports, generated outputs, completed local reviews with row-level evidence, and secrets must remain outside the public-capable repository. Version only safe manifests and hashes; see [Private Artifact Governance](private-artifact-governance.md).
+
 ## Data Contracts
 
 The default workflow accepts an input directory and output directory and returns `WorkflowResult` with output, database, table, metadata, and Tableau locations. Staged commands use explicit paths and return summaries or artifact locations from their module entrypoints.
@@ -104,6 +106,13 @@ module exports remain compatible. Distinct Product materialization and
 reference-dataset blocker schemas remain local until their contracts and
 consumers are characterized. Deterministic `.building` directory workflows
 remain separate because their stale-staging failure policy differs.
+
+The additive error-taxonomy registry classifies the 102 labels used by the four
+standard analytics blocker consumers without changing their persisted codes or
+CSV shape. Callers may request category metadata separately; unknown codes
+remain unregistered and `unclassified`. This registry is not yet a common
+run-result envelope and does not coerce exception messages, dynamic labels, or
+module-specific blocker records into the standard shape.
 
 The first formal module registry now describes the two recorded analytics
 session phases and validates inputs, outputs, dependencies, validation, tests,
