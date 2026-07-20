@@ -27,7 +27,7 @@ that is already proven equivalent into small internal contracts.
 | 2.1 | Common file hashing and the standard analytics blocker record | Implemented in `082920a` |
 | 2.2 | Common atomic publication with characterized Windows retry and race semantics | Implemented in `28e962b` |
 | 2.3 | Common source bindings, error taxonomy, and run-result envelope | Implemented; the additive projection remains opt-in after the consumer audit found no semantics-neutral runtime adopter |
-| 2.4 | CLI command registration split by domain while preserving `data_ops_lab.cli:main` | In progress; 44 registrations are extracted across eight coherent domain slices |
+| 2.4 | CLI command registration split by domain while preserving `data_ops_lab.cli:main` | In progress; all 47 registrations are extracted across ten coherent domain slices; final automated validation is pending |
 
 Other blocker shapes remain module-specific until their persisted schemas and
 consumers are characterized. Product materialization and reference-dataset
@@ -161,9 +161,14 @@ Backend Phase II is complete only when:
   111 internal links checked, 0 broken; exact isolated signatures, complete
   parser order, and pull-request diff gates passed.
 - Increment 2.4 model-documentation registration slice: 276 tests passed and
-  2 opt-in live-provider tests skipped in 54.57 seconds on Windows/Python 3.13;
+  2 opt-in live-provider tests skipped in 53.27 seconds on Windows/Python 3.13;
   111 internal links checked, 0 broken; exact isolated signatures, complete
   parser order, root-argument placement, and pull-request diff gates passed.
+- Increment 2.4 final analytics-operations registration slices: isolated syntax
+  and exact signature equivalence preserved all three command signatures;
+  reconstructed registration order preserved the complete 47-command surface
+  with no direct subparser registrations remaining in `build_parser`.
+  Automated repository validation is pending.
 - Latest full offline suite: 276 passed and 2 opt-in live-provider tests skipped
   in 44.98 seconds on Windows.
 - No external database, provider, network, production data, migration, import,
@@ -386,10 +391,14 @@ reference audit, reconciliation, human-review, validation, and explicit-apply
 commands. The `product_publication` registrar owns Product materialization
 preview, dry-run canonical promotion planning, and missing-notes repair. The
 `model_documentation` registrar owns conceptual schema overview and confirmed
-business-flow mapping documentation. `build_parser` calls all eight
+business-flow mapping documentation. The `analytics_foundation` registrar
+owns local module-contract validation and synthetic pipeline performance
+measurement; the `analytics_soak` registrar separately owns the explicitly
+authorized bounded local Ollama soak command. `build_parser` calls all ten
 registration functions at their original positions, so command order, names,
 options, types, required flags, defaults, help text, and root help remain
-unchanged.
+unchanged. No direct `subparsers.add_parser` declaration remains in
+`build_parser`.
 
 The extracted modules import only `argparse`, `Path`, and the existing Ollama
 CLI defaults. They do not import or call domain run functions. Dispatch, result
@@ -399,9 +408,10 @@ registration-only boundary, not dynamic dispatch or a new orchestrator.
 
 ## Next Increment
 
-Continue increment 2.4 with the remaining analytics-operations registration
-slices while
-preserving the complete parser signature and `data_ops_lab.cli:main`. Keep
+Validate the final analytics-operations registration slices through GitHub
+Actions, then close increment 2.4 and the Backend Phase II exit gate if the
+complete parser signature, offline suite, links, and diff remain green.
+Preserve `data_ops_lab.cli:main`. Keep
 domain execution and result formatting in their existing modules until a
 separate dispatch contract is approved. Do not add a generic success predicate
 or merge module-specific status, blocker, artifact, checkpoint, or authority
