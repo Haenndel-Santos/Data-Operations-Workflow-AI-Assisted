@@ -27,7 +27,7 @@ that is already proven equivalent into small internal contracts.
 | 2.1 | Common file hashing and the standard analytics blocker record | Implemented in `082920a` |
 | 2.2 | Common atomic publication with characterized Windows retry and race semantics | Implemented in `28e962b` |
 | 2.3 | Common source bindings, error taxonomy, and run-result envelope | Implemented; the additive projection remains opt-in after the consumer audit found no semantics-neutral runtime adopter |
-| 2.4 | CLI command registration split by domain while preserving `data_ops_lab.cli:main` | In progress; 21 registrations are extracted across dataset-benchmark, semantic/translation, and query/session slices |
+| 2.4 | CLI command registration split by domain while preserving `data_ops_lab.cli:main` | In progress; 23 registrations are extracted across four coherent domain slices |
 
 Other blocker shapes remain module-specific until their persisted schemas and
 consumers are characterized. Product materialization and reference-dataset
@@ -147,8 +147,11 @@ Backend Phase II is complete only when:
 - Increment 2.4 query/session CLI registration slice: 36 focused tests passed
   in 9.52 seconds; the same complete parser signature and all six individual
   command signatures were preserved.
+- Increment 2.4 reference-dataset CLI registration slice: 13 focused tests
+  passed in 3.91 seconds; the same complete parser signature and both
+  individual command signatures were preserved.
 - Latest full offline suite: 276 passed and 2 opt-in live-provider tests skipped
-  in 47.91 seconds on Windows.
+  in 44.98 seconds on Windows.
 - No external database, provider, network, production data, migration, import,
   synchronization, or approval apply was used.
 
@@ -361,7 +364,9 @@ of the seven dataset-backed benchmark commands. The adjacent
 adapter, translation, and offline evaluation commands. The
 `analytics_query_session` registrar owns six governed query planning,
 execution, presentation, recorded narration, and two-phase session commands.
-`build_parser` calls all three registration functions at their original
+The `reference_dataset` registrar owns local SQL sample conversion and exact
+reference-dataset validation. `build_parser` calls all four registration
+functions at their original
 positions, so command order, names, options, types, required flags, defaults,
 help text, and root help remain unchanged.
 

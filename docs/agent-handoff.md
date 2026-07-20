@@ -3419,3 +3419,43 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
   retain the exact parser signature as a compatibility gate.
 - Keep execution limits, checkpoints, provider controls, dispatch, and result
   formatting outside registration modules.
+
+## 2026-07-20 - Codex - Extract reference-dataset CLI registration
+
+### Git Checkpoint
+
+- Committed the query/session registration slice as `65bd16d`
+  (`refactor(cli): extract query session registration`).
+- Published `codex/split-cli-query-session-registration`, opened GitHub PR #9,
+  and merged it into `main` as `8866fca`.
+- Continued increment 2.4 on
+  `codex/split-cli-reference-dataset-registration`.
+
+### Implementation
+
+- Added `cli_commands.reference_dataset` for local benchmark SQL conversion
+  and exact reference-dataset validation parser declarations.
+- Invoked the registrar at the original location in `build_parser`; the four
+  extracted registration modules now own 23 of the 47 command declarations.
+- Kept converter and validator imports, explicit dispatch, result formatting,
+  completed-review semantics, and the public `data_ops_lab.cli:main` entrypoint
+  unchanged.
+- Did not open a source dataset, run a conversion, access a database, apply a
+  review, use a provider/network call, or read private project data.
+
+### Validation
+
+- The complete pre/post parser signature remained exactly
+  `ddfc7ba0a1cfe91fbe0e7e6baf084c14cbe665100f1cb7260c56e27f5b634b37`
+  across all 47 commands; both extracted command signatures also matched.
+- Focused conversion and reference-dataset validation suite: 13 passed in 3.91
+  seconds.
+- Full offline suite: 276 passed and 2 opt-in live-provider tests skipped in
+  44.98 seconds on Windows.
+
+### Next Logical Step
+
+- Continue increment 2.4 with the next coherent CLI registration family and
+  retain the exact parser signature as a compatibility gate.
+- Keep conversion, review authority, dispatch, and result formatting outside
+  registration modules.
