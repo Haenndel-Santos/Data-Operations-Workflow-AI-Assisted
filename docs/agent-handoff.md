@@ -3461,46 +3461,86 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
   registration modules.
 
 
-## 2026-07-20 - Codex - Extract ERP modeling CLI registration (draft)
+## 2026-07-20 - Codex - Add automated GitHub Actions validation
 
 ### Initial Context
 
-- GitHub base: `main` at `c28bb3a`; no open pull request was present.
-- The mobile Work environment had GitHub connector access but no local checkout
-  and no `gh` executable.
-- Objective received: correct the recorded progress checkpoint and continue the
-  next necessary implementation.
+- GitHub base: `main` at `c28bb3a`.
+- The repository had no workflow in the standard GitHub Actions locations and
+  recent pull requests had no automated check runs.
+- Objective received: continue safely from mobile without a connected local
+  checkout.
 
 ### Implementation
 
-- Added `cli_commands.erp_modeling` for seven Step 3 source onboarding,
-  human-review, serial-rule, approval-spreadsheet, and canonical-model parser
-  declarations.
-- Replaced the original declaration block at the same position in
-  `build_parser`; registration modules now own 30 of the 47 commands.
-- Kept all run-function imports, explicit dispatch, result formatting, approval
-  behavior, private-data boundaries, and `data_ops_lab.cli:main` unchanged.
-- Advanced the consolidated `Last Verified Commit` checkpoint to the current
-  `main` base and updated Backend Phase II/orchestrator progress counts.
+- Added `.github/workflows/ci.yml` for pull requests, pushes to `main`, and
+  manual dispatch.
+- Configured `windows-latest`, Python 3.13, pip caching, read-only repository
+  permissions, concurrency cancellation, and a 30-minute timeout.
+- Added project installation, the complete offline suite, internal-link
+  validation, and event-appropriate diff checks.
+- Added no secret, external provider, database, project-data, migration, import,
+  synchronization, approval, upload, or artifact-publishing capability.
 
 ### Validation
 
-- New registrar syntax compilation passed under Python 3.
-- An isolated seven-command comparison preserved names, order, options, types,
-  required flags, defaults, and help text; signature SHA-256:
-  `57c3e376ab3c1a9141c577c05eec0b2f9179bb48bd8eed6f72df242e6c7d27c4`.
-- A reconstructed full-parser comparison preserved the complete 47-command
-  structural/help surface before and after extraction.
-- The full repository suite and internal-link checker were not run because this
-  environment has no project checkout. The change must remain a draft until
-  those checks run on the connected Windows host.
-- No project data, provider, network workflow, database, approval apply,
-  migration, import, synchronization, or generated output was executed.
+- Workflow run `29772240350` completed successfully.
+- Full offline suite: 276 passed and 2 opt-in live-provider tests skipped in
+  93.18 seconds on Windows/Python 3.13.
+- Internal links: 110 checked, 0 broken.
+- Pull-request diff check: passed.
+- Checkout, Python setup, dependency installation, cache finalization, and all
+  cleanup steps completed successfully.
 
 ### Next Logical Step
 
-1. Run the focused ERP/source-modeling tests on the connected checkout.
-2. Run the complete offline suite and internal-link checker.
-3. Correct any regression before marking the pull request ready or merging.
-4. Continue increment 2.4 with the next coherent registration family only after
-   that gate passes.
+1. Revalidate this documentation commit through the same workflow.
+2. Merge the CI pull request only after the second run passes.
+3. Update the ERP modeling registration pull request from the new `main` so
+   its full regression checks run automatically.
+
+## 2026-07-20 - Codex - Update ERP modeling PR onto CI-enabled main
+
+### Git Checkpoint
+
+- GitHub PR #12 merged the Windows/Python 3.13 validation workflow into
+  `main` as `8009e9c`.
+- GitHub PR #11 remained open on
+  `agent/split-cli-erp-modeling` at `09c423b`.
+- Integrated `main` into PR #11 with a merge commit so both histories remain
+  explicit and no branch history is rewritten.
+
+### Implementation
+
+- Preserved the CI workflow, testing guidance, and validated documentation from
+  `main`.
+- Preserved `cli_commands.erp_modeling` and its seven Step 3 source
+  onboarding, human-review, serial-rule, approval-spreadsheet, and
+  canonical-model parser declarations.
+- Registration modules now own 30 of the 47 command declarations; run-function
+  imports, explicit dispatch, result formatting, approval behavior,
+  private-data boundaries, and `data_ops_lab.cli:main` remain unchanged.
+- Reconciled the shared progress and handoff documents without discarding
+  either pull request's factual history.
+- Did not execute project data, a provider, an external database, an approval
+  apply, a migration, an import, a synchronization, or generated-output
+  publication.
+
+### Validation
+
+- The original ERP slice passed syntax compilation, seven-command signature
+  equivalence with SHA-256
+  `57c3e376ab3c1a9141c577c05eec0b2f9179bb48bd8eed6f72df242e6c7d27c4`,
+  and reconstructed equivalence for the complete 47-command parser.
+- PR #12's two Windows/Python 3.13 workflow runs passed before merge; the second
+  completed with 276 tests passed, 2 opt-in live-provider tests skipped, 111
+  internal links checked, 0 broken, and a clean pull-request diff.
+- PR #11's full automated regression run is pending on this integrated commit.
+
+### Next Logical Step
+
+1. Wait for PR #11's GitHub Actions run.
+2. Inspect the complete job result and correct any regression.
+3. Record exact validation evidence, mark PR #11 ready, and merge only after
+   the gate passes.
+
