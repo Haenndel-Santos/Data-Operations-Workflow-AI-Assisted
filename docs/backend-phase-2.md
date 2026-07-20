@@ -27,7 +27,7 @@ that is already proven equivalent into small internal contracts.
 | 2.1 | Common file hashing and the standard analytics blocker record | Implemented in `082920a` |
 | 2.2 | Common atomic publication with characterized Windows retry and race semantics | Implemented in `28e962b` |
 | 2.3 | Common source bindings, error taxonomy, and run-result envelope | Implemented; the additive projection remains opt-in after the consumer audit found no semantics-neutral runtime adopter |
-| 2.4 | CLI command registration split by domain while preserving `data_ops_lab.cli:main` | In progress; 23 registrations are extracted across four coherent domain slices |
+| 2.4 | CLI command registration split by domain while preserving `data_ops_lab.cli:main` | In progress; 30 registrations are extracted across five coherent domain slices |
 
 Other blocker shapes remain module-specific until their persisted schemas and
 consumers are characterized. Product materialization and reference-dataset
@@ -150,6 +150,10 @@ Backend Phase II is complete only when:
 - Increment 2.4 reference-dataset CLI registration slice: 13 focused tests
   passed in 3.91 seconds; the same complete parser signature and both
   individual command signatures were preserved.
+- Increment 2.4 ERP modeling registration slice: isolated syntax and reconstructed
+  parser-equivalence checks preserved all seven command signatures and the
+  complete 47-command surface; the repository suite remains required on a
+  connected checkout before merge.
 - Latest full offline suite: 276 passed and 2 opt-in live-provider tests skipped
   in 44.98 seconds on Windows.
 - No external database, provider, network, production data, migration, import,
@@ -365,10 +369,11 @@ adapter, translation, and offline evaluation commands. The
 `analytics_query_session` registrar owns six governed query planning,
 execution, presentation, recorded narration, and two-phase session commands.
 The `reference_dataset` registrar owns local SQL sample conversion and exact
-reference-dataset validation. `build_parser` calls all four registration
-functions at their original
-positions, so command order, names, options, types, required flags, defaults,
-help text, and root help remain unchanged.
+reference-dataset validation. The `erp_modeling` registrar owns seven Step 3
+source onboarding, human-review, serial-rule, approval-spreadsheet, and canonical
+model commands. `build_parser` calls all five registration functions at their
+original positions, so command order, names, options, types, required flags,
+defaults, help text, and root help remain unchanged.
 
 The extracted modules import only `argparse`, `Path`, and the existing Ollama
 CLI defaults. They do not import or call domain run functions. Dispatch, result
@@ -378,7 +383,8 @@ registration-only boundary, not dynamic dispatch or a new orchestrator.
 
 ## Next Increment
 
-Continue increment 2.4 with the next coherent registration slice while
+Validate the ERP modeling registration slice in the connected project checkout,
+then continue increment 2.4 with the next coherent registration slice while
 preserving the complete parser signature and `data_ops_lab.cli:main`. Keep
 domain execution and result formatting in their existing modules until a
 separate dispatch contract is approved. Do not add a generic success predicate

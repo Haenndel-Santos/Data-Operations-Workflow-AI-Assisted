@@ -3498,3 +3498,99 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 2. Merge the CI pull request only after the second run passes.
 3. Update the ERP modeling registration pull request from the new `main` so
    its full regression checks run automatically.
+
+## 2026-07-20 - Codex - Update ERP modeling PR onto CI-enabled main
+
+### Git Checkpoint
+
+- GitHub PR #12 merged the Windows/Python 3.13 validation workflow into
+  `main` as `8009e9c`.
+- GitHub PR #11 remained open on
+  `agent/split-cli-erp-modeling` at `09c423b`.
+- Integrated `main` into PR #11 with a merge commit so both histories remain
+  explicit and no branch history is rewritten.
+
+### Implementation
+
+- Preserved the CI workflow, testing guidance, and validated documentation from
+  `main`.
+- Preserved `cli_commands.erp_modeling` and its seven Step 3 source
+  onboarding, human-review, serial-rule, approval-spreadsheet, and
+  canonical-model parser declarations.
+- Registration modules now own 30 of the 47 command declarations; run-function
+  imports, explicit dispatch, result formatting, approval behavior,
+  private-data boundaries, and `data_ops_lab.cli:main` remain unchanged.
+- Reconciled the shared progress and handoff documents without discarding
+  either pull request's factual history.
+- Did not execute project data, a provider, an external database, an approval
+  apply, a migration, an import, a synchronization, or generated-output
+  publication.
+
+### Validation
+
+- The original ERP slice passed syntax compilation, seven-command signature
+  equivalence with SHA-256
+  `57c3e376ab3c1a9141c577c05eec0b2f9179bb48bd8eed6f72df242e6c7d27c4`,
+  and reconstructed equivalence for the complete 47-command parser.
+- PR #12's two Windows/Python 3.13 workflow runs passed before merge; the second
+  completed with 276 tests passed, 2 opt-in live-provider tests skipped, 111
+  internal links checked, 0 broken, and a clean pull-request diff.
+- PR #11's full automated regression run is pending on this integrated commit.
+
+### Next Logical Step
+
+1. Wait for PR #11's GitHub Actions run.
+2. Inspect the complete job result and correct any regression.
+3. Record exact validation evidence, mark PR #11 ready, and merge only after
+   the gate passes.
+
+## 2026-07-20 - Codex - Correct ERP PR trailing blank line
+
+### Validation Result
+
+- GitHub Actions run `29773199824` installed the project successfully.
+- Full offline suite: 276 passed and 2 opt-in live-provider tests skipped in
+  47.37 seconds on Windows/Python 3.13.
+- Internal links: 111 checked, 0 broken.
+- The pull-request diff check alone failed because
+  `docs/agent-handoff.md` ended with one extra blank line.
+
+### Correction
+
+- Removed only the extra trailing blank line and updated the factual validation
+  checkpoint.
+- No runtime code, parser declaration, provider control, project data, database,
+  approval state, migration, import, synchronization, or generated output was
+  changed or executed.
+
+### Next Logical Step
+
+1. Re-run the complete GitHub Actions gate.
+2. Inspect all steps and proceed only if the workflow is fully green.
+
+## 2026-07-20 - Codex - Validate ERP modeling registration PR
+
+### Git Checkpoint
+
+- Revalidated GitHub PR #11 at `8b6d8ad` after integrating CI-enabled
+  `main` and correcting the trailing documentation blank line.
+- GitHub Actions workflow run: `29773451617`; job: `88457053119`.
+
+### Validation
+
+- Full offline suite: 276 passed and 2 opt-in live-provider tests skipped in
+  46.37 seconds on Windows/Python 3.13.
+- Internal links: 111 checked, 0 broken.
+- Pull-request diff check: passed against exact base `8009e9c` and head
+  `8b6d8ad`.
+- Checkout, Python setup, dependency installation, cache finalization, and
+  cleanup steps passed.
+- No live provider, project data, external database, approval apply, migration,
+  import, synchronization, upload, or generated-output publication ran.
+
+### Next Logical Step
+
+1. Revalidate this documentation-only evidence commit through the same workflow.
+2. Mark PR #11 ready and merge only after that final run passes.
+3. Continue increment 2.4 with the next coherent registration family from the
+   resulting `main`.
