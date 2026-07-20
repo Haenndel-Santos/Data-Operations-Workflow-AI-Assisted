@@ -3208,3 +3208,54 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 - Keep exceptions, statuses, control values, authority gates, and
   module-specific blocker records separate unless exact consumer/output
   contracts prove equivalence.
+
+## 2026-07-20 - Codex - Add the common run-result structural core
+
+### Git Checkpoint
+
+- Committed Product materialization taxonomy as `9e2da9f`
+  (`refactor(contracts): classify product materialization errors`).
+- Published `codex/classify-product-materialization`, opened GitHub PR #4, and
+  merged it into `main` as `ba20785` before starting this increment.
+- Started the run-result work on `codex/add-run-result-envelope`; it is not yet
+  committed.
+
+### Audit And Decision
+
+- Confirmed that all 658 literal labels and all 22 files recognized by
+  `scripts/inventory_failure_labels.py` are covered by the 675-code registry.
+- Confirmed that direct dictionary append sites are either the shared standard
+  helper or the already provenanced direct construction and five
+  module-specific formats; no additional literal consumer family remains.
+- Identified 23 frozen result classes with the exact common structural core
+  `output_dir`, `status`, `blocker_count`, and `outputs_changed`.
+- Chose a structural projection instead of inheritance changes, status
+  normalization, a generic success predicate, or a sparse union of artifact
+  paths.
+
+### Implementation
+
+- Added `RunResultLike`, immutable `RunResultEnvelope`,
+  `RUN_RESULT_ENVELOPE_FIELDS`, and `project_run_result` under the shared
+  contracts package and public compatibility exports.
+- Added regression coverage for value preservation, opaque module-specific
+  status, exclusion of module-owned fields, and all 23 compatible result types.
+- Did not change any existing result class, run function, Python/CLI return,
+  manifest, report, CSV, blocker format, checkpoint, approval, or authority.
+
+### Validation
+
+- Focused run-result and internal-contract suite: 21 passed in 1.78 seconds.
+- Full registered-consumer suite: 238 passed in 39.63 seconds.
+- Full offline suite: 276 passed and 2 opt-in live-provider tests skipped in
+  44.37 seconds on Windows.
+- No project data, provider, network, external database, migration, import,
+  synchronization, approval apply, or canonical promotion was executed.
+
+### Next Logical Step
+
+- Characterize current CLI and coordinator result consumers to select the first
+  read-only adoption point for `project_run_result` without changing CLI text or
+  persisted evidence.
+- If no current runtime consumer needs the projection, record increment 2.3
+  complete and proceed to the separately scoped CLI decomposition.

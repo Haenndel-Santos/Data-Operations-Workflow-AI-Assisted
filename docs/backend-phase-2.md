@@ -26,7 +26,7 @@ that is already proven equivalent into small internal contracts.
 | --- | --- | --- |
 | 2.1 | Common file hashing and the standard analytics blocker record | Implemented in `082920a` |
 | 2.2 | Common atomic publication with characterized Windows retry and race semantics | Implemented in `28e962b` |
-| 2.3 | Common source bindings, error taxonomy, and run-result envelope | Source bindings, reviewed dynamic/direct/exception/format/projection/authority provenance, and a 675-label classification registry implemented; remaining-consumer audit and run-result envelope pending |
+| 2.3 | Common source bindings, error taxonomy, and run-result envelope | Source bindings, complete source-only taxonomy coverage, and an additive four-field projection shared structurally by 23 result classes implemented; first runtime adoption pending |
 | 2.4 | CLI command registration split by domain while preserving `data_ops_lab.cli:main` | Pending |
 
 Other blocker shapes remain module-specific until their persisted schemas and
@@ -135,8 +135,10 @@ Backend Phase II is complete only when:
   suite: 227 passed in 38.03 seconds.
 - Increment 2.3 Product materialization taxonomy and registered-consumer suite:
   235 passed in 40.91 seconds.
-- Latest full offline suite: 273 passed and 2 opt-in live-provider tests skipped
-  in 45.66 seconds on Windows.
+- Increment 2.3 run-result compatibility and registered-consumer suite: 238
+  passed in 39.63 seconds.
+- Latest full offline suite: 276 passed and 2 opt-in live-provider tests skipped
+  in 44.37 seconds on Windows.
 - No external database, provider, network, production data, migration, import,
   synchronization, or approval apply was used.
 
@@ -300,10 +302,36 @@ manifest are separate authority gates. The two aggregate failures
 span multiple underlying causes. No private Product source, materialization,
 approval apply, canonical promotion, or database operation was executed.
 
+## Increment 2.3 Run-Result Contract
+
+The source-only audit found no remaining literal blocker labels or consumer
+files outside the registry: all 658 literal labels and all 22 files recognized
+by the inventory are covered. Separately provenanced dynamic calls, direct
+constructions/reuses, statuses, controls, exceptions, authority gates, and five
+module-specific blocker formats remain distinct.
+
+`data_ops_lab.contracts.run_results` defines a structural `RunResultLike`
+protocol, immutable `RunResultEnvelope`, and `project_run_result` projection.
+The common fields are exactly:
+
+```yaml
+output_dir:
+status:
+blocker_count:
+outputs_changed:
+```
+
+Twenty-three existing result classes already expose this core. The projection
+copies values without changing the original result object, interpreting status,
+inferring success, reading blocker records, or copying module-specific artifact
+paths. Existing Python return types, CLI text, manifests, CSVs, reports,
+checkpoints, approvals, and private-data boundaries remain unchanged.
+
 ## Next Increment
 
-Audit the remaining source-only blocker consumers against the 658-literal
-baseline before selecting another coherent family or designing the common
-run-result envelope. Keep exceptions, text statuses, control values, authority
-gates, and module-specific blocker formats separate unless their contracts and
-consumers prove equivalence.
+Characterize current CLI and coordinator consumers to select the first real
+read-only adoption point for `project_run_result` without changing CLI text or
+persisted evidence. If no runtime consumer needs the projection yet, record the
+core of increment 2.3 complete and proceed to the separately scoped CLI
+decomposition in increment 2.4. Do not add a generic success predicate or merge
+module-specific status, blocker, artifact, checkpoint, or authority semantics.

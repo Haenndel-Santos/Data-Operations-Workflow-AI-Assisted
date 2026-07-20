@@ -22,6 +22,12 @@ and workflow dependencies, cycles, capabilities, test files, stage order,
 failure policies, and the human execution gate, then writes dry-run evidence.
 It cannot dispatch or execute a module.
 
+`data_ops_lab.contracts.run_results` now exposes an additive structural
+projection for the four fields shared by 23 existing blocker-producing result
+classes: `output_dir`, opaque `status`, `blocker_count`, and `outputs_changed`.
+No current workflow dispatches through this contract; module-specific artifact
+paths, blocker records, statuses, checkpoints, and authority remain local.
+
 `reference-dataset-validate` remains a separate explicit Phase 2 entrypoint. It
 orders provenance/license/use preflight before any read-only DuckDB profiling
 and stops at `ready_for_relationship_review` without an exact completed human

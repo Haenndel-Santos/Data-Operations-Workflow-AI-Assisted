@@ -140,6 +140,13 @@ envelope and does not coerce exception messages, text statuses, authority
 boundaries, approval projections, or module-specific blocker records into one
 shape.
 
+The additive run-result contract projects only `output_dir`, opaque `status`,
+`blocker_count`, and `outputs_changed`. Twenty-three existing frozen result
+classes expose that exact structural core without changing their inheritance,
+return types, CLI output, persisted evidence, or module-specific fields. The
+projection does not infer success, normalize status text, inspect blocker rows,
+or combine artifact paths.
+
 The first formal module registry now describes the two recorded analytics
 session phases and validates inputs, outputs, dependencies, validation, tests,
 failure policy, entrypoint signatures, and review gates without changing current
@@ -154,8 +161,9 @@ Modeling decisions use distinct states such as candidate, pending review, approv
 
 - Shared hashing, the standard analytics blocker, two characterized
   atomic-publication variants, and two explicit source-binding absence
-  semantics are implemented Backend Phase II primitives. Error taxonomy, a
-  common run-result envelope, and CLI decomposition remain pending.
+  semantics are implemented Backend Phase II primitives. Source-only error
+  taxonomy coverage and the four-field run-result projection are implemented;
+  runtime adoption and CLI decomposition remain pending.
 - The analytics-session registry is validation-only; common discovery, dynamic
   dispatch, and a registry covering other pipelines remain pending.
 - No generic dependency graph, checkpoint, resume, or dry-run engine; only the recorded analytics session has narrow tested checkpoint/resume semantics.
