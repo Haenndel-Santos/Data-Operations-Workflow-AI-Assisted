@@ -6,7 +6,7 @@ Turn local operational spreadsheets into validated analytical datasets and an ap
 
 ## Current Stage
 
-Four active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases 0-4 passed their gates for Northwind and the selected local Ollama development provider; AI Phase 5 remains active after its recorded, live-development, and endurance evidence; and Backend Phase II is active in increment 2.4 after completing increment 2.3. Stage 5A-5F governed analytics retains its applied Northwind semantic catalog, immutable 13-case answer authority, reproducible 13/13 recorded evaluation, governed 9/13 loopback result, and 56 evidenced soak cycles. Backend Phase II has completed compatible common hashing, standard analytics blockers, atomic publication, the two proven source-binding absence semantics, explicit classification of 675 labels used by 22 complete blocker consumers, and exact provenance for all dynamic/direct and separate status/format/authority surfaces. The 658-literal audit found no remaining recognized consumer, and 23 existing result classes now conform structurally to the additive `output_dir`/opaque `status`/`blocker_count`/`outputs_changed` projection. A consumer audit found no honest runtime adoption point before generic dispatch or run recording, so the projection remains opt-in. CLI decomposition has moved 30 registrations across five coherent domain registrars while preserving the full 47-command parser surface. GitHub Actions now provides an automated read-only Windows/Python 3.13 gate for the offline suite, internal links, and pull-request diffs. The ERP modeling slice passed the full offline suite and internal-link check; a trailing blank line found by the pull-request diff gate was corrected and the complete workflow rerun is pending. Further CLI decomposition, a fresh holdout, provider selection, dynamic dispatch, live narration, and a user interface remain pending.
+Four active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases 0-4 passed their gates for Northwind and the selected local Ollama development provider; AI Phase 5 remains active after its recorded, live-development, and endurance evidence; and Backend Phase II is active in increment 2.4 after completing increment 2.3. Stage 5A-5F governed analytics retains its applied Northwind semantic catalog, immutable 13-case answer authority, reproducible 13/13 recorded evaluation, governed 9/13 loopback result, and 56 evidenced soak cycles. Backend Phase II has completed compatible common hashing, standard analytics blockers, atomic publication, the two proven source-binding absence semantics, explicit classification of 675 labels used by 22 complete blocker consumers, and exact provenance for all dynamic/direct and separate status/format/authority surfaces. The 658-literal audit found no remaining recognized consumer, and 23 existing result classes now conform structurally to the additive `output_dir`/opaque `status`/`blocker_count`/`outputs_changed` projection. A consumer audit found no honest runtime adoption point before generic dispatch or run recording, so the projection remains opt-in. CLI decomposition has moved 30 registrations across five coherent domain registrars while preserving the full 47-command parser surface. GitHub Actions now provides an automated read-only Windows/Python 3.13 gate for the offline suite, internal links, and pull-request diffs. The ERP modeling slice passed the full automated Windows/Python 3.13 regression gate after correcting one trailing documentation blank line. Further CLI decomposition, a fresh holdout, provider selection, dynamic dispatch, live narration, and a user interface remain pending.
 
 ## Last Completed Milestone
 
@@ -16,10 +16,9 @@ serial-rule, approval-spreadsheet, and canonical-model commands now register
 through `data_ops_lab.cli_commands.erp_modeling`. Together with the prior
 families, 30 registrations have moved while `build_parser` still exposes the
 same 47-command surface and `data_ops_lab.cli:main` still owns explicit
-dispatch and result formatting. The complete Windows/Python 3.13 suite passed
-with 276 tests and 2 opt-in live-provider skips, and 111 internal links passed;
-a trailing blank line reported by the pull-request diff gate was corrected and
-the complete workflow rerun is pending.
+dispatch and result formatting. The complete Windows/Python 3.13 gate passed with 276 tests and 2 opt-in
+live-provider skips, 111 valid internal links, and a clean pull-request diff
+after correcting one trailing documentation blank line.
 
 ## Current Capabilities
 
@@ -175,11 +174,9 @@ the complete workflow rerun is pending.
 - CI documentation revalidation: 276 passed and 2 opt-in live-provider tests
   skipped in 50.58 seconds on Windows/Python 3.13; 111 internal links checked,
   0 broken; pull-request diff check passed.
-- Current ERP modeling registration slice: 276 tests passed and 2 opt-in
-  live-provider tests skipped in 47.37 seconds on Windows/Python 3.13; 111
-  internal links checked, 0 broken. The initial pull-request diff gate found one
-  trailing blank line in `docs/agent-handoff.md`; it is corrected and the
-  complete workflow rerun is pending.
+- ERP modeling registration revalidation: 276 tests passed and 2 opt-in
+  live-provider tests skipped in 46.37 seconds on Windows/Python 3.13; 111
+  internal links checked, 0 broken; pull-request diff check passed.
 - Backend Phase II run-result compatibility and registered-consumer suite: 238
   passed in 39.63 seconds.
 - Backend Phase II existing-file binding consumer suite: 76 passed in 17.77 seconds.
@@ -221,8 +218,8 @@ the complete workflow rerun is pending.
   core. The consumer audit intentionally deferred runtime projection until a
   generic dispatcher or run recorder needs all four fields; CLI decomposition
   is now in progress with 30 registrations extracted across five coherent
-  domain modules. The ERP modeling slice passed its tests and links; its corrected trailing
-  blank line awaits the complete automated Windows regression rerun. Dispatch remains explicit and
+  domain modules. The ERP modeling slice passed the complete automated Windows regression gate
+  after correcting one trailing documentation blank line. Dispatch remains explicit and
   centralized. Free-text
   statuses remain intentionally separate. Binding comparison policies,
   deterministic `.building` workflows, and distinct blocker schemas must not
@@ -239,8 +236,7 @@ the complete workflow rerun is pending.
 
 ## Next Logical Milestone
 
-Complete the automated Windows/Python 3.13 regression rerun after correcting
-the ERP modeling branch's trailing blank line. After that gate, continue Backend Phase II
+Continue Backend Phase II
 increment 2.4 with the next coherent CLI registration slice while preserving
 the complete 47-command parser signature and `data_ops_lab.cli:main`. Keep
 execution and result formatting in the existing domain modules, and keep the
@@ -256,9 +252,9 @@ files in a separate private store or encrypted artifact workflow.
 
 ## Last Verified Commit
 
-`8009e9c` (merge of `ci: add Windows Python validation workflow`).
+`8b6d8ad` (`docs: record ERP CI result and fix trailing whitespace`).
 
 ## Last Updated
 
-2026-07-20 by Codex after the ERP modeling suite and links passed and the
-pull-request diff gate's trailing blank line was corrected for revalidation.
+2026-07-20 by Codex after the ERP modeling registration slice passed the
+complete automated Windows/Python 3.13 regression gate.
