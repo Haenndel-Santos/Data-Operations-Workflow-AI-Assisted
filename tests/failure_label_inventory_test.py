@@ -5,6 +5,7 @@ from pathlib import Path
 
 from data_ops_lab.contracts.error_taxonomy import (
     APPROVAL_PROJECTION_PROVENANCE,
+    AUTHORITY_BOUNDARY_PROVENANCE,
     BLOCKER_RECORD_FORMAT_PROVENANCE,
     CONTROL_TEXT_PROVENANCE,
     DIRECT_BLOCKER_REUSE_PROVENANCE,
@@ -70,7 +71,7 @@ def test_dynamic_callsite_provenance_covers_the_inventory_exactly():
     assert execution.surface is DynamicCodeSurface.EXCEPTION_CODE
     assert execution.disposition is TaxonomyDisposition.REGISTERED
     assert product.surface is DynamicCodeSurface.MODULE_SPECIFIC_BLOCKER
-    assert product.disposition is TaxonomyDisposition.SEPARATE_RECORD_FORMAT
+    assert product.disposition is TaxonomyDisposition.REGISTERED
 
 
 def test_direct_blocker_reuse_provenance_covers_the_inventory_exactly():
@@ -1225,6 +1226,181 @@ def test_reference_dataset_statuses_and_approval_projection_remain_separate():
     assert projection.disposition is TaxonomyDisposition.SEPARATE_APPROVAL_PROJECTION
 
 
+def test_product_canonical_promotion_is_a_complete_family_with_artifact_blockers():
+    root = Path(__file__).parents[1] / "src" / "data_ops_lab"
+    labels, _ = MODULE.inventory(root)
+    consumer_files = REGISTERED_ERROR_CONSUMER_FILES[
+        "product_canonical_promotion"
+    ]
+    literal_codes = {
+        label
+        for label, locations in labels.items()
+        if any(
+            any(f"/{filename}:" in location for filename in consumer_files)
+            for location in locations
+        )
+    }
+    dynamic = DYNAMIC_ERROR_CODE_PROVENANCE[
+        "src/data_ops_lab/product_canonical_promotion.py:332"
+    ]
+    family_codes = literal_codes | set(dynamic.possible_codes)
+
+    assert consumer_files == frozenset({"product_canonical_promotion.py"})
+    assert len(literal_codes) == 19
+    assert len(family_codes) == 24
+    assert family_codes <= set(ERROR_CLASSIFICATION_REGISTRY)
+    assert dynamic.consumer_family == "product_canonical_promotion"
+    assert dynamic.surface is DynamicCodeSurface.MODULE_SPECIFIC_BLOCKER
+    assert dynamic.disposition is TaxonomyDisposition.REGISTERED
+    assert not {
+        location
+        for location, provenance in STANDARD_BLOCKER_FLOW_PROVENANCE.items()
+        if provenance.consumer_family == "product_canonical_promotion"
+    }
+
+    location = "src/data_ops_lab/product_canonical_promotion.py:83"
+    provenance = BLOCKER_RECORD_FORMAT_PROVENANCE[location]
+    relative, line_text = location.rsplit(":", 1)
+    source_line = (
+        Path(__file__).parents[1] / relative
+    ).read_text(encoding="utf-8").splitlines()[int(line_text) - 1]
+
+    assert source_line == "    blockers.append("
+    assert provenance.consumer_family == "product_canonical_promotion"
+    assert provenance.output_surface == (
+        "plan.blockers + product_canonical_promotion_blockers.csv"
+    )
+    assert provenance.record_format == (
+        "product_canonical_promotion_artifact_blocker_v1"
+    )
+    assert provenance.record_fields == (
+        "blocker_id",
+        "blocker_type",
+        "artifact",
+        "explanation",
+    )
+    assert provenance.identifier_format == "BLOCKER_{ordinal:03d}"
+    assert provenance.disposition is TaxonomyDisposition.SEPARATE_RECORD_FORMAT
+
+
+def test_product_canonical_promotion_exceptions_remain_separate():
+    expected_exceptions = {
+        "src/data_ops_lab/product_canonical_promotion.py:108": (
+            "    except yaml.YAMLError:",
+            ("yaml.YAMLError",),
+            "module_specific_blocker",
+            "blocker_type",
+            "invalid_yaml",
+        ),
+        "src/data_ops_lab/product_canonical_promotion.py:135": (
+            "    except (ValueError, AttributeError):",
+            ("ValueError", "AttributeError"),
+            "integrity_predicate",
+            "valid_uuid5",
+            "false",
+        ),
+        "src/data_ops_lab/product_canonical_promotion.py:145": (
+            "    except (TypeError, ValueError):",
+            ("TypeError", "ValueError"),
+            "manifest_count_parser",
+            "integer_value",
+            "none",
+        ),
+        "src/data_ops_lab/product_canonical_promotion.py:276": (
+            "        except (csv.Error, OSError, UnicodeError):",
+            ("csv.Error", "OSError", "UnicodeError"),
+            "module_specific_blocker",
+            "blocker_type",
+            "invalid_csv",
+        ),
+    }
+    family_exceptions = {
+        location: provenance
+        for location, provenance in EXCEPTION_FALLBACK_PROVENANCE.items()
+        if provenance.consumer_family == "product_canonical_promotion"
+    }
+    assert set(family_exceptions) == set(expected_exceptions)
+    for location, expected in expected_exceptions.items():
+        expected_line, caught, output_surface, output_field, output_value = expected
+        relative, line_text = location.rsplit(":", 1)
+        source_line = (
+            Path(__file__).parents[1] / relative
+        ).read_text(encoding="utf-8").splitlines()[int(line_text) - 1]
+        provenance = family_exceptions[location]
+
+        assert source_line == expected_line
+        assert provenance.value_source
+        assert provenance.caught_exceptions == caught
+        assert provenance.output_surface == output_surface
+        assert provenance.output_field == output_field
+        assert provenance.output_value == output_value
+        assert provenance.exception_message_persisted is False
+        assert provenance.disposition is TaxonomyDisposition.SEPARATE_EXCEPTION_SURFACE
+        if output_field == "blocker_type":
+            assert output_value in ERROR_CLASSIFICATION_REGISTRY
+
+    assert "false" not in ERROR_CLASSIFICATION_REGISTRY
+    assert "none" not in ERROR_CLASSIFICATION_REGISTRY
+
+
+def test_product_canonical_status_and_apply_authority_remain_separate():
+    expected_statuses = {
+        "src/data_ops_lab/product_canonical_promotion.py:212": (
+            '    if state.get("status") != "applied":',
+            "product_reconciliation_state.status",
+            ("applied",),
+        ),
+        "src/data_ops_lab/product_canonical_promotion.py:227": (
+            '    if manifest.get("status") != "ready_for_local_preview":',
+            "materialization_manifest.status",
+            ("ready_for_local_preview",),
+        ),
+        "src/data_ops_lab/product_canonical_promotion.py:397": (
+            '    status = "blocked" if blockers else "ready_for_canonical_state_review"',
+            "plan.status",
+            ("blocked", "ready_for_canonical_state_review"),
+        ),
+    }
+    family_statuses = {
+        location: provenance
+        for location, provenance in TEXT_STATUS_PROVENANCE.items()
+        if provenance.consumer_family == "product_canonical_promotion"
+    }
+    assert set(family_statuses) == set(expected_statuses)
+    for location, (expected_line, output_field, status_values) in expected_statuses.items():
+        relative, line_text = location.rsplit(":", 1)
+        source_line = (
+            Path(__file__).parents[1] / relative
+        ).read_text(encoding="utf-8").splitlines()[int(line_text) - 1]
+        provenance = family_statuses[location]
+
+        assert source_line == expected_line
+        assert provenance.output_field == output_field
+        assert provenance.status_values == status_values
+        assert provenance.disposition is TaxonomyDisposition.SEPARATE_TEXT_STATUS
+        assert all(value not in ERROR_CLASSIFICATION_REGISTRY for value in status_values)
+
+    location = "src/data_ops_lab/product_canonical_promotion.py:444"
+    authority = AUTHORITY_BOUNDARY_PROVENANCE[location]
+    relative, line_text = location.rsplit(":", 1)
+    source_line = (
+        Path(__file__).parents[1] / relative
+    ).read_text(encoding="utf-8").splitlines()[int(line_text) - 1]
+
+    assert source_line == '        "approval": {'
+    assert authority.consumer_family == "product_canonical_promotion"
+    assert authority.output_surface == "plan.approval"
+    assert authority.authority_values == (
+        "canonical_state_applied=false",
+        "database_operation_authorized=false",
+        "requires_explicit_apply_contract=true",
+    )
+    assert authority.required_next_authority == (
+        "a separate explicit canonical-state apply contract"
+    )
+    assert authority.disposition is TaxonomyDisposition.SEPARATE_AUTHORITY_BOUNDARY
+
+
 def test_registry_covers_only_complete_registered_consumer_families():
     root = Path(__file__).parents[1] / "src" / "data_ops_lab"
     labels, _ = MODULE.inventory(root)
@@ -1249,4 +1425,4 @@ def test_registry_covers_only_complete_registered_consumer_families():
         expected_codes.update(family_codes)
 
     assert set(ERROR_CLASSIFICATION_REGISTRY) == expected_codes
-    assert len(ERROR_CLASSIFICATION_REGISTRY) == 637
+    assert len(ERROR_CLASSIFICATION_REGISTRY) == 659

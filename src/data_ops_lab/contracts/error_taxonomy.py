@@ -30,6 +30,7 @@ class TaxonomyDisposition(str, Enum):
     SEPARATE_TEXT_STATUS = "separate_text_status"
     SEPARATE_CONTROL_TEXT = "separate_control_text"
     SEPARATE_APPROVAL_PROJECTION = "separate_approval_projection"
+    SEPARATE_AUTHORITY_BOUNDARY = "separate_authority_boundary"
 
 
 @dataclass(frozen=True)
@@ -93,6 +94,16 @@ class ApprovalProjectionProvenance:
     authority_gate: str
     decision_domain: tuple[str, ...]
     projected_fields: tuple[str, ...]
+    disposition: TaxonomyDisposition
+
+
+@dataclass(frozen=True)
+class AuthorityBoundaryProvenance:
+    consumer_family: str
+    value_source: str
+    output_surface: str
+    authority_values: tuple[str, ...]
+    required_next_authority: str
     disposition: TaxonomyDisposition
 
 
@@ -171,6 +182,9 @@ REGISTERED_ERROR_CONSUMER_FILES = {
     "ollama_soak": frozenset({"analytics_ollama_soak.py"}),
     "reference_dataset_validation": frozenset(
         {"reference_dataset_validation.py"}
+    ),
+    "product_canonical_promotion": frozenset(
+        {"product_canonical_promotion.py"}
     ),
 }
 
@@ -271,7 +285,7 @@ DYNAMIC_ERROR_CODE_PROVENANCE = {
         consumer_family="product_canonical_promotion",
         value_source="local canonical Product integrity-check tuple",
         surface=DynamicCodeSurface.MODULE_SPECIFIC_BLOCKER,
-        disposition=TaxonomyDisposition.SEPARATE_RECORD_FORMAT,
+        disposition=TaxonomyDisposition.REGISTERED,
         possible_codes=(
             "duplicate_product_id",
             "duplicate_product_ref_nr",
@@ -616,6 +630,46 @@ EXCEPTION_FALLBACK_PROVENANCE = {
         exception_message_persisted=False,
         disposition=TaxonomyDisposition.SEPARATE_EXCEPTION_SURFACE,
     ),
+    "src/data_ops_lab/product_canonical_promotion.py:108": ExceptionFallbackProvenance(
+        consumer_family="product_canonical_promotion",
+        value_source="Product state or materialization-manifest YAML parse",
+        caught_exceptions=("yaml.YAMLError",),
+        output_surface="module_specific_blocker",
+        output_field="blocker_type",
+        output_value="invalid_yaml",
+        exception_message_persisted=False,
+        disposition=TaxonomyDisposition.SEPARATE_EXCEPTION_SURFACE,
+    ),
+    "src/data_ops_lab/product_canonical_promotion.py:135": ExceptionFallbackProvenance(
+        consumer_family="product_canonical_promotion",
+        value_source="canonical Product UUID5 integrity predicate",
+        caught_exceptions=("ValueError", "AttributeError"),
+        output_surface="integrity_predicate",
+        output_field="valid_uuid5",
+        output_value="false",
+        exception_message_persisted=False,
+        disposition=TaxonomyDisposition.SEPARATE_EXCEPTION_SURFACE,
+    ),
+    "src/data_ops_lab/product_canonical_promotion.py:145": ExceptionFallbackProvenance(
+        consumer_family="product_canonical_promotion",
+        value_source="materialization manifest integer-count normalization",
+        caught_exceptions=("TypeError", "ValueError"),
+        output_surface="manifest_count_parser",
+        output_field="integer_value",
+        output_value="none",
+        exception_message_persisted=False,
+        disposition=TaxonomyDisposition.SEPARATE_EXCEPTION_SURFACE,
+    ),
+    "src/data_ops_lab/product_canonical_promotion.py:276": ExceptionFallbackProvenance(
+        consumer_family="product_canonical_promotion",
+        value_source="bounded materialization artifact CSV read and parse",
+        caught_exceptions=("csv.Error", "OSError", "UnicodeError"),
+        output_surface="module_specific_blocker",
+        output_field="blocker_type",
+        output_value="invalid_csv",
+        exception_message_persisted=False,
+        disposition=TaxonomyDisposition.SEPARATE_EXCEPTION_SURFACE,
+    ),
 }
 
 
@@ -636,6 +690,15 @@ BLOCKER_RECORD_FORMAT_PROVENANCE = {
         record_format="reference_dataset_blocker_v1",
         record_fields=("code", "message", "field"),
         identifier_format=None,
+        disposition=TaxonomyDisposition.SEPARATE_RECORD_FORMAT,
+    ),
+    "src/data_ops_lab/product_canonical_promotion.py:83": BlockerRecordFormatProvenance(
+        consumer_family="product_canonical_promotion",
+        value_source="local add_blocker appends canonical-promotion blockers",
+        output_surface="plan.blockers + product_canonical_promotion_blockers.csv",
+        record_format="product_canonical_promotion_artifact_blocker_v1",
+        record_fields=("blocker_id", "blocker_type", "artifact", "explanation"),
+        identifier_format="BLOCKER_{ordinal:03d}",
         disposition=TaxonomyDisposition.SEPARATE_RECORD_FORMAT,
     ),
 }
@@ -1085,6 +1148,27 @@ TEXT_STATUS_PROVENANCE = {
         ),
         disposition=TaxonomyDisposition.SEPARATE_TEXT_STATUS,
     ),
+    "src/data_ops_lab/product_canonical_promotion.py:212": TextStatusProvenance(
+        consumer_family="product_canonical_promotion",
+        value_source="required applied Product reconciliation checkpoint",
+        output_field="product_reconciliation_state.status",
+        status_values=("applied",),
+        disposition=TaxonomyDisposition.SEPARATE_TEXT_STATUS,
+    ),
+    "src/data_ops_lab/product_canonical_promotion.py:227": TextStatusProvenance(
+        consumer_family="product_canonical_promotion",
+        value_source="required Step 3E.5 materialization checkpoint",
+        output_field="materialization_manifest.status",
+        status_values=("ready_for_local_preview",),
+        disposition=TaxonomyDisposition.SEPARATE_TEXT_STATUS,
+    ),
+    "src/data_ops_lab/product_canonical_promotion.py:397": TextStatusProvenance(
+        consumer_family="product_canonical_promotion",
+        value_source="complete dry-run promotion-plan blocker outcome",
+        output_field="plan.status",
+        status_values=("blocked", "ready_for_canonical_state_review"),
+        disposition=TaxonomyDisposition.SEPARATE_TEXT_STATUS,
+    ),
 }
 
 
@@ -1129,6 +1213,22 @@ APPROVAL_PROJECTION_PROVENANCE = {
             "rejected_relationship_ids",
         ),
         disposition=TaxonomyDisposition.SEPARATE_APPROVAL_PROJECTION,
+    ),
+}
+
+
+AUTHORITY_BOUNDARY_PROVENANCE = {
+    "src/data_ops_lab/product_canonical_promotion.py:444": AuthorityBoundaryProvenance(
+        consumer_family="product_canonical_promotion",
+        value_source="dry-run canonical Product promotion plan",
+        output_surface="plan.approval",
+        authority_values=(
+            "canonical_state_applied=false",
+            "database_operation_authorized=false",
+            "requires_explicit_apply_contract=true",
+        ),
+        required_next_authority="a separate explicit canonical-state apply contract",
+        disposition=TaxonomyDisposition.SEPARATE_AUTHORITY_BOUNDARY,
     ),
 }
 
@@ -1925,6 +2025,44 @@ _REFERENCE_DATASET_VALIDATION_CLASSIFICATIONS = {
 }
 
 
+_PRODUCT_CANONICAL_PROMOTION_CLASSIFICATIONS = {
+    ErrorCategory.AUTHORITY: {
+        "decision_digest_mismatch",
+        "manifest_count_mismatch",
+        "manifest_validation_mismatch",
+        "materialization_contract_mismatch",
+        "product_model_contract_mismatch",
+        "review_workbook_hash_mismatch",
+    },
+    ErrorCategory.APPROVAL: {
+        "product_state_not_applied",
+    },
+    ErrorCategory.FILESYSTEM: {
+        "invalid_csv",
+        "required_artifact_missing",
+    },
+    ErrorCategory.EXPECTED_RESULT: {
+        "duplicate_product_id",
+        "duplicate_product_ref_nr",
+        "empty_product_id",
+        "empty_product_ref_nr",
+        "excluded_identifier_in_lineage",
+        "invalid_exclusion_identifiers",
+        "invalid_product_id",
+        "lineage_product_mismatch",
+        "optional_pd_reference_mismatch",
+    },
+    ErrorCategory.CONTRACT: {
+        "duplicate_preview_columns",
+        "materialization_not_ready",
+        "required_preview_column_missing",
+    },
+    ErrorCategory.UNCLASSIFIED: {
+        "materialization_blockers_present",
+    },
+}
+
+
 def _build_registry() -> dict[str, ErrorCategory]:
     initial_groups = {
         ErrorCategory.CONTRACT: _CONTRACT_CODES,
@@ -1945,6 +2083,7 @@ def _build_registry() -> dict[str, ErrorCategory]:
         _MODULE_REGISTRY_CLASSIFICATIONS,
         _OLLAMA_SOAK_CLASSIFICATIONS,
         _REFERENCE_DATASET_VALIDATION_CLASSIFICATIONS,
+        _PRODUCT_CANONICAL_PROMOTION_CLASSIFICATIONS,
     ):
         for category, codes in groups.items():
             for code in codes:

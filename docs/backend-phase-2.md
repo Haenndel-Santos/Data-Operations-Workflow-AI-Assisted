@@ -26,7 +26,7 @@ that is already proven equivalent into small internal contracts.
 | --- | --- | --- |
 | 2.1 | Common file hashing and the standard analytics blocker record | Implemented in `082920a` |
 | 2.2 | Common atomic publication with characterized Windows retry and race semantics | Implemented in `28e962b` |
-| 2.3 | Common source bindings, error taxonomy, and run-result envelope | Source bindings, reviewed dynamic/direct/exception/format/projection provenance, and a 637-label classification registry implemented; further taxonomy expansion and run-result envelope pending |
+| 2.3 | Common source bindings, error taxonomy, and run-result envelope | Source bindings, reviewed dynamic/direct/exception/format/projection/authority provenance, and a 659-label classification registry implemented; further taxonomy expansion and run-result envelope pending |
 | 2.4 | CLI command registration split by domain while preserving `data_ops_lab.cli:main` | Pending |
 
 Other blocker shapes remain module-specific until their persisted schemas and
@@ -131,8 +131,10 @@ Backend Phase II is complete only when:
   in 36.98 seconds.
 - Increment 2.3 reference-dataset-validation taxonomy and registered-consumer
   suite: 218 passed in 37.67 seconds.
-- Latest full offline suite: 266 passed and 2 opt-in live-provider tests skipped
-  in 43.54 seconds on Windows.
+- Increment 2.3 Product canonical-promotion taxonomy and registered-consumer
+  suite: 227 passed in 38.03 seconds.
+- Latest full offline suite: 270 passed and 2 opt-in live-provider tests skipped
+  in 42.81 seconds on Windows.
 - No external database, provider, network, production data, migration, import,
   synchronization, or approval apply was used.
 
@@ -151,16 +153,17 @@ messages, free-text status values, provider payloads, or blocker dictionaries
 constructed without the two recognized append functions. Those separate
 failure surfaces must be characterized before inclusion.
 
-The additive registry now classifies 637 labels used by 20 complete consumer
-modules across ten slices: the four initial standard analytics consumers, the
+The additive registry now classifies 659 labels used by 21 complete consumer
+modules across eleven slices: the four initial standard analytics consumers, the
 semantic adapter, six dataset-benchmark modules, and the natural-language
 translation plus synthetic offline evaluation pair, followed by the synthetic
 exact-answer evaluator, the result-presentation/narration pair, and the
 analytics-session coordinator, static module-registry validator, bounded local
-Ollama soak, and reference-dataset validator. The latest slice reviewed all 79
-reference-validation codes and added the 74 that were not already registered.
-It does not classify isolated labels from a partially reviewed family. It uses
-these top-level categories:
+Ollama soak, reference-dataset validator, and Product canonical promotion. The
+latest slice reviewed 19 literal and five finite dynamic Product promotion
+codes and added the 22 that were not already registered. It does not classify
+isolated labels from a partially reviewed family. It uses these top-level
+categories:
 
 | Category | Boundary |
 | --- | --- |
@@ -191,7 +194,7 @@ or newly introduced dynamic site requires another explicit review.
 | Dataset benchmark review | 1 | Finite benchmark-scope decision branch | Registered with the complete dataset-benchmark family |
 | Analytics query execution | 1 | Three codes transported by `ExecutionLimitExceeded` and persisted as standard blockers | Codes registered as `execution_limit`; exception behavior remains local |
 | Semantic adapter | 3 | Six codes derived from the bounded `dimensions`/`metrics` and `dimension`/`measure` parameters | Registered with the complete semantic-adapter consumer family |
-| Product canonical promotion | 1 | Five codes selected from a local integrity-check tuple | Kept separate with the module-specific `artifact` blocker format |
+| Product canonical promotion | 1 | Five codes selected from a local integrity-check tuple | Registered with the complete consumer; module-specific `artifact` format remains separate |
 
 The registry exposes metadata alongside the existing code. It does not rename
 persisted labels, add columns to existing blocker CSVs, coerce module-specific
@@ -268,9 +271,22 @@ one code currently combines version shape, dataset identity, and completed
 review state. Classification does not approve candidates, apply relationships,
 open project data, or expand local, upload, publication, or training authority.
 
+Product canonical promotion has one finite dynamic integrity tuple and no
+inherited or direct blocker-record reuse. Its four YAML, UUID, integer-count,
+and CSV catches have exact provenance without persisted exception messages.
+Applied-state, materialization-readiness, and dry-run-plan statuses remain text
+surfaces. The four-field `artifact` blocker record remains separate even though
+all 24 effective family codes are registered. The plan's explicit
+`canonical_state_applied=false`, `database_operation_authorized=false`, and
+`requires_explicit_apply_contract=true` values are a separate authority
+boundary. The aggregate `materialization_blockers_present` remains
+`unclassified` because the underlying materialization blockers can span
+multiple categories. Taxonomy metadata does not apply canonical state, copy
+private Product rows, mutate approvals, or authorize database operations.
+
 ## Next Increment
 
-Review Product canonical promotion as the next complete consumer. Keep its
-dynamic integrity-check provenance, module-specific `artifact` blocker format,
-readiness/plan statuses, canonical apply authority, Product materialization
-format, and the common run-result envelope separate.
+Review Product materialization as the next complete consumer. Keep its
+five-field blocker format, issue/source identifiers, preview/readiness status,
+private row artifacts, canonical-promotion authority, and the common run-result
+envelope separate.

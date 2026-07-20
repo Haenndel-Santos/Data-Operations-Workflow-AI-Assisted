@@ -10,6 +10,7 @@ from .atomic_publish import (
 from .blockers import STANDARD_BLOCKER_FIELDS, StandardBlocker, add_blocker
 from .error_taxonomy import (
     APPROVAL_PROJECTION_PROVENANCE,
+    AUTHORITY_BOUNDARY_PROVENANCE,
     BLOCKER_RECORD_FORMAT_PROVENANCE,
     CONTROL_TEXT_PROVENANCE,
     DIRECT_BLOCKER_REUSE_PROVENANCE,
@@ -21,6 +22,7 @@ from .error_taxonomy import (
     STANDARD_BLOCKER_FLOW_PROVENANCE,
     TEXT_STATUS_PROVENANCE,
     ApprovalProjectionProvenance,
+    AuthorityBoundaryProvenance,
     BlockerRecordFormatProvenance,
     ControlTextProvenance,
     DirectBlockerReuseProvenance,
@@ -43,6 +45,7 @@ from .source_bindings import (
 
 __all__ = [
     "APPROVAL_PROJECTION_PROVENANCE",
+    "AUTHORITY_BOUNDARY_PROVENANCE",
     "BLOCKER_RECORD_FORMAT_PROVENANCE",
     "CONTROL_TEXT_PROVENANCE",
     "DEFAULT_DIRECTORY_PUBLISH_RETRY_DELAYS_SECONDS",
@@ -59,6 +62,7 @@ __all__ = [
     "STANDARD_BLOCKER_FIELDS",
     "AtomicPublishTargetAppearedError",
     "ApprovalProjectionProvenance",
+    "AuthorityBoundaryProvenance",
     "BlockerRecordFormatProvenance",
     "ControlTextProvenance",
     "DirectBlockerReuseProvenance",
