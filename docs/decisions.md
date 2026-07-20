@@ -708,3 +708,29 @@ empty values, drift comparisons, blocker codes, session gates, provider
 boundaries, and benchmark authority remain unchanged. Error taxonomy and a
 common run-result envelope remain pending parts of Backend Phase II increment
 2.3.
+
+## 2026-07-16 - Classify Errors As Additive Metadata
+
+**Decision:** Introduce an explicit error-classification registry alongside the
+existing standard blocker codes. Start with the 102 labels used by query
+planning, query execution, semantic catalog validation, and semantic approval.
+Return the original code, a category, and explicit registration state; never
+infer a category from label spelling. Unknown codes and reviewed umbrella
+failures without a safe category remain `unclassified`.
+
+**Rationale:** Persisted blocker labels are established evidence contracts, but
+orchestration and future service consumers need a stable way to distinguish
+contract, authority, approval, execution-limit, provider, filesystem, and
+expected-result failures. Separate metadata adds that capability without a
+schema migration or a misleading prefix heuristic.
+
+**Alternatives:** Rename blocker labels to encode a category; add a new column
+to every blocker CSV; classify by prefixes; classify all 658 labels in one
+unreviewable change; or defer classification until a common run-result envelope
+exists.
+
+**Impact:** `data_ops_lab.contracts.error_taxonomy` now owns the initial
+registry and lookup. Existing blocker dictionaries and CSV files are unchanged.
+Dynamic call sites, direct blocker dictionaries, exception messages, free-text
+statuses, module-specific blocker schemas, and the common run-result envelope
+remain separate follow-up work.

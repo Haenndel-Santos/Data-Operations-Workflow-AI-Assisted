@@ -25,6 +25,11 @@ from data_ops_lab.contracts.blockers import (
     add_blocker,
 )
 from data_ops_lab.contracts.hashing import FILE_HASH_CHUNK_SIZE, file_sha256
+from data_ops_lab.contracts.error_taxonomy import (
+    ERROR_CLASSIFICATION_REGISTRY,
+    ErrorCategory,
+    classify_error,
+)
 from data_ops_lab.contracts.source_bindings import (
     declared_file_sha256_bindings,
     existing_file_sha256_bindings,
@@ -78,6 +83,22 @@ def test_standard_blocker_preserves_legacy_exports_and_shape():
     assert analytics_query_execution.add_blocker is add_blocker
     assert analytics_semantic_approval.add_blocker is add_blocker
     assert analytics_semantic_catalog.add_blocker is add_blocker
+
+
+def test_error_taxonomy_is_additive_and_preserves_codes():
+    authority = classify_error("database_changed_during_execution")
+    unknown = classify_error("future_module_specific_failure")
+    reviewed_without_category = classify_error("query_execution_failed")
+
+    assert authority.code == "database_changed_during_execution"
+    assert authority.category is ErrorCategory.AUTHORITY
+    assert authority.registered is True
+    assert unknown.code == "future_module_specific_failure"
+    assert unknown.category is ErrorCategory.UNCLASSIFIED
+    assert unknown.registered is False
+    assert reviewed_without_category.category is ErrorCategory.UNCLASSIFIED
+    assert reviewed_without_category.registered is True
+    assert len(ERROR_CLASSIFICATION_REGISTRY) == len(set(ERROR_CLASSIFICATION_REGISTRY))
 
 
 def test_atomic_write_text_retries_and_cleans_temporary_file(tmp_path):

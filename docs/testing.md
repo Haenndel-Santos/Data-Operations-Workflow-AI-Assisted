@@ -26,8 +26,10 @@ Repairing the editable install is a separate environment change and should be pe
 Backend Phase II compatibility tests verify the common file SHA-256 digest,
 standard analytics blocker ordering/shape, atomic file/directory publication,
 cleanup after retry exhaustion, target-race refusal, source-binding absence
-semantics, and legacy module exports. Run them with the directly affected
-modules:
+semantics, additive error classification, and legacy module exports. The
+inventory regression also verifies that the initial registry covers exactly
+the labels used by the four standard blocker consumers. Run them with the
+directly affected modules:
 
 ```powershell
 $env:PYTHONPATH = "src"
@@ -37,6 +39,17 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 
 These tests use temporary files only. They do not process project data, call a
 provider, connect to an external database, or apply approval state.
+
+The additive Backend Phase II blocker-label inventory can be reproduced
+without importing project modules:
+
+```powershell
+$env:PYTHONDONTWRITEBYTECODE = "1"
+.\.venv\Scripts\python.exe scripts\inventory_failure_labels.py
+```
+
+Its focused parser and registry-coverage regressions are in
+`tests/failure_label_inventory_test.py`.
 
 The complete live/soak consumer regression is:
 

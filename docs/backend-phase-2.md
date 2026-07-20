@@ -26,7 +26,7 @@ that is already proven equivalent into small internal contracts.
 | --- | --- | --- |
 | 2.1 | Common file hashing and the standard analytics blocker record | Implemented in `082920a` |
 | 2.2 | Common atomic publication with characterized Windows retry and race semantics | Implemented in `28e962b` |
-| 2.3 | Common source bindings, error taxonomy, and run-result envelope | Source-binding substep implemented in `2b6a10f` and `51372fd`; remaining work pending |
+| 2.3 | Common source bindings, error taxonomy, and run-result envelope | Source bindings and initial 102-label classification registry implemented; taxonomy expansion and run-result envelope pending |
 | 2.4 | CLI command registration split by domain while preserving `data_ops_lab.cli:main` | Pending |
 
 Other blocker shapes remain module-specific until their persisted schemas and
@@ -115,16 +115,55 @@ Backend Phase II is complete only when:
   in 11.35 seconds.
 - Increment 2.3 existing-file binding consumers: 76 passed in 17.77 seconds.
 - Increment 2.3 declared-file binding consumers: 19 passed in 4.73 seconds.
-- Latest full offline suite: 235 passed and 2 opt-in live-provider tests skipped
-  in 38.61 seconds.
+- Latest full offline suite: 238 passed and 2 opt-in live-provider tests skipped
+  in 43.63 seconds on Windows.
 - No external database, provider, network, production data, migration, import,
   synchronization, or approval apply was used.
 
+## Increment 2.3 Error-Taxonomy Contract
+
+The first repository-wide blocker-label inventory is now reproducible with
+`scripts/inventory_failure_labels.py`. Its 2026-07-16 baseline found 658
+distinct literal labels passed to `add_blocker` or `_add_blocker`, plus 10
+dynamic call sites requiring manual review. The inventory parses Python source
+without importing modules, opening datasets, or executing workflows.
+
+This baseline is evidence, not yet a runtime taxonomy. It intentionally does
+not infer categories from label prefixes and does not include exception
+messages, free-text status values, provider payloads, or blocker dictionaries
+constructed without the two recognized append functions. Those separate
+failure surfaces must be characterized before inclusion.
+
+The first additive registry classifies the 102 labels used by the four modules
+that already share the standard blocker contract: analytics query planning,
+query execution, semantic catalog validation, and semantic approval. It uses
+these top-level categories:
+
+| Category | Boundary |
+| --- | --- |
+| `contract` | Invalid version, shape, field, type, or unsupported input contract |
+| `authority` | Hash, identity, source-binding, or immutable-evidence drift |
+| `approval` | Missing, incomplete, rejected, or scope-invalid human review |
+| `execution_limit` | Timeout, row/byte/resource bound, truncation, or safe-query limit |
+| `provider` | Provider configuration, response, timeout, or invocation failure |
+| `filesystem` | Missing/unreadable files, publication races, or write failures |
+| `expected_result` | Exact-answer, comparison, or governed expectation mismatch |
+
+`classify_error` returns the original code, its category, and whether that code
+was explicitly registered. Classification is explicit per label; unknown and
+dynamic labels remain unregistered and `unclassified` rather than being guessed
+from spelling. Two reviewed umbrella failures, `plan_revalidation_failed` and
+`query_execution_failed`, are registered as `unclassified` because none of the
+initial seven categories describes them without losing meaning.
+
+The registry exposes metadata alongside the existing code. It does not rename
+persisted labels, add columns to existing blocker CSVs, coerce module-specific
+blocker shapes, or change failure behavior. `provider` and `expected_result`
+remain valid categories with no labels in this initial standard-consumer slice.
+
 ## Next Increment
 
-Inventory blocker and failure labels before defining an error taxonomy.
-Separate contract failures, authority drift, human-review gates, execution
-limits, provider failures, filesystem failures, and expected-result failures.
-Do not replace persisted blocker codes or module-specific blocker columns in
-the first taxonomy change. A common run-result envelope remains a later,
-separate substep.
+Review the 10 dynamic call sites and expand the explicit registry by coherent
+consumer family. Characterize direct blocker dictionaries, exception classes,
+and free-text statuses separately rather than treating them as equivalent
+codes. A common run-result envelope remains a later, separate substep.
