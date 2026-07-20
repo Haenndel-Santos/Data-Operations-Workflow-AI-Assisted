@@ -58,6 +58,15 @@ class DirectBlockerReuseProvenance:
 
 
 @dataclass(frozen=True)
+class DirectBlockerConstructionProvenance:
+    consumer_family: str
+    value_source: str
+    record_format: str
+    possible_codes: tuple[str, ...]
+    disposition: TaxonomyDisposition
+
+
+@dataclass(frozen=True)
 class TextStatusProvenance:
     consumer_family: str
     value_source: str
@@ -186,6 +195,7 @@ REGISTERED_ERROR_CONSUMER_FILES = {
     "product_canonical_promotion": frozenset(
         {"product_canonical_promotion.py"}
     ),
+    "product_materialization": frozenset({"product_materialization.py"}),
 }
 
 
@@ -293,6 +303,17 @@ DYNAMIC_ERROR_CODE_PROVENANCE = {
             "empty_product_ref_nr",
             "invalid_product_id",
         ),
+    ),
+}
+
+
+DIRECT_BLOCKER_CONSTRUCTION_PROVENANCE = {
+    "src/data_ops_lab/product_materialization.py:145": DirectBlockerConstructionProvenance(
+        consumer_family="product_materialization",
+        value_source="applied decisions with zero or multiple source identifiers",
+        record_format="product_materialization_candidate_blocker_v1",
+        possible_codes=("invalid_source_identifier_count",),
+        disposition=TaxonomyDisposition.REGISTERED,
     ),
 }
 
@@ -698,6 +719,30 @@ BLOCKER_RECORD_FORMAT_PROVENANCE = {
         output_surface="plan.blockers + product_canonical_promotion_blockers.csv",
         record_format="product_canonical_promotion_artifact_blocker_v1",
         record_fields=("blocker_id", "blocker_type", "artifact", "explanation"),
+        identifier_format="BLOCKER_{ordinal:03d}",
+        disposition=TaxonomyDisposition.SEPARATE_RECORD_FORMAT,
+    ),
+    "src/data_ops_lab/product_materialization.py:174": BlockerRecordFormatProvenance(
+        consumer_family="product_materialization",
+        value_source="local add_blocker appends internal materialization candidates",
+        output_surface="internal materialization blocker candidates",
+        record_format="product_materialization_candidate_blocker_v1",
+        record_fields=("issue_ids", "source_identifier", "blocker_type", "explanation"),
+        identifier_format=None,
+        disposition=TaxonomyDisposition.SEPARATE_RECORD_FORMAT,
+    ),
+    "src/data_ops_lab/product_materialization.py:223": BlockerRecordFormatProvenance(
+        consumer_family="product_materialization",
+        value_source="normalize_blockers deduplicates candidates and assigns blocker IDs",
+        output_surface="manifest.blockers + product_materialization_blockers.csv",
+        record_format="product_materialization_blocker_v1",
+        record_fields=(
+            "blocker_id",
+            "issue_ids",
+            "source_identifier",
+            "blocker_type",
+            "explanation",
+        ),
         identifier_format="BLOCKER_{ordinal:03d}",
         disposition=TaxonomyDisposition.SEPARATE_RECORD_FORMAT,
     ),
@@ -1169,6 +1214,13 @@ TEXT_STATUS_PROVENANCE = {
         status_values=("blocked", "ready_for_canonical_state_review"),
         disposition=TaxonomyDisposition.SEPARATE_TEXT_STATUS,
     ),
+    "src/data_ops_lab/product_materialization.py:649": TextStatusProvenance(
+        consumer_family="product_materialization",
+        value_source="complete fail-closed materialization blocker outcome",
+        output_field="manifest.status",
+        status_values=("blocked", "ready_for_local_preview"),
+        disposition=TaxonomyDisposition.SEPARATE_TEXT_STATUS,
+    ),
 }
 
 
@@ -1188,6 +1240,26 @@ CONTROL_TEXT_PROVENANCE = {
         ),
         output_field="runtime.stop_reason",
         value_domain="bounded soak stop-reason control text",
+        disposition=TaxonomyDisposition.SEPARATE_CONTROL_TEXT,
+    ),
+    "src/data_ops_lab/product_materialization.py:48": ControlTextProvenance(
+        consumer_family="product_materialization",
+        value_source="exact applied human decision action",
+        output_field="applied_decision.action",
+        value_domain=(
+            "one of: apply_corrected_product_ref_nr, "
+            "exclude_from_target_product_model"
+        ),
+        disposition=TaxonomyDisposition.SEPARATE_CONTROL_TEXT,
+    ),
+    "src/data_ops_lab/product_materialization.py:427": ControlTextProvenance(
+        consumer_family="product_materialization",
+        value_source="deterministic retained Product lineage construction",
+        output_field="lineage.materialization_action",
+        value_domain=(
+            "one of: matched_authoritative_correction, "
+            "approved_same_row_conflict_resolution, approved_product_refnr_only"
+        ),
         disposition=TaxonomyDisposition.SEPARATE_CONTROL_TEXT,
     ),
 }
@@ -1228,6 +1300,27 @@ AUTHORITY_BOUNDARY_PROVENANCE = {
             "requires_explicit_apply_contract=true",
         ),
         required_next_authority="a separate explicit canonical-state apply contract",
+        disposition=TaxonomyDisposition.SEPARATE_AUTHORITY_BOUNDARY,
+    ),
+    "src/data_ops_lab/product_materialization.py:127": AuthorityBoundaryProvenance(
+        consumer_family="product_materialization",
+        value_source="validated review workbook projected through the application contract",
+        output_surface="materialization_preflight",
+        authority_values=("applied_state_matches_validated_workbook=true",),
+        required_next_authority="the exact applied Product reconciliation state",
+        disposition=TaxonomyDisposition.SEPARATE_AUTHORITY_BOUNDARY,
+    ),
+    "src/data_ops_lab/product_materialization.py:662": AuthorityBoundaryProvenance(
+        consumer_family="product_materialization",
+        value_source="fail-closed local Product materialization manifest",
+        output_surface="manifest.contract",
+        authority_values=(
+            "exclusion_precedence=true",
+            "preview_only=true",
+        ),
+        required_next_authority=(
+            "separate canonical-promotion review and explicit apply contracts"
+        ),
         disposition=TaxonomyDisposition.SEPARATE_AUTHORITY_BOUNDARY,
     ),
 }
@@ -2063,6 +2156,36 @@ _PRODUCT_CANONICAL_PROMOTION_CLASSIFICATIONS = {
 }
 
 
+_PRODUCT_MATERIALIZATION_CLASSIFICATIONS = {
+    ErrorCategory.AUTHORITY: {
+        "approved_conflict_alignment_changed",
+        "approved_conflict_reference_row_missing",
+        "approved_product_refnr_row_missing",
+        "source_identifier_out_of_range",
+    },
+    ErrorCategory.APPROVAL: {
+        "approved_conflict_reference_rejected",
+        "retained_product_uses_rejected_reference_row",
+        "unmatched_product_refnr_without_supported_decision",
+    },
+    ErrorCategory.EXPECTED_RESULT: {
+        "approved_authoritative_row_empty",
+        "approved_corrected_reference_missing",
+        "duplicate_generated_product_id",
+    },
+    ErrorCategory.CONTRACT: {
+        "invalid_source_identifier",
+        "invalid_source_identifier_count",
+        "missing_product_ref_nr_column",
+        "unsupported_materialization_action",
+    },
+    ErrorCategory.UNCLASSIFIED: {
+        "approved_decision_not_materialized",
+        "retained_original_product_unresolved",
+    },
+}
+
+
 def _build_registry() -> dict[str, ErrorCategory]:
     initial_groups = {
         ErrorCategory.CONTRACT: _CONTRACT_CODES,
@@ -2084,6 +2207,7 @@ def _build_registry() -> dict[str, ErrorCategory]:
         _OLLAMA_SOAK_CLASSIFICATIONS,
         _REFERENCE_DATASET_VALIDATION_CLASSIFICATIONS,
         _PRODUCT_CANONICAL_PROMOTION_CLASSIFICATIONS,
+        _PRODUCT_MATERIALIZATION_CLASSIFICATIONS,
     ):
         for category, codes in groups.items():
             for code in codes:

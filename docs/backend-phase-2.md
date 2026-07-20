@@ -26,7 +26,7 @@ that is already proven equivalent into small internal contracts.
 | --- | --- | --- |
 | 2.1 | Common file hashing and the standard analytics blocker record | Implemented in `082920a` |
 | 2.2 | Common atomic publication with characterized Windows retry and race semantics | Implemented in `28e962b` |
-| 2.3 | Common source bindings, error taxonomy, and run-result envelope | Source bindings, reviewed dynamic/direct/exception/format/projection/authority provenance, and a 659-label classification registry implemented; further taxonomy expansion and run-result envelope pending |
+| 2.3 | Common source bindings, error taxonomy, and run-result envelope | Source bindings, reviewed dynamic/direct/exception/format/projection/authority provenance, and a 675-label classification registry implemented; remaining-consumer audit and run-result envelope pending |
 | 2.4 | CLI command registration split by domain while preserving `data_ops_lab.cli:main` | Pending |
 
 Other blocker shapes remain module-specific until their persisted schemas and
@@ -133,8 +133,10 @@ Backend Phase II is complete only when:
   suite: 218 passed in 37.67 seconds.
 - Increment 2.3 Product canonical-promotion taxonomy and registered-consumer
   suite: 227 passed in 38.03 seconds.
-- Latest full offline suite: 270 passed and 2 opt-in live-provider tests skipped
-  in 42.81 seconds on Windows.
+- Increment 2.3 Product materialization taxonomy and registered-consumer suite:
+  235 passed in 40.91 seconds.
+- Latest full offline suite: 273 passed and 2 opt-in live-provider tests skipped
+  in 45.66 seconds on Windows.
 - No external database, provider, network, production data, migration, import,
   synchronization, or approval apply was used.
 
@@ -153,17 +155,17 @@ messages, free-text status values, provider payloads, or blocker dictionaries
 constructed without the two recognized append functions. Those separate
 failure surfaces must be characterized before inclusion.
 
-The additive registry now classifies 659 labels used by 21 complete consumer
-modules across eleven slices: the four initial standard analytics consumers, the
+The additive registry now classifies 675 labels used by 22 complete consumer
+modules across twelve slices: the four initial standard analytics consumers, the
 semantic adapter, six dataset-benchmark modules, and the natural-language
 translation plus synthetic offline evaluation pair, followed by the synthetic
 exact-answer evaluator, the result-presentation/narration pair, and the
 analytics-session coordinator, static module-registry validator, bounded local
-Ollama soak, reference-dataset validator, and Product canonical promotion. The
-latest slice reviewed 19 literal and five finite dynamic Product promotion
-codes and added the 22 that were not already registered. It does not classify
-isolated labels from a partially reviewed family. It uses these top-level
-categories:
+Ollama soak, reference-dataset validator, Product canonical promotion, and
+Product materialization. The latest slice reviewed 15 literal Product
+materialization codes plus one directly constructed code and added all 16. It
+does not classify isolated labels from a partially reviewed family. It uses
+these top-level categories:
 
 | Category | Boundary |
 | --- | --- |
@@ -284,9 +286,24 @@ boundary. The aggregate `materialization_blockers_present` remains
 multiple categories. Taxonomy metadata does not apply canonical state, copy
 private Product rows, mutate approvals, or authorize database operations.
 
+Product materialization has no dynamic call sites, inherited standard-blocker
+flows, direct blocker-list reuses, or catch-site fallbacks. Fifteen literal
+codes plus the directly constructed `invalid_source_identifier_count` are
+registered as one complete family. Its internal four-field blocker candidates
+are normalized into a distinct persisted five-field record with deterministic
+`BLOCKER_{ordinal:03d}` identifiers; both formats retain exact provenance and
+remain local. Preview readiness is text status, applied decision and lineage
+actions are control text, and the exact applied-state match plus preview-only
+manifest are separate authority gates. The two aggregate failures
+`approved_decision_not_materialized` and
+`retained_original_product_unresolved` remain `unclassified` because each can
+span multiple underlying causes. No private Product source, materialization,
+approval apply, canonical promotion, or database operation was executed.
+
 ## Next Increment
 
-Review Product materialization as the next complete consumer. Keep its
-five-field blocker format, issue/source identifiers, preview/readiness status,
-private row artifacts, canonical-promotion authority, and the common run-result
-envelope separate.
+Audit the remaining source-only blocker consumers against the 658-literal
+baseline before selecting another coherent family or designing the common
+run-result envelope. Keep exceptions, text statuses, control values, authority
+gates, and module-specific blocker formats separate unless their contracts and
+consumers prove equivalence.
