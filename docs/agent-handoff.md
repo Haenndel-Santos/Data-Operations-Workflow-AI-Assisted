@@ -3689,3 +3689,48 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 2. Mark PR #13 ready and merge only after that final run passes.
 3. Continue increment 2.4 with the next coherent registration family from the
    resulting `main`.
+
+## 2026-07-20 - Codex - Extract Product publication CLI registration (draft)
+
+### Git Checkpoint
+
+- GitHub PR #13 passed its final workflow run `29774803290` with 276 tests
+  passed, 2 opt-in live-provider tests skipped, 111 internal links checked, 0
+  broken, and a clean pull-request diff.
+- PR #13 merged the Product reference registration slice into `main` as
+  `83ef90b`.
+- Continued Backend Phase II increment 2.4 on
+  `agent/split-cli-product-publication`.
+
+### Implementation
+
+- Added `cli_commands.product_publication` for Product materialization preview,
+  dry-run canonical promotion planning, and missing-notes repair parser
+  declarations.
+- Invoked the registrar at the original position in `build_parser`;
+  registration modules now own 42 of the 47 command declarations.
+- Kept all Product run-function imports, explicit dispatch, result formatting,
+  read-only source handling, canonical dry-run semantics, approval authority,
+  private-data boundaries, and `data_ops_lab.cli:main` unchanged.
+- Did not open Product data, run materialization or promotion, access a
+  database, apply a decision, use a provider/network call, migrate, import,
+  synchronize, upload, or publish generated output.
+
+### Validation
+
+- New registrar syntax compilation passed under Python 3.
+- Exact isolated equivalence preserved the three command names, order, actions,
+  options, destinations, types, required flags, defaults, choices, metavars,
+  and help text; signature SHA-256:
+  `d0c33e3a3430525e2b1be6baabb65199a91b6297e0259055f789aa743ceaf6da`.
+- Reconstructed registration order remained identical across all 47 commands.
+- Exactly one final newline and no trailing whitespace were verified for every
+  changed file.
+- The complete GitHub Actions suite, link checker, and pull-request diff gate
+  are pending; this change remains a draft until they pass.
+
+### Next Logical Step
+
+1. Open the Product publication registration pull request as a draft.
+2. Inspect the complete automated Windows/Python 3.13 gate.
+3. Correct any regression before marking the pull request ready or merging.

@@ -6,19 +6,19 @@ Turn local operational spreadsheets into validated analytical datasets and an ap
 
 ## Current Stage
 
-Four active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases 0-4 passed their gates for Northwind and the selected local Ollama development provider; AI Phase 5 remains active after its recorded, live-development, and endurance evidence; and Backend Phase II is active in increment 2.4 after completing increment 2.3. Stage 5A-5F governed analytics retains its applied Northwind semantic catalog, immutable 13-case answer authority, reproducible 13/13 recorded evaluation, governed 9/13 loopback result, and 56 evidenced soak cycles. Backend Phase II has completed compatible common hashing, standard analytics blockers, atomic publication, the two proven source-binding absence semantics, explicit classification of 675 labels used by 22 complete blocker consumers, and exact provenance for all dynamic/direct and separate status/format/authority surfaces. The 658-literal audit found no remaining recognized consumer, and 23 existing result classes now conform structurally to the additive `output_dir`/opaque `status`/`blocker_count`/`outputs_changed` projection. A consumer audit found no honest runtime adoption point before generic dispatch or run recording, so the projection remains opt-in. CLI decomposition has moved 39 registrations across six coherent domain registrars while preserving the full 47-command parser surface. GitHub Actions provides an automated read-only Windows/Python 3.13 gate for the offline suite, internal links, and pull-request diffs. The Product reference slice passed the full automated Windows/Python 3.13 regression gate after correcting one extra blank line at the new module EOF. Further CLI decomposition, a fresh holdout, provider selection, dynamic dispatch, live narration, and a user interface remain pending.
+Four active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases 0-4 passed their gates for Northwind and the selected local Ollama development provider; AI Phase 5 remains active after its recorded, live-development, and endurance evidence; and Backend Phase II is active in increment 2.4 after completing increment 2.3. Stage 5A-5F governed analytics retains its applied Northwind semantic catalog, immutable 13-case answer authority, reproducible 13/13 recorded evaluation, governed 9/13 loopback result, and 56 evidenced soak cycles. Backend Phase II has completed compatible common hashing, standard analytics blockers, atomic publication, the two proven source-binding absence semantics, explicit classification of 675 labels used by 22 complete blocker consumers, and exact provenance for all dynamic/direct and separate status/format/authority surfaces. The 658-literal audit found no remaining recognized consumer, and 23 existing result classes now conform structurally to the additive `output_dir`/opaque `status`/`blocker_count`/`outputs_changed` projection. A consumer audit found no honest runtime adoption point before generic dispatch or run recording, so the projection remains opt-in. CLI decomposition has moved 42 registrations across seven coherent domain registrars while preserving the full 47-command parser surface. GitHub Actions provides an automated read-only Windows/Python 3.13 gate for the offline suite, internal links, and pull-request diffs. The Product publication slice has exact isolated parser-equivalence evidence and awaits that automated gate. Further CLI decomposition, a fresh holdout, provider selection, dynamic dispatch, live narration, and a user interface remain pending.
 
 ## Last Completed Milestone
 
-On 2026-07-20, Backend Phase II increment 2.4 implemented its sixth coherent
-CLI registration family. Nine contiguous Product reference audit,
-reconciliation, human-review, validation, and explicit-apply commands now
-register through `data_ops_lab.cli_commands.product_reference`. Together with
-the prior families, 39 registrations have moved while `build_parser` still
-exposes the same ordered 47-command surface and `data_ops_lab.cli:main` still
-owns explicit dispatch and result formatting. Syntax and exact nine-command signature equivalence passed. The complete Windows/Python 3.13 gate passed with 276 tests and 2 opt-in
-live-provider skips, 111 valid internal links, and a clean pull-request diff
-after correcting one extra blank line at the new module EOF.
+On 2026-07-20, Backend Phase II increment 2.4 implemented its seventh coherent
+CLI registration family. Product materialization preview, dry-run canonical
+promotion planning, and missing-notes repair now register through
+`data_ops_lab.cli_commands.product_publication`. Together with the prior
+families, 42 registrations have moved while `build_parser` still exposes the
+same ordered 47-command surface and `data_ops_lab.cli:main` still owns explicit
+dispatch, result formatting, and all approval/apply semantics. Syntax and exact
+three-command signature equivalence passed in the cloud work environment; the
+complete automated repository gate is pending.
 
 ## Current Capabilities
 
@@ -177,9 +177,14 @@ after correcting one extra blank line at the new module EOF.
 - ERP modeling registration revalidation: 276 tests passed and 2 opt-in
   live-provider tests skipped in 46.37 seconds on Windows/Python 3.13; 111
   internal links checked, 0 broken; pull-request diff check passed.
-- Product reference registration revalidation: 276 tests passed and 2 opt-in
-  live-provider tests skipped in 49.48 seconds on Windows/Python 3.13; 111
+- Product reference final validation: 276 tests passed and 2 opt-in
+  live-provider tests skipped in 52.44 seconds on Windows/Python 3.13; 111
   internal links checked, 0 broken; pull-request diff check passed.
+- Current Product publication registration slice: syntax and exact
+  three-command parser equivalence passed with SHA-256
+  `d0c33e3a3430525e2b1be6baabb65199a91b6297e0259055f789aa743ceaf6da`;
+  reconstructed registration order preserved all 47 commands. GitHub Actions
+  validation is pending.
 - Backend Phase II run-result compatibility and registered-consumer suite: 238
   passed in 39.63 seconds.
 - Backend Phase II existing-file binding consumer suite: 76 passed in 17.77 seconds.
@@ -220,9 +225,9 @@ after correcting one extra blank line at the new module EOF.
   complete, and 23 result classes expose the additive four-field run-result
   core. The consumer audit intentionally deferred runtime projection until a
   generic dispatcher or run recorder needs all four fields; CLI decomposition
-  is now in progress with 39 registrations extracted across six coherent
-  domain modules. The Product reference slice passed the complete automated Windows regression
-  gate after correcting one extra blank line at the new module EOF. Dispatch remains explicit and
+  is now in progress with 42 registrations extracted across seven coherent
+  domain modules. The Product publication slice is structurally equivalent and
+  awaits its automated Windows regression gate. Dispatch remains explicit and
   centralized. Free-text
   statuses remain intentionally separate. Binding comparison policies,
   deterministic `.building` workflows, and distinct blocker schemas must not
@@ -239,7 +244,8 @@ after correcting one extra blank line at the new module EOF.
 
 ## Next Logical Milestone
 
-Continue Backend Phase II increment 2.4 with the next coherent
+Validate the Product publication registration slice through GitHub Actions.
+After that gate, continue Backend Phase II increment 2.4 with the next coherent
 CLI registration slice while preserving
 the complete 47-command parser signature and `data_ops_lab.cli:main`. Keep
 execution and result formatting in the existing domain modules, and keep the
@@ -255,9 +261,10 @@ files in a separate private store or encrypted artifact workflow.
 
 ## Last Verified Commit
 
-`e4f1c10` (`docs: record Product CI result and fix module EOF`).
+`83ef90b` (merge of `refactor(cli): extract Product reference registration`).
 
 ## Last Updated
 
-2026-07-20 by Codex after the Product reference registration slice passed the
-complete automated Windows/Python 3.13 regression gate.
+2026-07-20 by Codex after implementing the Product publication CLI
+registration slice with exact isolated parser equivalence; automated validation
+is pending.
