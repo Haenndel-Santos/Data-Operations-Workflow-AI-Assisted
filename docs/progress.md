@@ -6,22 +6,20 @@ Turn local operational spreadsheets into validated analytical datasets and an ap
 
 ## Current Stage
 
-Four active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases 0-4 passed their gates for Northwind and the selected local Ollama development provider; AI Phase 5 remains active after its recorded, live-development, and endurance evidence; and Backend Phase II completed increment 2.4 and its documented exit gate. Stage 5A-5F governed analytics retains its applied Northwind semantic catalog, immutable 13-case answer authority, reproducible 13/13 recorded evaluation, governed 9/13 loopback result, and 56 evidenced soak cycles. Backend Phase II has completed compatible common hashing, standard analytics blockers, atomic publication, the two proven source-binding absence semantics, explicit classification of 675 labels used by 22 complete blocker consumers, and exact provenance for all dynamic/direct and separate status/format/authority surfaces. The 658-literal audit found no remaining recognized consumer, and 23 existing result classes now conform structurally to the additive `output_dir`/opaque `status`/`blocker_count`/`outputs_changed` projection. A consumer audit found no honest runtime adoption point before generic dispatch or run recording, so the projection remains opt-in. CLI decomposition has moved all 47 registrations across ten coherent domain registrars while preserving the full parser surface; `build_parser` contains no direct subparser declarations. GitHub Actions provides an automated read-only Windows/Python 3.13 gate for the offline suite, internal links, and pull-request diffs. The final analytics-operations slices passed the complete automated Windows/Python 3.13 gate, closing Backend Phase II. A fresh holdout, provider selection, dynamic dispatch, live narration, and a user interface remain pending.
+Four active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases 0-4 passed their gates for Northwind and the selected local Ollama development provider; AI Phase 5 remains active after its recorded, live-development, and endurance evidence; and Backend Phase II completed increment 2.4 and its documented exit gate. Stage 5A-5F governed analytics retains its applied Northwind semantic catalog, immutable 13-case answer authority, reproducible 13/13 recorded evaluation, governed 9/13 loopback result, and 56 evidenced soak cycles. Backend Phase II has completed compatible common hashing, standard analytics blockers, atomic publication, the two proven source-binding absence semantics, explicit classification of 675 labels used by 22 complete blocker consumers, and exact provenance for all dynamic/direct and separate status/format/authority surfaces. The 658-literal audit found no remaining recognized consumer, and 23 existing result classes now conform structurally to the additive `output_dir`/opaque `status`/`blocker_count`/`outputs_changed` projection. A consumer audit found no honest runtime adoption point before generic dispatch or run recording, so the projection remains opt-in. CLI decomposition has moved all 47 registrations across ten coherent domain registrars while preserving the full parser surface; `build_parser` contains no direct subparser declarations. GitHub Actions provides an automated read-only Windows/Python 3.13 gate for the offline suite, internal links, and pull-request diffs. The final analytics-operations slices passed the complete automated Windows/Python 3.13 gate, closing Backend Phase II. A version-1 Phase 5 provider-selection scope now defines candidate thresholds, holdout coverage, deterministic gates, and non-authorizations, but remains `pending_owner_review`; no holdout dataset or provider has been selected. A fresh holdout, provider selection, dynamic dispatch, live narration, and a user interface remain pending.
 
 ## Last Completed Milestone
 
-On 2026-07-20, Backend Phase II increment 2.4 implemented its ninth and tenth
-coherent CLI registration families. Local analytics module-contract validation
-and synthetic pipeline performance measurement now register through
-`data_ops_lab.cli_commands.analytics_foundation`; the separately authorized
-bounded local Ollama soak now registers through
-`data_ops_lab.cli_commands.analytics_soak`. All 47 command registrations now
-live in ten domain registrars, in their original order, while
-`data_ops_lab.cli:main` still owns explicit dispatch and result formatting.
-The soak's `--execute`/`--allow-network` gates and loopback defaults remain
-unchanged. Syntax and exact three-command signature equivalence passed. The
-complete Windows/Python 3.13 gate passed with 276 tests and 2 opt-in
-live-provider skips, 111 valid internal links, and a clean pull-request diff.
+On 2026-07-22, the repository checkpoint was reconciled with the merged PR #16
+and its successful post-merge GitHub Actions run at `f038cc5`. A separately
+versioned Phase 5 provider-selection scope was drafted with evidence-anchored
+candidate thresholds, minimum fresh-holdout coverage, deterministic approval
+and execution gates, explicit stop conditions, and preserved Backend Phase II
+contracts. The scope remains `pending_owner_review`; it did not select a
+dataset, approve a threshold, call a provider, connect to SQL Server, open
+DuckDB, or authorize Product canonical apply. GitHub PR #17 validated the draft
+with 276 tests passed, 2 opt-in live-provider tests skipped, 113 valid internal
+links, and a clean pull-request diff.
 
 ## Current Capabilities
 
@@ -192,6 +190,11 @@ live-provider skips, 111 valid internal links, and a clean pull-request diff.
 - Final analytics-operations registration validation: 276 tests passed and 2
   opt-in live-provider tests skipped in 93.00 seconds on Windows/Python 3.13;
   111 internal links checked, 0 broken; pull-request diff check passed.
+- Post-merge `main` validation: GitHub Actions run `29778080598` completed
+  successfully at exact merge commit `f038cc5` on 2026-07-20.
+- Phase 5 selection-scope draft validation: GitHub Actions run `29920603444`
+  passed at `701586f` with 276 tests, 2 opt-in live-provider skips, 113 valid
+  internal links, and a clean exact pull-request diff from `f038cc5`.
 - Backend Phase II run-result compatibility and registered-consumer suite: 238
   passed in 39.63 seconds.
 - Backend Phase II existing-file binding consumer suite: 76 passed in 17.77 seconds.
@@ -248,20 +251,32 @@ live-provider skips, 111 valid internal links, and a clean pull-request diff.
 - EDS cross-table analytics remain blocked because `approved_relationships.yml` is intentionally empty.
 - Northwind is `semantic_catalog_approved` with 13 accepted exact relationships and 111 approved semantic entities. All 13 exact plans and expected-answer decisions are approved; the recorded evaluator passed 13/13. Separate live authority permitted one bounded loopback comparison, which passed 9/13 as development evidence. That authority does not extend to a changed prompt/provider, external service, holdout invocation, narration, upload, publication, or training. Pubs remains pending provenance, license, schema, relationship, and benchmark-use review.
 - AdventureWorks is restored and validated but remains pending reproducible export, schema review, relationship approval, and benchmark-use approval.
+- The Phase 5 provider-selection scope, its candidate thresholds, and the
+  preferred AdventureWorks holdout candidate remain pending exact project-owner
+  review. The missing bounded live intent/clarification evaluator is scoped but
+  not implemented.
 
 ## Next Logical Milestone
 
 Backend Phase II is complete; there is no remaining CLI registration slice.
-Before further backend implementation, define a separately versioned scope that
-preserves the complete 47-command parser signature, `data_ops_lab.cli:main`,
-and the established hashing, blocker, publication, binding, taxonomy, and
-run-result contracts. Keep
-execution and result formatting in the existing domain modules, and keep the
-run-result projection opt-in until a generic dispatcher or run recorder has a
-real four-field use. Do not infer generic success from status, rename persisted
+The next gate is exact project-owner review of
+[`ai-phase-5-provider-selection-scope.md`](ai-phase-5-provider-selection-scope.md):
+approve or revise the proposed KPI thresholds and explicitly select or reject
+AdventureWorks as the holdout dataset. Until then, resume at
+`awaiting_scope_approval` and do not export a database or inspect holdout model
+results. If AdventureWorks is selected, obtain separate authorization for its
+local read-only SQL Server export, then proceed through reproducible reference
+validation, relationship review, semantic approval, frozen answer/intent packs,
+and exact live authorization in the documented order.
+
+Any later implementation must preserve the complete 47-command parser
+signature, `data_ops_lab.cli:main`, and the established hashing, blocker,
+publication, binding, taxonomy, and run-result contracts. Keep execution and
+result formatting in the existing domain modules, and keep the run-result
+projection opt-in until a generic dispatcher or run recorder has a real
+four-field use. Do not infer generic success from status, rename persisted
 codes, add blocker fields, or combine module-specific blocker, artifact,
-checkpoint, or authority semantics. The independent AI track still requires
-fixed Phase 5 thresholds and a fresh reviewed holdout before provider selection.
+checkpoint, or authority semantics.
 
 For cloud-first repository management, inventory local-only artifacts and commit
 only safe manifests/hashes before any public visibility change; keep sensitive
@@ -269,9 +284,9 @@ files in a separate private store or encrypted artifact workflow.
 
 ## Last Verified Commit
 
-`ff485ac` (`refactor(cli): complete domain registration split`).
+`f038cc5` (`Merge pull request #16 from Haenndel-Santos/agent/complete-cli-registration-split`).
 
 ## Last Updated
 
-2026-07-20 by Codex after the complete analytics-operations regression gate
-closed Backend Phase II with all 47 registrations in domain modules.
+2026-07-22 by Codex after reconciling the PR #16 merge/CI checkpoint and
+drafting the pending-review Phase 5 provider-selection scope.
