@@ -4031,3 +4031,81 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
    revalidate the resulting exact scope.
 3. Begin Phase 5.2 only after explicit dataset selection and separate export
    authority.
+
+## 2026-07-22 - Codex - Implement Phase 5.2 read-only AdventureWorks export
+
+### Authority And Git Baseline
+
+- Marked PR #17 ready and merged it into `main` at `729658d`; local `main` was
+  fast-forwarded to the same commit before creating
+  `codex/adventureworks-readonly-export`.
+- The project owner approved the exact Phase 5 thresholds/guardrails, selected
+  AdventureWorks 2025 as the fresh holdout, and separately authorized only the
+  Phase 5.2 local read-only SQL Server-to-DuckDB/Parquet export.
+- Relationship approval, semantic approval, pack design, answer collection,
+  live Ollama/provider calls, upload, publication, training, and provider
+  selection remain outside this authority.
+
+### Implementation
+
+- Added the additive `benchmark-export-sqlserver` command and
+  `run_benchmark_sqlserver_export` module contract.
+- Restricted connections to default local aliases, Microsoft ODBC Driver 17/18,
+  Windows integrated authentication, `ApplicationIntent=ReadOnly`, the ODBC
+  read-only access attribute, and an exact `ONLINE`/`READ_ONLY` database.
+- Hashes the immutable `.bak` before and after export, requires source-declared
+  primary keys, streams bounded primary-key-ordered batches to deterministic
+  Zstandard Parquet, and creates DuckDB only from those files.
+- Added atomic new-directory publication, exact idempotent reuse, configuration
+  and artifact hash/path drift refusal, unsupported-type/collision/contract
+  refusal, connection rollback/close, and partial-staging cleanup.
+- Added optional `pyodbc>=5.2,<6`; installed and checked local `pyodbc 5.3.0`
+  plus Microsoft ODBC Drivers 17 and 18 without changing the default dependency
+  set.
+- Added relationship candidate artifact v2 so a composite SQL Server foreign
+  key remains one ordered source/target column set. Extended reference dataset
+  validation to accept v1 and v2, profile composite evidence across the full
+  key, and preserve versioned pending/completed human-review projections.
+- Reused the existing reference-validation blocker labels and updated their
+  exact taxonomy provenance; no persisted error-code vocabulary was expanded.
+
+### Validation
+
+- Focused exporter, reference-validation, and taxonomy suite: 43 passed.
+- Full offline suite: 284 passed and 2 opt-in live-provider tests skipped in
+  47.92 seconds on Windows/Python 3.13.
+- Internal links: 113 checked, 0 broken.
+- The source-double tests cover explicit authority, ODBC access mode, read-only
+  preflight, bounded materialization, independent reproducibility, composite
+  technical evidence, synthetic completed review, source preservation,
+  idempotency, drift/path escape, cleanup, and CLI compatibility.
+- No Ollama/provider call, source mutation, relationship approval, Product
+  apply, migration, import, synchronization, upload, publication, or training
+  ran.
+
+### Real Export Stop State
+
+- The default `MSSQLSERVER` service remains `Stopped`/`Manual`. A prior service
+  start attempt was denied because this process does not have local
+  administrator authority.
+- The authorized real CLI attempt used local ODBC Driver 18 and failed at the
+  connection boundary with `08001` before source catalog/table access.
+- `datasets/benchmarks/derived/adventureworks-2025` and its `.building`
+  directory do not exist; no partial export was created.
+
+### Next Logical Step
+
+1. The user starts the default `MSSQLSERVER` service from an elevated local
+   PowerShell session.
+2. Run the authorized export twice into separate current/reproduction ignored
+   directories and compare the exact conversion projection and artifacts.
+3. Create the versioned AdventureWorks reference manifest from exact hashes and
+   source-declared pending PKs, then run `reference-dataset-validate`.
+4. Stop at `ready_for_relationship_review`, record the real evidence, and return
+   the manual service to `Stopped`/`Manual` with administrator authority.
+
+### Do Not Do Yet
+
+- Do not weaken the read-only preflight, use `DATAOPSLAB`, connect remotely,
+  approve any AdventureWorks relationship, design/inspect holdout questions or
+  answers, call Ollama, or advance beyond Phase 5.2.

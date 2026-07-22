@@ -31,6 +31,55 @@ def register_reference_dataset_commands(
         help="New or verified-identical local derived dataset directory.",
     )
 
+    benchmark_export_sqlserver = subparsers.add_parser(
+        "benchmark-export-sqlserver",
+        help="Export an authorized local read-only SQL Server benchmark to DuckDB and Parquet.",
+    )
+    benchmark_export_sqlserver.add_argument(
+        "--source-backup",
+        type=Path,
+        required=True,
+        help="Local read-only .bak file used to verify source provenance before and after export.",
+    )
+    benchmark_export_sqlserver.add_argument(
+        "--dataset",
+        required=True,
+        help="Stable dataset name used for normalized derived artifacts.",
+    )
+    benchmark_export_sqlserver.add_argument(
+        "--database",
+        required=True,
+        help="Exact already-restored local read-only SQL Server database name.",
+    )
+    benchmark_export_sqlserver.add_argument(
+        "--server",
+        default="localhost",
+        help="Authorized local default SQL Server instance (default: localhost).",
+    )
+    benchmark_export_sqlserver.add_argument(
+        "--driver",
+        default="ODBC Driver 18 for SQL Server",
+        choices=("ODBC Driver 18 for SQL Server", "ODBC Driver 17 for SQL Server"),
+        help="Installed Microsoft ODBC driver.",
+    )
+    benchmark_export_sqlserver.add_argument(
+        "--batch-size",
+        type=int,
+        default=10_000,
+        help="Bounded source fetch and Parquet row-group size (1-50000).",
+    )
+    benchmark_export_sqlserver.add_argument(
+        "--output",
+        type=Path,
+        required=True,
+        help="New or verified-identical local derived dataset directory.",
+    )
+    benchmark_export_sqlserver.add_argument(
+        "--execute",
+        action="store_true",
+        help="Execute the separately authorized local read-only export.",
+    )
+
     reference_dataset_validate = subparsers.add_parser(
         "reference-dataset-validate",
         help="Validate provenance, reproducibility, schema, keys, and relationship-review state for a local reference dataset.",

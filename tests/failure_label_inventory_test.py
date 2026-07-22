@@ -1088,28 +1088,28 @@ def test_reference_dataset_validation_exceptions_remain_separate():
             "code",
             "invalid_yaml",
         ),
-        "src/data_ops_lab/reference_dataset_validation.py:281": (
+        "src/data_ops_lab/reference_dataset_validation.py:293": (
             "    except ValueError:",
             ("ValueError",),
             "module_specific_blocker",
             "code",
             "invalid_benchmark_approval_time",
         ),
-        "src/data_ops_lab/reference_dataset_validation.py:485": (
+        "src/data_ops_lab/reference_dataset_validation.py:582": (
             "    except duckdb.Error:",
             ("duckdb.Error",),
             "module_specific_blocker",
             "code",
             "database_unreadable",
         ),
-        "src/data_ops_lab/reference_dataset_validation.py:540": (
+        "src/data_ops_lab/reference_dataset_validation.py:640": (
             "        except ValueError:",
             ("ValueError",),
             "module_specific_blocker",
             "code",
             "invalid_review_time",
         ),
-        "src/data_ops_lab/reference_dataset_validation.py:701": (
+        "src/data_ops_lab/reference_dataset_validation.py:837": (
             "    except Exception:",
             ("Exception",),
             "exception",
@@ -1147,32 +1147,32 @@ def test_reference_dataset_validation_exceptions_remain_separate():
 
 def test_reference_dataset_statuses_and_approval_projection_remain_separate():
     expected_statuses = {
-        "src/data_ops_lab/reference_dataset_validation.py:211": (
+        "src/data_ops_lab/reference_dataset_validation.py:222": (
             "def conversion_projection(manifest: dict[str, Any]) -> dict[str, Any]:",
             "conversion_projection.status",
             ("ready_for_local_benchmark",),
         ),
-        "src/data_ops_lab/reference_dataset_validation.py:493": (
+        "src/data_ops_lab/reference_dataset_validation.py:590": (
             "def validate_completed_review(",
             "relationships.review_status",
             ("completed", "incomplete", "invalid", "pending_review"),
         ),
-        "src/data_ops_lab/reference_dataset_validation.py:560": (
+        "src/data_ops_lab/reference_dataset_validation.py:705": (
             '        "status": "pending_review",',
             "relationship_review.status",
             ("pending_review",),
         ),
-        "src/data_ops_lab/reference_dataset_validation.py:592": (
+        "src/data_ops_lab/reference_dataset_validation.py:694": (
             '                "decision": "pending",',
             "relationship_review.decisions[].decision",
             ("accepted", "pending", "rejected"),
         ),
-        "src/data_ops_lab/reference_dataset_validation.py:632": (
+        "src/data_ops_lab/reference_dataset_validation.py:768": (
             '        "status": "approved" if authority_complete else "pending_review",',
             "approved_relationships.status",
             ("approved", "pending_review"),
         ),
-        "src/data_ops_lab/reference_dataset_validation.py:778": (
+        "src/data_ops_lab/reference_dataset_validation.py:914": (
             '        "status": status,',
             "status",
             (
@@ -1201,7 +1201,7 @@ def test_reference_dataset_statuses_and_approval_projection_remain_separate():
         assert provenance.disposition is TaxonomyDisposition.SEPARATE_TEXT_STATUS
         assert all(value not in ERROR_CLASSIFICATION_REGISTRY for value in status_values)
 
-    location = "src/data_ops_lab/reference_dataset_validation.py:612"
+    location = "src/data_ops_lab/reference_dataset_validation.py:734"
     projection = APPROVAL_PROJECTION_PROVENANCE[location]
     relative, line_text = location.rsplit(":", 1)
     source_line = (

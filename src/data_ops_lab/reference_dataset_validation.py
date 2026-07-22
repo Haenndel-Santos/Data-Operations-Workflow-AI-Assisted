@@ -13,7 +13,7 @@ import yaml
 from .contracts.hashing import file_sha256
 
 
-MODULE_VERSION = 2
+MODULE_VERSION = 3
 MANIFEST_NAME = "reference_dataset_validation.yml"
 REVIEW_NAME = "relationship_review.yml"
 APPROVED_RELATIONSHIPS_NAME = "approved_relationships.yml"
@@ -185,6 +185,17 @@ def validate_conversion_artifacts(
             add_blocker(blockers, "invalid_conversion_artifact", "Conversion artifact entry is missing.", f"{field_prefix}.artifacts.{name}")
         else:
             entries.append((name, item))
+    schema = artifacts.get("schema")
+    if schema is not None:
+        if not isinstance(schema, dict):
+            add_blocker(
+                blockers,
+                "invalid_conversion_artifact",
+                "Optional conversion schema artifact entry must be a mapping.",
+                f"{field_prefix}.artifacts.schema",
+            )
+        else:
+            entries.append(("schema", schema))
     parquet = artifacts.get("parquet")
     if not isinstance(parquet, list):
         add_blocker(blockers, "invalid_parquet_artifacts", "Parquet artifact entries must be a list.", f"{field_prefix}.artifacts.parquet")
@@ -219,6 +230,7 @@ def conversion_projection(manifest: dict[str, Any]) -> dict[str, Any]:
         "tables": manifest.get("tables"),
         "parquet": artifacts.get("parquet"),
         "relationships": artifacts.get("relationships"),
+        "schema": artifacts.get("schema"),
         "report": artifacts.get("report"),
     }
 
@@ -367,6 +379,14 @@ def load_relationships(
     relationship_artifact = conversion_artifacts.get("relationships", {})
     path = relationship_artifact.get("resolved_path")
     payload = load_yaml(path, "conversion.artifacts.relationships", blockers) if isinstance(path, Path) else {}
+    contract_version = payload.get("version")
+    if contract_version not in {1, 2}:
+        add_blocker(
+            blockers,
+            "invalid_relationship_candidates",
+            "Relationship candidate artifact version must be 1 or 2.",
+            "relationships.version",
+        )
     rows = payload.get("relationship_candidates")
     if not isinstance(rows, list):
         add_blocker(blockers, "invalid_relationship_candidates", "Relationship candidates must be a list.", "relationships")
@@ -374,31 +394,89 @@ def load_relationships(
     if expected_count != len(rows):
         add_blocker(blockers, "relationship_count_mismatch", "Expected relationship count does not match the conversion candidates.", "relationships.expected_candidates")
     normalized = []
-    seen: set[tuple[str, str, str, str]] = set()
+    seen: set[tuple[str, tuple[str, ...], str, tuple[str, ...]]] = set()
     for index, row in enumerate(rows):
         field = f"relationships[{index}]"
         if not isinstance(row, dict):
             add_blocker(blockers, "invalid_relationship", "Relationship candidate must be a mapping.", field)
             continue
-        identity = tuple(row.get(name) for name in ("source_table", "source_column", "target_table", "target_column"))
-        if any(not isinstance(value, str) or not IDENTIFIER_PATTERN.fullmatch(value) for value in identity):
-            add_blocker(blockers, "invalid_relationship_identifier", "Relationship identifiers must be normalized safe names.", field)
-            continue
+        source_table = row.get("source_table")
+        target_table = row.get("target_table")
+        if contract_version == 1:
+            source_column = row.get("source_column")
+            target_column = row.get("target_column")
+            flat_identity = (source_table, source_column, target_table, target_column)
+            if any(
+                not isinstance(value, str)
+                or not IDENTIFIER_PATTERN.fullmatch(value)
+                for value in flat_identity
+            ):
+                add_blocker(blockers, "invalid_relationship_identifier", "Relationship identifiers must be normalized safe names.", field)
+                continue
+            source_columns = (source_column,)
+            target_columns = (target_column,)
+        else:
+            source_values = row.get("source_columns")
+            target_values = row.get("target_columns")
+            if (
+                not isinstance(source_table, str)
+                or not IDENTIFIER_PATTERN.fullmatch(source_table)
+                or not isinstance(target_table, str)
+                or not IDENTIFIER_PATTERN.fullmatch(target_table)
+                or not isinstance(source_values, list)
+                or not source_values
+                or not isinstance(target_values, list)
+                or len(source_values) != len(target_values)
+                or any(
+                    not isinstance(value, str)
+                    or not IDENTIFIER_PATTERN.fullmatch(value)
+                    for value in [*source_values, *target_values]
+                )
+            ):
+                add_blocker(blockers, "invalid_relationship_identifier", "Relationship identifiers must be normalized safe names with equal non-empty column lists.", field)
+                continue
+            if not isinstance(row.get("constraint_name"), str) or not row["constraint_name"].strip():
+                add_blocker(blockers, "invalid_relationship", "Version 2 relationship candidates require a source constraint name.", field)
+                continue
+            source_columns = tuple(source_values)
+            target_columns = tuple(target_values)
+        identity = (source_table, source_columns, target_table, target_columns)
         if identity in seen:
             add_blocker(blockers, "duplicate_relationship", "Relationship candidate is duplicated.", field)
             continue
         seen.add(identity)
         if row.get("evidence") != "source_declared_foreign_key" or row.get("status") != "pending_review":
             add_blocker(blockers, "invalid_relationship_authority", "Converted relationships must remain source-declared pending candidates.", field)
-        normalized.append({
-            "id": f"{identity[0]}.{identity[1]}->{identity[2]}.{identity[3]}",
-            "source_table": identity[0],
-            "source_column": identity[1],
-            "target_table": identity[2],
-            "target_column": identity[3],
-            "evidence": row.get("evidence"),
-        })
+        if contract_version == 1:
+            normalized.append({
+                "id": f"{source_table}.{source_columns[0]}->{target_table}.{target_columns[0]}",
+                "source_table": source_table,
+                "source_column": source_columns[0],
+                "target_table": target_table,
+                "target_column": target_columns[0],
+                "evidence": row.get("evidence"),
+            })
+        else:
+            source_id = ",".join(source_columns)
+            target_id = ",".join(target_columns)
+            normalized.append({
+                "id": f"{source_table}.({source_id})->{target_table}.({target_id})",
+                "constraint_name": row["constraint_name"],
+                "source_table": source_table,
+                "source_columns": list(source_columns),
+                "target_table": target_table,
+                "target_columns": list(target_columns),
+                "evidence": row.get("evidence"),
+            })
     return normalized, relationship_artifact.get("sha256")
+
+
+def relationship_columns(
+    relationship: dict[str, Any],
+) -> tuple[list[str], list[str]]:
+    if "source_columns" in relationship:
+        return relationship["source_columns"], relationship["target_columns"]
+    return [relationship["source_column"]], [relationship["target_column"]]
 
 
 def query_technical_evidence(
@@ -450,24 +528,43 @@ def query_technical_evidence(
                     add_blocker(blockers, "invalid_primary_key_data", "Declared primary key has null or duplicate values.", f"schema.primary_keys.{table}")
                 key_evidence.append({**key, "rows": catalog[table]["rows"], "null_key_rows": null_rows, "duplicate_key_groups": duplicate_groups, "valid": valid})
             for relationship in relationships:
-                st, sc = relationship["source_table"], relationship["source_column"]
-                tt, tc = relationship["target_table"], relationship["target_column"]
+                st = relationship["source_table"]
+                tt = relationship["target_table"]
+                source_relationship_columns, target_relationship_columns = (
+                    relationship_columns(relationship)
+                )
                 if st not in catalog or tt not in catalog:
                     add_blocker(blockers, "unknown_relationship_table", "Relationship table is absent from the converted schema.", f"relationships.{relationship['id']}")
                     continue
                 source_columns = {column["name"] for column in catalog[st]["columns"]}
                 target_columns = {column["name"] for column in catalog[tt]["columns"]}
-                if sc not in source_columns or tc not in target_columns:
+                if (
+                    any(column not in source_columns for column in source_relationship_columns)
+                    or any(column not in target_columns for column in target_relationship_columns)
+                ):
                     add_blocker(blockers, "unknown_relationship_column", "Relationship column is absent from the converted schema.", f"relationships.{relationship['id']}")
                     continue
-                qst, qsc, qtt, qtc = map(quote_identifier, (st, sc, tt, tc))
-                nonnull = int(connection.execute(f"select count(*) from {qst} where {qsc} is not null").fetchone()[0])
-                nulls = int(connection.execute(f"select count(*) from {qst} where {qsc} is null").fetchone()[0])
+                qst = quote_identifier(st)
+                qtt = quote_identifier(tt)
+                qscs = [quote_identifier(column) for column in source_relationship_columns]
+                qtcs = [quote_identifier(column) for column in target_relationship_columns]
+                source_complete = " and ".join(f"s.{column} is not null" for column in qscs)
+                source_incomplete = " or ".join(f"s.{column} is null" for column in qscs)
+                target_complete = " and ".join(f"{column} is not null" for column in qtcs)
+                join_predicate = " and ".join(
+                    f"s.{source_column} = t.{target_column}"
+                    for source_column, target_column in zip(qscs, qtcs, strict=True)
+                )
+                grouped_targets = ", ".join(qtcs)
+                nonnull = int(connection.execute(f"select count(*) from {qst} s where {source_complete}").fetchone()[0])
+                nulls = int(connection.execute(f"select count(*) from {qst} s where {source_incomplete}").fetchone()[0])
                 orphans = int(connection.execute(
-                    f"select count(*) from {qst} s left join {qtt} t on s.{qsc} = t.{qtc} where s.{qsc} is not null and t.{qtc} is null"
+                    f"select count(*) from {qst} s where {source_complete} "
+                    f"and not exists (select 1 from {qtt} t where {join_predicate})"
                 ).fetchone()[0])
                 target_duplicates = int(connection.execute(
-                    f"select count(*) from (select {qtc} from {qtt} where {qtc} is not null group by {qtc} having count(*) > 1)"
+                    f"select count(*) from (select {grouped_targets} from {qtt} "
+                    f"where {target_complete} group by {grouped_targets} having count(*) > 1)"
                 ).fetchone()[0])
                 valid = orphans == 0 and target_duplicates == 0
                 if not valid:
@@ -504,7 +601,10 @@ def validate_completed_review(
     review = load_yaml(review_path, "review", blockers)
     if not review:
         return "invalid", [], review_hash
-    if review.get("version") != 1 or review.get("dataset") != dataset or review.get("status") != "completed":
+    review_version = (
+        2 if any("source_columns" in row for row in relationship_evidence) else 1
+    )
+    if review.get("version") != review_version or review.get("dataset") != dataset or review.get("status") != "completed":
         add_blocker(blockers, "invalid_relationship_review", "Completed review must match version, dataset, and completed status.", "review")
     if review.get("source_manifest_sha256") != source_manifest_hash:
         add_blocker(blockers, "review_manifest_drift", "Review is not bound to the exact reference manifest.", "review.source_manifest_sha256")
@@ -554,8 +654,53 @@ def pending_review_payload(
     relationship_hash: str | None,
     relationship_evidence: list[dict[str, Any]],
 ) -> dict[str, Any]:
+    review_version = (
+        2 if any("source_columns" in row for row in relationship_evidence) else 1
+    )
+
+    def decision_payload(row: dict[str, Any]) -> dict[str, Any]:
+        relationship = {
+            "id": row["id"],
+            "source_table": row["source_table"],
+            "target_table": row["target_table"],
+            "evidence": row["evidence"],
+        }
+        if review_version == 1:
+            relationship.update(
+                {
+                    "source_column": row["source_column"],
+                    "target_column": row["target_column"],
+                }
+            )
+        else:
+            relationship.update(
+                {
+                    "constraint_name": row["constraint_name"],
+                    "source_columns": row["source_columns"],
+                    "target_columns": row["target_columns"],
+                }
+            )
+        relationship.update(
+            {
+                "technical_validation": {
+                    "source_rows": row["source_rows"],
+                    "nonnull_source_rows": row["nonnull_source_rows"],
+                    "null_source_rows": row["null_source_rows"],
+                    "orphan_rows": row["orphan_rows"],
+                    "target_duplicate_groups": row["target_duplicate_groups"],
+                    "positive_coverage": row["positive_coverage"],
+                    "valid": row["valid"],
+                },
+                "decision": "pending",
+                "reviewer": None,
+                "reviewed_at": None,
+                "notes": None,
+            }
+        )
+        return relationship
+
     return {
-        "version": 1,
+        "version": review_version,
         "dataset": dataset,
         "status": "pending_review",
         "source_manifest_sha256": source_manifest_hash,
@@ -572,30 +717,7 @@ def pending_review_payload(
             "Provide reviewer, reviewed_at, and notes for every decision.",
             "Use a new validation output directory after completing this file.",
         ],
-        "decisions": [
-            {
-                "id": row["id"],
-                "source_table": row["source_table"],
-                "source_column": row["source_column"],
-                "target_table": row["target_table"],
-                "target_column": row["target_column"],
-                "evidence": row["evidence"],
-                "technical_validation": {
-                    "source_rows": row["source_rows"],
-                    "nonnull_source_rows": row["nonnull_source_rows"],
-                    "null_source_rows": row["null_source_rows"],
-                    "orphan_rows": row["orphan_rows"],
-                    "target_duplicate_groups": row["target_duplicate_groups"],
-                    "positive_coverage": row["positive_coverage"],
-                    "valid": row["valid"],
-                },
-                "decision": "pending",
-                "reviewer": None,
-                "reviewed_at": None,
-                "notes": None,
-            }
-            for row in relationship_evidence
-        ],
+        "decisions": [decision_payload(row) for row in relationship_evidence],
     }
 
 
@@ -610,6 +732,9 @@ def approved_relationships_payload(
 ) -> dict[str, Any]:
     decisions_by_id = {row["id"]: row for row in decisions}
     authority_complete = status == "ready_for_semantic_modeling"
+    registry_version = (
+        2 if any("source_columns" in row for row in relationship_evidence) else 1
+    )
     approved = []
     rejected = []
     for relationship in relationship_evidence:
@@ -617,18 +742,29 @@ def approved_relationships_payload(
         if not authority_complete:
             continue
         if decision.get("decision") == "accepted":
-            approved.append(
-                {
-                    "source_table": relationship["source_table"],
-                    "source_column": relationship["source_column"],
-                    "target_table": relationship["target_table"],
-                    "target_column": relationship["target_column"],
-                }
-            )
+            if registry_version == 1:
+                approved.append(
+                    {
+                        "source_table": relationship["source_table"],
+                        "source_column": relationship["source_column"],
+                        "target_table": relationship["target_table"],
+                        "target_column": relationship["target_column"],
+                    }
+                )
+            else:
+                approved.append(
+                    {
+                        "constraint_name": relationship["constraint_name"],
+                        "source_table": relationship["source_table"],
+                        "source_columns": relationship["source_columns"],
+                        "target_table": relationship["target_table"],
+                        "target_columns": relationship["target_columns"],
+                    }
+                )
         elif decision.get("decision") == "rejected":
             rejected.append(relationship["id"])
     return {
-        "version": 1,
+        "version": registry_version,
         "status": "approved" if authority_complete else "pending_review",
         "dataset": dataset,
         "authority": {
