@@ -427,6 +427,32 @@ DuckDB in read-only mode and does not approve its pending relationships. A
 completed-review test also verifies that only accepted decisions enter the
 derived registry and that rejected decisions remain explicitly excluded.
 
+The same suite now covers relationship candidate artifacts v1 and v2. Version
+2 preserves composite foreign keys as ordered column lists and validates
+coverage, orphans, and target uniqueness across the complete key while keeping
+the generated human review pending.
+
+## Read-Only SQL Server Export
+
+The focused Phase 5.2 suite uses an injected offline SQL Server source and
+temporary files only. It verifies the explicit execution gate, local/driver
+allowlists, ODBC read-only access mode, exact read-only database preflight,
+bounded deterministic Parquet/DuckDB output, independent reproducibility,
+source preservation, composite FK candidates, idempotency, drift refusal,
+cleanup, and CLI shape:
+
+```powershell
+$env:PYTHONPATH = "src"
+$env:PYTHONDONTWRITEBYTECODE = "1"
+.\.venv\Scripts\python.exe -m pytest -p no:cacheprovider tests\benchmark_sqlserver_export_test.py tests\reference_dataset_validation_test.py
+```
+
+`pyodbc>=5.2,<6` is an optional `sqlserver` dependency. The default GitHub and
+local offline suites do not install it and never open SQL Server. A real export
+requires the separately authorized local read-only database, installed Driver
+17 or 18, and explicit `--execute`; it is operational evidence rather than a
+default automated test.
+
 ## Northwind Semantic Catalog Validation
 
 The ordinary Stage 5C tests remain synthetic and offline. The separately

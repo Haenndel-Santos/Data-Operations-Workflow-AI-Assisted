@@ -6,20 +6,19 @@ Turn local operational spreadsheets into validated analytical datasets and an ap
 
 ## Current Stage
 
-Four active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases 0-4 passed their gates for Northwind and the selected local Ollama development provider; AI Phase 5 remains active after its recorded, live-development, and endurance evidence; and Backend Phase II completed increment 2.4 and its documented exit gate. Stage 5A-5F governed analytics retains its applied Northwind semantic catalog, immutable 13-case answer authority, reproducible 13/13 recorded evaluation, governed 9/13 loopback result, and 56 evidenced soak cycles. Backend Phase II has completed compatible common hashing, standard analytics blockers, atomic publication, the two proven source-binding absence semantics, explicit classification of 675 labels used by 22 complete blocker consumers, and exact provenance for all dynamic/direct and separate status/format/authority surfaces. The 658-literal audit found no remaining recognized consumer, and 23 existing result classes now conform structurally to the additive `output_dir`/opaque `status`/`blocker_count`/`outputs_changed` projection. A consumer audit found no honest runtime adoption point before generic dispatch or run recording, so the projection remains opt-in. CLI decomposition has moved all 47 registrations across ten coherent domain registrars while preserving the full parser surface; `build_parser` contains no direct subparser declarations. GitHub Actions provides an automated read-only Windows/Python 3.13 gate for the offline suite, internal links, and pull-request diffs. The final analytics-operations slices passed the complete automated Windows/Python 3.13 gate, closing Backend Phase II. A version-1 Phase 5 provider-selection scope now defines candidate thresholds, holdout coverage, deterministic gates, and non-authorizations, but remains `pending_owner_review`; no holdout dataset or provider has been selected. A fresh holdout, provider selection, dynamic dispatch, live narration, and a user interface remain pending.
+Four active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases 0-4 passed their gates for Northwind and the selected local Ollama development provider; AI Phase 5.1 is approved and Phase 5.2 is active for the selected AdventureWorks 2025 holdout; and Backend Phase II completed increment 2.4 and its documented exit gate. The project owner froze the exact Phase 5 KPI thresholds and guardrails before holdout results, selected AdventureWorks, and authorized only its default-instance local read-only SQL Server export. The additive exporter, optional ODBC adapter, deterministic DuckDB/Parquet materialization, and composite relationship-candidate v2 contract are implemented and offline-tested. A real export attempted the authorized connection but stopped before staging because `MSSQLSERVER` is stopped and this process lacks local administrator authority to start it. CLI registration now contains 48 commands across ten coherent registrars while preserving all prior shapes. Relationship approval, semantic approval, pack design, answer collection, live provider use, provider selection, dynamic dispatch, live narration, and a user interface remain pending.
 
 ## Last Completed Milestone
 
-On 2026-07-22, the repository checkpoint was reconciled with the merged PR #16
-and its successful post-merge GitHub Actions run at `f038cc5`. A separately
-versioned Phase 5 provider-selection scope was drafted with evidence-anchored
-candidate thresholds, minimum fresh-holdout coverage, deterministic approval
-and execution gates, explicit stop conditions, and preserved Backend Phase II
-contracts. The scope remains `pending_owner_review`; it did not select a
-dataset, approve a threshold, call a provider, connect to SQL Server, open
-DuckDB, or authorize Product canonical apply. GitHub PR #17 validated the draft
-with 276 tests passed, 2 opt-in live-provider tests skipped, 113 valid internal
-links, and a clean pull-request diff.
+On 2026-07-22, PR #17 was merged at `729658d`, the project owner approved its
+exact thresholds and guardrails, selected AdventureWorks 2025, and separately
+authorized Phase 5.2's local read-only export. The implementation adds a
+fail-closed SQL Server exporter, optional `pyodbc` dependency, one additive CLI
+command, version-2 composite relationship candidates, and backward-compatible
+reference validation. The full offline suite passed with 284 tests and 2
+expected live-provider skips; 113 internal links passed. The authorized real
+connection attempt created no output or staging because the required default
+SQL Server service is stopped.
 
 ## Current Capabilities
 
@@ -99,6 +98,10 @@ links, and a clean pull-request diff.
 - Maintain a versioned AI implementation roadmap with ordered phases, exit gates, quality targets, and explicit non-authorizations.
 - Inventory local benchmark sources with hashes, provenance/license status, and separate use approvals.
 - Convert supported T-SQL samples to deterministic DuckDB/Parquet artifacts while ignoring operational SQL and retaining foreign keys as pending candidates.
+- Stream an explicitly authorized default-instance local SQL Server database to
+  deterministic DuckDB/Parquet only after exact `ONLINE`/`READ_ONLY`, integrated
+  authentication, ODBC read-only, source-hash, primary-key, and output-drift
+  gates; preserve composite foreign keys as pending candidates.
 - Validate exact reference-dataset provenance, SPDX license evidence, current
   artifact hashes, independent conversion equivalence, read-only schema/counts,
   declared primary keys, declared relationship integrity, and explicit use
@@ -195,6 +198,10 @@ links, and a clean pull-request diff.
 - Phase 5 selection-scope draft validation: GitHub Actions run `29920603444`
   passed at `701586f` with 276 tests, 2 opt-in live-provider skips, 113 valid
   internal links, and a clean exact pull-request diff from `f038cc5`.
+- Phase 5.2 local implementation validation: 284 tests passed and 2 opt-in
+  live-provider tests skipped in 47.92 seconds on Windows/Python 3.13; 113
+  internal links checked, 0 broken; focused exporter/reference/taxonomy suite
+  passed 43 tests.
 - Backend Phase II run-result compatibility and registered-consumer suite: 238
   passed in 39.63 seconds.
 - Backend Phase II existing-file binding consumer suite: 76 passed in 17.77 seconds.
@@ -222,7 +229,11 @@ links, and a clean pull-request diff.
 - Stage 5B plan-to-execution drift still uses size and nanosecond modification time in ordinary queries. The dataset-backed evaluator additionally rechecks the complete database SHA-256 and every other authority hash before each Stage 5B call and after evaluation.
 - Exact download provenance and licensing remain unconfirmed for Pubs and Contoso. Northwind provenance and MIT licensing are verified, but its technical relationship evidence is not promotion authority.
 - Northwind's two `customer_customer_demo` relationships were explicitly accepted as official structural relationships without positive row coverage; semantic modeling must retain that limitation instead of presenting them as row-validated.
-- AdventureWorks now has a compatible local restore runtime, but the SQL Server-to-DuckDB/Parquet export is not implemented; the Contoso recipe references external data and was not executed.
+- AdventureWorks has an offline-validated SQL Server-to-DuckDB/Parquet exporter,
+  but the real dual export and reference evidence remain blocked until a local
+  administrator starts `MSSQLSERVER`; the failed connection created no output
+  or staging directory. The Contoso recipe references external data and was not
+  executed.
 - A second SQL Server 2025 Evaluation instance (`DATAOPSLAB`) remains installed but stopped; project work should use the default Developer instance only when an explicitly authorized restore/export task requires it.
 - Backend Phase II has consolidated proven-equivalent file hashing, standard
   analytics blockers, two atomic-publication variants, and two source-binding
@@ -235,7 +246,8 @@ links, and a clean pull-request diff.
   complete, and 23 result classes expose the additive four-field run-result
   core. The consumer audit intentionally deferred runtime projection until a
   generic dispatcher or run recorder needs all four fields; CLI decomposition
-  has moved all 47 registrations across ten coherent domain modules. The final
+  has moved all prior 47 registrations across ten coherent domain modules; the
+  Phase 5.2 exporter is an additive 48th command. The final
   analytics-operations slices passed the complete automated Windows regression
   gate, and Backend Phase II is complete. Dispatch remains explicit and
   centralized. Free-text
@@ -250,27 +262,25 @@ links, and a clean pull-request diff.
 - No explicit apply contract or approved versioned representation exists yet for the candidate canonical Product snapshot.
 - EDS cross-table analytics remain blocked because `approved_relationships.yml` is intentionally empty.
 - Northwind is `semantic_catalog_approved` with 13 accepted exact relationships and 111 approved semantic entities. All 13 exact plans and expected-answer decisions are approved; the recorded evaluator passed 13/13. Separate live authority permitted one bounded loopback comparison, which passed 9/13 as development evidence. That authority does not extend to a changed prompt/provider, external service, holdout invocation, narration, upload, publication, or training. Pubs remains pending provenance, license, schema, relationship, and benchmark-use review.
-- AdventureWorks is restored and validated but remains pending reproducible export, schema review, relationship approval, and benchmark-use approval.
-- The Phase 5 provider-selection scope, its candidate thresholds, and the
-  preferred AdventureWorks holdout candidate remain pending exact project-owner
-  review. The missing bounded live intent/clarification evaluator is scoped but
-  not implemented.
+- AdventureWorks is restored, validated, selected, and authorized for Phase 5.2,
+  but remains pending two real reproducible exports, reference validation,
+  schema review, relationship approval, and benchmark-use approval. The local
+  default SQL Server service requires administrator authority to start.
+- The Phase 5 thresholds and guardrails are approved and frozen. The missing
+  bounded live intent/clarification evaluator is scoped but not implemented;
+  live provider use remains not authorized.
 
 ## Next Logical Milestone
 
-Backend Phase II is complete; there is no remaining CLI registration slice.
-The next gate is exact project-owner review of
-[`ai-phase-5-provider-selection-scope.md`](ai-phase-5-provider-selection-scope.md):
-approve or revise the proposed KPI thresholds and explicitly select or reject
-AdventureWorks as the holdout dataset. Until then, resume at
-`awaiting_scope_approval` and do not export a database or inspect holdout model
-results. If AdventureWorks is selected, obtain separate authorization for its
-local read-only SQL Server export, then proceed through reproducible reference
-validation, relationship review, semantic approval, frozen answer/intent packs,
-and exact live authorization in the documented order.
+Start the default local `MSSQLSERVER` service with administrator authority, then
+resume the already authorized Phase 5.2 operation. Produce current and
+independent reproduction exports, verify exact source and derived hashes, add
+the versioned AdventureWorks reference manifest, and run
+`reference-dataset-validate`. Stop at `ready_for_relationship_review`; do not
+approve any relationship or inspect any holdout model result in this increment.
 
-Any later implementation must preserve the complete 47-command parser
-signature, `data_ops_lab.cli:main`, and the established hashing, blocker,
+Any later implementation must preserve all prior 47 command shapes plus the
+additive Phase 5.2 command, `data_ops_lab.cli:main`, and the established hashing, blocker,
 publication, binding, taxonomy, and run-result contracts. Keep execution and
 result formatting in the existing domain modules, and keep the run-result
 projection opt-in until a generic dispatcher or run recorder has a real
@@ -284,9 +294,10 @@ files in a separate private store or encrypted artifact workflow.
 
 ## Last Verified Commit
 
-`f038cc5` (`Merge pull request #16 from Haenndel-Santos/agent/complete-cli-registration-split`).
+`729658d` (`Merge pull request #17 from Haenndel-Santos/codex/phase-5-holdout-scope`).
 
 ## Last Updated
 
-2026-07-22 by Codex after reconciling the PR #16 merge/CI checkpoint and
-drafting the pending-review Phase 5 provider-selection scope.
+2026-07-22 by Codex after merging PR #17, recording the owner's Phase 5.1/5.2
+authority, implementing and validating the read-only exporter, and stopping
+safely on the unavailable administrator-controlled SQL Server service.

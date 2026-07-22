@@ -200,14 +200,16 @@ wall time was 429.073 seconds, median 31.759 seconds, p95 43.220 seconds, with
 thresholds first, create a fresh separately reviewed holdout pack, and evaluate
 without tuning on that holdout before selecting a provider.
 
-On 2026-07-22, a version-1
-[provider-selection scope](ai-phase-5-provider-selection-scope.md) was drafted
-with candidate KPI definitions, thresholds, holdout coverage, deterministic
-gates, stop conditions, and explicit non-authorizations. Its status is
-`pending_owner_review`: neither the thresholds nor AdventureWorks as the
-preferred candidate are authority until the project owner reviews that exact
-scope. No holdout result may be inspected before the approved thresholds are
-frozen.
+On 2026-07-22, the project owner approved the exact KPI thresholds and
+guardrails in the version-1
+[provider-selection scope](ai-phase-5-provider-selection-scope.md), selected
+AdventureWorks 2025 as the fresh holdout, and separately authorized increment
+5.2's local read-only SQL Server-to-DuckDB/Parquet export. The export contract
+is implemented and offline-tested, but real export evidence remains pending
+because the required local SQL Server service is stopped and needs local
+administrator authority to start. No holdout model result may be inspected;
+relationship review, semantic approval, pack design, answer collection, live
+provider use, and provider selection remain later gates.
 
 ### Phase 6 - Generic Dataset Recognition
 

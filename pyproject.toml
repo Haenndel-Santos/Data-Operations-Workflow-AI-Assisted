@@ -17,6 +17,9 @@ dependencies = [
 dev = [
   "pytest>=8.0.0",
 ]
+sqlserver = [
+  "pyodbc>=5.2,<6",
+]
 
 [project.scripts]
 dataops = "data_ops_lab.cli:main"

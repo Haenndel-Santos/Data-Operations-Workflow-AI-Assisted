@@ -7,11 +7,11 @@
 `src/data_ops_lab/cli.py` separately dispatches ERP modeling and human-review commands. These commands are explicit and testable, but they do not yet share dependency resolution, checkpoint state, or resume behavior. Step 3E.4 provides a command-local decision digest; Step 3E.5 adds a deterministic ready/blocked materialization checkpoint; Step 3E.6 binds that complete snapshot to applied state in a dry-run promotion plan. None is yet shared orchestrator infrastructure.
 
 CLI registration decomposition has started without changing that dispatch
-boundary. The `src/data_ops_lab/cli_commands/` package now owns all 47 parser
+boundary. The `src/data_ops_lab/cli_commands/` package now owns all 48 parser
 declarations: seven dataset-benchmark commands, eight semantic catalog,
 approval, adapter, translation, and offline evaluation commands, six query
 planning, execution, presentation, narration, and session commands, two
-reference-dataset conversion and validation commands, seven Step 3 ERP
+reference-dataset conversion, SQL Server export, and validation commands, seven Step 3 ERP
 modeling and human-review commands, nine Product reference audit,
 reconciliation, review, validation, and apply commands, three Product
 materialization, canonical-promotion, and repair commands, two conceptual
@@ -49,7 +49,13 @@ projection therefore remains opt-in until a generic dispatcher or run recorder
 needs its complete four-field view; blocker records, statuses, checkpoints,
 artifacts, and authority remain local.
 
-`reference-dataset-validate` remains a separate explicit Phase 2 entrypoint. It
+`benchmark-export-sqlserver` is an additive explicit Phase 5.2 entrypoint with
+a separate `--execute` gate. It may read only an exact authorized local
+read-only SQL Server database and publish new DuckDB/Parquet evidence; it does
+not join the fixed workflow or declarative session registry.
+
+`reference-dataset-validate` remains a separate explicit Phase 2/5.2
+entrypoint. It
 orders provenance/license/use preflight before any read-only DuckDB profiling
 and stops at `ready_for_relationship_review` without an exact completed human
 review. With a completed review it may report `ready_for_semantic_modeling` and

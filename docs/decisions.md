@@ -783,3 +783,35 @@ dispatch, persistence, and failure semantics are defined.
 four-field contract stays tested and opt-in, increment 2.3 is complete, and
 increment 2.4 may focus independently on splitting CLI command registration by
 domain without moving execution logic or changing result semantics.
+
+## 2026-07-22 - Freeze Phase 5 Thresholds And Select AdventureWorks For Phase 5.2
+
+**Decision:** Approve the exact Phase 5 primary KPI thresholds and mandatory
+guardrails in `docs/ai-phase-5-provider-selection-scope.md`, select
+AdventureWorks 2025 as the fresh holdout, and authorize only its reproducible
+local read-only SQL Server-to-DuckDB/Parquet export in increment 5.2. Preserve
+each source-declared composite foreign key as one ordered version-2 candidate;
+keep all schema and relationship decisions pending separate human review.
+
+**Rationale:** Northwind informed prompt and policy development and therefore
+cannot be independent holdout evidence. AdventureWorks has an exact official
+MIT-licensed backup, a verified local restore, broad business coverage, and
+source-declared relational metadata. Its 90 foreign keys include composite
+constraints that the single-column candidate contract cannot represent without
+losing constraint identity and joint-key semantics.
+
+**Alternatives:** Reuse Northwind as the holdout; select an unqualified dataset;
+depend on SQL Server permanently; flatten composite constraints into unrelated
+single-column candidates; approve relationships from declarations alone; or
+authorize the provider call together with export.
+
+**Impact:** Phase 5.1 is approved and Phase 5.2 may use only the default local
+Developer instance, integrated authentication, ODBC read-only intent, an exact
+`ONLINE`/`READ_ONLY` database preflight, bounded primary-key-ordered batches,
+and local DuckDB/Parquet outputs. The additive
+`benchmark-export-sqlserver` command and optional `pyodbc` dependency do not
+alter the offline default suite. Reference validation accepts both relationship
+artifact v1 and v2, but no v2 candidate gains authority automatically. Live
+Ollama invocation, relationship/semantic approval, holdout-pack design, answer
+collection, external upload, publication, training, and provider selection
+remain not authorized.

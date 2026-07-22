@@ -4,34 +4,35 @@
 
 ```yaml
 version: 1
-status: pending_owner_review
+status: approved_for_phase_5_2
 created: 2026-07-22
 decision_supported: select_or_reject_one_exact_local_provider_configuration
 candidate_provider: ollama:gpt-oss:20b
 candidate_prompt_contract: ollama_semantic_intent_v2
-holdout_dataset: pending_owner_selection
+holdout_dataset: adventureworks_2025
 dynamic_execution_enabled: false
 external_provider_enabled: false
 production_use_enabled: false
 ```
 
 This document is the separately versioned scope required after Backend Phase II.
-It fixes a reviewable Phase 5 decision boundary before any new holdout result is
-visible. It does not approve the proposed thresholds, select a holdout dataset,
-authorize an export or database connection, authorize a live provider call, or
-select a provider. Those decisions require the explicit gates below.
+On 2026-07-22, the project owner approved the exact thresholds and guardrails,
+selected AdventureWorks 2025 as the fresh holdout, and separately authorized
+increment 5.2's local read-only SQL Server-to-DuckDB/Parquet export. That
+authority does not extend to relationship approval, semantic approval, holdout
+design, answer collection, a live provider call, or provider selection.
 
 ## Required Owner Review
 
 | Decision | Current state | Required action |
 | --- | --- | --- |
-| Primary KPI thresholds and mandatory guardrails | `pending` | Approve or revise this exact metric set before any holdout response is visible |
-| Holdout dataset | `pending` | Select AdventureWorks 2025 or name another eligible dataset |
-| Phase 5.2 export/conversion work | `not_authorized` | Authorize separately only after the dataset decision |
+| Primary KPI thresholds and mandatory guardrails | `approved` | Frozen before any AdventureWorks holdout response is visible |
+| Holdout dataset | `adventureworks_2025_selected` | Qualify only through the ordered gates below |
+| Phase 5.2 export/conversion work | `authorized_local_read_only` | Export only from the default local read-only instance to local DuckDB/Parquet |
 | Live holdout invocation | `not_authorized` | Authorize separately after every immutable review and dry-run gate passes |
 
-Approval of this document would freeze the metric definitions and thresholds,
-not authorize the later database or provider operations.
+The approval freezes the metric definitions and thresholds. It authorizes only
+the Phase 5.2 database operation described above, not any provider operation.
 
 ## Objective
 
@@ -73,11 +74,10 @@ alias_normalization: reviewed_expected_aliases_only_after_non_alias_request_matc
 The baseline supports thresholds but does not count toward the holdout
 numerators or denominators.
 
-## Proposed Selection Metrics
+## Approved Selection Metrics
 
-The thresholds below remain candidate human decisions until the project owner
-reviews this exact document. Once approved, they must be frozen before any
-provider response or result for the selected holdout is inspected.
+The project owner approved the thresholds below on 2026-07-22. They are frozen
+before any provider response or result for the selected holdout is inspected.
 
 ### Primary KPIs
 
@@ -148,7 +148,7 @@ Current candidates are:
 
 | Dataset | Evidence today | Holdout status |
 | --- | --- | --- |
-| AdventureWorks 2025 | Exact official Microsoft source and MIT license verified; local read-only restore and integrity checks passed | Preferred candidate, but pending explicit owner selection, reproducible export, relationship review, semantic approval, and benchmark-use approval |
+| AdventureWorks 2025 | Exact official Microsoft source and MIT license verified; local read-only restore and integrity checks passed | Selected fresh holdout; Phase 5.2 export is authorized, while reproducible output, relationship review, semantic approval, and benchmark-use approval remain gated |
 | Pubs | Local conversion exists | Blocked on exact provenance and license confirmation, then all later reviews |
 | Contoso recipe | Schema recipe only; external rows were not loaded | Ineligible without a separately approved local dataset |
 | Chinook | Recommended by the roadmap but not present in the versioned local inventory | Acquisition and onboarding not authorized by this scope |
@@ -192,8 +192,9 @@ telemetry. It must reuse Stage 5D rather than duplicate semantic logic.
 
 ## Deterministic Execution Order
 
-1. **Approve this scope.** Review the decision boundary, candidate thresholds,
-   dataset choice, and non-authorizations. Stop while any item is pending.
+1. **Approve this scope.** Completed by the project owner on 2026-07-22 for the
+   exact thresholds, AdventureWorks selection, and Phase 5.2 local read-only
+   export boundary.
 2. **Qualify the selected dataset.** Perform only a separately authorized local
    export/conversion, then validate provenance, license, hashes, schema, keys,
    relationships, and permitted uses. Stop at `ready_for_relationship_review`.
@@ -232,7 +233,7 @@ authorization and a fresh unseen holdout for a new selection claim.
 
 | Increment | Deliverable | Required checks | Safe stop point |
 | --- | --- | --- | --- |
-| 5.1 | Reviewed threshold and dataset-selection scope | Internal links and documentation diff | `awaiting_scope_approval` |
+| 5.1 | Reviewed threshold and dataset-selection scope | Internal links and documentation diff | `approved_for_phase_5_2` |
 | 5.2 | Reproducible selected-dataset export/conversion and reference manifest | Focused conversion/reference tests, independent reproduction, full offline suite | `ready_for_relationship_review` |
 | 5.3 | Completed relationship and semantic authority | Focused review/catalog/approval tests and full offline suite | `semantic_catalog_approved` |
 | 5.4 | Frozen executable and intent holdout designs, exact plan review, candidate answers, and benchmark approval | Existing preparation/materialization/review/evaluation suites | `ready_for_live_authorization` |
@@ -246,7 +247,8 @@ remains at its last valid checkpoint and cannot be renamed to a later status.
 
 This scope preserves:
 
-- all 47 CLI command registrations and the `data_ops_lab.cli:main` entrypoint;
+- all prior 47 CLI command registrations and the `data_ops_lab.cli:main`
+  entrypoint; Phase 5.2 adds one covered command without changing prior shapes;
 - explicit domain dispatch and module-specific result formatting;
 - the opt-in four-field run-result projection;
 - existing hashing, blocker, atomic-publication, source-binding, taxonomy,
@@ -261,8 +263,8 @@ analytics domain registrar, and covered by exact parser compatibility tests.
 
 This scope does not authorize:
 
-- connecting to SQL Server or exporting AdventureWorks;
-- selecting AdventureWorks or any other dataset without explicit owner review;
+- any SQL Server target except the default local Developer instance and exact
+  read-only `AdventureWorks2025` database, or any database write;
 - changing completed Northwind reviews, packs, approvals, or evidence;
 - a provider/network invocation or reuse of an old live authorization;
 - hosted or LAN providers, credentials, upload, publication, or training;
@@ -284,4 +286,6 @@ Phase 5 may close only when:
 6. all three primary KPIs pass their fixed thresholds; and
 7. a separate human decision records selection or rejection with evidence hashes.
 
-Until then, the current safe resume point is `awaiting_scope_approval`.
+Until then, the current safe resume point is Phase 5.2. If the required local
+SQL Server service is unavailable, stop at `awaiting_local_sqlserver_service`
+without weakening the read-only preflight or advancing to relationship review.

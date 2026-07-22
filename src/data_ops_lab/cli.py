@@ -49,6 +49,7 @@ from .analytics_semantic_review import run_analytics_semantic_review
 from .analytics_translation_evaluation import run_analytics_translation_evaluation
 from .approval_spreadsheet import run_approval_spreadsheet
 from .benchmark_sql_conversion import run_benchmark_sql_conversion
+from .benchmark_sqlserver_export import run_benchmark_sqlserver_export
 from .business_flow_mapping import run_business_flow_mapping
 from .canonical_model import run_canonical_model_alignment
 from .cli_commands import (
@@ -624,6 +625,29 @@ def main() -> None:
         print(f"Manifest: {result.manifest_path}")
         print(f"Parquet directory: {result.output_dir / 'parquet'}")
         print("No source file, external database, credential, or remote system was modified.")
+        return
+
+    if args.command == "benchmark-export-sqlserver":
+        result = run_benchmark_sqlserver_export(
+            args.source_backup,
+            args.dataset,
+            args.database,
+            args.output,
+            server=args.server,
+            driver=args.driver,
+            batch_size=args.batch_size,
+            execute=args.execute,
+        )
+        print("Local read-only SQL Server benchmark export complete")
+        print(f"Status: {result.status}")
+        print(f"Tables: {result.table_count}")
+        print(f"Rows: {result.row_count}")
+        print(f"Relationship candidates: {result.relationship_count}")
+        print(f"Outputs changed: {result.outputs_changed}")
+        print(f"DuckDB: {result.database_path}")
+        print(f"Manifest: {result.manifest_path}")
+        print(f"Schema candidates: {result.schema_path}")
+        print("The .bak remained unchanged; SQL Server access was local and read-only.")
         return
 
     if args.command == "reference-dataset-validate":

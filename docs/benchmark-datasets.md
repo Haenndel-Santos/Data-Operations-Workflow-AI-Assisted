@@ -44,13 +44,28 @@ foreign keys become unapproved relationship candidates. Existing derived
 outputs are accepted only when source and artifact hashes still match;
 otherwise the command fails without overwriting them.
 
+## Read-Only SQL Server Export
+
+`benchmark-export-sqlserver` is the separately authorized Phase 5.2 bridge for
+an already restored local backup database. It accepts only the default local
+instance, Windows integrated authentication, Microsoft ODBC Driver 17/18, and
+an exact database that SQL Server reports as `ONLINE` and `READ_ONLY`. It
+streams tables in primary-key order to bounded Parquet batches, creates DuckDB
+only from those files, and preserves composite foreign keys as pending version-2
+candidates. See the full
+[AdventureWorks export contract](adventureworks-sqlserver-export.md).
+
+The command requires explicit `--execute` and the optional `sqlserver`
+dependency. Default tests use an offline source double and never connect to a
+database.
+
 ## Current Inventory
 
 | Dataset | Local state | Evidence | Remaining gate |
 | --- | --- | --- | --- |
 | Northwind | `semantic_catalog_approved` | Phases 2-3 passed; 13 tables, 60 dimensions, 19 measures, 18 approved paths, 339 terms, zero blockers/ambiguities | Select and govern a live provider separately; expected-answer authority remains pending. |
 | Pubs | Converted: 11 tables, 255 rows | DuckDB, Parquet, 10 relationship candidates | Confirm source/license; assess two replacement characters; review schema/relationships. |
-| AdventureWorks 2025 | Official backup restored locally as `READ_ONLY` | Exact release hash; `RESTORE VERIFYONLY` and `DBCC CHECKDB` passed; 71 tables, 20 views, 90 declared foreign keys, 760,167 aggregate rows | Implement a reproducible read-only DuckDB/Parquet export, then review schema, relationships, and benchmark use. |
+| AdventureWorks 2025 | Selected holdout; official backup restored locally as `READ_ONLY`; Phase 5.2 export authorized | Exact release hash; `RESTORE VERIFYONLY` and `DBCC CHECKDB` passed; exporter and composite-contract offline tests pass | Start the default service with local administrator authority, run two reproducible exports, validate the reference manifest, then stop at relationship review. |
 | Contoso warehouse recipe | Raw SQL/Markdown retained | Schema/load recipe only | Confirm source/license; acquire an authorized local data package without external execution. |
 
 The local AdventureWorks backup exactly matches Microsoft's official
@@ -58,8 +73,10 @@ The local AdventureWorks backup exactly matches Microsoft's official
 `fa6a2a5d431ad88123f89b36b1f2c7e42ca4bdf6b293269a44df80f6de3738a5`).
 It is restored only in the local SQL Server 2025 Developer instance, database
 `AdventureWorks2025`, and was set to `READ_ONLY` immediately after restoration.
-The SQL Server restore is a temporary compatibility bridge; no derived export
-or relationship approval has been produced from it yet.
+The SQL Server restore is a temporary compatibility bridge. The bounded export
+module is implemented, but no real derived export or relationship approval has
+been produced yet because `MSSQLSERVER` remains stopped and this Codex process
+cannot start it without local administrator rights.
 
 ## Northwind Phase 2 And 3 Boundary
 

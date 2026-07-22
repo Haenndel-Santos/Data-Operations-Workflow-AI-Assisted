@@ -611,7 +611,7 @@ EXCEPTION_FALLBACK_PROVENANCE = {
         exception_message_persisted=False,
         disposition=TaxonomyDisposition.SEPARATE_EXCEPTION_SURFACE,
     ),
-    "src/data_ops_lab/reference_dataset_validation.py:281": ExceptionFallbackProvenance(
+    "src/data_ops_lab/reference_dataset_validation.py:293": ExceptionFallbackProvenance(
         consumer_family="reference_dataset_validation",
         value_source="benchmark-use human approval timestamp parsing",
         caught_exceptions=("ValueError",),
@@ -621,7 +621,7 @@ EXCEPTION_FALLBACK_PROVENANCE = {
         exception_message_persisted=False,
         disposition=TaxonomyDisposition.SEPARATE_EXCEPTION_SURFACE,
     ),
-    "src/data_ops_lab/reference_dataset_validation.py:485": ExceptionFallbackProvenance(
+    "src/data_ops_lab/reference_dataset_validation.py:582": ExceptionFallbackProvenance(
         consumer_family="reference_dataset_validation",
         value_source="read-only DuckDB technical-evidence profiling",
         caught_exceptions=("duckdb.Error",),
@@ -631,7 +631,7 @@ EXCEPTION_FALLBACK_PROVENANCE = {
         exception_message_persisted=False,
         disposition=TaxonomyDisposition.SEPARATE_EXCEPTION_SURFACE,
     ),
-    "src/data_ops_lab/reference_dataset_validation.py:540": ExceptionFallbackProvenance(
+    "src/data_ops_lab/reference_dataset_validation.py:640": ExceptionFallbackProvenance(
         consumer_family="reference_dataset_validation",
         value_source="per-relationship human review timestamp parsing",
         caught_exceptions=("ValueError",),
@@ -641,7 +641,7 @@ EXCEPTION_FALLBACK_PROVENANCE = {
         exception_message_persisted=False,
         disposition=TaxonomyDisposition.SEPARATE_EXCEPTION_SURFACE,
     ),
-    "src/data_ops_lab/reference_dataset_validation.py:701": ExceptionFallbackProvenance(
+    "src/data_ops_lab/reference_dataset_validation.py:837": ExceptionFallbackProvenance(
         consumer_family="reference_dataset_validation",
         value_source="staged validation-evidence publication",
         caught_exceptions=("Exception",),
@@ -1147,42 +1147,42 @@ TEXT_STATUS_PROVENANCE = {
         ),
         disposition=TaxonomyDisposition.SEPARATE_TEXT_STATUS,
     ),
-    "src/data_ops_lab/reference_dataset_validation.py:211": TextStatusProvenance(
+    "src/data_ops_lab/reference_dataset_validation.py:222": TextStatusProvenance(
         consumer_family="reference_dataset_validation",
         value_source="validated benchmark-conversion manifest projection",
         output_field="conversion_projection.status",
         status_values=("ready_for_local_benchmark",),
         disposition=TaxonomyDisposition.SEPARATE_TEXT_STATUS,
     ),
-    "src/data_ops_lab/reference_dataset_validation.py:493": TextStatusProvenance(
+    "src/data_ops_lab/reference_dataset_validation.py:590": TextStatusProvenance(
         consumer_family="reference_dataset_validation",
         value_source="optional exact relationship-review validation outcome",
         output_field="relationships.review_status",
         status_values=("completed", "incomplete", "invalid", "pending_review"),
         disposition=TaxonomyDisposition.SEPARATE_TEXT_STATUS,
     ),
-    "src/data_ops_lab/reference_dataset_validation.py:560": TextStatusProvenance(
+    "src/data_ops_lab/reference_dataset_validation.py:705": TextStatusProvenance(
         consumer_family="reference_dataset_validation",
         value_source="generated relationship-review template",
         output_field="relationship_review.status",
         status_values=("pending_review",),
         disposition=TaxonomyDisposition.SEPARATE_TEXT_STATUS,
     ),
-    "src/data_ops_lab/reference_dataset_validation.py:592": TextStatusProvenance(
+    "src/data_ops_lab/reference_dataset_validation.py:694": TextStatusProvenance(
         consumer_family="reference_dataset_validation",
         value_source="generated pending or preserved completed human decision",
         output_field="relationship_review.decisions[].decision",
         status_values=("accepted", "pending", "rejected"),
         disposition=TaxonomyDisposition.SEPARATE_TEXT_STATUS,
     ),
-    "src/data_ops_lab/reference_dataset_validation.py:632": TextStatusProvenance(
+    "src/data_ops_lab/reference_dataset_validation.py:768": TextStatusProvenance(
         consumer_family="reference_dataset_validation",
         value_source="human-review-gated approved-relationship projection",
         output_field="approved_relationships.status",
         status_values=("approved", "pending_review"),
         disposition=TaxonomyDisposition.SEPARATE_TEXT_STATUS,
     ),
-    "src/data_ops_lab/reference_dataset_validation.py:778": TextStatusProvenance(
+    "src/data_ops_lab/reference_dataset_validation.py:914": TextStatusProvenance(
         consumer_family="reference_dataset_validation",
         value_source="blocker outcome and completed exact relationship review",
         output_field="status",
@@ -1266,7 +1266,7 @@ CONTROL_TEXT_PROVENANCE = {
 
 
 APPROVAL_PROJECTION_PROVENANCE = {
-    "src/data_ops_lab/reference_dataset_validation.py:612": ApprovalProjectionProvenance(
+    "src/data_ops_lab/reference_dataset_validation.py:734": ApprovalProjectionProvenance(
         consumer_family="reference_dataset_validation",
         value_source=(
             "accepted/rejected decisions from the exact completed human review, "
