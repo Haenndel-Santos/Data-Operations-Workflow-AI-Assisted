@@ -17,7 +17,9 @@ candidate thresholds, minimum fresh-holdout coverage, deterministic approval
 and execution gates, explicit stop conditions, and preserved Backend Phase II
 contracts. The scope remains `pending_owner_review`; it did not select a
 dataset, approve a threshold, call a provider, connect to SQL Server, open
-DuckDB, or authorize Product canonical apply.
+DuckDB, or authorize Product canonical apply. GitHub PR #17 validated the draft
+with 276 tests passed, 2 opt-in live-provider tests skipped, 113 valid internal
+links, and a clean pull-request diff.
 
 ## Current Capabilities
 
@@ -190,6 +192,9 @@ DuckDB, or authorize Product canonical apply.
   111 internal links checked, 0 broken; pull-request diff check passed.
 - Post-merge `main` validation: GitHub Actions run `29778080598` completed
   successfully at exact merge commit `f038cc5` on 2026-07-20.
+- Phase 5 selection-scope draft validation: GitHub Actions run `29920603444`
+  passed at `701586f` with 276 tests, 2 opt-in live-provider skips, 113 valid
+  internal links, and a clean exact pull-request diff from `f038cc5`.
 - Backend Phase II run-result compatibility and registered-consumer suite: 238
   passed in 39.63 seconds.
 - Backend Phase II existing-file binding consumer suite: 76 passed in 17.77 seconds.

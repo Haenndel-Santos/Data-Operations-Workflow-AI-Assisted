@@ -3992,3 +3992,42 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 - Do not connect to SQL Server, call Ollama, apply Product canonical state,
   enable dynamic dispatch/concurrency/UI, or reuse Northwind as a holdout under
   this documentation-only scope.
+
+## 2026-07-22 - Codex - Validate Phase 5 selection-scope draft PR
+
+### Git Checkpoint
+
+- Committed the documentation scope as `701586f`
+  (`docs(ai): draft phase 5 provider selection scope`).
+- Pushed branch `codex/phase-5-holdout-scope` and opened GitHub PR #17 as a
+  draft so owner review cannot be confused with merge readiness.
+- Validated exact base `f038cc5` and head `701586f` through GitHub Actions run
+  `29920603444`; job `88924847639`.
+
+### Validation
+
+- Full offline suite: 276 passed and 2 opt-in live-provider tests skipped in
+  47.91 seconds on Windows/Python 3.13.
+- Internal links: 113 checked, 0 broken.
+- Exact pull-request `git diff --check`: passed.
+- Checkout, Python setup, dependency installation, cache finalization, and
+  cleanup passed.
+- No provider/network invocation, project data, external database, DuckDB
+  artifact, approval apply, migration, import, synchronization, upload,
+  publication, or generated-output publication ran.
+
+### Phase Result
+
+- The Phase 5 provider-selection scope is versioned and regression-validated,
+  but remains `pending_owner_review`.
+- Threshold, dataset, export, live-evaluation, and provider-selection authority
+  remain separate and unapproved.
+
+### Next Logical Step
+
+1. Keep PR #17 draft while the project owner reviews the exact proposed KPI
+   thresholds, guardrails, and AdventureWorks holdout recommendation.
+2. Record any approved or revised decisions as a separate durable decision and
+   revalidate the resulting exact scope.
+3. Begin Phase 5.2 only after explicit dataset selection and separate export
+   authority.
