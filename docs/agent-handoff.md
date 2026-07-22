@@ -3919,3 +3919,76 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 2. Mark PR #16 ready and merge only after that final run passes.
 3. Define a new versioned scope before dynamic dispatch, service/UI expansion,
    concurrency, or further generic result semantics.
+
+## 2026-07-22 - Codex - Reconcile PR #16 and draft Phase 5 selection scope
+
+### Initial Context
+
+- Fetched `origin` and confirmed local `main`, `origin/main`, and GitHub's
+  default branch at exact commit `f038cc5`, with zero ahead/behind divergence,
+  a clean worktree, and no stash.
+- Confirmed PR #16 merged and post-merge GitHub Actions run `29778080598`
+  completed successfully at `f038cc5`.
+- `docs/progress.md` still identified pre-merge commit `ff485ac` as the last
+  verified checkpoint, and the newest prior handoff still listed PR #16 merge
+  as pending.
+- Created branch `codex/phase-5-holdout-scope` from the synchronized `main`.
+
+### Documentation
+
+- Updated `docs/progress.md` to record the merged checkpoint and successful
+  post-merge CI, while preserving Backend Phase II as complete.
+- Added `docs/ai-phase-5-provider-selection-scope.md` as a version-1
+  `pending_owner_review` scope rather than treating a planning recommendation
+  as human authority.
+- Defined three candidate primary KPIs: at least 90% end-to-end accuracy over
+  at least 20 executable holdout cases, at least 90% reviewed semantic-request
+  accuracy, and at least 90% clarification decision accuracy over at least 10
+  clarification/unknown cases.
+- Kept provider acceptance and component agreement as diagnostic drivers and
+  defined uncompensated guardrails for blockers, unauthorized access, raw SQL,
+  authority checks, executed-result controls, timeout, telemetry, latency, cost,
+  and external scopes.
+- Documented 20-40-case executable-pack coverage, a separate 10-20-case live
+  intent pack, deterministic review/execution order, increments, stop states,
+  compatibility boundaries, and the Phase 5 exit gate.
+- Recorded AdventureWorks 2025 as the preferred current candidate based on its
+  already versioned exact provenance, MIT license, and local read-only restore,
+  but left dataset selection, export, relationships, semantics, benchmark use,
+  and live evaluation pending explicit authority.
+- Added the new scope to `docs/ai-implementation-roadmap.md` and made
+  `awaiting_scope_approval` the current safe resume point in `docs/progress.md`.
+- Did not update `docs/decisions.md` because no threshold, dataset, provider, or
+  execution decision has yet been approved.
+
+### Validation
+
+- Internal links: 113 checked, 0 broken.
+- Focused internal-link pytest: 1 passed in 0.06 seconds.
+- `git diff --check`: no whitespace errors.
+- No trailing whitespace was found in the new or updated documents.
+- The full Python suite was not rerun because this increment changes only
+  Markdown planning/state documents and no executable code, contract, fixture,
+  or dependency.
+- No provider/network invocation, database connection, DuckDB access, source or
+  generated-output change, review-file modification, approval apply, migration,
+  import, synchronization, upload, publication, or training ran.
+
+### Next Logical Step
+
+1. The project owner reviews the exact KPI thresholds and guardrails in
+   `docs/ai-phase-5-provider-selection-scope.md` and approves or revises them.
+2. The project owner explicitly selects AdventureWorks 2025 or another eligible
+   holdout dataset.
+3. Only if AdventureWorks is selected, obtain separate authorization for a
+   reproducible local read-only SQL Server export and begin increment 5.2.
+
+### Do Not Do Yet
+
+- Do not treat this draft scope as threshold, dataset, provider, export, or live
+  invocation authority.
+- Do not inspect holdout model results before approved thresholds and immutable
+  packs are frozen.
+- Do not connect to SQL Server, call Ollama, apply Product canonical state,
+  enable dynamic dispatch/concurrency/UI, or reuse Northwind as a holdout under
+  this documentation-only scope.

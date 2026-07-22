@@ -200,6 +200,15 @@ wall time was 429.073 seconds, median 31.759 seconds, p95 43.220 seconds, with
 thresholds first, create a fresh separately reviewed holdout pack, and evaluate
 without tuning on that holdout before selecting a provider.
 
+On 2026-07-22, a version-1
+[provider-selection scope](ai-phase-5-provider-selection-scope.md) was drafted
+with candidate KPI definitions, thresholds, holdout coverage, deterministic
+gates, stop conditions, and explicit non-authorizations. Its status is
+`pending_owner_review`: neither the thresholds nor AdventureWorks as the
+preferred candidate are authority until the project owner reviews that exact
+scope. No holdout result may be inspected before the approved thresholds are
+frozen.
+
 ### Phase 6 - Generic Dataset Recognition
 
 - Detect physical types, nullability, uniqueness, candidate keys, repeated line
