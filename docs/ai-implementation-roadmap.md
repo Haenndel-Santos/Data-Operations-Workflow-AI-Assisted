@@ -2,15 +2,26 @@
 
 ## Purpose
 
-Evolve the current governed analytics backend into a local-first product where
-an analyst can connect an approved dataset, review its semantic model, ask a
-question in natural language, approve the analytical plan, and receive a
-reproducible result with evidence and cited narration without writing SQL.
+Evolve the current governed analytics backend into a customer-hosted,
+local-first product where a PME stakeholder can ask an operational question in
+natural language and receive a reproducible result with evidence and cited
+narration without writing SQL. Analysts and reviewers retain deeper controls
+for dataset onboarding, semantic review, plan approval, and evidence audit.
 
 This roadmap is sequencing guidance, not authority to use real data, connect an
 external provider, approve relationships, upload information, train a model, or
 deploy to production. Every existing human, privacy, dataset, and execution gate
 continues to apply.
+
+Sprint 0 now defines the product and security baseline:
+[Product Vision](product-vision.md),
+[Customer Data Boundary](customer-data-boundary.md),
+[Security Architecture Baseline](security-architecture.md),
+[Product Threat Model](threat-model.md),
+[AI Analytical Capability Matrix](ai-analytical-capability-matrix.md),
+[MVP Product Requirements](mvp-prd.md), [MVP Architecture](mvp-architecture.md),
+[RBAC Matrix](rbac-matrix.md), and
+[Product Readiness Checklist](product-readiness-checklist.md).
 
 ## Current Baseline
 
@@ -73,7 +84,10 @@ reliability evidence still does not satisfy the fresh-holdout selection gate.
 ## Target Architecture
 
 ```text
-approved local dataset
+customer-controlled environment
+  -> product API and browser UI
+  -> identity, RBAC, tenant policy, feature flags, audit
+  -> approved local dataset
   -> onboarding, profiling, and schema candidates
   -> human-approved semantic catalog and relationships
   -> minimized semantic retrieval context
@@ -101,10 +115,10 @@ approvals, and evidence.
 | 4 | Live provider boundary | At least one provider adapter passes privacy, timeout, failure, cost, and offline-mock tests; network use remains explicit per invocation. |
 | 5 | Model and answer evaluation | Provider/model selection is supported by semantic accuracy, answer accuracy, grounding, safety, latency, and cost evidence. |
 | 6 | Generic dataset recognition | New datasets produce bounded schema and semantic candidates with confidence/evidence and no automatic approval. |
-| 7 | Product API and interface | Users can ask, clarify, review, execute, inspect evidence, export, and revisit analyses through governed sessions. |
+| 7 | Product API and interface | Users can ask, clarify, review, execute, inspect evidence, export, and revisit analyses through governed sessions; identity, RBAC, tenant policy, audit, feature flags, and the Customer Data Boundary are enforced before shared UI use. |
 | 8 | EDS controlled pilot | EDS semantics and required relationships are approved; local pilot questions are verified against human answers and privacy controls. |
 | 9 | Supervised feedback loop | Human corrections become versioned evaluation/retrieval evidence without silently changing approved state or model parameters. |
-| 10 | Production and commercialization | Authentication, authorization, isolation, secrets, audit, observability, recovery, packaging, privacy, and support controls pass release review. |
+| 10 | Production and commercialization | Secrets, WAF/rate limiting, HTTPS/HSTS, observability, recovery, packaging, privacy, support, update/rollback, and release security controls pass review. |
 
 ## Phase Details
 
@@ -265,7 +279,8 @@ frontend separable.
 ## Critical Path
 
 ```text
-module registry
+Sprint 0 product and security baseline
+  -> module registry
   -> measured performance
   -> approved reference datasets
   -> approved semantic catalogs
@@ -290,6 +305,10 @@ include:
 - zero execution of raw model-generated SQL;
 - 100% enforcement of approved relationships and plan-review checkpoints;
 - exact numeric preservation between Stage 5B facts and presented values;
+- 100% enforcement of product RBAC, tenant/data-boundary policy, and feature
+  flags once API/UI work begins;
+- no prompts, rows, credentials, provider responses, SQL parameters, or private
+  identifiers in external logs or support bundles by default;
 - measurable benchmark thresholds for intent and answer accuracy;
 - bounded memory, runtime, rows, result bytes, and provider cost;
 - reproducible offline main suite with isolated opt-in online tests.

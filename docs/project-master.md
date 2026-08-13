@@ -2,11 +2,26 @@
 
 ## Mission
 
-Build a modular, local-first workflow that receives raw operational XLSX/CSV exports and turns them into validated analytical datasets and an evidence-backed ERP data model. It should reduce manual profiling, cleaning, relationship discovery, SQL preparation, and BI export work while preserving analyst control and traceability. The final system should coordinate specialized modules through explicit contracts, support safe partial execution and validation, and remain reproducible without external services.
+Build a modular, customer-hosted, local-first Data Intelligence platform that
+receives raw operational XLSX/CSV exports and local database evidence, turns
+them into validated analytical datasets and an evidence-backed ERP data model,
+and lets small and medium-sized businesses ask governed analytical questions
+without requiring SQL or data-analysis expertise. It should reduce manual
+profiling, cleaning, relationship discovery, SQL preparation, BI export, and
+business-answering work while preserving analyst/reviewer control,
+traceability, and private data boundaries. The final system should coordinate
+specialized modules through explicit contracts, support safe partial execution
+and validation, and remain reproducible without external services by default.
 
 ## Users And Outcomes
 
-Primary users are data and operations analysts working from ERP exports. A successful run produces normalized staging data, profiles, schema/key candidates, relationship evidence, review packages, a local DuckDB analytical layer, Tableau-ready files, and concise documentation.
+Primary product users are business owners, managers, and operations teams at
+PMEs that need decision-ready analysis but may not have a dedicated analyst.
+Data and operations analysts remain advanced users and reviewers. A successful
+run produces normalized staging data, profiles, schema/key candidates,
+relationship evidence, review packages, a local DuckDB analytical layer,
+Tableau-ready files, concise documentation, governed semantic context, and
+reproducible answers with evidence.
 
 ## Architecture
 
@@ -33,6 +48,9 @@ backend to approved datasets, live-model evaluation, governed UX, EDS pilot,
 and production readiness.
 See `docs/backend-phase-2.md` for the active compatibility-preserving
 consolidation of shared internal backend contracts.
+See `docs/product-vision.md`, `docs/customer-data-boundary.md`,
+`docs/security-architecture.md`, `docs/mvp-prd.md`, and
+`docs/mvp-architecture.md` for the Sprint 0 product and security baseline.
 
 ## Project Stages
 
@@ -42,7 +60,12 @@ consolidation of shared internal backend contracts.
 4. **Approved canonical model:** pending. The Product promotion plan has not been applied, while `approved_keys.yml` and `approved_relationships.yml` remain intentionally empty.
 5. **Migration/import execution:** not started and not authorized until approvals and safeguards exist.
 6. **AI-assisted analytics interface:** Stage 5A safe structured query planning, Stage 5B controlled local DuckDB execution, Stage 5C semantic governance, Stage 5D deterministic/provider-neutral translation evaluation, a synthetic Stage 5E exact-answer harness, pre-execution answer preparation, sequential candidate-answer materialization, per-case dataset benchmark review/approval, dry-run immutable binding validation, approved offline dataset-backed execution, separate live loopback evaluation, a bounded local endurance harness, deterministic result presentation, recorded grounded narration, a two-phase local session coordinator, and its static declarative module registry are implemented. Northwind now has exact official provenance, MIT licensing, independent conversion equivalence, 13 technically valid PKs, approved local benchmark scope, a completed exact human review accepting all 13 physical relationships, and an applied 111-entity semantic registry with zero compiled blockers or ambiguities. A provider-neutral loopback Ollama `gpt-oss:20b` intent adapter is implemented with explicit socket opt-in, bounded structured output, and isolated live testing. Phase 5 executed 13 separately approved exact plans, produced a typed expected-answer pack with separate immutable approval, passed its recorded offline evaluator 13/13, and completed a separately authorized local live development comparison at 9/13 with all four mismatches blocked before query execution. The soak harness may repeat only that development comparison with concurrency one and resource stop gates. Northwind remains a development set; AdventureWorks 2025 is now the selected fresh holdout and its local read-only export contract is implemented, while real reproducible export and every later relationship, semantic, pack, live-provider, and provider-selection gate remain pending. Live narration, dynamic registry execution, and a user interface also remain pending.
-7. **Optional product extensions:** UI, richer BI artifacts, and additional performance work remain future options after the backend contracts are validated.
+7. **Product and security baseline:** Sprint 0 has documented the PME-oriented
+   product vision, Customer Data Boundary, security architecture, threat model,
+   AI authority split, MVP requirements, RBAC target, and product readiness
+   checklist. These are design baselines, not implemented API/UI/security
+   controls.
+8. **Optional product extensions:** UI, richer BI artifacts, and additional performance work remain future options after the backend contracts are validated.
 
 ## Global Success Criteria
 
@@ -53,3 +76,9 @@ consolidation of shared internal backend contracts.
 - Modules expose clear inputs, outputs, failure behavior, and validation.
 - The orchestrator can evolve toward partial execution, dry-run, checkpoints, and safe resume without absorbing business logic.
 - Documentation and handoff files let a new agent identify the current stage and next safe step in minutes.
+- Customer data, prompts, results, logs, generated artifacts, and secrets remain
+  inside the Customer Data Boundary unless a separate documented authorization
+  permits a narrower disclosure.
+- The AI remains an interpretation and explanation layer; deterministic code
+  remains authority for calculations, permissions, SQL planning/execution, and
+  evidence.

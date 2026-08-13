@@ -4109,3 +4109,103 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 - Do not weaken the read-only preflight, use `DATAOPSLAB`, connect remotely,
   approve any AdventureWorks relationship, design/inspect holdout questions or
   answers, call Ollama, or advance beyond Phase 5.2.
+
+## 2026-08-13 - Codex - Complete Sprint 0 product and security baseline
+
+### Scope And Coordination
+
+- Used project-guardian, project-orchestrator, documentation-writer,
+  implementation, test-engineer, and security threat-model guidance. The
+  Codex Security threat-model skill referenced a missing
+  `threat-model-guidance.md`, so the security model was written as a normal
+  project document under `docs/` using existing repository evidence.
+- Spawned three read-only subagents for product/UX, security/governance, and
+  Phase 5 sequencing. Their outputs were integrated into documentation; no
+  subagent edited files.
+- Did not connect to SQL Server, DuckDB real artifacts, Ollama, hosted
+  providers, external services, or production data.
+
+### Documentation
+
+- Added Sprint 0 product/security baseline documents:
+  `docs/product-vision.md`, `docs/customer-data-boundary.md`,
+  `docs/security-architecture.md`, `docs/threat-model.md`,
+  `docs/ai-analytical-capability-matrix.md`, `docs/mvp-architecture.md`,
+  `docs/mvp-prd.md`, `docs/rbac-matrix.md`,
+  `docs/product-readiness-checklist.md`, and `docs/sprint-0-plan.md`.
+- Updated `docs/project-master.md` to reposition the primary product audience
+  toward PMEs without dedicated analysts while preserving analysts/reviewers as
+  advanced users.
+- Updated `docs/architecture.md`, `docs/ai-implementation-roadmap.md`, and
+  `docs/testing.md` to reference the product API/UI target boundary, Customer
+  Data Boundary, RBAC/security controls, and future security verification
+  targets without treating them as implemented.
+- Added a durable decision to `docs/decisions.md` for the Customer Data
+  Boundary and AI-as-interpretation product baseline.
+- Updated `docs/progress.md` for Sprint 0, the current `13a8880` baseline, and
+  the 2026-08-13 local artifact/service inventory.
+
+### Local State Observed
+
+- Git baseline before Sprint 0 docs was `13a8880`
+  (`Merge pull request #18 from Haenndel-Santos/codex/adventureworks-readonly-export`).
+- This workspace did not contain the ignored benchmark raw/derived artifacts
+  checked during Sprint 0: AdventureWorks `.bak`, AdventureWorks derived
+  export, AdventureWorks reference manifest, Northwind raw SQL, Northwind
+  derived DuckDB, or generated Northwind outputs.
+- `Get-Service` showed `SQLBrowser` and `SQLWriter`; `MSSQLSERVER` was not
+  listed for this process.
+
+### Validation
+
+- `git diff --check`: passed, with only Windows LF-to-CRLF normalization
+  warnings.
+- `scripts/check_internal_links.py`: 146 internal links checked, 0 broken.
+- `tests/internal_links_test.py`: 1 passed in 0.06 seconds.
+- Full pytest was not run because this was a documentation-only baseline with
+  no executable code, contracts, fixtures, or dependencies changed.
+
+### Next Logical Step
+
+1. Owner reviews and accepts or revises the Sprint 0 product/security baseline.
+2. Restore local Phase 5.2 prerequisites: expected AdventureWorks `.bak` and
+   default local `MSSQLSERVER` availability with administrator authority.
+3. Resume the already authorized Phase 5.2 export twice, create the
+   AdventureWorks reference manifest, run `reference-dataset-validate`, and
+   stop at `ready_for_relationship_review`.
+4. Start API/UI implementation only after selecting the smallest API/security
+   contract and adding offline tests for the new behavior.
+
+### Do Not Do Yet
+
+- Do not treat Sprint 0 docs as implementation of Product API, browser UI,
+  authentication, RBAC, tenant isolation, RLS, WAF/rate limiting, HTTPS/HSTS,
+  feature flags, central audit logs, error reporting, secret manager,
+  deployment egress controls, backup/restore, update/rollback, or support
+  workflow.
+- Do not call a live provider, approve AdventureWorks relationships or
+  semantics, design or inspect holdout answers, upload, publish, train, apply
+  Product canonical state, or use SQL Server until the exact local Phase 5.2
+  prerequisites exist.
+
+## 2026-08-13 - Codex - Review Sprint 0 Before Commit
+
+### Review Fixes
+
+- Reviewed the Sprint 0 documentation baseline before commit/merge.
+- Changed `docs/threat-model.md` from a stale document `Version: 13a8880`
+  footer to a baseline-evidence reference.
+- Changed `docs/sprint-0-plan.md` status from completed baseline to
+  `ready_for_owner_review` with `pending_owner_review`, avoiding accidental
+  implementation authority.
+- Reworded the `DATAOPSLAB` note in `docs/progress.md` as historical evidence
+  that was not confirmed by the current 2026-08-13 workspace inventory.
+
+### Validation
+
+- `git diff --check`: passed, with only Windows LF-to-CRLF normalization
+  warnings.
+- `python scripts/check_internal_links.py`: 146 internal links checked, 0
+  broken.
+- `.\.venv\Scripts\python.exe -m pytest -p no:cacheprovider
+  tests\internal_links_test.py`: 1 passed in 0.18 seconds.
