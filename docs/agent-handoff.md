@@ -4209,3 +4209,25 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
   broken.
 - `.\.venv\Scripts\python.exe -m pytest -p no:cacheprovider
   tests\internal_links_test.py`: 1 passed in 0.18 seconds.
+
+## 2026-08-13 - Codex - Align Sprint 0 Review Notes
+
+### Scope
+
+- Read the attached review noting that GitHub `main` advanced to `827db0d` and
+  that the Sprint 0 baseline was incorporated.
+- Verified via `gh run list` that GitHub Actions CI run `31741726966` passed
+  for `827db0d` on the `main` branch.
+- Corrected `docs/project-master.md` so UI is no longer described as an
+  optional extension; the optional scope is now richer BI artifacts, dashboard
+  building, connectors, automation, and performance optimization.
+- Recorded the MVP 1 single-tenant customer-hosted direction as a
+  recommendation pending owner acceptance, not as an approved durable decision.
+
+### Do Not Do Yet
+
+- Do not mark Sprint 0 as owner-accepted until the owner explicitly accepts or
+  revises the baseline.
+- Do not implement Product API/UI, identity, RBAC, tenant isolation, RLS,
+  provider invocation, deployment egress, upload, publication, training, or
+  production packaging from this documentation-only update.
