@@ -3,6 +3,12 @@
 ## Runtime Layers
 
 ```text
+Future product surface
+  -> browser UI
+  -> product API
+     -> identity, RBAC, tenant policy, feature flags, audit, support reporting
+     -> existing governed analytics and data-preparation entrypoints
+
 CLI
   -> default workflow coordinator
      -> conversion -> profiling -> cleaning -> schema/key inference
@@ -49,10 +55,17 @@ CLI
      -> applied approved semantic registry
 ```
 
+The product API/UI layer is a Sprint 0 target architecture, not an implemented
+runtime surface. Current execution remains through explicit CLI/Python
+entrypoints.
+
 ## Boundaries
 
 | Area | Responsibility | Important boundary |
 | --- | --- | --- |
+| Product API | Future versioned boundary for sessions, datasets, reviews, execution, evidence, exports, audit, and support reports | Planned only; must enforce identity, RBAC, tenant policy, feature flags, and the Customer Data Boundary before shared UI use. |
+| Web UI | Future stakeholder/reviewer workspace for questions, clarification, plan review, results, and evidence | Planned only; must never talk directly to DuckDB, source databases, provider endpoints, or private artifact stores. |
+| Customer Data Boundary | Keep customer data, prompts, results, logs, generated artifacts, embeddings, and backups in customer-controlled infrastructure | Target deployment rule; repository currently versions only safe code/docs/manifests. |
 | `src/data_ops_lab/cli.py` | Parse commands and dispatch entrypoints | Do not absorb module business logic. |
 | `src/data_ops_lab/workflow.py` | Coordinate the default analytical pipeline | Preserve `run_workflow` and `WorkflowResult` compatibility. |
 | Analytics module registry | Describe and statically validate current session contracts and workflow order | No dynamic import, dispatch, execution, network, concurrency, or auto-approval. |
@@ -88,6 +101,12 @@ CLI
 | `.codex/` | Domain guidance, skills, and agent profiles | Guidance only; cannot override code, tests, or human approvals. |
 
 Private source exports, generated outputs, completed local reviews with row-level evidence, and secrets must remain outside the public-capable repository. Version only safe manifests and hashes; see [Private Artifact Governance](private-artifact-governance.md).
+The broader customer-hosted product boundary is defined in
+[Customer Data Boundary](customer-data-boundary.md), with security controls in
+[Security Architecture Baseline](security-architecture.md), the product threat
+model in [Product Threat Model](threat-model.md), MVP requirements in
+[MVP Product Requirements](mvp-prd.md), and initial RBAC targets in
+[RBAC Matrix](rbac-matrix.md).
 
 ## Data Contracts
 
@@ -169,4 +188,8 @@ Modeling decisions use distinct states such as candidate, pending review, approv
 - No generic dependency graph, checkpoint, resume, or dry-run engine; only the recorded analytics session has narrow tested checkpoint/resume semantics.
 - CLI stage dispatch and the default workflow are not yet unified under one orchestration contract.
 - Some generated summaries become stale when later review steps run; consolidated state must cite the newest validation evidence.
+- Product API, browser UI, authentication, RBAC enforcement, tenant isolation,
+  row-level security, feature flags, central audit logs, redacted error
+  reporting, WAF/rate limiting, HTTPS/HSTS deployment, and backup/restore
+  automation are planned product controls, not implemented runtime surfaces.
 - Semantic governance, Stage 5D translation evaluation, a synthetic Stage 5E exact-answer harness, pre-execution real answer preparation, sequential candidate-answer materialization, dataset benchmark review/approval, dry-run binding validation, approved offline and separately authorized live dataset-backed execution, deterministic result presentation, and recorded narration validation exist. Northwind has the first applied real semantic registry, immutable 13-case answer authority, 13/13 recorded baseline, and 9/13 loopback Ollama development comparison. Because the pack informed prompt and alias-policy refinement, a fresh holdout and provider selection remain pending, together with dynamic provider dispatch, a live narration provider, and a user interface.

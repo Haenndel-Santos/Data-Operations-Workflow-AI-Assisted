@@ -2,26 +2,55 @@
 
 ## Objective
 
-Turn local operational spreadsheets into validated analytical datasets and an approved ERP model, then let users ask governed analytical questions without requiring SQL knowledge.
+Turn local operational spreadsheets and authorized local database evidence into
+validated analytical datasets and an approved ERP model, then let PME
+stakeholders ask governed analytical questions without requiring SQL or
+data-analysis expertise while keeping customer data inside a customer-controlled
+boundary.
 
 ## Current Stage
 
-Four active tracks: Product Stage 3E.6 is `ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases 0-4 passed their gates for Northwind and the selected local Ollama development provider; AI Phase 5.1 is approved and Phase 5.2 is active for the selected AdventureWorks 2025 holdout; and Backend Phase II completed increment 2.4 and its documented exit gate. The project owner froze the exact Phase 5 KPI thresholds and guardrails before holdout results, selected AdventureWorks, and authorized only its default-instance local read-only SQL Server export. The additive exporter, optional ODBC adapter, deterministic DuckDB/Parquet materialization, and composite relationship-candidate v2 contract are implemented and offline-tested. A real export attempted the authorized connection but stopped before staging because `MSSQLSERVER` is stopped and this process lacks local administrator authority to start it. CLI registration now contains 48 commands across ten coherent registrars while preserving all prior shapes. Relationship approval, semantic approval, pack design, answer collection, live provider use, provider selection, dynamic dispatch, live narration, and a user interface remain pending.
+Five active tracks: Product Stage 3E.6 is
+`ready_for_canonical_state_review` with no canonical apply; AI roadmap Phases
+0-4 passed their gates for Northwind and the selected local Ollama development
+provider; AI Phase 5.1 is approved and Phase 5.2 is active for the selected
+AdventureWorks 2025 holdout; Backend Phase II completed increment 2.4 and its
+documented exit gate; and Sprint 0 has documented the PME product vision,
+Customer Data Boundary, security architecture, product threat model, AI
+authority split, MVP PRD/architecture, RBAC target, and readiness checklist.
+The project owner froze the exact Phase 5 KPI thresholds and guardrails before
+holdout results, selected AdventureWorks, and authorized only its
+default-instance local read-only SQL Server export. The additive exporter,
+optional ODBC adapter, deterministic DuckDB/Parquet materialization, and
+composite relationship-candidate v2 contract are implemented and
+offline-tested. In this workspace on 2026-08-13, the ignored local benchmark raw
+and derived artifacts are absent, `outputs/` is absent, and only `SQLBrowser`
+and `SQLWriter` were visible from `Get-Service`; `MSSQLSERVER` was not listed
+for this process. CLI registration contains 48 commands across ten coherent
+registrars while preserving all prior shapes. Relationship approval, semantic
+approval, pack design, answer collection, live provider use, provider
+selection, dynamic dispatch, live narration, Product API, browser UI,
+authentication, RBAC enforcement, tenant isolation, RLS, WAF/HTTPS deployment,
+feature flags, central audit logging, error reporting, and production packaging
+remain pending.
 
 ## Last Completed Milestone
 
-On 2026-07-22, PR #17 was merged at `729658d`, the project owner approved its
-exact thresholds and guardrails, selected AdventureWorks 2025, and separately
-authorized Phase 5.2's local read-only export. The implementation adds a
-fail-closed SQL Server exporter, optional `pyodbc` dependency, one additive CLI
-command, version-2 composite relationship candidates, and backward-compatible
-reference validation. The full offline suite passed with 284 tests and 2
-expected live-provider skips; 113 internal links passed. The authorized real
-connection attempt created no output or staging because the required default
-SQL Server service is stopped.
+On 2026-08-13, Sprint 0 produced a documentation baseline for the new product
+direction: PME-oriented Product Vision, Customer Data Boundary, Security
+Architecture Baseline, Product Threat Model, AI Analytical Capability Matrix,
+MVP Product Requirements, MVP Architecture, RBAC Matrix, Product Readiness
+Checklist, and Sprint 0 execution plan. It updated the project master,
+architecture, roadmap, testing guidance, and decisions while preserving all
+existing execution gates and making no source, generated-output, approved-YAML,
+database, provider, upload, publication, training, or deployment changes.
 
 ## Current Capabilities
 
+- Describe the PME-oriented product vision, Customer Data Boundary, product
+  security architecture, threat model, AI authority split, MVP PRD,
+  MVP/API/UI target architecture, RBAC target matrix, and product readiness
+  checklist without treating those controls as implemented.
 - Convert and normalize local CSV/XLSX inputs.
 - Profile, clean, infer schemas/keys, and validate relationships.
 - Generate SQL suggestions, DuckDB datasets, Tableau exports, and data dictionaries.
@@ -168,6 +197,10 @@ SQL Server service is stopped.
 - Govern private local artifacts for cloud-first work by versioning only safe
   metadata and keeping raw sources, generated outputs, completed sensitive
   reviews, and secrets outside any repository that may become public.
+- Plan product security verification targets for raw-SQL rejection, read-only
+  execution, provider/network opt-in, authority gates, API RBAC, feature flags,
+  log redaction, tenant isolation, and release controls once executable
+  product/security surfaces exist.
 
 ## Test Status
 
@@ -202,6 +235,10 @@ SQL Server service is stopped.
   live-provider tests skipped in 47.92 seconds on Windows/Python 3.13; 113
   internal links checked, 0 broken; focused exporter/reference/taxonomy suite
   passed 43 tests.
+- Sprint 0 documentation baseline validation on 2026-08-13: `git diff --check`
+  passed with only Windows LF-to-CRLF normalization warnings; internal link
+  checker reported 146 checked, 0 broken; focused internal-link pytest passed 1
+  test in 0.06 seconds.
 - Backend Phase II run-result compatibility and registered-consumer suite: 238
   passed in 39.63 seconds.
 - Backend Phase II existing-file binding consumer suite: 76 passed in 17.77 seconds.
@@ -234,7 +271,19 @@ SQL Server service is stopped.
   administrator starts `MSSQLSERVER`; the failed connection created no output
   or staging directory. The Contoso recipe references external data and was not
   executed.
-- A second SQL Server 2025 Evaluation instance (`DATAOPSLAB`) remains installed but stopped; project work should use the default Developer instance only when an explicitly authorized restore/export task requires it.
+- On this 2026-08-13 workspace, the ignored local benchmark artifacts were not
+  present: the AdventureWorks `.bak`, Northwind raw SQL, Northwind derived
+  DuckDB, generated Northwind outputs, AdventureWorks derived export, and
+  AdventureWorks reference manifest were absent. The versioned manifests remain
+  safe metadata, not proof that local artifacts are currently available.
+- Sprint 0 defines product/security targets, but Product API, UI, identity,
+  RBAC enforcement, tenant isolation, RLS, feature flags, audit logs, redacted
+  error reporting, deployment egress controls, WAF/rate limiting, HTTPS/HSTS,
+  backup/restore, update/rollback, and support workflow remain unimplemented.
+- Earlier versioned evidence recorded a second SQL Server 2025 Evaluation
+  instance (`DATAOPSLAB`) as installed but stopped; this 2026-08-13 workspace
+  inventory did not confirm it. Project work should use the default Developer
+  instance only when an explicitly authorized restore/export task requires it.
 - Backend Phase II has consolidated proven-equivalent file hashing, standard
   analytics blockers, two atomic-publication variants, and two source-binding
   absence semantics. Its error taxonomy covers 22 complete consumers; all
@@ -262,18 +311,27 @@ SQL Server service is stopped.
 - No explicit apply contract or approved versioned representation exists yet for the candidate canonical Product snapshot.
 - EDS cross-table analytics remain blocked because `approved_relationships.yml` is intentionally empty.
 - Northwind is `semantic_catalog_approved` with 13 accepted exact relationships and 111 approved semantic entities. All 13 exact plans and expected-answer decisions are approved; the recorded evaluator passed 13/13. Separate live authority permitted one bounded loopback comparison, which passed 9/13 as development evidence. That authority does not extend to a changed prompt/provider, external service, holdout invocation, narration, upload, publication, or training. Pubs remains pending provenance, license, schema, relationship, and benchmark-use review.
-- AdventureWorks is restored, validated, selected, and authorized for Phase 5.2,
-  but remains pending two real reproducible exports, reference validation,
-  schema review, relationship approval, and benchmark-use approval. The local
-  default SQL Server service requires administrator authority to start.
+- AdventureWorks is restored, validated, selected, and authorized for Phase 5.2
+  according to versioned prior evidence, but this workspace currently lacks the
+  ignored local `.bak` and derived artifacts, and the default SQL Server service
+  was not visible to this process. Phase 5.2 remains pending two real
+  reproducible exports, reference validation, schema review, relationship
+  approval, and benchmark-use approval.
+- Sprint 0 is a documentation baseline only; it does not authorize or implement
+  Product API/UI, authentication, RBAC, tenant isolation, RLS, provider
+  invocation, external egress, upload, publication, training, or production
+  deployment.
 - The Phase 5 thresholds and guardrails are approved and frozen. The missing
   bounded live intent/clarification evaluator is scoped but not implemented;
   live provider use remains not authorized.
 
 ## Next Logical Milestone
 
-Start the default local `MSSQLSERVER` service with administrator authority, then
-resume the already authorized Phase 5.2 operation. Produce current and
+Review and accept or revise the Sprint 0 product/security baseline, then restore
+the local Phase 5.2 prerequisites: make the ignored AdventureWorks source backup
+available in its expected local path and make the default local `MSSQLSERVER`
+service available with administrator authority. Resume the already authorized
+Phase 5.2 operation only after those prerequisites exist. Produce current and
 independent reproduction exports, verify exact source and derived hashes, add
 the versioned AdventureWorks reference manifest, and run
 `reference-dataset-validate`. Stop at `ready_for_relationship_review`; do not
@@ -288,16 +346,21 @@ four-field use. Do not infer generic success from status, rename persisted
 codes, add blocker fields, or combine module-specific blocker, artifact,
 checkpoint, or authority semantics.
 
+For product/API/UI work, start from the Sprint 0 PRD, Customer Data Boundary,
+security architecture, RBAC matrix, and product-readiness checklist. Implement
+the smallest API/security contract first, with offline tests, and keep UI work
+behind those boundaries.
+
 For cloud-first repository management, inventory local-only artifacts and commit
 only safe manifests/hashes before any public visibility change; keep sensitive
 files in a separate private store or encrypted artifact workflow.
 
 ## Last Verified Commit
 
-`729658d` (`Merge pull request #17 from Haenndel-Santos/codex/phase-5-holdout-scope`).
+`13a8880` (`Merge pull request #18 from Haenndel-Santos/codex/adventureworks-readonly-export`), before Sprint 0 documentation edits.
 
 ## Last Updated
 
-2026-07-22 by Codex after merging PR #17, recording the owner's Phase 5.1/5.2
-authority, implementing and validating the read-only exporter, and stopping
-safely on the unavailable administrator-controlled SQL Server service.
+2026-08-13 by Codex after documenting Sprint 0 product/security baseline,
+recording the current local artifact/service inventory, and preserving the
+Phase 5.2 stop state.

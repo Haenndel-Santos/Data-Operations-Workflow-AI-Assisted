@@ -21,6 +21,35 @@ Remove-Item Env:PYTHONPATH
 
 Repairing the editable install is a separate environment change and should be performed only when explicitly approved.
 
+## Product Security Verification Targets
+
+Sprint 0 adds product/security design baselines but no API/UI/security runtime
+code. As those surfaces are implemented, add focused offline tests before
+broadening to integration and E2E checks. Initial target evidence:
+
+- raw SQL from a user, provider, or API request is rejected before planning;
+- analytics execution paths remain read-only and cannot write to source or
+  analytical stores;
+- provider/network calls are default-closed and require exact per-invocation
+  authority;
+- candidate relationships, pending reviews, rejected decisions, and stale hashes
+  cannot grant operational authority;
+- API endpoints enforce role, dataset, tenant, session, result, export, audit,
+  and support-bundle permissions;
+- feature flags cannot enable external providers, upload, training,
+  publication, dynamic execution, or review auto-approval without policy;
+- logs, errors, screenshots, support bundles, prompts, evidence manifests, and
+  telemetry omit private values, credentials, provider responses, SQL
+  parameters, and row data by default;
+- tenant isolation and row-level or equivalent storage policies prevent
+  cross-customer leakage;
+- backup, restore, retention, deletion, WAF/rate limiting, HTTPS/HSTS, and
+  release audit controls are validated before production readiness.
+
+Documentation-only Sprint 0 changes should be validated with internal links and
+diff checks. Do not invent tests until executable product/security behavior
+exists.
+
 ## Automated GitHub Validation
 
 The [GitHub Actions workflow](../.github/workflows/ci.yml) runs on every pull

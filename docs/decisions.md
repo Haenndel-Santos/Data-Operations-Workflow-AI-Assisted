@@ -815,3 +815,42 @@ artifact v1 and v2, but no v2 candidate gains authority automatically. Live
 Ollama invocation, relationship/semantic approval, holdout-pack design, answer
 collection, external upload, publication, training, and provider selection
 remain not authorized.
+
+## 2026-08-13 - Product Vision Uses A Customer Data Boundary
+
+**Decision:** Reposition the product direction as a customer-hosted,
+local-first Data Intelligence platform for PMEs that need governed business
+answers without SQL or data-analysis expertise. Treat the Customer Data
+Boundary as a first-class architecture rule covering raw data, cleaned data,
+DuckDB/Parquet, questions, prompts, semantic context, results, logs, reports,
+embeddings, backups, temporary files, and provider context. Keep the AI as an
+interpretation and explanation layer; deterministic local code remains
+authority for calculations, SQL planning/execution, permissions, approvals, and
+evidence.
+
+**Context:** The user supplied a Sprint 0 product/security brief and readiness
+screenshots emphasizing PRD, system map, RBAC, customer isolation, RLS, secrets,
+feature flags, error reporting, automated tests, security audit, WAF/rate
+limiting, and HTTPS. Existing project architecture already rejects raw
+model-generated SQL, preserves candidate/approved separation, enforces local
+read-only execution, and binds reviews/evidence by hash, but its primary
+documented user was still an analyst.
+
+**Alternatives:** Continue positioning the product mainly for analysts; defer
+security architecture to production readiness; treat "our AI" as model training
+first; let the future UI hide governance complexity without enforcing it at the
+API/runtime boundary.
+
+**Reason:** The repository's existing strengths are governed deterministic
+analytics, local privacy boundaries, and human review. Moving product and
+security architecture earlier prevents API, UI, logging, provider, and
+deployment decisions from being designed around assumptions that would later
+break customer data protection.
+
+**Impact:** Sprint 0 adds product vision, Customer Data Boundary, security
+architecture, product threat model, AI authority split, MVP PRD/architecture,
+RBAC targets, and readiness checklist documentation. These documents do not
+implement authentication, RBAC, tenant isolation, RLS, WAF, HTTPS, error
+reporting, secret management, deployment egress controls, provider selection,
+relationship approval, semantic approval, Product canonical apply, upload,
+publication, or training.
