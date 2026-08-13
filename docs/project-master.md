@@ -65,7 +65,10 @@ See `docs/product-vision.md`, `docs/customer-data-boundary.md`,
    AI authority split, MVP requirements, RBAC target, and product readiness
    checklist. These are design baselines, not implemented API/UI/security
    controls.
-8. **Optional product extensions:** UI, richer BI artifacts, and additional performance work remain future options after the backend contracts are validated.
+8. **Product extensions and advanced capabilities:** richer BI artifacts,
+   dashboard building, additional connectors, advanced automation, and
+   performance optimization remain future options after the MVP Product
+   API/UI/security boundary is validated.
 
 ## Global Success Criteria
 

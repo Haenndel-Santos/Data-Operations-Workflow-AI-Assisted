@@ -15,7 +15,7 @@ must distinguish design, implementation, test evidence, and release approval.
 | Customer Data Boundary | Covered data, trust zones, egress defaults, repository implications | Baseline documented |
 | Threat model | Assets, attacker-controlled inputs, boundaries, invariants | Baseline documented |
 | RBAC | Roles, permission matrix, enforcement requirements | Baseline documented; not implemented |
-| Tenant separation | Tenant policy, storage strategy, tests | Planned; not implemented |
+| Tenant separation | Tenant policy, storage strategy, tests | MVP 1 recommendation is single-tenant customer-hosted; shared multi-tenant release remains planned, not implemented |
 | Row-level security | Database-level or equivalent policy for shared storage | Planned; not implemented |
 | Secrets | No secrets in Git/source/logs; runtime secret mechanism | Repository ignore exists; manager not implemented |
 | Feature flags | Default-closed providers, upload, training, publication, support access, dynamic execution | Planned; not implemented |

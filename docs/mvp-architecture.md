@@ -20,6 +20,11 @@ A customer-hosted local product slice should let an authorized user:
 7. View Simple View and Analytical View backed by the same evidence.
 8. Save the analysis history and export safe artifacts inside the boundary.
 
+MVP 1 should target a single-tenant customer-hosted deployment unless owner
+review revises that direction. The API and persisted resources should still be
+designed with tenant or ownership scope where practical, but shared
+multi-tenant SaaS is deferred beyond the first pilot.
+
 ## MVP Components
 
 | Component | Responsibility | Status |
@@ -88,6 +93,7 @@ not a marketing landing page.
 
 - Full dynamic orchestrator dispatch.
 - Multi-provider marketplace.
+- Shared SaaS-style multi-tenant release.
 - Model fine-tuning.
 - External warehouse connectors.
 - Complex dashboard builder.

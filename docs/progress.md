@@ -239,6 +239,8 @@ database, provider, upload, publication, training, or deployment changes.
   passed with only Windows LF-to-CRLF normalization warnings; internal link
   checker reported 146 checked, 0 broken; focused internal-link pytest passed 1
   test in 0.06 seconds.
+- Post-push Sprint 0 GitHub Actions CI: run `31741726966` passed on
+  2026-08-13 at merge commit `827db0d` (`merge: sprint 0 product baseline`).
 - Backend Phase II run-result compatibility and registered-consumer suite: 238
   passed in 39.63 seconds.
 - Backend Phase II existing-file binding consumer suite: 76 passed in 17.77 seconds.
@@ -347,9 +349,10 @@ codes, add blocker fields, or combine module-specific blocker, artifact,
 checkpoint, or authority semantics.
 
 For product/API/UI work, start from the Sprint 0 PRD, Customer Data Boundary,
-security architecture, RBAC matrix, and product-readiness checklist. Implement
-the smallest API/security contract first, with offline tests, and keep UI work
-behind those boundaries.
+security architecture, RBAC matrix, and product-readiness checklist. Review the
+single-tenant customer-hosted MVP 1 recommendation with the owner before
+implementation starts. Implement the smallest API/security contract first, with
+offline tests, and keep UI work behind those boundaries.
 
 For cloud-first repository management, inventory local-only artifacts and commit
 only safe manifests/hashes before any public visibility change; keep sensitive

@@ -58,6 +58,7 @@ verified answer with evidence:
 - Multi-provider selection marketplace.
 - Production billing, licensing, or support portal.
 - Direct frontend access to databases or provider endpoints.
+- Shared SaaS-style multi-tenant release for the first pilot.
 
 ## Acceptance Criteria
 
@@ -72,10 +73,21 @@ verified answer with evidence:
 | Private artifacts stay local | Git and support-bundle checks exclude raw data, prompts, result rows, secrets, and generated outputs |
 | Failure is recoverable | Session reports last valid checkpoint and recovery options |
 
+## MVP 1 Deployment Recommendation
+
+MVP 1 should be planned as a single-tenant, customer-hosted pilot unless owner
+review explicitly changes that direction. This keeps the Customer Data Boundary
+small: one customer runtime, one local artifact store, and no cross-customer
+shared service.
+
+Product resources should still carry tenant or ownership scope where practical,
+so a later private-cloud or shared multi-tenant architecture can evolve without
+rewriting the Product API, RBAC, audit, or artifact contracts.
+
 ## Open Product Questions
 
-- Is the first MVP single-tenant customer-hosted only, or should multi-tenant
-  architecture be implemented before any UI pilot?
+- Does the owner accept the single-tenant, customer-hosted MVP 1
+  recommendation, or should it be revised before implementation starts?
 - Which user roles are required for the first pilot versus later commercial
   packaging?
 - Which deployment target is first: local workstation, on-prem server, or
