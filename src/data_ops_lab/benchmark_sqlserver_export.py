@@ -622,7 +622,7 @@ class PyodbcSqlServerSource:
         cursor = self._connection.cursor()
         cursor.arraysize = batch_size
         try:
-            cursor.execute(f"SELECT {projections} FROM {table_name} ORDER BY {ordering}")
+            cursor.execute(f"SELECT {projections} FROM {table_name} ORDER BY {ordering}")  # noqa: S608 - identifiers via quote_sqlserver/duckdb_identifier; values bound as parameters
             while True:
                 rows = cursor.fetchmany(batch_size)
                 if not rows:
@@ -970,7 +970,7 @@ def run_benchmark_sqlserver_export(
                 parquet_path = parquet_dir / f"{table.name}.parquet"
                 rows = _write_table_parquet(source, table, parquet_path, batch_size)
                 connection.execute(
-                    f"CREATE TABLE {quote_duckdb_identifier(table.name)} AS "
+                    f"CREATE TABLE {quote_duckdb_identifier(table.name)} AS "  # noqa: S608 - identifiers via quote_sqlserver/duckdb_identifier; values bound as parameters
                     "SELECT * FROM read_parquet(?)",
                     [str(parquet_path)],
                 )

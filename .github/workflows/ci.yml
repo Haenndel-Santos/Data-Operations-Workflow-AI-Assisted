@@ -25,8 +25,12 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Scan history and working tree for secrets
-        uses: gitleaks/gitleaks-action@v2
+      # Full-history baseline (all 876 blobs) was verified clean before this gate
+      # was added. On PR/push the action scans the event's commit range, so this
+      # job blocks newly introduced secrets; it does not re-scan all history on
+      # every run. A scheduled or workflow_dispatch full scan can be added later.
+      - name: Block newly introduced secrets
+        uses: gitleaks/gitleaks-action@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

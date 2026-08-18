@@ -53,21 +53,10 @@ extend-exclude = [".venv", "outputs", "datasets", "originaldatabase"]
 #   DTZ      - naive datetimes (audit and evidence timestamps must stay unambiguous)
 #   S        - bandit security rules
 select = ["E4", "E7", "E9", "F", "B", "DTZ", "S"]
-ignore = [
-  # S608 flags every f-string that contains SQL. Every occurrence was audited:
-  # identifiers are slugified to [a-z0-9_] or double-quoted, and all values are
-  # bound as parameters. The invariant that actually matters - no user-controlled
-  # value reaching SQL unparameterized - is enforced by the architecture tests
-  # rather than by pattern matching. See docs/security-architecture.md.
-  "S608",
-]
+# No global ignores. Audited exceptions carry a per-line noqa with the reason,
+# so the audit is pinned to exactly the lines it covered and any new occurrence
+# of the same pattern fails CI.
 
 [tool.ruff.lint.per-file-ignores]
 # pytest asserts are the point of the test suite.
 "tests/*" = ["S101"]
-# Every assert under src is a type-narrowing assert placed immediately after a
-# guard that already returned; none of them carry validation authority, so none
-# of them change behaviour when Python runs with -O. Validation is expressed as
-# blockers, never as asserts. Adding a validating assert to a module here would
-# be a contract violation, not a lint exception.
-"src/data_ops_lab/*" = ["S101"]

@@ -256,7 +256,7 @@ def key_stats(df: pd.DataFrame, columns: list[str]) -> tuple[float, float, int]:
           count(*) filter (where {not_null_predicate}) as non_null_count,
           count(distinct {concat_expr}) as unique_count
         from candidate_table
-        """
+        """  # noqa: S608 - identifiers double-quoted upstream; aggregate query over local parquet
     ).fetchone()
     duplicate_count = int(row_count - unique_count)
     return (

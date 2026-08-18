@@ -693,7 +693,7 @@ def run_benchmark_sql_conversion(
             table_rows = []
             for table in sorted(table_definitions, key=lambda item: item.name):
                 rows = connection.execute(
-                    f"SELECT COUNT(*) FROM {quote_identifier(table.name)}"
+                    f"SELECT COUNT(*) FROM {quote_identifier(table.name)}"  # noqa: S608 - identifier via quote_identifier; no user values in statement
                 ).fetchone()[0]
                 parquet_path = parquet_dir / f"{table.name}.parquet"
                 connection.execute(

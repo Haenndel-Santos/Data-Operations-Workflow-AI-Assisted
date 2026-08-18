@@ -510,7 +510,7 @@ def query_technical_evidence(
                 if actual_catalog.get(table) != expected["columns"]:
                     add_blocker(blockers, "database_column_drift", "DuckDB columns differ from the conversion manifest.", f"database.schema.{table}")
                     continue
-                count = int(connection.execute(f"select count(*) from {quote_identifier(table)}").fetchone()[0])
+                count = int(connection.execute(f"select count(*) from {quote_identifier(table)}").fetchone()[0])  # noqa: S608 - identifiers via quote_identifier; values bound as parameters
                 row_count += count
                 if count != expected["rows"]:
                     add_blocker(blockers, "database_row_count_drift", "DuckDB row count differs from the conversion manifest.", f"database.rows.{table}")
@@ -519,9 +519,9 @@ def query_technical_evidence(
                 columns = key["columns"]
                 grouped = ", ".join(quote_identifier(column) for column in columns)
                 null_filter = " or ".join(f"{quote_identifier(column)} is null" for column in columns)
-                null_rows = int(connection.execute(f"select count(*) from {quote_identifier(table)} where {null_filter}").fetchone()[0])
+                null_rows = int(connection.execute(f"select count(*) from {quote_identifier(table)} where {null_filter}").fetchone()[0])  # noqa: S608 - identifiers via quote_identifier; values bound as parameters
                 duplicate_groups = int(connection.execute(
-                    f"select count(*) from (select {grouped} from {quote_identifier(table)} group by {grouped} having count(*) > 1)"
+                    f"select count(*) from (select {grouped} from {quote_identifier(table)} group by {grouped} having count(*) > 1)"  # noqa: S608 - identifiers via quote_identifier; values bound as parameters
                 ).fetchone()[0])
                 valid = null_rows == 0 and duplicate_groups == 0
                 if not valid:
@@ -556,14 +556,14 @@ def query_technical_evidence(
                     for source_column, target_column in zip(qscs, qtcs, strict=True)
                 )
                 grouped_targets = ", ".join(qtcs)
-                nonnull = int(connection.execute(f"select count(*) from {qst} s where {source_complete}").fetchone()[0])
-                nulls = int(connection.execute(f"select count(*) from {qst} s where {source_incomplete}").fetchone()[0])
+                nonnull = int(connection.execute(f"select count(*) from {qst} s where {source_complete}").fetchone()[0])  # noqa: S608 - identifiers via quote_identifier; values bound as parameters
+                nulls = int(connection.execute(f"select count(*) from {qst} s where {source_incomplete}").fetchone()[0])  # noqa: S608 - identifiers via quote_identifier; values bound as parameters
                 orphans = int(connection.execute(
-                    f"select count(*) from {qst} s where {source_complete} "
+                    f"select count(*) from {qst} s where {source_complete} "  # noqa: S608 - identifiers via quote_identifier; values bound as parameters
                     f"and not exists (select 1 from {qtt} t where {join_predicate})"
                 ).fetchone()[0])
                 target_duplicates = int(connection.execute(
-                    f"select count(*) from (select {grouped_targets} from {qtt} "
+                    f"select count(*) from (select {grouped_targets} from {qtt} "  # noqa: S608 - identifiers via quote_identifier; values bound as parameters
                     f"where {target_complete} group by {grouped_targets} having count(*) > 1)"
                 ).fetchone()[0])
                 valid = orphans == 0 and target_duplicates == 0
