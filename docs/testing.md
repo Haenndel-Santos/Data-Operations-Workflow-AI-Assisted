@@ -599,3 +599,17 @@ Default tests must remain offline. Any future API, database, or hosted-service i
 - Separate raw-data findings, approval gaps, model assumptions, and code regressions.
 - Never claim a test passed unless its command completed successfully.
 - Record skipped checks and their reason in `docs/agent-handoff.md`.
+
+## Governed Cleaning Contract
+
+- `tests/governed_cleaning_contract_test.py` proves the contract invariants:
+  state transitions, governance classes, computed confidence, hash binding,
+  authority granting, and lineage. It exercises no engine and touches no data.
+- `tests/legacy_cleaner_characterization_test.py` pins the current behaviour
+  of `clean_dataframe` (column normalization, silent numeric coercion at the
+  90% threshold, blank-sentinel erasure, name-based date detection, and the
+  ISO-date reinterpretation under the 80% sample threshold) so the engine
+  increment can prove the legacy path stayed unchanged. Inputs use explicit
+  dtypes to stay deterministic across the declared pandas range.
+- The `governed_cleaning` blocker family is registered in the error taxonomy;
+  `tests/failure_label_inventory_test.py` pins the registry at 700 codes.

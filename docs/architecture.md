@@ -71,6 +71,7 @@ entrypoints.
 | Analytics module registry | Describe and statically validate current session contracts and workflow order | No dynamic import, dispatch, execution, network, concurrency, or auto-approval. |
 | Analytics session module | Coordinate the recorded analytics stages through an exact human plan-review checkpoint | Two separate immutable phases; reuse stage entrypoints; never self-approve or bypass blockers. |
 | Conversion/profile/clean/schema modules | Transform and describe local data | Never modify raw input files. |
+| Governed cleaning contract (`governed_cleaning.py`) | Define transformation candidates, deterministic evidence, computed confidence, hash-bound decisions, exact application authority, and lineage | Pure contract: no I/O, no DataFrame access; confidence is derived from evidence only; `candidate -> applied` does not exist; the legacy cleaner is unchanged and its behaviour is pinned by characterization tests. See [Governed Cleaning Contract](governed-cleaning.md). |
 | Synthetic performance harness | Measure selected Pandas-heavy stages in isolated processes over generated Parquet | No external input, production threshold, dataset authority, or persistent synthetic rows. |
 | Schema/key inference | Produce schema plus candidate PK/FK evidence from Parquet metadata and local DuckDB aggregates | Preserve candidate status and output compatibility; never promote relationships or keys. |
 | Validation/SQL/export/documentation modules | Validate and publish analytical artifacts | Generated output is not approval evidence by itself. |

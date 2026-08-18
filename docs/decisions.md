@@ -854,3 +854,46 @@ implement authentication, RBAC, tenant isolation, RLS, WAF, HTTPS, error
 reporting, secret management, deployment egress controls, provider selection,
 relationship approval, semantic approval, Product canonical apply, upload,
 publication, or training.
+
+## 2026-08-18 - Cleaning Transformations Are Governed By Class, Evidence, And Hash-Bound Decisions
+
+**Decision:** Introduce a governed cleaning contract in which every
+transformation belongs to one of three governance classes - `safe_automatic`
+(structural, value-preserving: column-name normalization, whitespace trim),
+`configured_only` (blank-sentinel normalization; never automatic by default),
+and `governed` (every semantic coercion: number, date, decimal separator,
+locale, identifier canonicalization, category remap). Governed operations are
+always candidates with deterministic evidence and a computed confidence, and
+may be applied only under an exact, hash-bound approved or modified decision
+whose authority is voided by any source change. States move only
+`candidate -> pending_review -> approved | rejected -> applied`;
+`candidate -> applied` does not exist. Confidence is a versioned pure function
+of evidence; a proposer's confidence is never stored.
+
+**Context:** The legacy `clean_dataframe` alters data on heuristics with no
+evidence, review, or lineage. Characterization tests pin two behaviours that
+motivate this: numeric coercion at a 90% threshold turns `"ABC"` into `NA`
+silently, and name-based date parsing with an 80% ISO sample threshold applies
+`dayfirst=True` to whole columns, turning `2024-01-05` into `2024-05-01` under
+the installed pandas. The Sprint 0 capability matrix already required
+"AI proposes / deterministic engine applies reviewed rules with lineage".
+
+**Alternatives:** Treat all normalization as automatic to avoid review
+overhead; treat all normalization as governed and bury users in reviews; let
+the model or heuristic supply the confidence it reports; patch the legacy
+cleaner in place.
+
+**Reason:** Three classes keep the review burden proportional to risk while
+making the boundary mechanical: the class is decided by the operation table,
+not by the caller. Computed confidence and hash binding reuse the authority
+split and fail-closed style the analytics side already proves. Building the
+contract before any engine means states, hashes, evidence, and review
+semantics are settled before any new line can alter a dataset.
+
+**Impact:** `src/data_ops_lab/governed_cleaning.py` and its tests define the
+contract; the `governed_cleaning` blocker family is registered in the error
+taxonomy. `run_workflow()` and `clean_dataframe()` are unchanged and their
+behaviour is pinned. The engine (propose, review, apply, lineage) is a later
+opt-in increment beside the legacy cleaner. Not decided here: the exact
+blank-sentinel configuration surface, the CLI command names, and whether the
+pandas major version should be pinned.

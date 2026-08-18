@@ -18,6 +18,7 @@ from data_ops_lab.contracts.error_taxonomy import (
     STANDARD_BLOCKER_FLOW_PROVENANCE,
     TEXT_STATUS_PROVENANCE,
     DynamicCodeSurface,
+    ErrorCategory,
     TaxonomyDisposition,
 )
 
@@ -1592,6 +1593,71 @@ def test_product_materialization_status_controls_and_authority_remain_separate()
         assert all(value not in ERROR_CLASSIFICATION_REGISTRY for value in authority_values)
 
 
+def test_governed_cleaning_is_a_complete_family_of_literal_standard_blockers():
+    """The governed cleaning contract emits only literal standard blockers
+    through the shared add_blocker helper: no dynamic codes, no direct dict
+    construction, no reuse of foreign blocker rows, no separate text status."""
+    root = Path(__file__).parents[1] / "src" / "data_ops_lab"
+    labels, dynamic_sites = MODULE.inventory(root)
+    consumer_files = REGISTERED_ERROR_CONSUMER_FILES["governed_cleaning"]
+    literal_codes = {
+        label
+        for label, locations in labels.items()
+        if any(
+            any(f"/{filename}:" in location for filename in consumer_files)
+            for location in locations
+        )
+    }
+
+    assert consumer_files == frozenset({"governed_cleaning.py"})
+    assert literal_codes == {
+        "authority_hash_mismatch",
+        "candidate_not_reviewable",
+        "decision_candidate_mismatch",
+        "decision_hash_mismatch",
+        "decision_rejected",
+        "governed_operation_requires_approval",
+        "illegal_review_transition",
+        "inconsistent_evidence",
+        "inconsistent_lineage",
+        "invalid_applied_at",
+        "invalid_candidate_id",
+        "invalid_column_identifier",
+        "invalid_evidence_count",
+        "invalid_lineage_count",
+        "invalid_output_sha256",
+        "invalid_reviewed_at",
+        "invalid_source_sha256",
+        "invalid_table_identifier",
+        "missing_applied_timestamp",
+        "missing_review_timestamp",
+        "missing_reviewer",
+        "modified_decision_without_parameters",
+        "proposed_confidence_ignored",
+        "source_changed_since_review",
+        "unclassified_transformation_operation",
+        "unexpected_modified_parameters",
+        "unknown_transformation_operation",
+    }
+    assert literal_codes <= set(ERROR_CLASSIFICATION_REGISTRY)
+    # Two codes are shared with older families and keep their global category.
+    assert ERROR_CLASSIFICATION_REGISTRY["missing_reviewer"] is ErrorCategory.APPROVAL
+    assert ERROR_CLASSIFICATION_REGISTRY["invalid_reviewed_at"] is ErrorCategory.CONTRACT
+    assert not {loc for loc in dynamic_sites if "/governed_cleaning.py:" in loc}
+    for provenance_table in (
+        STANDARD_BLOCKER_FLOW_PROVENANCE,
+        DIRECT_BLOCKER_REUSE_PROVENANCE,
+        DIRECT_BLOCKER_CONSTRUCTION_PROVENANCE,
+        DYNAMIC_ERROR_CODE_PROVENANCE,
+        TEXT_STATUS_PROVENANCE,
+    ):
+        assert not {
+            location
+            for location, provenance in provenance_table.items()
+            if provenance.consumer_family == "governed_cleaning"
+        }
+
+
 def test_registry_covers_only_complete_registered_consumer_families():
     root = Path(__file__).parents[1] / "src" / "data_ops_lab"
     labels, _ = MODULE.inventory(root)
@@ -1623,4 +1689,4 @@ def test_registry_covers_only_complete_registered_consumer_families():
         expected_codes.update(family_codes)
 
     assert set(ERROR_CLASSIFICATION_REGISTRY) == expected_codes
-    assert len(ERROR_CLASSIFICATION_REGISTRY) == 675
+    assert len(ERROR_CLASSIFICATION_REGISTRY) == 700

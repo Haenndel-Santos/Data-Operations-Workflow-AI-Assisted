@@ -196,6 +196,7 @@ REGISTERED_ERROR_CONSUMER_FILES = {
         {"product_canonical_promotion.py"}
     ),
     "product_materialization": frozenset({"product_materialization.py"}),
+    "governed_cleaning": frozenset({"governed_cleaning.py"}),
 }
 
 
@@ -2186,6 +2187,41 @@ _PRODUCT_MATERIALIZATION_CLASSIFICATIONS = {
 }
 
 
+_GOVERNED_CLEANING_CLASSIFICATIONS = {
+    ErrorCategory.CONTRACT: {
+        "illegal_review_transition",
+        "inconsistent_evidence",
+        "inconsistent_lineage",
+        "invalid_applied_at",
+        "invalid_candidate_id",
+        "invalid_column_identifier",
+        "invalid_evidence_count",
+        "invalid_lineage_count",
+        "invalid_output_sha256",
+        "invalid_source_sha256",
+        "invalid_table_identifier",
+        "missing_applied_timestamp",
+        "missing_review_timestamp",
+        "modified_decision_without_parameters",
+        "proposed_confidence_ignored",
+        "unclassified_transformation_operation",
+        "unexpected_modified_parameters",
+        "unknown_transformation_operation",
+    },
+    ErrorCategory.AUTHORITY: {
+        "authority_hash_mismatch",
+        "candidate_not_reviewable",
+        "decision_candidate_mismatch",
+        "decision_hash_mismatch",
+        "source_changed_since_review",
+    },
+    ErrorCategory.APPROVAL: {
+        "decision_rejected",
+        "governed_operation_requires_approval",
+    },
+}
+
+
 def _build_registry() -> dict[str, ErrorCategory]:
     initial_groups = {
         ErrorCategory.CONTRACT: _CONTRACT_CODES,
@@ -2208,6 +2244,7 @@ def _build_registry() -> dict[str, ErrorCategory]:
         _REFERENCE_DATASET_VALIDATION_CLASSIFICATIONS,
         _PRODUCT_CANONICAL_PROMOTION_CLASSIFICATIONS,
         _PRODUCT_MATERIALIZATION_CLASSIFICATIONS,
+        _GOVERNED_CLEANING_CLASSIFICATIONS,
     ):
         for category, codes in groups.items():
             for code in codes:

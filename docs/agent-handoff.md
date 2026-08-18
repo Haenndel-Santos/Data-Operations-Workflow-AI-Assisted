@@ -4231,3 +4231,38 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 - Do not implement Product API/UI, identity, RBAC, tenant isolation, RLS,
   provider invocation, deployment egress, upload, publication, training, or
   production packaging from this documentation-only update.
+
+## 2026-08-18 - Claude - Governed Cleaning Contract (D1)
+
+### Scope
+
+- Added `src/data_ops_lab/governed_cleaning.py`: typed contract for
+  transformation candidates, deterministic evidence, computed confidence,
+  hash-bound decisions, exact application authority, and lineage. Pure
+  functions only; no I/O, no DataFrame access.
+- Added `tests/governed_cleaning_contract_test.py` (47 tests) proving the
+  contract invariants, and `tests/legacy_cleaner_characterization_test.py`
+  (9 tests) pinning current `clean_dataframe` behaviour so the engine
+  increment can prove the legacy path unchanged.
+- Registered the `governed_cleaning` blocker family (25 new codes; reuses the
+  global `missing_reviewer` and `invalid_reviewed_at`) in the error taxonomy;
+  registry count moves from 675 to 700.
+- Added `docs/governed-cleaning.md`; updated architecture, testing, and
+  decisions.
+
+### Findings Recorded, Not Fixed
+
+- Legacy date parsing: a date-named column whose first-20 sample is under 80%
+  ISO gets `dayfirst=True`, which under pandas 3.0.3 reinterprets valid ISO
+  dates (`2024-01-05 -> 2024-05-01`). Silent wrong values, not lost values.
+- Legacy behaviour depends on the pandas major: under pandas 3 the default
+  `str` dtype bypasses the object/string branches (no blank normalization,
+  trim, or numeric coercion on freshly-read string columns) while name-based
+  date parsing still fires. `pyproject.toml` leaves pandas unpinned.
+
+### Do Not Do Yet
+
+- Do not implement the engine (propose/review/apply/lineage) in this branch.
+- Do not change `run_workflow()` or `clean_dataframe()`.
+- Do not pin pandas without an explicit decision; the characterization tests
+  use explicit dtypes so they hold across the declared range.
