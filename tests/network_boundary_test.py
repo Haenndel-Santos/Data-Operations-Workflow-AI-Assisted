@@ -9,6 +9,12 @@ It fails when a new network-capable import appears outside the allowlist, and
 it also fails when an allowlist entry goes stale, so the allowlist cannot grow
 into a list of things that used to be true.
 
+It is a tripwire, not a sandbox. The property it proves is that no unsanctioned
+direct Python network-capable import exists in the source. Subprocess-based
+egress (curl, PowerShell) is outside its scope and is covered by the active
+Ruff S603/S607 rules until a site receives a local exception; deployment-level
+egress denial remains a separate future control.
+
 See docs/customer-data-boundary.md and docs/security-architecture.md.
 """
 
@@ -46,7 +52,10 @@ NETWORK_CAPABLE_ROOTS = frozenset(
     }
 )
 
-NON_NETWORK_SUBMODULES = frozenset({"urllib.parse"})
+# urllib is split: request and robotparser open connections (robotparser
+# fetches robots.txt through urllib.request); parse, error, and response only
+# manipulate values. A bare `import urllib` exposes no submodule by itself.
+URLLIB_NETWORK_SUBMODULES = frozenset({"urllib.request", "urllib.robotparser"})
 
 # Every entry needs a reason, and the reason has to describe a boundary that
 # some other control actually enforces.
@@ -69,9 +78,10 @@ def _module_key(path: Path) -> str:
 
 
 def _is_network_capable(dotted_name: str) -> bool:
-    if dotted_name in NON_NETWORK_SUBMODULES:
-        return False
-    return dotted_name.split(".")[0] in NETWORK_CAPABLE_ROOTS
+    parts = dotted_name.split(".")
+    if parts[0] == "urllib":
+        return ".".join(parts[:2]) in URLLIB_NETWORK_SUBMODULES
+    return parts[0] in NETWORK_CAPABLE_ROOTS
 
 
 def _network_imports(tree: ast.AST) -> set[str]:
@@ -83,8 +93,16 @@ def _network_imports(tree: ast.AST) -> set[str]:
                     found.add(alias.name)
         elif isinstance(node, ast.ImportFrom):
             # Relative imports stay inside the package and cannot reach the network.
-            if node.level == 0 and node.module and _is_network_capable(node.module):
-                found.add(node.module)
+            if node.level == 0 and node.module:
+                if _is_network_capable(node.module):
+                    found.add(node.module)
+                else:
+                    # `from urllib import request` names the module through the
+                    # member, not through node.module.
+                    for alias in node.names:
+                        composed = f"{node.module}.{alias.name}"
+                        if _is_network_capable(composed):
+                            found.add(composed)
     return found
 
 
@@ -153,6 +171,39 @@ def test_every_allowlist_entry_states_a_reason() -> None:
         f"These allowlist entries need a real justification: {missing}. An "
         "entry without a stated boundary is an undocumented egress path."
     )
+
+
+def test_urllib_request_is_detected_in_every_import_form() -> None:
+    """Regression: review found that only `socket` exposed ollama_provider.
+
+    A module importing urllib.request alone must not slip past the scan,
+    in any spelling.
+    """
+    snippets = (
+        "from urllib.request import urlopen",
+        "import urllib.request",
+        "from urllib import request",
+        "import urllib.robotparser",
+        "import importlib\nimportlib.import_module('urllib.request')",
+    )
+    for snippet in snippets:
+        tree = ast.parse(snippet)
+        hits = _network_imports(tree) | _dynamic_network_imports(tree)
+        assert hits, f"network-capable import escaped the scan: {snippet!r}"
+
+
+def test_urllib_value_only_submodules_are_not_flagged() -> None:
+    snippets = (
+        "from urllib.parse import urlsplit",
+        "import urllib.parse",
+        "from urllib import parse",
+        "from urllib.error import URLError",
+        "import urllib",
+    )
+    for snippet in snippets:
+        tree = ast.parse(snippet)
+        hits = _network_imports(tree) | _dynamic_network_imports(tree)
+        assert not hits, f"false positive on value-only import: {snippet!r}"
 
 
 def test_provider_module_pins_the_endpoint_to_loopback() -> None:
