@@ -1612,32 +1612,44 @@ def test_governed_cleaning_is_a_complete_family_of_literal_standard_blockers():
     assert consumer_files == frozenset({"governed_cleaning.py"})
     assert literal_codes == {
         "authority_hash_mismatch",
+        "candidate_not_approved",
         "candidate_not_reviewable",
+        "decision_authority_wrong_class",
         "decision_candidate_mismatch",
         "decision_hash_mismatch",
         "decision_rejected",
-        "governed_operation_requires_approval",
+        "duplicate_policy_scope",
+        "empty_policy",
+        "empty_policy_scope",
         "illegal_review_transition",
         "inconsistent_evidence",
         "inconsistent_lineage",
         "invalid_applied_at",
         "invalid_candidate_id",
         "invalid_column_identifier",
+        "invalid_configured_at",
+        "invalid_dataset_identifier",
         "invalid_evidence_count",
+        "invalid_evidence_metric",
         "invalid_lineage_count",
         "invalid_output_sha256",
         "invalid_reviewed_at",
         "invalid_source_sha256",
         "invalid_table_identifier",
         "missing_applied_timestamp",
+        "missing_policy_author",
         "missing_review_timestamp",
         "missing_reviewer",
         "modified_decision_without_parameters",
+        "non_canonical_payload",
+        "operation_not_configured",
+        "policy_operation_not_configurable",
         "proposed_confidence_ignored",
         "source_changed_since_review",
         "unclassified_transformation_operation",
         "unexpected_modified_parameters",
         "unknown_transformation_operation",
+        "unsupported_policy_version",
     }
     assert literal_codes <= set(ERROR_CLASSIFICATION_REGISTRY)
     # Two codes are shared with older families and keep their global category.
@@ -1689,4 +1701,4 @@ def test_registry_covers_only_complete_registered_consumer_families():
         expected_codes.update(family_codes)
 
     assert set(ERROR_CLASSIFICATION_REGISTRY) == expected_codes
-    assert len(ERROR_CLASSIFICATION_REGISTRY) == 700
+    assert len(ERROR_CLASSIFICATION_REGISTRY) == 712

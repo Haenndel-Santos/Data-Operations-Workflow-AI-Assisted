@@ -252,9 +252,9 @@ database, provider, upload, publication, training, or deployment changes.
 - Isolated local Ollama smoke test: 1 passed in 39.48 seconds on 2026-07-15 with an 8,192-token context; it used no database or SQL execution.
 - All 12 project-local skills passed the official skill validator on 2026-07-13.
 - Internal link check: 110 checked, 0 broken on 2026-07-20.
-- Governed cleaning contract (D1) validation on 2026-08-18: 47 contract
+- Governed cleaning contract (D1) validation on 2026-08-18: 93 contract
   invariant tests and 9 legacy-cleaner characterization tests added; error
-  taxonomy registry pinned at 700 codes; full offline suite passes with the
+  taxonomy registry pinned at 712 codes; full offline suite passes with the
   new tests.
 - Main suite is offline and uses temporary directories for generated test artifacts.
 - Documentation link checker is available at `scripts/check_internal_links.py`.
@@ -345,13 +345,15 @@ database, provider, upload, publication, training, or deployment changes.
 
 ## Next Logical Milestone
 
-After owner review of the governed cleaning contract
-(`docs/governed-cleaning.md`), implement the engine (D2) as an opt-in route
-beside `cleaner.py`: `propose_transformations`, `validate_review`,
-`apply_approved_transformations`, `write_cleaning_lineage`, reachable through
-separate CLI commands. `run_workflow()` and `clean_dataframe()` stay unchanged;
-the characterization tests plus a golden-file comparison over the sample
-dataset prove it. Then generic dataset readiness, then Product API.
+Merge the governed cleaning contract (D1, PR #24) after the owner's final
+review. Then D1b: pin `pandas>=3.0.3,<3.1` in `pyproject.toml` and
+`requirements.txt` in a small separate PR, with the characterization tests
+and full CI as evidence. Then implement the engine (D2) as an opt-in route
+beside `cleaner.py`, reachable through `governed-cleaning-propose`,
+`governed-cleaning-authorize`, and `governed-cleaning-apply`. `run_workflow()`
+and `clean_dataframe()` stay unchanged; the characterization tests plus a
+golden-file comparison over the sample dataset prove it. Then generic dataset
+readiness, then Product API.
 
 Review and accept or revise the Sprint 0 product/security baseline, then restore
 the local Phase 5.2 prerequisites: make the ignored AdventureWorks source backup

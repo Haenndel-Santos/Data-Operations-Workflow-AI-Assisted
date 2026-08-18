@@ -858,17 +858,28 @@ publication, or training.
 ## 2026-08-18 - Cleaning Transformations Are Governed By Class, Evidence, And Hash-Bound Decisions
 
 **Decision:** Introduce a governed cleaning contract in which every
-transformation belongs to one of three governance classes - `safe_automatic`
-(structural, value-preserving: column-name normalization, whitespace trim),
-`configured_only` (blank-sentinel normalization; never automatic by default),
-and `governed` (every semantic coercion: number, date, decimal separator,
-locale, identifier canonicalization, category remap). Governed operations are
-always candidates with deterministic evidence and a computed confidence, and
-may be applied only under an exact, hash-bound approved or modified decision
-whose authority is voided by any source change. States move only
+transformation belongs to one of three governance classes, each with exactly
+one authority mechanism: `safe_automatic` (structural, name-level only:
+column-name normalization; authority is the versioned operation table),
+`configured_only` (value-changing but bounded: whitespace trim, blank-sentinel
+normalization; authority is an exact, hash-bound dataset-scoped cleaning
+policy naming author, time, operation, table, columns, and parameters; never
+automatic by default), and `governed` (every semantic coercion: number, date,
+decimal separator, locale, identifier canonicalization, category remap;
+authority is an exact, hash-bound human decision on a candidate in the
+`approved` state). Governed operations are always candidates with
+deterministic evidence and a computed confidence. States move only
 `candidate -> pending_review -> approved | rejected -> applied`;
-`candidate -> applied` does not exist. Confidence is a versioned pure function
-of evidence; a proposer's confidence is never stored.
+`candidate -> applied` does not exist, and `approved` is real authority:
+`record_decision` is the only route into it and `authorize_application`
+requires it. Confidence is a versioned pure function of evidence; a proposer's
+confidence is never stored. Every hash payload is restricted to a canonical
+JSON domain (string keys; null/bool/int/finite float/string/list/mapping) and
+serialized with sorted keys and `allow_nan=False`; sets and non-finite floats
+are rejected. Lineage names its authority mechanism and hash. The engine's CLI
+surface is three flat commands, `governed-cleaning-propose`,
+`governed-cleaning-authorize`, `governed-cleaning-apply`; pandas is pinned to
+`>=3.0.3,<3.1` in a separate small dependency PR before the engine.
 
 **Context:** The legacy `clean_dataframe` alters data on heuristics with no
 evidence, review, or lineage. Characterization tests pin two behaviours that
@@ -881,7 +892,10 @@ the installed pandas. The Sprint 0 capability matrix already required
 **Alternatives:** Treat all normalization as automatic to avoid review
 overhead; treat all normalization as governed and bury users in reviews; let
 the model or heuristic supply the confidence it reports; patch the legacy
-cleaner in place.
+cleaner in place; keep whitespace trim automatic as "value-preserving";
+grant configured authority from a global deployment default; let authority be
+born at `pending_review` with `approved` as a decorative label; accept sets
+and arbitrary objects in hash payloads.
 
 **Reason:** Three classes keep the review burden proportional to risk while
 making the boundary mechanical: the class is decided by the operation table,
@@ -893,7 +907,8 @@ semantics are settled before any new line can alter a dataset.
 **Impact:** `src/data_ops_lab/governed_cleaning.py` and its tests define the
 contract; the `governed_cleaning` blocker family is registered in the error
 taxonomy. `run_workflow()` and `clean_dataframe()` are unchanged and their
-behaviour is pinned. The engine (propose, review, apply, lineage) is a later
-opt-in increment beside the legacy cleaner. Not decided here: the exact
-blank-sentinel configuration surface, the CLI command names, and whether the
-pandas major version should be pinned.
+behaviour is pinned. The engine (propose, authorize, apply, lineage) is a
+later opt-in increment beside the legacy cleaner. Owner review of the first
+draft closed four contract gaps before merge: `approved` made a real state,
+`trim_whitespace` moved to `configured_only`, the cleaning-policy authority
+object materialized in the contract, and the hash domain made canonical.
