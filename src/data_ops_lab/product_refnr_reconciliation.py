@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections import Counter, defaultdict
+from collections import defaultdict
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -230,7 +230,6 @@ def reconcile(original_df: pd.DataFrame, refnr_df: pd.DataFrame) -> dict[str, li
             matched_refnr_indices.add(candidates[0])
             ref_payload = base_payload("refnr", ref_row, refnr_columns)
             corrected_ref = clean_value(ref_row.get(ref_col, "")) if ref_col else ""
-            original_part = clean_value(original_row.get(part_col_original, "")) if part_col_original else ""
             row = {
                 **original_payload,
                 **ref_payload,

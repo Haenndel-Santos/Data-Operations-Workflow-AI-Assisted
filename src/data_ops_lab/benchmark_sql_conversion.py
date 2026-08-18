@@ -329,7 +329,7 @@ def parse_source_datetime(value: str) -> str:
         "%m/%d/%Y %H:%M:%S",
     ):
         try:
-            return datetime.strptime(value, date_format).isoformat(sep=" ")
+            return datetime.strptime(value, date_format).isoformat(sep=" ")  # noqa: DTZ007 - source T-SQL literals carry no zone; naive is the exact value
         except ValueError:
             continue
     raise ValueError(f"Unsupported source date literal: {value}")
@@ -693,7 +693,7 @@ def run_benchmark_sql_conversion(
             table_rows = []
             for table in sorted(table_definitions, key=lambda item: item.name):
                 rows = connection.execute(
-                    f"SELECT COUNT(*) FROM {quote_identifier(table.name)}"
+                    f"SELECT COUNT(*) FROM {quote_identifier(table.name)}"  # noqa: S608 - identifier via quote_identifier; no user values in statement
                 ).fetchone()[0]
                 parquet_path = parquet_dir / f"{table.name}.parquet"
                 connection.execute(

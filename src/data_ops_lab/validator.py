@@ -13,7 +13,7 @@ def create_duckdb_database(parquet_dir: Path, database_path: Path) -> list[str]:
     with duckdb.connect(str(database_path)) as con:
         for path in sorted(parquet_dir.glob("*.parquet")):
             table_name = path.stem
-            con.execute(f"create or replace table {table_name} as select * from read_parquet(?)", [str(path)])
+            con.execute(f"create or replace table {table_name} as select * from read_parquet(?)", [str(path)])  # noqa: S608 - table name is slugified to [a-z0-9_]; path bound as parameter
             created_tables.append(table_name)
     return created_tables
 

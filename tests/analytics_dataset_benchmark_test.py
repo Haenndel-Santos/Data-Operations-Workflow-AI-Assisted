@@ -1164,7 +1164,7 @@ class FakeLiveProvider:
 
     def translate(self, prompt: object, *, timeout_seconds: int) -> dict:
         assert timeout_seconds == 120
-        question = getattr(prompt, "question")
+        question = prompt.question
         self.calls.append(question)
         self.last_metrics = {
             "request_bytes": 2048,

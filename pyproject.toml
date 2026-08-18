@@ -15,7 +15,9 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
+  "pip-audit>=2.7",
   "pytest>=8.0.0",
+  "ruff>=0.16,<0.17",
 ]
 sqlserver = [
   "pyodbc>=5.2,<6",
@@ -35,3 +37,26 @@ where = ["src"]
 markers = [
   "live_provider: isolated opt-in tests that call a locally installed model provider",
 ]
+
+[tool.ruff]
+target-version = "py311"
+src = ["src"]
+extend-exclude = [".venv", "outputs", "datasets", "originaldatabase"]
+
+[tool.ruff.lint]
+# Deliberately narrow and blocking at zero findings rather than broad and advisory.
+# Correctness and safety rules only; style/modernization rules stay out so the gate
+# never competes with the compatibility freeze on module and CLI contracts.
+#   E4/E7/E9 - import, statement, and syntax errors
+#   F        - pyflakes: undefined names, dead imports/locals, redefinitions
+#   B        - bugbear: real bug patterns
+#   DTZ      - naive datetimes (audit and evidence timestamps must stay unambiguous)
+#   S        - bandit security rules
+select = ["E4", "E7", "E9", "F", "B", "DTZ", "S"]
+# No global ignores. Audited exceptions carry a per-line noqa with the reason,
+# so the audit is pinned to exactly the lines it covered and any new occurrence
+# of the same pattern fails CI.
+
+[tool.ruff.lint.per-file-ignores]
+# pytest asserts are the point of the test suite.
+"tests/*" = ["S101"]
