@@ -27,10 +27,11 @@ reproducible answers with evidence.
 
 The package is organized as a Python application under `src/data_ops_lab/`:
 
-- `cli.py` exposes the default pipeline and staged modeling/review commands.
+- `cli.py` exposes the default pipeline, staged modeling/review commands, and the three opt-in `governed-cleaning-*` commands.
 - `workflow.py` coordinates the default conversion-to-export pipeline.
 - Specialized modules own conversion, profiling, cleaning, schema inference, validation, SQL suggestions, export, and documentation.
-- `governed_cleaning.py` defines the governed cleaning contract (candidates, evidence, computed confidence, hash-bound decisions and cleaning policy, exact authority, lineage) as pure types and functions; its engine is not implemented and the legacy cleaner is unchanged.
+- `governed_cleaning.py` defines the governed cleaning contract (candidates, evidence, computed confidence, hash-bound decisions and cleaning policy, exact authority, lineage) as pure types and functions.
+- `governed_cleaning_engine.py` implements the opt-in propose/authorize/apply route over local Parquet with a verified source hash, an ordered hash-bound application plan, atomic publication, and lineage; the legacy cleaner and `run_workflow` are unchanged.
 - Modeling modules prepare source onboarding, serial rules, canonical mappings, Product reconciliation, human review, Product materialization previews, dry-run promotion plans, and schema overview artifacts.
 - The analytics backend is evolving from fixed SQL suggestions toward validated structured requests, semantic context, and controlled read-only execution.
 - The recorded analytics session has a versioned, statically validated module

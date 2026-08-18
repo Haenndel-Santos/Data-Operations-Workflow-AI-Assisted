@@ -4325,3 +4325,64 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 - Do not implement the engine in this branch.
 - Do not change `run_workflow()` or `clean_dataframe()`.
 - Do not pin pandas in this PR; that is D1b after #24 merges.
+
+## 2026-08-18 - Claude - Governed Cleaning Engine (D2)
+
+### Scope
+
+- Added `src/data_ops_lab/governed_cleaning_engine.py`: `run_governed_cleaning_propose`,
+  `run_governed_cleaning_authorize`, `run_governed_cleaning_apply`, with
+  verified source inventory, deterministic profiling (numbers, dates with
+  explicit format, padding, observed sentinels, non-normalized names), exact
+  proposal bundle, disposition rules, canonical ordering, hash-bound
+  application plan, v1 composition rule, all-preconditions-first apply, atomic
+  publish, logical + physical hashes, lineage per step.
+- Added `cli_commands/governed_cleaning.py` and wired three commands into
+  `cli.py` / `cli_commands/__init__.py` (51 commands; 48 unchanged).
+- Added `tests/governed_cleaning_engine_test.py` (35 on-disk tests) covering
+  the 20-item D2 checklist and the owner's requested cases.
+- Registered the `governed_cleaning_engine` taxonomy family (36 literal codes,
+  3 shared globals); registry 713 -> 746.
+- Added `docs/governed-cleaning-engine.md`; updated architecture, testing,
+  project-master, decisions.
+
+### Do Not Do Yet
+
+- Do not route `run_workflow` through the engine; it stays opt-in.
+- Do not widen the one-value-changing-operation-per-column rule without tests.
+- Do not pin `pyarrow` or promise byte-identical Parquet without evidence.
+- Do not add model or provider involvement to proposing.
+
+## 2026-08-18 - Claude - Governed Cleaning Engine (D2) Final-Review Fixes
+
+### Scope
+
+- Blocker 1: `build_automatic_authority` / `verify_automatic_authority` accept a
+  bounded raw source column name for `normalize_column_name` only
+  (`RAW_COLUMN_NAME_PATTERN`, `invalid_raw_column_name`); end-to-end rename
+  test added; `rename_target_collision` added at authorize.
+- Blocker 2: lineage rows are the serialized D1 `TransformationLineage` built
+  with the real logical output hash; `values_failed`, `sequence`, and
+  `output_physical_sha256` beside it; the placeholder hash is gone.
+- Blocker 3: apply requires the plan to equal `_order_steps(all verified
+  authorities)` (`application_plan_authority_set_mismatch`); omission and
+  reorder-with-full-rehash tests added.
+- Blocker 4 (Option A): plan steps carry only `sequence` + `authority_sha256`;
+  any other key is `invalid_application_plan`.
+- Blocker 5: `review.proposal_sha256` must equal the proposal manifest's
+  (`review_proposal_hash_mismatch`); proposals carry a UUID `proposal_id`
+  covered by `proposal_sha256` (two proposals in the same second over
+  unchanged data were previously indistinguishable).
+- Blocker 6: `tests/fixtures/legacy_cleaner/legacy_cleaner_golden.yml` holds
+  static logical hashes captured from `origin/main` at `826cfc4`; the A-vs-B
+  test is replaced by a fixed-baseline comparison plus a guard that the
+  fixture values are static digests.
+- Hardening 7: `unsupported_engine_version` on proposal load (authorize) and
+  authorization load (apply).
+- Taxonomy: registry 746 -> 751; D1 family +1, engine family +4 (40 literal).
+
+### Do Not Do Yet
+
+- Do not merge #26 without the owner's final review.
+- Do not widen the engine-version policy or the composition rule.
+- Do not regenerate the legacy golden without a recorded decision.

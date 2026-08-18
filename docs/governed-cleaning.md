@@ -193,6 +193,22 @@ operation cannot borrow the automatic door. `verify_automatic_authority`
 rechecks source drift, that the operation is still `safe_automatic` in the
 current table, and the record's self-check.
 
+**Raw column names (narrow compatibility correction found by the engine).**
+Every operation scopes authority by identifier-shaped `table` and `column` -
+except `normalize_column_name`, whose purpose is to act on a name that is not
+an identifier yet. For that one operation the `column` is the exact raw source
+name, bounded by `RAW_COLUMN_NAME_PATTERN`: 1 to 255 characters, no control
+characters, at least one letter or digit (`invalid_raw_column_name`
+otherwise). The authority hash binds that raw name exactly; the target name is
+derived deterministically by the engine and is not part of the authority. The
+exception is expressed per operation in `build_automatic_authority` and
+rechecked in `verify_automatic_authority`; it is not a generic bypass, and no
+other operation - candidate, policy, or decision - accepts a non-identifier
+column. Pinned by
+`test_normalize_column_name_binds_authority_to_a_raw_non_identifier_source_name`,
+`test_pathological_raw_column_names_are_refused_by_the_bounded_rule`, and
+`test_raw_name_exception_does_not_leak_to_other_operations`.
+
 ### TransformationLineage
 
 `source_sha256`, `authority_kind`, `authority_sha256`, `output_sha256`,
@@ -328,6 +344,7 @@ Parameter dictionaries hash the same regardless of insertion order.
 | Modified decision without parameters, or parameters on a non-modified decision | `modified_decision_without_parameters`, `unexpected_modified_parameters` |
 | `record_decision` on a candidate not in `pending_review` | `candidate_not_reviewable` |
 | `build_automatic_authority` for an operation that is not `safe_automatic` | `operation_not_automatic` |
+| `normalize_column_name` on a raw source name outside the bounded rule | `invalid_raw_column_name` |
 | Authority record does not match its own bound content (`verify_authority`, `verify_configured_authority`) | `authority_hash_mismatch` |
 | Structural defects in candidate, evidence, policy, or lineage inputs | `invalid_*`, `inconsistent_*`, `unknown_transformation_operation`, `unclassified_transformation_operation`, `empty_policy`, `empty_policy_scope`, `duplicate_policy_scope`, `unsupported_policy_version`, `missing_policy_author`, `missing_applied_timestamp` |
 
@@ -383,6 +400,7 @@ counterparts are proven here.
 | - | Each class has exactly one authority mechanism | `test_a_human_decision_cannot_authorize_a_non_governed_operation`, `test_policy_may_only_configure_configured_only_operations`, `test_operation_table_grants_no_authority_outside_safe_automatic` |
 | - | All three authority kinds reach lineage through one door | `test_all_three_authority_kinds_reach_lineage_and_stay_distinct`, `test_lineage_from_the_operation_table_names_that_authority` |
 | - | `authority_kind` is self-bound in every authority record | `test_tampered_authority_record_fails_self_check`, `test_tampered_configured_authority_fails_self_check`, `test_automatic_authority_is_void_after_source_change_and_on_tamper` (each tampers `authority_kind`) |
+| - | `normalize_column_name` binds a bounded raw source name; no other operation does | `test_normalize_column_name_binds_authority_to_a_raw_non_identifier_source_name`, `test_pathological_raw_column_names_are_refused_by_the_bounded_rule`, `test_raw_name_exception_does_not_leak_to_other_operations`, `test_stored_automatic_authority_with_pathological_raw_name_fails_verify` |
 | - | Configured authority is exact per dataset, operation, table, column, and parameters | `test_valid_policy_grants_exact_scoped_authority`, `test_policy_scope_is_exact_per_table_and_column`, `test_policy_scope_is_exact_per_operation`, `test_policy_hash_changes_with_any_configured_parameter` |
 | - | Lineage names its authority mechanism | `test_lineage_from_a_human_decision_names_that_authority`, `test_lineage_from_a_policy_names_that_authority` |
 | - | The hash domain is canonical | `test_canonical_json_is_order_independent_and_ascii`, `test_values_outside_the_canonical_domain_are_rejected` (parametrized), `test_non_canonical_candidate_parameters_are_a_blocker` |

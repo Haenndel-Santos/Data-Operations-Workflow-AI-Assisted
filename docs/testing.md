@@ -613,5 +613,17 @@ Default tests must remain offline. Any future API, database, or hosted-service i
   ISO-date reinterpretation under the 80% sample threshold) so the engine
   increment can prove the legacy path stayed unchanged. Inputs use explicit
   dtypes to stay deterministic across the declared pandas range.
-- The `governed_cleaning` blocker family is registered in the error taxonomy;
-  `tests/failure_label_inventory_test.py` pins the registry at 713 codes.
+- `tests/governed_cleaning_engine_test.py` drives the real
+  propose -> authorize -> apply route over Parquet fixtures in a temporary
+  directory and proves the 20-item D2 checklist in
+  `docs/governed-cleaning-engine.md`: source verification, explicit
+  dispositions, ordered hash-bound plan, tamper and drift refusal, partial
+  failure publishing nothing, logical determinism, lineage per step, legacy
+  golden file over `samples/raw`, and opt-in isolation.
+- `tests/fixtures/legacy_cleaner/legacy_cleaner_golden.yml` is the static
+  logical baseline of the legacy workflow over `samples/raw` (captured from
+  `origin/main` at `826cfc4`); `test_legacy_workflow_matches_the_fixed_golden_baseline`
+  compares against it rather than against a second fresh run.
+- The `governed_cleaning` and `governed_cleaning_engine` blocker families are
+  registered in the error taxonomy; `tests/failure_label_inventory_test.py`
+  pins the registry at 751 codes.

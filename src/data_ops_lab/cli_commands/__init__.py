@@ -8,6 +8,7 @@ from .analytics_query_session import register_analytics_query_session_commands
 from .analytics_semantic import register_analytics_semantic_commands
 from .analytics_soak import register_analytics_soak_commands
 from .erp_modeling import register_erp_modeling_commands
+from .governed_cleaning import register_governed_cleaning_commands
 from .model_documentation import register_model_documentation_commands
 from .product_publication import register_product_publication_commands
 from .product_reference import register_product_reference_commands
@@ -20,6 +21,7 @@ __all__ = [
     "register_analytics_semantic_commands",
     "register_analytics_soak_commands",
     "register_erp_modeling_commands",
+    "register_governed_cleaning_commands",
     "register_model_documentation_commands",
     "register_product_publication_commands",
     "register_product_reference_commands",

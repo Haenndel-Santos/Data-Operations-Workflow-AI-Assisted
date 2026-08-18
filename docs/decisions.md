@@ -912,3 +912,90 @@ later opt-in increment beside the legacy cleaner. Owner review of the first
 draft closed four contract gaps before merge: `approved` made a real state,
 `trim_whitespace` moved to `configured_only`, the cleaning-policy authority
 object materialized in the contract, and the hash domain made canonical.
+
+## 2026-08-18 - The Governed Cleaning Engine Applies Only An Ordered, Hash-Bound Plan
+
+**Decision:** Implement the governed cleaning engine as an opt-in
+propose -> authorize -> apply route beside the legacy cleaner, with these
+rules: the source hash is always derived from the real Parquet files and a
+source manifest is verified against them, never trusted alone; discovery
+happens once in propose and the proposal bundle carries exact automatic and
+configured steps plus governed candidates, so authorize rediscovers nothing;
+every governed candidate needs an explicit disposition (missing is
+`authorization_incomplete`, malformed is a blocker, rejected is a valid
+disposition with zero authority) before an apply-ready bundle exists;
+`approved` is derived from decisions and never stored; authorities are
+ordered canonically and the ordered list of authority hashes is bound in an
+`application_plan_sha256`; engine v1 allows at most one value-changing
+operation per column; apply re-verifies the source, the authority bundle,
+the plan, and every authority before creating staging, applies in plan order
+in one staging directory, and publishes atomically so a failure anywhere
+promotes nothing; lineage names one authority mechanism per step and carries
+both a logical content hash (promised deterministic) and a physical Parquet
+hash (recorded, not promised across writer versions).
+
+**Context:** D1 fixed the contract; the engine had to inherit its semantics
+without inventing new authority. Owner review of the engine design added the
+verified source, the ordered plan, the exact proposal bundle, and the
+disposition rule before implementation.
+
+**Alternatives:** Trust the source manifest; let apply order steps at run
+time; describe configured/automatic steps as prose and rediscover them in
+authorize; treat a missing decision as approval or as a blocker; promise
+byte-identical Parquet across environments; add autodiscovery to the CLI to
+avoid touching `cli.py`.
+
+**Reason:** Once two operations can touch a column, order is part of the
+authority over the result, so it must be explicit and hashed. Verified source
+hashes and exact bundles remove every "which dataset / which step" ambiguity.
+Distinguishing logical from physical determinism keeps "the data changed"
+separate from "the encoder changed".
+
+**Impact:** `src/data_ops_lab/governed_cleaning_engine.py`, three flat CLI
+commands registered through `cli_commands/governed_cleaning.py` with minimal
+edits to `cli.py` and `cli_commands/__init__.py` (51 commands total; the 48
+existing are unchanged), the `governed_cleaning_engine` taxonomy family, and
+`docs/governed-cleaning-engine.md`. `run_workflow()` and `clean_dataframe()`
+are unchanged and pinned by a golden-file test over `samples/raw`.
+
+## 2026-08-18 - Final Review Of The Governed Cleaning Engine Closes Seven Binding Gaps
+
+**Decision:** Before merging the engine, close the gaps final review found in
+the same pull request: (1) `normalize_column_name` may bind authority to a
+bounded raw source column name (`RAW_COLUMN_NAME_PATTERN`; a narrow,
+operation-specific compatibility correction to the D1 contract, not a
+reopening of its semantics); (2) persisted lineage is the D1
+`TransformationLineage` built with the real output hash, whose contract
+`output_sha256` is the logical content hash, with `values_failed` and the
+physical hash as D2 evidence beside it; (3) the application plan must equal
+the canonical projection of the complete verified authority bundle
+(`application_plan_authority_set_mismatch`); (4) plan steps carry only
+`sequence` and `authority_sha256`, so no redundant metadata can disagree with
+the referenced authority; (5) a review binds to the exact proposal artifact
+(`review_proposal_hash_mismatch`), and every proposal carries a UUID
+`proposal_id` covered by its hash; (6) the legacy workflow is compared against
+a committed static logical baseline captured from `origin/main` at `826cfc4`;
+(7) artifacts crossing a process boundary must match `ENGINE_VERSION`
+(`unsupported_engine_version`).
+
+**Context:** The engine as first submitted proposed a rename it could not
+authorize, discarded the D1 lineage object in favor of a hand-built record,
+let a plan omit or reorder genuine authorities if every hash was rehashed,
+carried unverified step metadata, accepted a review written against a
+different proposal with identical candidates, proved legacy determinism rather
+than legacy stability, and did not check engine compatibility.
+
+**Alternatives:** Relax identifier validation globally; store a placeholder
+output hash and a parallel lineage schema; verify redundant plan metadata
+field by field instead of removing it; compare two fresh legacy runs; treat
+engine version as advisory.
+
+**Reason:** Each gap is a field that looked authoritative but was not bound,
+recomputed, or cross-checked - the same class the D1 reviews closed. The plan
+is not a list of some valid authorities; it is the exact executable projection
+of the whole bundle, and order is part of the authority over the result.
+
+**Impact:** `governed_cleaning.py` changes only for the raw-name rule and its
+verification; the engine, its tests (46), the taxonomy (five new codes,
+registry 751), and the docs change accordingly. `run_workflow()` and
+`clean_dataframe()` are unchanged and now pinned by a static golden.
