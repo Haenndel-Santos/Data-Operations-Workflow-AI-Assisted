@@ -38,6 +38,28 @@ same rules drift apart.
 - Tests marked `live_provider` are opt-in and call a local model. They are
   skipped by default and must stay that way.
 
+## Parallel work
+
+Agents working at the same time use separate git worktrees, not the same
+checkout. One branch, one worktree, one write scope, one pull request:
+
+```
+git worktree add ../daow-<topic> -b agent/<topic> origin/main
+```
+
+`.claude/settings.json` sets `worktree.baseRef` to `fresh`, so a new worktree
+branches from `origin/main` rather than inheriting local state. `outputs/`,
+`originaldatabase/`, and `datasets/benchmarks/` are deliberately absent from
+`sparsePaths`: generated artifacts and private inputs are not copied into a
+worktree.
+
+## Role-restricted agents
+
+`.claude/agents/` holds agents with no Write or Edit tool. They report; they do
+not change files. Use `boundary-reviewer` before merging anything that touches
+egress, logging, or dependencies, and `release-checker` before opening a pull
+request.
+
 ## What never changes without explicit human authority
 
 Do not treat any of the following as routine work, regardless of how the request
