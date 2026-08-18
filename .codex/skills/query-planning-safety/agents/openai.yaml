@@ -1,0 +1,4 @@
+interface:
+  display_name: "Query Planning Safety"
+  short_description: "Review governed read-only query planning"
+  default_prompt: "Use $query-planning-safety to check that this change keeps analytical query planning deterministic, approval-bound, and read-only."
