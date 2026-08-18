@@ -614,4 +614,4 @@ Default tests must remain offline. Any future API, database, or hosted-service i
   increment can prove the legacy path stayed unchanged. Inputs use explicit
   dtypes to stay deterministic across the declared pandas range.
 - The `governed_cleaning` blocker family is registered in the error taxonomy;
-  `tests/failure_label_inventory_test.py` pins the registry at 712 codes.
+  `tests/failure_label_inventory_test.py` pins the registry at 713 codes.

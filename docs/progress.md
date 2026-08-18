@@ -252,9 +252,9 @@ database, provider, upload, publication, training, or deployment changes.
 - Isolated local Ollama smoke test: 1 passed in 39.48 seconds on 2026-07-15 with an 8,192-token context; it used no database or SQL execution.
 - All 12 project-local skills passed the official skill validator on 2026-07-13.
 - Internal link check: 110 checked, 0 broken on 2026-07-20.
-- Governed cleaning contract (D1) validation on 2026-08-18: 93 contract
+- Governed cleaning contract (D1) validation on 2026-08-18: 114 contract
   invariant tests and 9 legacy-cleaner characterization tests added; error
-  taxonomy registry pinned at 712 codes; full offline suite passes with the
+  taxonomy registry pinned at 713 codes; full offline suite passes with the
   new tests.
 - Main suite is offline and uses temporary directories for generated test artifacts.
 - Documentation link checker is available at `scripts/check_internal_links.py`.

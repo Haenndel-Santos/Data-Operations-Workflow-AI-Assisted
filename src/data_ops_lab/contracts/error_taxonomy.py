@@ -2224,6 +2224,7 @@ _GOVERNED_CLEANING_CLASSIFICATIONS = {
         "decision_authority_wrong_class",
         "decision_candidate_mismatch",
         "decision_hash_mismatch",
+        "operation_not_automatic",
         "operation_not_configured",
         "policy_operation_not_configurable",
         "source_changed_since_review",

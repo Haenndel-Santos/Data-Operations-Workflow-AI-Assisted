@@ -1642,6 +1642,7 @@ def test_governed_cleaning_is_a_complete_family_of_literal_standard_blockers():
         "missing_reviewer",
         "modified_decision_without_parameters",
         "non_canonical_payload",
+        "operation_not_automatic",
         "operation_not_configured",
         "policy_operation_not_configurable",
         "proposed_confidence_ignored",
@@ -1701,4 +1702,4 @@ def test_registry_covers_only_complete_registered_consumer_families():
         expected_codes.update(family_codes)
 
     assert set(ERROR_CLASSIFICATION_REGISTRY) == expected_codes
-    assert len(ERROR_CLASSIFICATION_REGISTRY) == 712
+    assert len(ERROR_CLASSIFICATION_REGISTRY) == 713

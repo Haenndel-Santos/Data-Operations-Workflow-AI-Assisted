@@ -177,13 +177,36 @@ policy hash and therefore the authority hash. This closes mechanically the
 question of who authorized `N/A` to become null in this dataset: the lineage
 points at a policy hash, and the policy names its author and time.
 
+### AutomaticAuthority
+
+The exact authority to apply one `safe_automatic` operation on one column:
+`source_sha256`, `table`, `column`, `operation`, and
+
+```text
+authority_sha256 = sha256(authority_kind + contract_version + operation
+                          + governance_class + source_sha256 + table + column)
+```
+
+`build_automatic_authority` refuses any operation the table does not classify
+as `safe_automatic` (`operation_not_automatic`), so a configured or governed
+operation cannot borrow the automatic door. `verify_automatic_authority`
+rechecks source drift, that the operation is still `safe_automatic` in the
+current table, and the record's self-check.
+
 ### TransformationLineage
 
 `source_sha256`, `authority_kind`, `authority_sha256`, `output_sha256`,
 `table`, `column`, `operation`, `rows_examined`, `rows_changed`, `applied_at`
 (ISO-8601 with explicit offset; `invalid_applied_at` otherwise). Lineage
 points at exactly one authority record; `authority_kind` says which mechanism
-produced it.
+produced it. `build_lineage` accepts all three authority records through the
+same door:
+
+```text
+OPERATION_TABLE   AutomaticAuthority     ─┐
+CLEANING_POLICY   ConfiguredAuthority    ─┼→ exact authority → verify → apply → lineage
+HUMAN_DECISION    ApprovedTransformation ─┘
+```
 
 ## States
 
@@ -259,7 +282,13 @@ apply to a candidate scored differently.
 | `authority_sha256` (human decision) | authority kind, candidate id, candidate hash, decision hash, source hash, table, column, operation, effective parameters | - |
 | `policy_sha256` | the whole policy | - |
 | `authority_sha256` (cleaning policy) | authority kind, policy hash, source hash, dataset, operation, table, column, effective parameters | - |
-| operation-table authority | authority kind, contract version, operation, governance class | - |
+| `authority_sha256` (operation table) | authority kind, contract version, operation, governance class, source hash, table, column | - |
+
+In every authority record `authority_kind` is part of the hashed content, and
+every `verify_*` function recomputes the hash from the record's own
+`authority_kind`. Changing what lineage will report therefore fails the
+self-check with `authority_hash_mismatch`, exactly like changing the table or
+column.
 
 ### Canonical hash domain
 
@@ -298,6 +327,7 @@ Parameter dictionaries hash the same regardless of insertion order.
 | Reviewer missing, or `reviewed_at` missing/naive/malformed | `missing_reviewer`, `missing_review_timestamp`, `invalid_reviewed_at` |
 | Modified decision without parameters, or parameters on a non-modified decision | `modified_decision_without_parameters`, `unexpected_modified_parameters` |
 | `record_decision` on a candidate not in `pending_review` | `candidate_not_reviewable` |
+| `build_automatic_authority` for an operation that is not `safe_automatic` | `operation_not_automatic` |
 | Authority record does not match its own bound content (`verify_authority`, `verify_configured_authority`) | `authority_hash_mismatch` |
 | Structural defects in candidate, evidence, policy, or lineage inputs | `invalid_*`, `inconsistent_*`, `unknown_transformation_operation`, `unclassified_transformation_operation`, `empty_policy`, `empty_policy_scope`, `duplicate_policy_scope`, `unsupported_policy_version`, `missing_policy_author`, `missing_applied_timestamp` |
 
@@ -342,7 +372,7 @@ counterparts are proven here.
 | 4 | A source change voids a prior approval | `test_source_change_voids_a_prior_approval`, `test_source_drift_after_authority_is_caught_by_verify` |
 | 5 | Same source and same decision produce the same authority | `test_same_source_and_same_decision_produce_the_same_authority`, `test_candidate_hash_is_deterministic_and_independent_of_dict_order` |
 | 6 | Output receives hash and lineage | `test_lineage_from_a_human_decision_names_that_authority`, `test_lineage_from_a_policy_names_that_authority` |
-| - | A tampered authority record fails its own self-check on every bound field | `test_tampered_authority_record_fails_self_check` (parametrized over table, column, id, operation, source, hashes, parameters), `test_tampered_configured_authority_fails_self_check` |
+| - | A tampered authority record fails its own self-check on every bound field | `test_tampered_authority_record_fails_self_check`, `test_tampered_configured_authority_fails_self_check` (both parametrized over every bound field, `authority_kind` included), `test_automatic_authority_is_void_after_source_change_and_on_tamper` |
 | 8 | Confidence is computed, never accepted | `test_proposed_confidence_is_ignored_and_the_discrepancy_is_recorded`, `test_confidence_is_a_pure_function_of_evidence` |
 | 9 | Ambiguous coercion stays a candidate | `test_semantic_coercions_are_always_governed`, `test_the_ninety_percent_coercion_case_stays_a_governed_candidate` |
 | 10 | Legacy cleaner behaviourally unchanged | `tests/legacy_cleaner_characterization_test.py` (9 pinned behaviours) |
@@ -350,7 +380,9 @@ counterparts are proven here.
 | - | A shared blocker accumulator cannot drop later valid candidates | `test_shared_blocker_accumulator_does_not_drop_later_valid_candidates` |
 | - | `candidate -> applied` does not exist | `test_candidate_can_never_reach_applied_without_approval` |
 | - | Value-changing normalizations are not automatic | `test_value_changing_normalizations_are_configured_only_not_automatic`, `test_only_name_level_structural_operations_are_safe_automatic` |
-| - | Each class has exactly one authority mechanism | `test_a_human_decision_cannot_authorize_a_non_governed_operation`, `test_policy_may_only_configure_configured_only_operations` |
+| - | Each class has exactly one authority mechanism | `test_a_human_decision_cannot_authorize_a_non_governed_operation`, `test_policy_may_only_configure_configured_only_operations`, `test_operation_table_grants_no_authority_outside_safe_automatic` |
+| - | All three authority kinds reach lineage through one door | `test_all_three_authority_kinds_reach_lineage_and_stay_distinct`, `test_lineage_from_the_operation_table_names_that_authority` |
+| - | `authority_kind` is self-bound in every authority record | `test_tampered_authority_record_fails_self_check`, `test_tampered_configured_authority_fails_self_check`, `test_automatic_authority_is_void_after_source_change_and_on_tamper` (each tampers `authority_kind`) |
 | - | Configured authority is exact per dataset, operation, table, column, and parameters | `test_valid_policy_grants_exact_scoped_authority`, `test_policy_scope_is_exact_per_table_and_column`, `test_policy_scope_is_exact_per_operation`, `test_policy_hash_changes_with_any_configured_parameter` |
 | - | Lineage names its authority mechanism | `test_lineage_from_a_human_decision_names_that_authority`, `test_lineage_from_a_policy_names_that_authority` |
 | - | The hash domain is canonical | `test_canonical_json_is_order_independent_and_ascii`, `test_values_outside_the_canonical_domain_are_rejected` (parametrized), `test_non_canonical_candidate_parameters_are_a_blocker` |

@@ -23,6 +23,7 @@ from data_ops_lab.governed_cleaning import (
     POLICY_VERSION,
     ApprovedTransformation,
     AuthorityKind,
+    AutomaticAuthority,
     CleaningPolicy,
     ConfiguredAuthority,
     DecisionKind,
@@ -36,6 +37,7 @@ from data_ops_lab.governed_cleaning import (
     TransformationOperation,
     authorize_application,
     authorize_configured,
+    build_automatic_authority,
     build_candidate,
     build_lineage,
     candidate_hash,
@@ -45,7 +47,6 @@ from data_ops_lab.governed_cleaning import (
     governance_class_for,
     is_aware_iso_timestamp,
     is_canonical_payload,
-    operation_table_authority_hash,
     policy_hash,
     record_decision,
     sha256_of,
@@ -54,6 +55,7 @@ from data_ops_lab.governed_cleaning import (
     validate_decision,
     validate_policy,
     verify_authority,
+    verify_automatic_authority,
     verify_configured_authority,
 )
 
@@ -280,13 +282,47 @@ def test_only_name_level_structural_operations_are_safe_automatic():
     assert safe == {TransformationOperation.NORMALIZE_COLUMN_NAME}
 
 
-def test_safe_automatic_authority_is_the_versioned_table_entry():
-    h = operation_table_authority_hash(TransformationOperation.NORMALIZE_COLUMN_NAME)
-    assert h == operation_table_authority_hash(TransformationOperation.NORMALIZE_COLUMN_NAME)
-    assert h == sha256_of({
+def test_safe_automatic_authority_is_the_versioned_table_entry_bound_to_scope():
+    """The third leg: safe_automatic -> operation_table -> exact authority."""
+    blockers: list[dict[str, str]] = []
+    auth = build_automatic_authority(
+        source_sha256=SOURCE, table="orders", column="order_date",
+        operation=TransformationOperation.NORMALIZE_COLUMN_NAME, blockers=blockers,
+    )
+    assert isinstance(auth, AutomaticAuthority) and blockers == []
+    assert auth.authority_kind is AuthorityKind.OPERATION_TABLE
+    assert auth.authority_sha256 == sha256_of({
         "authority_kind": AuthorityKind.OPERATION_TABLE, "contract_version": CONTRACT_VERSION,
         "operation": TransformationOperation.NORMALIZE_COLUMN_NAME, "governance_class": GovernanceClass.SAFE_AUTOMATIC,
+        "source_sha256": SOURCE, "table": "orders", "column": "order_date",
     })
+    assert verify_automatic_authority(auth, current_source_sha256=SOURCE, blockers=blockers) and blockers == []
+    again = build_automatic_authority(source_sha256=SOURCE, table="orders", column="order_date",
+                                      operation=TransformationOperation.NORMALIZE_COLUMN_NAME, blockers=[])
+    assert again == auth
+
+
+@pytest.mark.parametrize("op", [op for op, cls in OPERATION_GOVERNANCE.items() if cls is not GovernanceClass.SAFE_AUTOMATIC])
+def test_operation_table_grants_no_authority_outside_safe_automatic(op):
+    """A configured or governed operation cannot borrow the automatic door."""
+    blockers: list[dict[str, str]] = []
+    assert build_automatic_authority(source_sha256=SOURCE, table="orders", column="x", operation=op, blockers=blockers) is None
+    assert [b["blocker_type"] for b in blockers] == ["operation_not_automatic"]
+
+
+def test_automatic_authority_is_void_after_source_change_and_on_tamper():
+    auth = build_automatic_authority(source_sha256=SOURCE, table="orders", column="order_date",
+                                     operation=TransformationOperation.NORMALIZE_COLUMN_NAME, blockers=[])
+    assert auth is not None
+    blockers: list[dict[str, str]] = []
+    assert not verify_automatic_authority(auth, current_source_sha256=OTHER_SOURCE, blockers=blockers)
+    assert "source_changed_since_review" in {b["blocker_type"] for b in blockers}
+    for field_name, value in (("table", "secret"), ("column", "ssn"), ("source_sha256", OTHER_SOURCE),
+                              ("authority_kind", AuthorityKind.HUMAN_DECISION)):
+        blockers = []
+        forged = dataclasses.replace(auth, **{field_name: value})
+        assert not verify_automatic_authority(forged, current_source_sha256=forged.source_sha256, blockers=blockers), field_name
+        assert "authority_hash_mismatch" in {b["blocker_type"] for b in blockers}, field_name
 
 
 def test_unknown_operation_is_rejected_before_it_carries_state():
@@ -564,6 +600,8 @@ def test_source_drift_after_authority_is_caught_by_verify():
         ("source_sha256", OTHER_SOURCE),
         ("candidate_sha256", "d" * 64),
         ("decision_sha256", "e" * 64),
+        ("authority_kind", AuthorityKind.CLEANING_POLICY),
+        ("authority_kind", AuthorityKind.OPERATION_TABLE),
     ],
 )
 def test_tampered_authority_record_fails_self_check(field_name, new_value):
@@ -749,12 +787,28 @@ def test_configured_authority_is_void_after_source_change():
     assert "source_changed_since_review" in {b["blocker_type"] for b in blockers}
 
 
-def test_tampered_configured_authority_fails_self_check():
+@pytest.mark.parametrize(
+    "field_name, new_value",
+    [
+        ("effective_parameters", {"sentinels": ["", "N/A", "-", "--"]}),
+        ("table", "secret_table"),
+        ("column", "ssn"),
+        ("dataset_id", "other_dataset"),
+        ("operation", TransformationOperation.TRIM_WHITESPACE),
+        ("source_sha256", OTHER_SOURCE),
+        ("policy_sha256", "d" * 64),
+        ("authority_kind", AuthorityKind.HUMAN_DECISION),
+        ("authority_kind", AuthorityKind.OPERATION_TABLE),
+    ],
+)
+def test_tampered_configured_authority_fails_self_check(field_name, new_value):
+    """authority_kind is bound like every other field: what lineage will
+    report cannot be changed without failing the self-check."""
     auth = authorize_configured(policy(), source_sha256=SOURCE, operation=TransformationOperation.NORMALIZE_BLANK_SENTINEL, table="orders", column="notes", blockers=[])
     assert auth is not None
-    forged = dataclasses.replace(auth, effective_parameters={"sentinels": ["", "N/A", "-", "--"]})
+    forged = dataclasses.replace(auth, **{field_name: new_value})
     blockers: list[dict[str, str]] = []
-    assert not verify_configured_authority(forged, current_source_sha256=SOURCE, blockers=blockers)
+    assert not verify_configured_authority(forged, current_source_sha256=forged.source_sha256, blockers=blockers)
     assert "authority_hash_mismatch" in {b["blocker_type"] for b in blockers}
 
 
@@ -819,6 +873,32 @@ def test_lineage_from_a_policy_names_that_authority():
     assert lineage.authority_kind is AuthorityKind.CLEANING_POLICY
     assert lineage.authority_sha256 == auth.authority_sha256
     assert (lineage.table, lineage.column, lineage.operation) == ("orders", "notes", TransformationOperation.NORMALIZE_BLANK_SENTINEL)
+
+
+def test_lineage_from_the_operation_table_names_that_authority():
+    """The third leg reaches lineage through the same door as the other two."""
+    auth = build_automatic_authority(source_sha256=SOURCE, table="orders", column="order_date",
+                                     operation=TransformationOperation.NORMALIZE_COLUMN_NAME, blockers=[])
+    assert auth is not None
+    blockers: list[dict[str, str]] = []
+    lineage = build_lineage(auth, output_sha256=OUTPUT, rows_examined=1240, rows_changed=0, applied_at=NOW, blockers=blockers)
+    assert lineage is not None and blockers == []
+    assert lineage.authority_kind is AuthorityKind.OPERATION_TABLE
+    assert lineage.authority_sha256 == auth.authority_sha256
+    assert (lineage.table, lineage.column, lineage.operation) == ("orders", "order_date", TransformationOperation.NORMALIZE_COLUMN_NAME)
+
+
+def test_all_three_authority_kinds_reach_lineage_and_stay_distinct():
+    human = authorize_application(approved(candidate()), approved_decision(candidate()), SOURCE, [])
+    configured = authorize_configured(policy(), source_sha256=SOURCE, operation=TransformationOperation.TRIM_WHITESPACE, table="orders", column="customer_code", blockers=[])
+    automatic = build_automatic_authority(source_sha256=SOURCE, table="orders", column="order_date", operation=TransformationOperation.NORMALIZE_COLUMN_NAME, blockers=[])
+    kinds = set()
+    for auth in (human, configured, automatic):
+        assert auth is not None
+        lineage = build_lineage(auth, output_sha256=OUTPUT, rows_examined=10, rows_changed=1, applied_at=NOW, blockers=[])
+        assert lineage is not None
+        kinds.add(lineage.authority_kind)
+    assert kinds == {AuthorityKind.HUMAN_DECISION, AuthorityKind.CLEANING_POLICY, AuthorityKind.OPERATION_TABLE}
 
 
 def test_lineage_rejects_impossible_counts_and_bad_hashes():

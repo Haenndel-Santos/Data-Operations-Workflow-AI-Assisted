@@ -350,6 +350,19 @@ class ConfiguredAuthority:
 
 
 @dataclass(frozen=True)
+class AutomaticAuthority:
+    """What the engine is allowed to run for a safe_automatic operation: the
+    versioned operation-table entry, bound to the exact source and scope."""
+
+    source_sha256: str
+    table: str
+    column: str
+    operation: TransformationOperation
+    authority_sha256: str
+    authority_kind: AuthorityKind = AuthorityKind.OPERATION_TABLE
+
+
+@dataclass(frozen=True)
 class TransformationLineage:
     source_sha256: str
     authority_kind: AuthorityKind
@@ -415,6 +428,7 @@ def policy_hash(policy: CleaningPolicy) -> str:
 
 def authority_hash(
     *,
+    authority_kind: AuthorityKind,
     candidate_id: str,
     candidate_sha256: str,
     decision_sha256: str,
@@ -424,12 +438,13 @@ def authority_hash(
     operation: TransformationOperation,
     effective_parameters: Mapping[str, Any],
 ) -> str:
-    """Bind everything the application will act on. Symmetric with the
-    configured authority: a record retargeted to another table or column must
-    fail its own self-check, not verify clean and poison lineage."""
+    """Bind everything the application will act on, including which mechanism
+    granted it. Symmetric with the other authorities: a record retargeted to
+    another table, column, or authority kind must fail its own self-check,
+    not verify clean and poison lineage."""
     return sha256_of(
         {
-            "authority_kind": AuthorityKind.HUMAN_DECISION,
+            "authority_kind": authority_kind,
             "candidate_id": candidate_id,
             "candidate_sha256": candidate_sha256,
             "decision_sha256": decision_sha256,
@@ -444,6 +459,7 @@ def authority_hash(
 
 def configured_authority_hash(
     *,
+    authority_kind: AuthorityKind,
     policy_sha256: str,
     source_sha256: str,
     dataset_id: str,
@@ -454,7 +470,7 @@ def configured_authority_hash(
 ) -> str:
     return sha256_of(
         {
-            "authority_kind": AuthorityKind.CLEANING_POLICY,
+            "authority_kind": authority_kind,
             "policy_sha256": policy_sha256,
             "source_sha256": source_sha256,
             "dataset_id": dataset_id,
@@ -466,14 +482,25 @@ def configured_authority_hash(
     )
 
 
-def operation_table_authority_hash(operation: TransformationOperation) -> str:
-    """Authority for safe_automatic operations is the versioned table entry."""
+def automatic_authority_hash(
+    *,
+    authority_kind: AuthorityKind,
+    source_sha256: str,
+    table: str,
+    column: str,
+    operation: TransformationOperation,
+) -> str:
+    """Authority for safe_automatic operations is the versioned table entry,
+    bound to the exact source and scope it will act on."""
     return sha256_of(
         {
-            "authority_kind": AuthorityKind.OPERATION_TABLE,
+            "authority_kind": authority_kind,
             "contract_version": CONTRACT_VERSION,
             "operation": operation,
             "governance_class": OPERATION_GOVERNANCE[operation],
+            "source_sha256": source_sha256,
+            "table": table,
+            "column": column,
         }
     )
 
@@ -766,6 +793,7 @@ def authorize_application(
         operation=candidate.operation,
         effective_parameters=effective,
         authority_sha256=authority_hash(
+            authority_kind=AuthorityKind.HUMAN_DECISION,
             candidate_id=candidate.candidate_id,
             candidate_sha256=c_hash,
             decision_sha256=d_hash,
@@ -790,6 +818,7 @@ def verify_authority(
         add_blocker(blockers, "source_changed_since_review", "Source hash drifted after authority was granted.", field="source_sha256")
         ok = False
     expected = authority_hash(
+        authority_kind=approved.authority_kind,
         candidate_id=approved.candidate_id,
         candidate_sha256=approved.candidate_sha256,
         decision_sha256=approved.decision_sha256,
@@ -920,6 +949,7 @@ def authorize_configured(
         operation=operation,
         effective_parameters=effective,
         authority_sha256=configured_authority_hash(
+            authority_kind=AuthorityKind.CLEANING_POLICY,
             policy_sha256=p_hash,
             source_sha256=source_sha256,
             dataset_id=policy.dataset_id,
@@ -942,6 +972,7 @@ def verify_configured_authority(
         add_blocker(blockers, "source_changed_since_review", "Source hash drifted after configured authority was granted.", field="source_sha256")
         ok = False
     expected = configured_authority_hash(
+        authority_kind=authority.authority_kind,
         policy_sha256=authority.policy_sha256,
         source_sha256=authority.source_sha256,
         dataset_id=authority.dataset_id,
@@ -957,12 +988,86 @@ def verify_configured_authority(
 
 
 # --------------------------------------------------------------------------- #
+# Automatic authority
+# --------------------------------------------------------------------------- #
+
+
+def build_automatic_authority(
+    *,
+    source_sha256: str,
+    table: str,
+    column: str,
+    operation: TransformationOperation,
+    blockers: list[dict[str, str]],
+) -> AutomaticAuthority | None:
+    """Grant exact authority for one safe_automatic operation on one column.
+    Only the operation table grants it, and only for operations the table
+    classifies as safe_automatic; everything else needs a policy or a decision.
+    """
+    start = len(blockers)
+    if not SHA256_PATTERN.fullmatch(source_sha256 or ""):
+        add_blocker(blockers, "invalid_source_sha256", "Source hash must be 64 lowercase hex characters.", field="source_sha256")
+    if not IDENTIFIER_PATTERN.fullmatch(table or ""):
+        add_blocker(blockers, "invalid_table_identifier", "Table must be a simple identifier.", field="table")
+    if not IDENTIFIER_PATTERN.fullmatch(column or ""):
+        add_blocker(blockers, "invalid_column_identifier", "Column must be a simple identifier.", field="column")
+    if OPERATION_GOVERNANCE.get(operation) is not GovernanceClass.SAFE_AUTOMATIC:
+        add_blocker(
+            blockers,
+            "operation_not_automatic",
+            f"{getattr(operation, 'value', operation)} is not safe_automatic; the operation table grants no authority for it.",
+            field="operation",
+        )
+    if len(blockers) > start:
+        return None
+    return AutomaticAuthority(
+        source_sha256=source_sha256,
+        table=table,
+        column=column,
+        operation=operation,
+        authority_sha256=automatic_authority_hash(
+            authority_kind=AuthorityKind.OPERATION_TABLE,
+            source_sha256=source_sha256,
+            table=table,
+            column=column,
+            operation=operation,
+        ),
+    )
+
+
+def verify_automatic_authority(
+    authority: AutomaticAuthority,
+    *,
+    current_source_sha256: str,
+    blockers: list[dict[str, str]],
+) -> bool:
+    ok = True
+    if current_source_sha256 != authority.source_sha256:
+        add_blocker(blockers, "source_changed_since_review", "Source hash drifted after automatic authority was granted.", field="source_sha256")
+        ok = False
+    if OPERATION_GOVERNANCE.get(authority.operation) is not GovernanceClass.SAFE_AUTOMATIC:
+        add_blocker(blockers, "operation_not_automatic", f"{authority.operation.value} is no longer safe_automatic in the operation table.", field="operation")
+        ok = False
+    expected = automatic_authority_hash(
+        authority_kind=authority.authority_kind,
+        source_sha256=authority.source_sha256,
+        table=authority.table,
+        column=authority.column,
+        operation=authority.operation,
+    ) if OPERATION_GOVERNANCE.get(authority.operation) is not None else ""
+    if expected != authority.authority_sha256:
+        add_blocker(blockers, "authority_hash_mismatch", "Automatic authority record does not match its own bound content.", field="authority_sha256")
+        ok = False
+    return ok
+
+
+# --------------------------------------------------------------------------- #
 # Lineage
 # --------------------------------------------------------------------------- #
 
 
 def build_lineage(
-    authority: ApprovedTransformation | ConfiguredAuthority,
+    authority: ApprovedTransformation | ConfiguredAuthority | AutomaticAuthority,
     *,
     output_sha256: str,
     rows_examined: int,
@@ -970,7 +1075,8 @@ def build_lineage(
     applied_at: str,
     blockers: list[dict[str, str]],
 ) -> TransformationLineage | None:
-    """Lineage points at exactly one authority record and one output."""
+    """Lineage points at exactly one authority record and one output. All three
+    authority kinds reach lineage through the same door."""
     if not SHA256_PATTERN.fullmatch(output_sha256 or ""):
         add_blocker(blockers, "invalid_output_sha256", "Output hash must be 64 lowercase hex characters.", field="output_sha256")
         return None

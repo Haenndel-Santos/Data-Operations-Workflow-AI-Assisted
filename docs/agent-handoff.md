@@ -4294,8 +4294,9 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 - Each class has exactly one authority mechanism: a decision on a non-governed
   operation is `decision_authority_wrong_class`; a policy entry that is not
   `configured_only` is `policy_operation_not_configurable`.
-- Contract tests: 93. Taxonomy family: 39 literal codes (13 new this round;
-  `governed_operation_requires_approval` removed); registry pinned at 712.
+- Contract tests: 114. Taxonomy family: 40 literal codes (14 new across
+  the review rounds; `governed_operation_requires_approval` removed);
+  registry pinned at 713.
 - Decisions recorded in the doc: CLI surface `governed-cleaning-propose`,
   `governed-cleaning-authorize`, `governed-cleaning-apply`; pandas pinned to
   `>=3.0.3,<3.1` in a separate small PR (D1b) before the engine.
@@ -4310,6 +4311,14 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
   phantom test name in the doc, made `validate_policy` run the canonical
   parameter check even for unknown operations, and anchored the invariant
   tables to an explicit numbered D1 checklist.
+- Owner's final review found two more: `authority_kind` was hardcoded inside
+  each hash function and ignored by `verify_*`, so a record's reported kind
+  could be changed without failing the self-check (fixed: the record's own
+  kind is hashed and recomputed; pinned for all three authority classes); and
+  the documented `safe_automatic -> operation_table -> lineage` path had no
+  authority object (fixed: `AutomaticAuthority`, `build_automatic_authority`,
+  `verify_automatic_authority`; `build_lineage` accepts all three kinds;
+  new blocker `operation_not_automatic`).
 
 ### Do Not Do Yet
 
