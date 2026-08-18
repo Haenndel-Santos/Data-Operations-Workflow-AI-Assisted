@@ -42,6 +42,10 @@ Expand context progressively. Do not read the entire repository without a concre
 - Do not connect to external databases, run migrations/imports/sync jobs, or process production data without explicit authorization.
 - Do not expose secrets, commit `.env`, overwrite unknown files, or discard another agent's work.
 - Treat `originaldatabase/` as private read-only input and `outputs/` as generated artifacts.
+- Write every repository artifact in English: code, identifiers, comments,
+  commit messages, pull request and issue text, documentation, skills, YAML
+  keys, and blocker text. The owner may converse in another language; the
+  artifacts do not.
 
 Read `.codex/project-context/eds-sql-domain-rules.md` before ERP modeling work.
 

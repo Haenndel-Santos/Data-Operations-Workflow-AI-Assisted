@@ -48,6 +48,7 @@ Use the narrowest skill that matches the work.
 | Validation checks, pytest planning, regression testing expectations | `test-engineer` |
 | Approved human review files, conflicting decisions, blocked decisions | `human-approval-manager` |
 | Analytical query planning, semantic adaptation, read-only execution safety | `query-planning-safety` |
+| Network, providers, logs, telemetry, exports, or anything that could expose customer data | `customer-data-boundary` |
 | Duplicates, nulls, malformed values, orphan references, suspicious keys | `data-quality-auditor` |
 | Primary key, foreign key, relationship, or schema modeling decisions | `data-model-architect` |
 | Markdown schema docs, flow maps, decision logs, executive summaries | `documentation-writer` |
@@ -90,6 +91,7 @@ are:
 | Correctness and security lint rules | `ruff check .` in CI |
 | Contract, approval, and execution behaviour | the offline pytest suite |
 | Documentation links resolve | `scripts/check_internal_links.py` in CI |
+| Network access stays inside the sanctioned egress allowlist | `tests/network_boundary_test.py` |
 
 Adding a rule here without a corresponding check makes it advisory. Prefer the
 check.
