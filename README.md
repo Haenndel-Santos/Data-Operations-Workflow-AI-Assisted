@@ -1,38 +1,297 @@
 # AI-Assisted Data Operations Workflow
 
-Local workflow for turning raw operational spreadsheets into validated analytical datasets for BI.
+**A local-first, customer-hosted Data Intelligence platform for operational
+data.** It turns raw spreadsheets and local database evidence into validated
+analytical datasets, governed semantic context, and evidence-backed analytical
+answers. AI may interpret and explain; deterministic software retains authority
+over transformations, calculations, SQL planning and execution, approvals, and
+lineage.
 
-The project demonstrates how AI can assist data operations without replacing the analyst. The workflow accelerates file conversion, profiling, schema discovery, key detection, SQL generation, validation, documentation, and Tableau-ready export.
+The repository began as a workflow that converts XLSX/CSV exports into
+DuckDB/BI-ready datasets. That pipeline is still here, implemented and used, but
+it is now the foundation of a broader system: governed data preparation,
+approved semantic context, deterministic analytics with human review, and a
+planned Product API and UI for business users. Read this README as a map of what
+exists, what is contract-complete, what is in progress, and what is still a
+design.
 
-## Workflow
+## Who It Is For
+
+| User | What they get |
+| --- | --- |
+| Business owners, managers, and operations teams at small and medium-sized businesses | Ask an operational question in plain language and receive a reproducible answer with evidence and caveats, without SQL. This is the intended product user; the user-facing surface (API/UI) is not built yet. |
+| Data and operations analysts | Faster profiling, schema and key discovery, relationship evidence, review workbooks, a local DuckDB layer, and BI exports. They remain advanced users and reviewers. |
+| Reviewers and administrators | Explicit, hash-bound approval points; local-only data by default; audit evidence for every promoted decision. |
+
+Tableau export is one downstream output the pipeline produces. It is not the
+product.
+
+## Core Principles
+
+- **Local-first, customer-controlled data.** Raw inputs, cleaned data, DuckDB,
+  prompts, results, and generated artifacts stay inside the customer-controlled
+  environment by default. See [Customer Data Boundary](docs/customer-data-boundary.md).
+- **Deterministic authority.** A candidate, heuristic, AI suggestion, or model
+  output is never itself permission to change data or run an operation. Code
+  and approved contracts calculate, plan, execute, and record.
+- **Human or exact policy grants authority.** Missing or pending review never
+  becomes approval. Every promoted relationship, semantic term, and execution
+  plan is bound to a hash of exactly what was reviewed; the governed cleaning
+  contract applies the same rule to transformations.
+- **Evidence and lineage.** Answers expose their plan, controls, and facts;
+  transformations record what changed and under which authority.
+- **Provider-neutral AI boundary.** The model interprets intent and narrates
+  facts. Its output is schema-bounded and validated; raw model SQL is rejected.
+- **Reproducible and offline by default.** The main test suite and every
+  default command run without network, credentials, or a live model.
+
+## Architecture Overview
+
+```text
+Operational data (XLSX / CSV / local database evidence)
+        |
+        v
+ingestion + profiling                       implemented
+        |
+        v
+governed preparation                        legacy cleaner implemented;
+  (candidate -> evidence -> review           governed contract complete,
+   -> authority -> apply -> lineage)         governed engine in review
+        |
+        v
+schema, key, and relationship evidence      implemented; approvals human-only
+        |
+        v
+semantic governance                         implemented (catalog, review, approval)
+        |
+        v
+structured analytical intent                implemented (AI proposes; code validates)
+        |
+        v
+deterministic planning + read-only execution   implemented (Stage 5A / 5B)
+        |
+        v
+facts, evidence, cited narration            implemented (recorded narration)
+        |
+        v
+Product API / UI                            designed, not implemented
+```
+
+The same authority pattern repeats at every layer:
+
+```text
+AI or heuristic proposes / interprets
+        -> deterministic code measures
+        -> human review or exact policy authorizes
+        -> deterministic code executes
+        -> evidence + lineage prove what happened
+```
+
+## Core Data Pipeline
+
+The original workflow, still the default command and still the entry point for
+every dataset:
 
 ```text
 Raw XLSX / CSV
--> controlled conversion
+-> controlled conversion (normalized CSV + Parquet)
 -> data profiling
--> cleaning and standardization
+-> cleaning (legacy path; see Governed Cleaning below)
 -> schema and key detection
--> relationship mapping
+-> relationship evidence and validation
 -> SQL suggestions
--> relationship validation
--> DuckDB analytical layer
--> Tableau export
+-> local DuckDB analytical layer
+-> BI-ready CSV/Parquet export
 -> data dictionary and process documentation
 ```
-
-## Modules
 
 | Module | Purpose |
 |---|---|
 | File Converter | Converts CSV/XLSX files into normalized CSV and Parquet staging files. |
 | Data Profiler | Reports columns, types, nulls, duplicates, unique counts, and examples. |
-| Schema Detector | Infers physical and semantic column types. |
-| Key Identifier | Suggests primary keys and foreign keys based on uniqueness, naming, and value coverage. |
-| Data Cleaner | Standardizes column names, blanks, text, dates, and numeric strings. |
-| SQL Assistant | Generates starter SQL checks and join queries from detected metadata. |
-| Query Validator | Checks relationship match rates and join fanout risk. |
-| Export Layer | Writes clean CSV/Parquet files for Tableau and creates a DuckDB database. |
+| Schema Detector | Infers physical and semantic column types; key inference pushes metadata, null, uniqueness, and overlap work into local DuckDB. |
+| Key Identifier | Suggests primary keys and foreign keys as candidates. Candidates are never promoted without evidence and human approval. |
+| Data Cleaner (legacy) | Standardizes column names, blanks, text, dates, and numeric strings by heuristic. Behavior is characterized by tests and frozen while the governed path is built beside it. |
+| SQL Assistant | Generates starter SQL checks and join queries from detected metadata for a human to read. It is not an execution path. |
+| Query Validator | Checks relationship match rates and join fan-out risk. |
+| Export Layer | Writes clean CSV/Parquet files and creates a DuckDB database. |
 | Documentation Generator | Creates a data dictionary, SQL suggestions, and validation summaries. |
+
+Beyond the default pipeline, staged ERP modeling commands prepare source
+onboarding, serial reference rules, canonical mappings, Product reference
+reconciliation, human review workbooks, and hash-bound dry-run promotion plans.
+Approved model state (`config/data_model/approved_*.yml`) is written only by an
+explicit apply contract after a completed human review; candidates and approvals
+are kept mechanically separate.
+
+## Governed Analytics
+
+The analytics backend lets a question become a reproducible answer without
+trusting the model with the database:
+
+```text
+Natural-language question
+  -> AI / provider interprets intent
+  -> structured semantic intent (schema-bounded to approved entity IDs)
+  -> deterministic semantic resolution against the approved catalog
+  -> deterministic query planning (Stage 5A: parameterized SELECT, no execution)
+  -> exact human plan review (hash-bound)
+  -> read-only, resource-bounded execution (Stage 5B)
+  -> deterministic facts and result presentation
+  -> optional AI-assisted narration that must cite those facts
+```
+
+What holds at each boundary:
+
+- Provider output is a JSON object whose entity IDs are constrained by schema
+  to the approved semantic catalog. Provider-generated SQL, physical tables,
+  and physical joins are rejected before planning.
+- Cross-table plans require human-approved relationships; candidate
+  relationships never grant a join.
+- Stage 5A compiles but does not execute. Stage 5B rebuilds the plan, compares
+  it by SHA-256 with the reviewed plan, opens DuckDB read-only with external
+  access and extension autoload disabled, and enforces row, byte, runtime,
+  memory, thread, and temp limits.
+- Narration is validated against the deterministic facts and is never numeric
+  authority.
+
+This is not a generic NL-to-SQL tool and not a SQL generator. Structured
+requests, approved semantic context, and deterministic compilation sit between
+the model and the database.
+
+## Governed Cleaning
+
+Two paths coexist deliberately.
+
+**Legacy path (`cleaner.py`)** - the cleaner the default pipeline still calls.
+It changes data by heuristic: blank sentinels become nulls, numeric-looking text
+is coerced when at least 90% parses, and date-named columns are parsed with a
+day-first guess. Its behavior is pinned by characterization tests and left
+unchanged on purpose while the governed path is built beside it. Two of those
+pinned behaviors are the motivation for governance: a single unparseable value
+becomes `NA` silently, and a date column whose sample is under 80% ISO can have
+valid ISO dates reinterpreted with day and month swapped.
+
+**Governed path (`governed_cleaning.py`, contract complete)** - transformations
+belong to one of three classes, each with exactly one authority mechanism:
+
+```text
+safe_automatic    structural, name-level only          -> versioned operation table
+configured_only   bounded value changes (trim, blanks)  -> exact dataset cleaning policy
+governed          semantic coercion (numbers, dates)    -> exact human decision on an approved candidate
+```
+
+Confidence is computed from evidence, never accepted from a proposer. States
+move only `candidate -> pending_review -> approved | rejected -> applied`;
+`approved` is derived from a hash-bound decision, not stored as free-standing
+state. Every authority record is self-bound, including which mechanism granted
+it, and lineage names that mechanism. See
+[Governed Cleaning Contract](docs/governed-cleaning.md).
+
+**Governed engine (`propose -> review -> authorize -> ordered application plan
+-> verify -> apply -> atomic publish -> lineage`)** - implemented as an opt-in
+route beside the legacy cleaner and currently under review in an open pull
+request; it is not on `main` yet. Until it merges, `run_workflow` and the
+legacy cleaner are the only cleaning path in this repository.
+
+## Security and the Customer Data Boundary
+
+Implemented today, at the repository and application level:
+
+- Local model calls are pinned to a loopback HTTP origin with proxies
+  disabled, no credentials, and per-invocation opt-in; hosted providers are not
+  called. An architecture test fails the suite if a network-capable import
+  appears outside a two-module allowlist. This is a tripwire, not a sandbox.
+- Analytical execution is read-only with external access disabled and fixed
+  resource limits.
+- Private inputs (`originaldatabase/`), generated artifacts (`outputs/`), and
+  benchmark raw/derived data are excluded from Git and from agent worktrees.
+- Agent execution is constrained by permission rules (deny-by-default for
+  destructive git operations, edits to approved state, private inputs, and
+  secrets), role-restricted read-only reviewer agents, and a worktree
+  convention. Guidance files orient; code, tests, and CI enforce.
+- CI runs Ruff correctness and security rules, secret scanning, dependency
+  vulnerability auditing, the offline test suite, internal-link validation,
+  and pull-request diff checks.
+
+Designed, documented, and **not implemented**: runtime authentication, RBAC,
+tenant isolation, row-level security, deployment-level egress denial, secret
+manager integration, central audit logging, WAF/TLS/HSTS, backup and restore,
+and the error-reporting workflow. See
+[Security Architecture Baseline](docs/security-architecture.md),
+[Product Threat Model](docs/threat-model.md), and
+[RBAC Matrix](docs/rbac-matrix.md). A documented target is not an implemented
+control.
+
+## Testing and CI
+
+The repository has a broad contract- and regression-oriented offline suite:
+414 tests pass and 2 opt-in live-provider tests are skipped by default. Tests
+protect workflow behavior, preservation of source and approved files, every
+analytics stage's blockers and authority gates, the governed cleaning contract's
+invariants, the legacy cleaner's characterized behavior, the error-taxonomy
+registry, and the network boundary. CI runs on every pull request and push to
+`main`: Ruff, pip-audit, Gitleaks, pytest, internal links, and `git diff
+--check`.
+
+Remaining major testing work belongs to surfaces that do not exist yet: the
+Product API and UI, runtime authentication and RBAC, tenant isolation,
+deployment controls, and end-to-end product workflows. See
+[Testing](docs/testing.md).
+
+## Benchmarking
+
+Northwind is the development benchmark: exact provenance and MIT license,
+independently reproduced conversion, 13 human-accepted relationships, an
+approved 111-entity semantic catalog, and a 13-case expected-answer pack with a
+separate immutable approval.
+
+- Recorded offline evaluation: **13/13** - deterministic regression evidence.
+- Separately authorized local `gpt-oss:20b` development comparison: **9/13**
+  end to end; the four mismatches were blocked before any query executed. This
+  is development evidence, not holdout evidence and not provider selection.
+
+AdventureWorks 2025 is the selected fresh holdout. Its read-only local export
+contract is implemented; the export itself, relationship review, semantic
+approval, answer packs, and any live evaluation remain pending. No provider has
+been selected. See [Benchmark datasets](docs/benchmark-datasets.md) and the
+[Phase 5 provider-selection scope](docs/ai-phase-5-provider-selection-scope.md).
+
+## Local Model Provider
+
+Ollama (`gpt-oss:20b`) is the local provider used for controlled development
+evaluation. It is not a product dependency: the provider boundary is neutral,
+the recorded provider is the offline default for every regression test, live
+calls require an explicit `--allow-network` on a loopback origin, and no core
+deterministic functionality needs a model installed. Installing Ollama is
+required only to run the opt-in live tests and the live evaluation commands.
+
+## Current Project Status
+
+| State | Items |
+| --- | --- |
+| Implemented | Core pipeline (conversion, profiling, legacy cleaning, schema/key detection, relationship validation, DuckDB, BI/Parquet/CSV export, documentation); staged ERP modeling and human review workflows with hash-bound dry-run promotion; analytics Stage 5A planning, Stage 5B read-only execution, semantic catalog/review/approval, provider-neutral translation with recorded and loopback Ollama providers, deterministic presentation, cited recorded narration, two-phase session coordinator, static module registry; Northwind development benchmark; CI security and correctness gates; repository-level Customer Data Boundary enforcement; agent permission and worktree controls; Governed Cleaning D1 contract; pandas reproducibility baseline (`>=3.0.3,<3.1`). |
+| In review | Governed Cleaning D2 engine (`propose`, `authorize`, `apply`, ordered hash-bound plan, atomic publish, lineage) - open pull request, not on `main`. |
+| Designed, not implemented | Generic dataset readiness over the governed route; Product API; UI; runtime authentication and RBAC; tenant isolation; deployment security; customer onboarding; end-to-end product workflows; richer connectors and BI artifacts. AdventureWorks holdout evaluation and provider selection remain gated. |
+
+## Known Limitations
+
+- **Backend CLI complexity.** The CLI exposes 48 commands. They are backend
+  and internal primitives - each stage's contract is a command so it can be
+  run, reviewed, and tested in isolation. They are not the intended end-user
+  experience. The Product API and UI, when built, should present something
+  closer to: connect or upload data -> review detected issues -> approve
+  governed corrections -> ask a business question -> receive answer plus
+  evidence.
+- **Performance is measured, not proven at scale.** Pandas-heavy stages remain
+  in the default pipeline. A synthetic isolated-process baseline exists;
+  schema/key inference moved metadata, null, uniqueness, and overlap work into
+  DuckDB (measured 27% peak-memory and 99% runtime reduction on the fixed
+  3-table workload); analytical execution has fixed resource limits. Large
+  production datasets have not been exercised.
+- **Legacy cleaner behavior depends on the pandas major**, which is why pandas
+  is pinned to `>=3.0.3,<3.1` until the governed engine replaces it for new
+  work.
 
 ## Quick Start
 
@@ -48,6 +307,22 @@ Equivalent installed command:
 ```powershell
 .\.venv\Scripts\dataops --input samples\raw --output outputs\demo
 ```
+
+Run the offline suite and the same gates CI runs:
+
+```powershell
+$env:PYTHONPATH = "src"
+.\.venv\Scripts\python.exe -m pytest -q
+.\.venv\Scripts\python.exe -m ruff check .
+.\.venv\Scripts\python.exe -m pip_audit --skip-editable
+.\.venv\Scripts\python.exe scripts\check_internal_links.py
+```
+
+## Backend CLI Reference
+
+The commands below expose each backend stage as a separately runnable,
+reviewable contract. Most stop at a human review or dry-run boundary by design.
+Paths written as `outputs\<run-id>\...` are placeholders.
 
 To run the workflow on the full original export folder:
 
@@ -407,15 +682,18 @@ After running the demo, inspect:
 | Path | Description |
 |---|---|
 | `outputs/demo/01_converted/` | Controlled CSV and Parquet conversion layer. |
-| `outputs/demo/02_cleaned/` | Cleaned analytical files. |
+| `outputs/demo/02_cleaned/` | Cleaned analytical files (legacy cleaner). |
 | `outputs/demo/duckdb/operations_lab.duckdb` | Local DuckDB database for SQL analysis. |
 | `outputs/demo/metadata/data_profile.json` | Data profiling output. |
 | `outputs/demo/metadata/schema.json` | Inferred schema metadata. |
-| `outputs/demo/metadata/keys.json` | Primary and foreign key suggestions. |
+| `outputs/demo/metadata/keys.json` | Primary and foreign key candidates. |
 | `outputs/demo/metadata/relationship_validation.csv` | Join validation and match-rate checks. |
-| `outputs/demo/metadata/sql_suggestions.md` | SQL checks and join queries. |
+| `outputs/demo/metadata/sql_suggestions.md` | SQL checks and join queries for a human to read. |
 | `outputs/demo/metadata/data_dictionary.md` | Human-readable data dictionary. |
-| `outputs/demo/tableau/` | Clean CSV/Parquet export layer for Tableau. |
+| `outputs/demo/tableau/` | Clean CSV/Parquet export layer usable by Tableau or any BI tool. |
+
+Generated outputs are evidence, not authority: nothing under `outputs/`
+approves a relationship, a semantic term, or a transformation.
 
 ## Demo Dataset
 
@@ -435,22 +713,45 @@ The workflow detects:
 
 ## Portfolio Explanation
 
-Use this concise explanation in interviews:
+> I built a governed, local-first Data Intelligence system for operational
+> data. It converts raw spreadsheets into validated Parquet/DuckDB datasets,
+> discovers schema, keys, and relationships as evidence for human approval,
+> maintains an approved semantic catalog, and turns natural-language questions
+> into deterministic, read-only, hash-reviewed query plans. AI proposes intent
+> and narrates cited facts; deterministic code owns calculations, execution,
+> approvals, and lineage. The same authority pattern governs data cleaning:
+> candidates carry computed evidence, humans or exact policies grant authority,
+> and every applied change records lineage. The backend is contract-driven,
+> offline-testable, and protected by CI security gates and a customer data
+> boundary.
 
-> I built an AI-assisted workflow to convert raw operational spreadsheets into structured analytical datasets. The system profiles files, detects key relationships, prepares SQL joins, validates relationship quality, creates a local DuckDB analytical layer, and exports clean data for Tableau dashboards.
+Signals a reviewer can verify in the code: data engineering over Parquet and
+DuckDB, schema and relationship inference, semantic modeling, contract-driven
+module design, hash-bound approvals, deterministic execution with resource
+limits, AI safety boundaries (schema-bounded intent, rejected model SQL,
+loopback-only provider), benchmark design with holdout discipline, error
+taxonomy, CI/security engineering, and local-first product architecture.
 
 ## Why DuckDB
 
-DuckDB is a good fit for this project because it supports local analytical workflows over CSV and Parquet without requiring a database server. That makes the project easy to demo, easy to reproduce, and aligned with real operations-analysis work where analysts often start from spreadsheets.
+DuckDB is a good fit for this project because it supports local analytical workflows over CSV and Parquet without requiring a database server. That makes the project easy to demo, easy to reproduce, and aligned with real operations-analysis work where analysts often start from spreadsheets. It also supports the read-only, resource-bounded execution mode the analytics backend requires.
 
-## Next Extensions
+## Roadmap
 
-- Create and approve a fresh Phase 5 holdout pack, fix acceptance thresholds,
-  and compare eligible local providers without tuning on the holdout.
-- Add a governed UI for questions, result tables, evidence, and validation review.
-- Add Tableau workbook screenshots as a final portfolio artifact.
-- Add richer validation checks for totals before and after joins.
-- Add pytest coverage for each module.
+High-level and status-accurate; see
+[AI platform implementation roadmap](docs/ai-implementation-roadmap.md) for
+phases and exit gates.
+
+1. **Governed Cleaning D2 engine** - in review; merges when accepted.
+2. **Generic dataset readiness** over the governed route - designed.
+3. **Product API** - versioned boundary for datasets, sessions, questions,
+   reviews, executions, results, exports; identity and RBAC enforced before
+   shared use - designed.
+4. **UI** - Simple View and Analytical View backed by the same facts - designed.
+5. **Fresh holdout evaluation and provider selection** on AdventureWorks -
+   gated on local prerequisites and reviews.
+6. **Production readiness** - runtime security, deployment packaging, backup,
+   support - designed.
 
 ## Project Utilities
 
@@ -458,41 +759,74 @@ DuckDB is a good fit for this project because it supports local analytical workf
 - [Internal link checker](scripts/check_internal_links.py)
 - [Sample customers file](samples/raw/customers.csv)
 
-## Project Governance
+## Documentation Index
 
-- [Agent instructions](AGENTS.md)
+Product and security baseline:
+
+- [Product vision](docs/product-vision.md)
+- [Customer Data Boundary](docs/customer-data-boundary.md)
+- [Security architecture baseline](docs/security-architecture.md)
+- [Product threat model](docs/threat-model.md)
+- [AI analytical capability matrix](docs/ai-analytical-capability-matrix.md)
+- [MVP product requirements](docs/mvp-prd.md)
+- [MVP architecture](docs/mvp-architecture.md)
+- [RBAC matrix](docs/rbac-matrix.md)
+- [Product readiness checklist](docs/product-readiness-checklist.md)
+- [Private artifact governance](docs/private-artifact-governance.md)
+
+Governance and project memory:
+
+- [Agent instructions](AGENTS.md) and [Claude notes](CLAUDE.md)
 - [Project mission and stages](docs/project-master.md)
 - [Current project state](docs/progress.md)
+- [Durable decisions](docs/decisions.md)
 - [Architecture](docs/architecture.md)
 - [Testing](docs/testing.md)
 - [Orchestrator](docs/orchestrator.md)
-- [Analytics module registry contract](docs/analytics-module-registry.md)
-- [Synthetic pipeline performance baseline](docs/performance-baseline.md)
-- [Step 3E.4 Product application contract](docs/product-refnr-application.md)
-- [Product materialization preview contract](docs/product-materialization.md)
-- [Product canonical promotion plan contract](docs/product-canonical-promotion.md)
+- [Agent handoff history](docs/agent-handoff.md)
+
+Governed cleaning:
+
+- [Governed cleaning contract](docs/governed-cleaning.md)
+
+Analytics backend contracts:
+
 - [AI-assisted analytics backend and roadmap](docs/ai-analytics-backend.md)
 - [AI platform implementation roadmap](docs/ai-implementation-roadmap.md)
+- [Analytics module registry contract](docs/analytics-module-registry.md)
 - [Structured analytics query plan contract](docs/analytics-query-plan.md)
+- [Analytics query execution contract](docs/analytics-query-execution.md)
 - [Analytics semantic catalog contract](docs/analytics-semantic-catalog.md)
 - [Analytics semantic review and approval contract](docs/analytics-semantic-approval.md)
-- [Northwind semantic catalog review](docs/northwind-semantic-review.md)
 - [Analytics semantic adapter contract](docs/analytics-semantic-adapter.md)
 - [Analytics natural-language translation contract](docs/analytics-nl-translation.md)
 - [Analytics translation evaluation contract](docs/analytics-translation-evaluation.md)
 - [Analytics expected-answer evaluation contract](docs/analytics-answer-evaluation.md)
-- [Dataset benchmark answer preparation contract](docs/analytics-dataset-benchmark-preparation.md)
+- [Deterministic analytics result presentation contract](docs/analytics-result-presentation.md)
+- [Grounded analytics result narration contract](docs/analytics-result-narration.md)
+- [Local analytics session contract](docs/analytics-session.md)
+
+Benchmarks and reference datasets:
+
+- [Benchmark dataset onboarding contract](docs/benchmark-datasets.md)
+- [Reference dataset validation and relationship-review contract](docs/reference-dataset-validation.md)
+- [Northwind semantic catalog review](docs/northwind-semantic-review.md)
 - [Northwind expected-answer plan review](docs/northwind-answer-benchmark-review.md)
-- [Dataset benchmark answer materialization contract](docs/analytics-dataset-benchmark-materialization.md)
 - [Northwind expected-answer review](docs/northwind-expected-answer-review.md)
+- [Dataset benchmark answer preparation contract](docs/analytics-dataset-benchmark-preparation.md)
+- [Dataset benchmark answer materialization contract](docs/analytics-dataset-benchmark-materialization.md)
 - [Dataset-backed benchmark validation contract](docs/analytics-dataset-benchmark.md)
 - [Dataset benchmark review and approval contract](docs/analytics-dataset-benchmark-review.md)
 - [Dataset-backed offline benchmark evaluation contract](docs/analytics-dataset-benchmark-evaluation.md)
 - [Dataset-backed live Ollama benchmark evaluation contract](docs/analytics-dataset-benchmark-live-evaluation.md)
 - [Local Ollama overnight soak contract](docs/analytics-ollama-soak.md)
-- [Deterministic analytics result presentation contract](docs/analytics-result-presentation.md)
-- [Grounded analytics result narration contract](docs/analytics-result-narration.md)
-- [Local analytics session contract](docs/analytics-session.md)
-- [Benchmark dataset onboarding contract](docs/benchmark-datasets.md)
-- [Reference dataset validation and relationship-review contract](docs/reference-dataset-validation.md)
-- [Agent handoff history](docs/agent-handoff.md)
+- [Phase 5 provider-selection scope](docs/ai-phase-5-provider-selection-scope.md)
+- [AdventureWorks SQL Server export contract](docs/adventureworks-sqlserver-export.md)
+
+ERP modeling and Product reference contracts:
+
+- [Synthetic pipeline performance baseline](docs/performance-baseline.md)
+- [Step 3E.4 Product application contract](docs/product-refnr-application.md)
+- [Product materialization preview contract](docs/product-materialization.md)
+- [Product canonical promotion plan contract](docs/product-canonical-promotion.md)
+- [Backend Phase II internal contracts](docs/backend-phase-2.md)

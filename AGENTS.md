@@ -4,7 +4,7 @@ These instructions apply to Codex, Claude Code, and any other agent working in t
 
 ## Mission
 
-Build a modular, local-first workflow that turns raw operational spreadsheets into validated analytical datasets and an evidence-backed ERP data model. The system exists for analysts who need faster profiling, cleaning, schema discovery, relationship validation, SQL preparation, DuckDB analysis, and Tableau export without surrendering human control. Its final form should use a central orchestrator, specialized modules, explicit contracts, reproducible offline tests, safe checkpoints, and enough shared documentation for another agent to continue without private conversation history.
+Build a modular, customer-hosted, local-first Data Intelligence platform that turns raw operational spreadsheets and local database evidence into validated analytical datasets, an evidence-backed data model, governed semantic context, and evidence-backed analytical answers. The intended product users are business owners, managers, and operations teams at small and medium-sized businesses who need decision-ready analysis without SQL; data and operations analysts remain advanced users and reviewers. AI may interpret, propose, and explain; deterministic code retains authority over transformations, calculations, permissions, SQL planning/execution, approvals, evidence, and lineage. Its final form should use a central orchestrator, specialized modules, explicit contracts, reproducible offline tests, safe checkpoints, a Product API and UI behind identity and authorization, and enough shared documentation for another agent to continue without private conversation history. `docs/project-master.md` is the authoritative statement of this mission.
 
 ## Source Of Truth
 
