@@ -197,6 +197,7 @@ REGISTERED_ERROR_CONSUMER_FILES = {
     ),
     "product_materialization": frozenset({"product_materialization.py"}),
     "governed_cleaning": frozenset({"governed_cleaning.py"}),
+    "governed_cleaning_engine": frozenset({"governed_cleaning_engine.py"}),
 }
 
 
@@ -2235,6 +2236,49 @@ _GOVERNED_CLEANING_CLASSIFICATIONS = {
 }
 
 
+_GOVERNED_CLEANING_ENGINE_CLASSIFICATIONS = {
+    ErrorCategory.CONTRACT: {
+        "candidate_record_carries_authority",
+        "invalid_application_plan",
+        "invalid_authority_record",
+        "invalid_candidate_record",
+        "invalid_input_file",
+        "invalid_policy_file",
+        "invalid_review_decision",
+        "invalid_review_file",
+        "invalid_source_manifest",
+        "unsupported_authorization_version",
+        "unsupported_proposal_version",
+    },
+    ErrorCategory.AUTHORITY: {
+        "application_plan_hash_mismatch",
+        "authority_bundle_hash_mismatch",
+        "authorization_not_ready",
+        "candidate_record_hash_mismatch",
+        "duplicate_authority_in_bundle",
+        "duplicate_plan_step",
+        "operation_not_supported_by_engine",
+        "proposal_hash_mismatch",
+        "proposal_not_ready",
+        "source_changed_since_authorization",
+        "source_changed_since_proposal",
+        "source_manifest_hash_mismatch",
+        "source_manifest_inventory_mismatch",
+        "unknown_plan_authority",
+        "unknown_review_candidate",
+        "unsupported_operation_composition",
+    },
+    ErrorCategory.FILESYSTEM: {
+        "missing_input_file",
+        "output_directory_exists",
+        "source_directory_empty",
+        "source_directory_missing",
+        "source_parquet_unreadable",
+        "unreadable_input_file",
+    },
+}
+
+
 def _build_registry() -> dict[str, ErrorCategory]:
     initial_groups = {
         ErrorCategory.CONTRACT: _CONTRACT_CODES,
@@ -2258,6 +2302,7 @@ def _build_registry() -> dict[str, ErrorCategory]:
         _PRODUCT_CANONICAL_PROMOTION_CLASSIFICATIONS,
         _PRODUCT_MATERIALIZATION_CLASSIFICATIONS,
         _GOVERNED_CLEANING_CLASSIFICATIONS,
+        _GOVERNED_CLEANING_ENGINE_CLASSIFICATIONS,
     ):
         for category, codes in groups.items():
             for code in codes:

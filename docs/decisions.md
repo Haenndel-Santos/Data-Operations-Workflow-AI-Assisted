@@ -912,3 +912,48 @@ later opt-in increment beside the legacy cleaner. Owner review of the first
 draft closed four contract gaps before merge: `approved` made a real state,
 `trim_whitespace` moved to `configured_only`, the cleaning-policy authority
 object materialized in the contract, and the hash domain made canonical.
+
+## 2026-08-18 - The Governed Cleaning Engine Applies Only An Ordered, Hash-Bound Plan
+
+**Decision:** Implement the governed cleaning engine as an opt-in
+propose -> authorize -> apply route beside the legacy cleaner, with these
+rules: the source hash is always derived from the real Parquet files and a
+source manifest is verified against them, never trusted alone; discovery
+happens once in propose and the proposal bundle carries exact automatic and
+configured steps plus governed candidates, so authorize rediscovers nothing;
+every governed candidate needs an explicit disposition (missing is
+`authorization_incomplete`, malformed is a blocker, rejected is a valid
+disposition with zero authority) before an apply-ready bundle exists;
+`approved` is derived from decisions and never stored; authorities are
+ordered canonically and the ordered list of authority hashes is bound in an
+`application_plan_sha256`; engine v1 allows at most one value-changing
+operation per column; apply re-verifies the source, the authority bundle,
+the plan, and every authority before creating staging, applies in plan order
+in one staging directory, and publishes atomically so a failure anywhere
+promotes nothing; lineage names one authority mechanism per step and carries
+both a logical content hash (promised deterministic) and a physical Parquet
+hash (recorded, not promised across writer versions).
+
+**Context:** D1 fixed the contract; the engine had to inherit its semantics
+without inventing new authority. Owner review of the engine design added the
+verified source, the ordered plan, the exact proposal bundle, and the
+disposition rule before implementation.
+
+**Alternatives:** Trust the source manifest; let apply order steps at run
+time; describe configured/automatic steps as prose and rediscover them in
+authorize; treat a missing decision as approval or as a blocker; promise
+byte-identical Parquet across environments; add autodiscovery to the CLI to
+avoid touching `cli.py`.
+
+**Reason:** Once two operations can touch a column, order is part of the
+authority over the result, so it must be explicit and hashed. Verified source
+hashes and exact bundles remove every "which dataset / which step" ambiguity.
+Distinguishing logical from physical determinism keeps "the data changed"
+separate from "the encoder changed".
+
+**Impact:** `src/data_ops_lab/governed_cleaning_engine.py`, three flat CLI
+commands registered through `cli_commands/governed_cleaning.py` with minimal
+edits to `cli.py` and `cli_commands/__init__.py` (51 commands total; the 48
+existing are unchanged), the `governed_cleaning_engine` taxonomy family, and
+`docs/governed-cleaning-engine.md`. `run_workflow()` and `clean_dataframe()`
+are unchanged and pinned by a golden-file test over `samples/raw`.

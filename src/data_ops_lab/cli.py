@@ -55,10 +55,16 @@ from .cli_commands import (
     register_analytics_semantic_commands,
     register_analytics_soak_commands,
     register_erp_modeling_commands,
+    register_governed_cleaning_commands,
     register_model_documentation_commands,
     register_product_publication_commands,
     register_product_reference_commands,
     register_reference_dataset_commands,
+)
+from .governed_cleaning_engine import (
+    run_governed_cleaning_apply,
+    run_governed_cleaning_authorize,
+    run_governed_cleaning_propose,
 )
 from .human_review import run_human_review, validate_approval_template
 from .module_registry import run_module_registry_validation
@@ -109,6 +115,8 @@ def build_parser() -> argparse.ArgumentParser:
     register_product_publication_commands(subparsers)
 
     register_model_documentation_commands(subparsers)
+
+    register_governed_cleaning_commands(subparsers)
 
     parser.add_argument("--input", type=Path, help="Directory containing raw CSV/XLSX files.")
     parser.add_argument("--output", type=Path, default=Path("outputs/run"), help="Directory for generated outputs.")
@@ -955,6 +963,60 @@ def main() -> None:
         print(f"Line rules: {result.line_rule_count}")
         print(f"Relationship candidates: {result.relationship_candidate_count}")
         print("No approvals were applied. approved_keys.yml and approved_relationships.yml were not modified.")
+        return
+
+    if args.command == "governed-cleaning-propose":
+        result = run_governed_cleaning_propose(
+            args.parquet_dir,
+            args.output,
+            source_manifest_path=args.source_manifest,
+        )
+        print("Governed cleaning proposal complete")
+        print(f"Status: {result.status}")
+        print(f"Source SHA-256: {result.source_sha256}")
+        print(f"Proposal SHA-256: {result.proposal_sha256}")
+        print(f"Governed candidates: {result.candidate_count}")
+        print(f"Configured steps: {result.configured_step_count}")
+        print(f"Automatic steps: {result.automatic_step_count}")
+        print(f"Blockers: {result.blocker_count}")
+        print(f"Output: {result.output_dir}")
+        print("No value was changed. Governed candidates are pending_review.")
+        return
+
+    if args.command == "governed-cleaning-authorize":
+        result = run_governed_cleaning_authorize(
+            args.proposal,
+            args.parquet_dir,
+            args.output,
+            review_path=args.review,
+            policy_path=args.policy,
+        )
+        print("Governed cleaning authorization complete")
+        print(f"Status: {result.status}")
+        print(f"Source SHA-256: {result.source_sha256}")
+        print(f"Application plan SHA-256: {result.application_plan_sha256 or '(none)'}")
+        print(f"Authorities: {result.authority_count}")
+        print(f"Governed candidates without disposition: {result.incomplete_count}")
+        print(f"Blockers: {result.blocker_count}")
+        print(f"Output: {result.output_dir}")
+        print("No value was changed. approved is derived from decisions and never stored on its own.")
+        return
+
+    if args.command == "governed-cleaning-apply":
+        result = run_governed_cleaning_apply(
+            args.authority,
+            args.parquet_dir,
+            args.output,
+        )
+        print("Governed cleaning application complete")
+        print(f"Status: {result.status}")
+        print(f"Source SHA-256: {result.source_sha256}")
+        print(f"Application plan SHA-256: {result.application_plan_sha256 or '(none)'}")
+        print(f"Steps applied: {result.step_count}")
+        print(f"Tables written: {result.tables_written}")
+        print(f"Blockers: {result.blocker_count}")
+        print(f"Output: {result.output_dir}")
+        print("Every authority was re-verified against the current source before application.")
         return
 
     if args.input is None:

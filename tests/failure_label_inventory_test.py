@@ -1671,6 +1671,36 @@ def test_governed_cleaning_is_a_complete_family_of_literal_standard_blockers():
         }
 
 
+def test_governed_cleaning_engine_is_a_complete_family_of_literal_standard_blockers():
+    """The engine emits only literal standard blockers through add_blocker;
+    three codes are shared with older families and keep their category."""
+    root = Path(__file__).parents[1] / "src" / "data_ops_lab"
+    labels, dynamic_sites = MODULE.inventory(root)
+    consumer_files = REGISTERED_ERROR_CONSUMER_FILES["governed_cleaning_engine"]
+    literal_codes = {
+        label
+        for label, locations in labels.items()
+        if any(any(f"/{filename}:" in location for filename in consumer_files) for location in locations)
+    }
+    assert consumer_files == frozenset({"governed_cleaning_engine.py"})
+    assert len(literal_codes) == 36
+    assert literal_codes <= set(ERROR_CLASSIFICATION_REGISTRY)
+    assert {"duplicate_review_decision", "unknown_transformation_operation", "unsupported_review_version"} <= literal_codes
+    assert not {loc for loc in dynamic_sites if "/governed_cleaning_engine.py:" in loc}
+    for provenance_table in (
+        STANDARD_BLOCKER_FLOW_PROVENANCE,
+        DIRECT_BLOCKER_REUSE_PROVENANCE,
+        DIRECT_BLOCKER_CONSTRUCTION_PROVENANCE,
+        DYNAMIC_ERROR_CODE_PROVENANCE,
+        TEXT_STATUS_PROVENANCE,
+    ):
+        assert not {
+            location
+            for location, provenance in provenance_table.items()
+            if provenance.consumer_family == "governed_cleaning_engine"
+        }
+
+
 def test_registry_covers_only_complete_registered_consumer_families():
     root = Path(__file__).parents[1] / "src" / "data_ops_lab"
     labels, _ = MODULE.inventory(root)
@@ -1702,4 +1732,4 @@ def test_registry_covers_only_complete_registered_consumer_families():
         expected_codes.update(family_codes)
 
     assert set(ERROR_CLASSIFICATION_REGISTRY) == expected_codes
-    assert len(ERROR_CLASSIFICATION_REGISTRY) == 713
+    assert len(ERROR_CLASSIFICATION_REGISTRY) == 746

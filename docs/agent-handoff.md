@@ -4325,3 +4325,30 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 - Do not implement the engine in this branch.
 - Do not change `run_workflow()` or `clean_dataframe()`.
 - Do not pin pandas in this PR; that is D1b after #24 merges.
+
+## 2026-08-18 - Claude - Governed Cleaning Engine (D2)
+
+### Scope
+
+- Added `src/data_ops_lab/governed_cleaning_engine.py`: `run_governed_cleaning_propose`,
+  `run_governed_cleaning_authorize`, `run_governed_cleaning_apply`, with
+  verified source inventory, deterministic profiling (numbers, dates with
+  explicit format, padding, observed sentinels, non-normalized names), exact
+  proposal bundle, disposition rules, canonical ordering, hash-bound
+  application plan, v1 composition rule, all-preconditions-first apply, atomic
+  publish, logical + physical hashes, lineage per step.
+- Added `cli_commands/governed_cleaning.py` and wired three commands into
+  `cli.py` / `cli_commands/__init__.py` (51 commands; 48 unchanged).
+- Added `tests/governed_cleaning_engine_test.py` (35 on-disk tests) covering
+  the 20-item D2 checklist and the owner's requested cases.
+- Registered the `governed_cleaning_engine` taxonomy family (36 literal codes,
+  3 shared globals); registry 713 -> 746.
+- Added `docs/governed-cleaning-engine.md`; updated architecture, testing,
+  project-master, decisions.
+
+### Do Not Do Yet
+
+- Do not route `run_workflow` through the engine; it stays opt-in.
+- Do not widen the one-value-changing-operation-per-column rule without tests.
+- Do not pin `pyarrow` or promise byte-identical Parquet without evidence.
+- Do not add model or provider involvement to proposing.
