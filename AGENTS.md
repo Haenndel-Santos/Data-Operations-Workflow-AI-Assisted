@@ -90,6 +90,14 @@ See `docs/testing.md` for current commands and environment notes.
 
 At the end of a session that changes versioned files, append a factual entry to `docs/agent-handoff.md` and update `docs/progress.md`. Update `docs/decisions.md` only for a durable decision and `CHANGELOG.md` only when users or releases are affected. Never rewrite prior handoff entries.
 
+## Reporting To The Owner
+
+Deliver every end-of-task report, status update, or review result to the owner
+as one single Markdown block that can be copied in one action: one outer fenced
+block, no text before or after it, and no nested fenced code blocks inside it
+(use indented text or lists for commands, diagrams, and examples). The report
+language follows the conversation; every repository artifact stays in English.
+
 ## Completion And Git
 
 A task is complete only when behavior or documentation is finished, contracts are preserved, relevant checks pass, the diff is reviewed, no temporary files or secrets are included, and the next logical step is recorded.
