@@ -196,6 +196,7 @@ REGISTERED_ERROR_CONSUMER_FILES = {
         {"product_canonical_promotion.py"}
     ),
     "product_materialization": frozenset({"product_materialization.py"}),
+    "governed_cleaning": frozenset({"governed_cleaning.py"}),
 }
 
 
@@ -2186,6 +2187,54 @@ _PRODUCT_MATERIALIZATION_CLASSIFICATIONS = {
 }
 
 
+_GOVERNED_CLEANING_CLASSIFICATIONS = {
+    ErrorCategory.CONTRACT: {
+        "duplicate_policy_scope",
+        "empty_policy",
+        "empty_policy_scope",
+        "illegal_review_transition",
+        "inconsistent_evidence",
+        "inconsistent_lineage",
+        "invalid_applied_at",
+        "invalid_candidate_id",
+        "invalid_column_identifier",
+        "invalid_configured_at",
+        "invalid_dataset_identifier",
+        "invalid_evidence_count",
+        "invalid_evidence_metric",
+        "invalid_lineage_count",
+        "invalid_output_sha256",
+        "invalid_source_sha256",
+        "invalid_table_identifier",
+        "missing_applied_timestamp",
+        "missing_policy_author",
+        "missing_review_timestamp",
+        "modified_decision_without_parameters",
+        "non_canonical_payload",
+        "proposed_confidence_ignored",
+        "unclassified_transformation_operation",
+        "unexpected_modified_parameters",
+        "unknown_transformation_operation",
+        "unsupported_policy_version",
+    },
+    ErrorCategory.AUTHORITY: {
+        "authority_hash_mismatch",
+        "candidate_not_approved",
+        "candidate_not_reviewable",
+        "decision_authority_wrong_class",
+        "decision_candidate_mismatch",
+        "decision_hash_mismatch",
+        "operation_not_automatic",
+        "operation_not_configured",
+        "policy_operation_not_configurable",
+        "source_changed_since_review",
+    },
+    ErrorCategory.APPROVAL: {
+        "decision_rejected",
+    },
+}
+
+
 def _build_registry() -> dict[str, ErrorCategory]:
     initial_groups = {
         ErrorCategory.CONTRACT: _CONTRACT_CODES,
@@ -2208,6 +2257,7 @@ def _build_registry() -> dict[str, ErrorCategory]:
         _REFERENCE_DATASET_VALIDATION_CLASSIFICATIONS,
         _PRODUCT_CANONICAL_PROMOTION_CLASSIFICATIONS,
         _PRODUCT_MATERIALIZATION_CLASSIFICATIONS,
+        _GOVERNED_CLEANING_CLASSIFICATIONS,
     ):
         for category, codes in groups.items():
             for code in codes:

@@ -4231,3 +4231,97 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 - Do not implement Product API/UI, identity, RBAC, tenant isolation, RLS,
   provider invocation, deployment egress, upload, publication, training, or
   production packaging from this documentation-only update.
+
+## 2026-08-18 - Claude - Governed Cleaning Contract (D1)
+
+### Scope
+
+- Added `src/data_ops_lab/governed_cleaning.py`: typed contract for
+  transformation candidates, deterministic evidence, computed confidence,
+  hash-bound decisions, exact application authority, and lineage. Pure
+  functions only; no I/O, no DataFrame access.
+- Added `tests/governed_cleaning_contract_test.py` (47 tests) proving the
+  contract invariants, and `tests/legacy_cleaner_characterization_test.py`
+  (9 tests) pinning current `clean_dataframe` behaviour so the engine
+  increment can prove the legacy path unchanged.
+- Registered the `governed_cleaning` blocker family (25 new codes; reuses the
+  global `missing_reviewer` and `invalid_reviewed_at`) in the error taxonomy;
+  registry count moves from 675 to 700.
+- Added `docs/governed-cleaning.md`; updated architecture, testing, and
+  decisions.
+
+### Findings Recorded, Not Fixed
+
+- Legacy date parsing: a date-named column whose first-20 sample is under 80%
+  ISO gets `dayfirst=True`, which under pandas 3.0.3 reinterprets valid ISO
+  dates (`2024-01-05 -> 2024-05-01`). Silent wrong values, not lost values.
+- Legacy behaviour depends on the pandas major: under pandas 3 the default
+  `str` dtype bypasses the object/string branches (no blank normalization,
+  trim, or numeric coercion on freshly-read string columns) while name-based
+  date parsing still fires. `pyproject.toml` leaves pandas unpinned.
+
+### Do Not Do Yet
+
+- Do not implement the engine (propose/review/apply/lineage) in this branch.
+- Do not change `run_workflow()` or `clean_dataframe()`.
+- Do not pin pandas without an explicit decision; the characterization tests
+  use explicit dtypes so they hold across the declared range.
+
+## 2026-08-18 - Claude - Governed Cleaning Contract (D1) Review Round
+
+### Scope
+
+- Owner review on PR #24 found four contract gaps; all closed in the same PR
+  because the engine would copy the semantics mechanically.
+- `approved` is now real authority: `record_decision` is the only route into
+  it (requires `pending_review`, validates the exact decision, moves to
+  `approved` or `rejected`); `authorize_application` requires `approved`
+  (`candidate_not_approved` otherwise).
+- `trim_whitespace` moved from `safe_automatic` to `configured_only`; only
+  `normalize_column_name` remains automatic.
+- Added the dataset-scoped `CleaningPolicy` / `PolicyOperation` /
+  `ConfiguredAuthority` contract: `validate_policy`, `authorize_configured`,
+  `verify_configured_authority`, `configured_authority_hash`. Authority binds
+  policy hash + source hash + dataset + operation + table + column + effective
+  parameters. Lineage carries `authority_kind` (`operation_table`,
+  `cleaning_policy`, `human_decision`) and can be built from either authority.
+- Canonical hash domain: `_canonical` reduces payloads to
+  null/bool/int/finite float/str/list/str-keyed mapping (plus contract-owned
+  enums and dataclasses); sets, non-string keys, non-finite floats, and other
+  objects raise `NonCanonicalPayloadError`; `canonical_json` uses
+  `allow_nan=False`. Caller payloads that fail get `non_canonical_payload`;
+  evidence metrics get `invalid_evidence_metric`.
+- Each class has exactly one authority mechanism: a decision on a non-governed
+  operation is `decision_authority_wrong_class`; a policy entry that is not
+  `configured_only` is `policy_operation_not_configurable`.
+- Contract tests: 114. Taxonomy family: 40 literal codes (14 new across
+  the review rounds; `governed_operation_requires_approval` removed);
+  registry pinned at 713.
+- Decisions recorded in the doc: CLI surface `governed-cleaning-propose`,
+  `governed-cleaning-authorize`, `governed-cleaning-apply`; pandas pinned to
+  `>=3.0.3,<3.1` in a separate small PR (D1b) before the engine.
+- Second `release-checker` pass found: the human-decision `authority_hash`
+  did not bind `candidate_id`, `table`, or `column` (asymmetric with the
+  configured authority; a retargeted record verified clean). Fixed: the hash
+  now binds all three; `test_tampered_authority_record_fails_self_check` is
+  parametrized over every bound field. Added `submit_for_review` as the API
+  for `candidate -> pending_review` and pinned the stated limit that
+  `review_state` is a projection of the decision record
+  (`test_review_state_is_a_projection_the_decision_is_the_authority`). Fixed a
+  phantom test name in the doc, made `validate_policy` run the canonical
+  parameter check even for unknown operations, and anchored the invariant
+  tables to an explicit numbered D1 checklist.
+- Owner's final review found two more: `authority_kind` was hardcoded inside
+  each hash function and ignored by `verify_*`, so a record's reported kind
+  could be changed without failing the self-check (fixed: the record's own
+  kind is hashed and recomputed; pinned for all three authority classes); and
+  the documented `safe_automatic -> operation_table -> lineage` path had no
+  authority object (fixed: `AutomaticAuthority`, `build_automatic_authority`,
+  `verify_automatic_authority`; `build_lineage` accepts all three kinds;
+  new blocker `operation_not_automatic`).
+
+### Do Not Do Yet
+
+- Do not implement the engine in this branch.
+- Do not change `run_workflow()` or `clean_dataframe()`.
+- Do not pin pandas in this PR; that is D1b after #24 merges.

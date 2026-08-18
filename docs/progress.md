@@ -32,7 +32,11 @@ approval, pack design, answer collection, live provider use, provider
 selection, dynamic dispatch, live narration, Product API, browser UI,
 authentication, RBAC enforcement, tenant isolation, RLS, WAF/HTTPS deployment,
 feature flags, central audit logging, error reporting, and production packaging
-remain pending.
+remain pending. Agent Platform v0 (CI gates, agent-layer realignment,
+Customer Data Boundary network test, agent permissions) merged into `main` on
+2026-08-18 through PRs #19, #20, and #21. The governed cleaning contract (D1)
+is implemented as pure types, authority functions, and invariant tests beside
+the unchanged legacy cleaner; its engine (D2) is not started.
 
 ## Last Completed Milestone
 
@@ -248,6 +252,10 @@ database, provider, upload, publication, training, or deployment changes.
 - Isolated local Ollama smoke test: 1 passed in 39.48 seconds on 2026-07-15 with an 8,192-token context; it used no database or SQL execution.
 - All 12 project-local skills passed the official skill validator on 2026-07-13.
 - Internal link check: 110 checked, 0 broken on 2026-07-20.
+- Governed cleaning contract (D1) validation on 2026-08-18: 114 contract
+  invariant tests and 9 legacy-cleaner characterization tests added; error
+  taxonomy registry pinned at 713 codes; full offline suite passes with the
+  new tests.
 - Main suite is offline and uses temporary directories for generated test artifacts.
 - Documentation link checker is available at `scripts/check_internal_links.py`.
 - The relocated `.venv` has a stale editable-install path; use the `PYTHONPATH=src` command in `docs/testing.md` until environment repair is explicitly approved.
@@ -255,6 +263,14 @@ database, provider, upload, publication, training, or deployment changes.
 
 ## Open Risks
 
+- Legacy `clean_dataframe` reinterprets valid ISO dates when a date-named
+  column's first-20 sample is under 80% ISO (`dayfirst=True` applied to the
+  whole column; `2024-01-05 -> 2024-05-01` under pandas 3.0.3). Pinned by
+  characterization tests; not fixed, because the legacy path is frozen while
+  the governed engine is built beside it.
+- Legacy cleaner behaviour depends on the pandas major version (pandas 3
+  default `str` dtype bypasses the object/string branches). `pyproject.toml`
+  leaves pandas unpinned at `>=2.2.0`.
 - Reports under `outputs/originaldatabase_analysis/` are stale and still show earlier Product blockers; use the 2026-07-14 resolved materialization report under `outputs/019f21a4-daf0-7272-b2a7-09b4f0e2c75b/step3e5_product_materialization_resolved/`.
 - `canonical_tables.yml` still describes the pre-application Product key candidate; downstream work must treat `product_reconciliation_state.yml` as the approved Product-specific contract until those representations are deliberately reconciled.
 - `ready_for_canonical_state_review` is dry-run evidence only; it is not approval to apply a Product snapshot or change `canonical_tables.yml`.
@@ -329,6 +345,16 @@ database, provider, upload, publication, training, or deployment changes.
 
 ## Next Logical Milestone
 
+Merge the governed cleaning contract (D1, PR #24) after the owner's final
+review. Then D1b: pin `pandas>=3.0.3,<3.1` in `pyproject.toml` and
+`requirements.txt` in a small separate PR, with the characterization tests
+and full CI as evidence. Then implement the engine (D2) as an opt-in route
+beside `cleaner.py`, reachable through `governed-cleaning-propose`,
+`governed-cleaning-authorize`, and `governed-cleaning-apply`. `run_workflow()`
+and `clean_dataframe()` stay unchanged; the characterization tests plus a
+golden-file comparison over the sample dataset prove it. Then generic dataset
+readiness, then Product API.
+
 Review and accept or revise the Sprint 0 product/security baseline, then restore
 the local Phase 5.2 prerequisites: make the ignored AdventureWorks source backup
 available in its expected local path and make the default local `MSSQLSERVER`
@@ -360,10 +386,10 @@ files in a separate private store or encrypted artifact workflow.
 
 ## Last Verified Commit
 
-`13a8880` (`Merge pull request #18 from Haenndel-Santos/codex/adventureworks-readonly-export`), before Sprint 0 documentation edits.
+`6ba185e` (`Merge pull request #21 from Haenndel-Santos/agent/data-boundary`), before the governed cleaning contract branch.
 
 ## Last Updated
 
-2026-08-13 by Codex after documenting Sprint 0 product/security baseline,
-recording the current local artifact/service inventory, and preserving the
-Phase 5.2 stop state.
+2026-08-18 by Claude after adding the governed cleaning contract (D1),
+its invariant and characterization tests, and the taxonomy family
+registration; Agent Platform v0 is merged and closed.

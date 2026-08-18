@@ -854,3 +854,61 @@ implement authentication, RBAC, tenant isolation, RLS, WAF, HTTPS, error
 reporting, secret management, deployment egress controls, provider selection,
 relationship approval, semantic approval, Product canonical apply, upload,
 publication, or training.
+
+## 2026-08-18 - Cleaning Transformations Are Governed By Class, Evidence, And Hash-Bound Decisions
+
+**Decision:** Introduce a governed cleaning contract in which every
+transformation belongs to one of three governance classes, each with exactly
+one authority mechanism: `safe_automatic` (structural, name-level only:
+column-name normalization; authority is the versioned operation table),
+`configured_only` (value-changing but bounded: whitespace trim, blank-sentinel
+normalization; authority is an exact, hash-bound dataset-scoped cleaning
+policy naming author, time, operation, table, columns, and parameters; never
+automatic by default), and `governed` (every semantic coercion: number, date,
+decimal separator, locale, identifier canonicalization, category remap;
+authority is an exact, hash-bound human decision on a candidate in the
+`approved` state). Governed operations are always candidates with
+deterministic evidence and a computed confidence. States move only
+`candidate -> pending_review -> approved | rejected -> applied`;
+`candidate -> applied` does not exist, and `approved` is real authority:
+`record_decision` is the only route into it and `authorize_application`
+requires it. Confidence is a versioned pure function of evidence; a proposer's
+confidence is never stored. Every hash payload is restricted to a canonical
+JSON domain (string keys; null/bool/int/finite float/string/list/mapping) and
+serialized with sorted keys and `allow_nan=False`; sets and non-finite floats
+are rejected. Lineage names its authority mechanism and hash. The engine's CLI
+surface is three flat commands, `governed-cleaning-propose`,
+`governed-cleaning-authorize`, `governed-cleaning-apply`; pandas is pinned to
+`>=3.0.3,<3.1` in a separate small dependency PR before the engine.
+
+**Context:** The legacy `clean_dataframe` alters data on heuristics with no
+evidence, review, or lineage. Characterization tests pin two behaviours that
+motivate this: numeric coercion at a 90% threshold turns `"ABC"` into `NA`
+silently, and name-based date parsing with an 80% ISO sample threshold applies
+`dayfirst=True` to whole columns, turning `2024-01-05` into `2024-05-01` under
+the installed pandas. The Sprint 0 capability matrix already required
+"AI proposes / deterministic engine applies reviewed rules with lineage".
+
+**Alternatives:** Treat all normalization as automatic to avoid review
+overhead; treat all normalization as governed and bury users in reviews; let
+the model or heuristic supply the confidence it reports; patch the legacy
+cleaner in place; keep whitespace trim automatic as "value-preserving";
+grant configured authority from a global deployment default; let authority be
+born at `pending_review` with `approved` as a decorative label; accept sets
+and arbitrary objects in hash payloads.
+
+**Reason:** Three classes keep the review burden proportional to risk while
+making the boundary mechanical: the class is decided by the operation table,
+not by the caller. Computed confidence and hash binding reuse the authority
+split and fail-closed style the analytics side already proves. Building the
+contract before any engine means states, hashes, evidence, and review
+semantics are settled before any new line can alter a dataset.
+
+**Impact:** `src/data_ops_lab/governed_cleaning.py` and its tests define the
+contract; the `governed_cleaning` blocker family is registered in the error
+taxonomy. `run_workflow()` and `clean_dataframe()` are unchanged and their
+behaviour is pinned. The engine (propose, authorize, apply, lineage) is a
+later opt-in increment beside the legacy cleaner. Owner review of the first
+draft closed four contract gaps before merge: `approved` made a real state,
+`trim_whitespace` moved to `configured_only`, the cleaning-policy authority
+object materialized in the contract, and the hash domain made canonical.
