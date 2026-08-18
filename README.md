@@ -12,8 +12,7 @@ DuckDB/BI-ready datasets. That pipeline is still here, implemented and used, but
 it is now the foundation of a broader system: governed data preparation,
 approved semantic context, deterministic analytics with human review, and a
 planned Product API and UI for business users. Read this README as a map of what
-exists, what is contract-complete, what is in progress, and what is still a
-design.
+exists, what is opt-in, and what is still a design.
 
 ## Who It Is For
 
@@ -54,9 +53,9 @@ Operational data (XLSX / CSV / local database evidence)
 ingestion + profiling                       implemented
         |
         v
-governed preparation                        legacy cleaner implemented;
-  (candidate -> evidence -> review           governed contract complete,
-   -> authority -> apply -> lineage)         governed engine in review
+governed preparation                        legacy cleaner (default path);
+  (candidate -> evidence -> review           governed contract + engine
+   -> authority -> apply -> lineage)         implemented, opt-in
         |
         v
 schema, key, and relationship evidence      implemented; approvals human-only
@@ -188,11 +187,20 @@ state. Every authority record is self-bound, including which mechanism granted
 it, and lineage names that mechanism. See
 [Governed Cleaning Contract](docs/governed-cleaning.md).
 
-**Governed engine (`propose -> review -> authorize -> ordered application plan
--> verify -> apply -> atomic publish -> lineage`)** - implemented as an opt-in
-route beside the legacy cleaner and currently under review in an open pull
-request; it is not on `main` yet. Until it merges, `run_workflow` and the
-legacy cleaner are the only cleaning path in this repository.
+**Governed engine (`governed_cleaning_engine.py`, implemented, opt-in)** -
+`propose -> review -> authorize -> ordered application plan -> verify -> apply
+-> atomic publish -> lineage`, reachable only through the three
+`governed-cleaning-*` commands. The source hash is derived from the real
+Parquet files; the human review binds to the exact proposal artifact; the
+application plan is the complete authorized authority set in canonical order,
+hash-bound; every authority is re-verified against the current source before
+staging is created; a failure anywhere before publish promotes nothing; each
+lineage row is the contract's `TransformationLineage` with the real logical
+output hash. `run_workflow()` continues to use the legacy cleaner for
+compatibility; the governed engine is available only through its explicit
+opt-in `governed-cleaning-*` commands, so both paths exist on `main` and the
+default workflow does not change. See
+[Governed Cleaning Engine](docs/governed-cleaning-engine.md).
 
 ## Security and the Customer Data Boundary
 
@@ -226,11 +234,13 @@ control.
 ## Testing and CI
 
 The repository has a broad contract- and regression-oriented offline suite:
-414 tests pass and 2 opt-in live-provider tests are skipped by default. Tests
+477 tests pass and 2 opt-in live-provider tests are skipped by default. Tests
 protect workflow behavior, preservation of source and approved files, every
 analytics stage's blockers and authority gates, the governed cleaning contract's
-invariants, the legacy cleaner's characterized behavior, the error-taxonomy
-registry, and the network boundary. CI runs on every pull request and push to
+invariants, the governed engine's on-disk behavior (tamper, drift, omission,
+partial failure, determinism), the legacy cleaner's characterized behavior and
+its fixed logical golden baseline, the error-taxonomy registry, and the network
+boundary. CI runs on every pull request and push to
 `main`: Ruff, pip-audit, Gitleaks, pytest, internal links, and `git diff
 --check`.
 
@@ -270,13 +280,12 @@ required only to run the opt-in live tests and the live evaluation commands.
 
 | State | Items |
 | --- | --- |
-| Implemented | Core pipeline (conversion, profiling, legacy cleaning, schema/key detection, relationship validation, DuckDB, BI/Parquet/CSV export, documentation); staged ERP modeling and human review workflows with hash-bound dry-run promotion; analytics Stage 5A planning, Stage 5B read-only execution, semantic catalog/review/approval, provider-neutral translation with recorded and loopback Ollama providers, deterministic presentation, cited recorded narration, two-phase session coordinator, static module registry; Northwind development benchmark; CI security and correctness gates; repository-level Customer Data Boundary enforcement; agent permission and worktree controls; Governed Cleaning D1 contract; pandas reproducibility baseline (`>=3.0.3,<3.1`). |
-| In review | Governed Cleaning D2 engine (`propose`, `authorize`, `apply`, ordered hash-bound plan, atomic publish, lineage) - open pull request, not on `main`. |
+| Implemented | Core pipeline (conversion, profiling, legacy cleaning, schema/key detection, relationship validation, DuckDB, BI/Parquet/CSV export, documentation); staged ERP modeling and human review workflows with hash-bound dry-run promotion; analytics Stage 5A planning, Stage 5B read-only execution, semantic catalog/review/approval, provider-neutral translation with recorded and loopback Ollama providers, deterministic presentation, cited recorded narration, two-phase session coordinator, static module registry; Northwind development benchmark; CI security and correctness gates; repository-level Customer Data Boundary enforcement; agent permission and worktree controls; Governed Cleaning D1 contract; pandas reproducibility baseline (`>=3.0.3,<3.1`); Governed Cleaning D2 engine (`governed-cleaning-propose` / `-authorize` / `-apply`, ordered hash-bound plan, atomic publish, contract lineage) as an opt-in route. |
 | Designed, not implemented | Generic dataset readiness over the governed route; Product API; UI; runtime authentication and RBAC; tenant isolation; deployment security; customer onboarding; end-to-end product workflows; richer connectors and BI artifacts. AdventureWorks holdout evaluation and provider selection remain gated. |
 
 ## Known Limitations
 
-- **Backend CLI complexity.** The CLI exposes 48 commands. They are backend
+- **Backend CLI complexity.** The CLI exposes 51 commands. They are backend
   and internal primitives - each stage's contract is a command so it can be
   run, reviewed, and tested in isolation. They are not the intended end-user
   experience. The Product API and UI, when built, should present something
@@ -290,8 +299,13 @@ required only to run the opt-in live tests and the live evaluation commands.
   3-table workload); analytical execution has fixed resource limits. Large
   production datasets have not been exercised.
 - **Legacy cleaner behavior depends on the pandas major**, which is why pandas
-  is pinned to `>=3.0.3,<3.1` until the governed engine replaces it for new
-  work.
+  is pinned to `>=3.0.3,<3.1`; the legacy path is frozen and pinned by a static
+  golden baseline while the governed engine is the route for new work.
+- **Governed engine v1 scope.** Five operations (`normalize_column_name`,
+  `trim_whitespace`, `normalize_blank_sentinel`, `parse_number`, `parse_date`
+  with explicit format), one value-changing operation per column, logical
+  determinism promised and physical Parquet bytes recorded but not promised
+  across writer versions.
 
 ## Quick Start
 
@@ -323,6 +337,24 @@ $env:PYTHONPATH = "src"
 The commands below expose each backend stage as a separately runnable,
 reviewable contract. Most stop at a human review or dry-run boundary by design.
 Paths written as `outputs\<run-id>\...` are placeholders.
+
+To run the opt-in governed cleaning route over a directory of Parquet files
+(propose changes no value; authorize turns the completed review and an optional
+dataset cleaning policy into an ordered, hash-bound plan; apply re-verifies
+everything against the current source and publishes output with lineage
+atomically):
+
+```powershell
+$env:PYTHONPATH = "src"
+.\.venv\Scripts\python.exe -m data_ops_lab governed-cleaning-propose --parquet-dir "outputs\<run-id>\01_converted\parquet" --output "outputs\<run-id>\governed_cleaning\proposal"
+# complete outputs\<run-id>\governed_cleaning\proposal\review_template.yml, then:
+.\.venv\Scripts\python.exe -m data_ops_lab governed-cleaning-authorize --proposal "outputs\<run-id>\governed_cleaning\proposal" --parquet-dir "outputs\<run-id>\01_converted\parquet" --review "outputs\<run-id>\governed_cleaning\review.yml" --policy "config\cleaning_policy.yml" --output "outputs\<run-id>\governed_cleaning\authority"
+.\.venv\Scripts\python.exe -m data_ops_lab governed-cleaning-apply --authority "outputs\<run-id>\governed_cleaning\authority" --parquet-dir "outputs\<run-id>\01_converted\parquet" --output "outputs\<run-id>\governed_cleaning\output"
+```
+
+Every governed candidate needs an explicit disposition before an apply-ready
+plan exists; a missing decision leaves the authorization incomplete rather than
+blocked. Nothing in this route is invoked by the default workflow.
 
 To run the workflow on the full original export folder:
 
@@ -742,15 +774,14 @@ High-level and status-accurate; see
 [AI platform implementation roadmap](docs/ai-implementation-roadmap.md) for
 phases and exit gates.
 
-1. **Governed Cleaning D2 engine** - in review; merges when accepted.
-2. **Generic dataset readiness** over the governed route - designed.
-3. **Product API** - versioned boundary for datasets, sessions, questions,
+1. **Generic dataset readiness** over the governed route - designed; next.
+2. **Product API** - versioned boundary for datasets, sessions, questions,
    reviews, executions, results, exports; identity and RBAC enforced before
    shared use - designed.
-4. **UI** - Simple View and Analytical View backed by the same facts - designed.
-5. **Fresh holdout evaluation and provider selection** on AdventureWorks -
+3. **UI** - Simple View and Analytical View backed by the same facts - designed.
+4. **Fresh holdout evaluation and provider selection** on AdventureWorks -
    gated on local prerequisites and reviews.
-6. **Production readiness** - runtime security, deployment packaging, backup,
+5. **Production readiness** - runtime security, deployment packaging, backup,
    support - designed.
 
 ## Project Utilities
@@ -788,6 +819,7 @@ Governance and project memory:
 Governed cleaning:
 
 - [Governed cleaning contract](docs/governed-cleaning.md)
+- [Governed cleaning engine](docs/governed-cleaning-engine.md)
 
 Analytics backend contracts:
 
