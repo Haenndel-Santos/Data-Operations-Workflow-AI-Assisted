@@ -1,0 +1,4 @@
+interface:
+  display_name: "Customer Data Boundary"
+  short_description: "Review changes that could expose customer data"
+  default_prompt: "Use $customer-data-boundary to review whether this change could move customer data, prompts, results, or logs outside customer-controlled infrastructure."
