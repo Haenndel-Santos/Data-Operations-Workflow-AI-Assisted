@@ -138,7 +138,7 @@ def parquet_table_stats(
             ]
         )
     row = connection.execute(
-        f"select {', '.join(expressions)} from read_parquet(?)",
+        f"select {', '.join(expressions)} from read_parquet(?)",  # noqa: S608 - identifiers double-quoted; source path bound as parameter
         [str(path)],
     ).fetchone()
     if row is None:
@@ -263,7 +263,7 @@ def distinct_overlap_count(
         from left_values as left_value
         semi join right_values as right_value
           on left_value.value = right_value.value
-    """
+    """  # noqa: S608 - identifiers double-quoted; source path bound as parameter
     row = connection.execute(query, [str(left["path"]), str(right["path"])]).fetchone()
     return int(row[0]) if row else 0
 

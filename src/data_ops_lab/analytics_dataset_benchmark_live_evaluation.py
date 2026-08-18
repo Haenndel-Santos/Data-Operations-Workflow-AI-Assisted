@@ -617,7 +617,7 @@ def _case_row(
     authority_rechecked = False
 
     if translation.status == "ready_for_query_plan" and request_match:
-        assert canonical_request is not None
+        assert canonical_request is not None  # noqa: S101 - type narrowing after a guard that already returned; not validation
         canonical_request_path = case_dir / "canonical_request.yml"
         canonical_request_path.write_text(
             yaml.safe_dump(canonical_request, sort_keys=False, allow_unicode=False),
@@ -968,7 +968,7 @@ def sample_local_resources() -> dict[str, Any]:
             pass
     try:
         completed = subprocess.run(
-            [
+            [  # noqa: S607 - fixed literal argv; telemetry only, no shell and no user input
                 "nvidia-smi",
                 "--query-gpu=memory.total,memory.used",
                 "--format=csv,noheader,nounits",

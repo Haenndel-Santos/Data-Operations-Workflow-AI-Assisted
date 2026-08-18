@@ -140,10 +140,10 @@ def _numeric_cell_matches(
     relative_decimal = _decimal(relative)
     if None in (actual_decimal, expected_decimal, absolute_decimal, relative_decimal):
         return False
-    assert actual_decimal is not None
-    assert expected_decimal is not None
-    assert absolute_decimal is not None
-    assert relative_decimal is not None
+    assert actual_decimal is not None  # noqa: S101 - type narrowing after a guard that already returned; not validation
+    assert expected_decimal is not None  # noqa: S101 - type narrowing after a guard that already returned; not validation
+    assert absolute_decimal is not None  # noqa: S101 - type narrowing after a guard that already returned; not validation
+    assert relative_decimal is not None  # noqa: S101 - type narrowing after a guard that already returned; not validation
     difference = abs(actual_decimal - expected_decimal)
     allowed = max(absolute_decimal, relative_decimal * abs(expected_decimal))
     return difference <= allowed
@@ -242,8 +242,8 @@ def _case_row(
     authority_rechecked = False
 
     if translation_status == "ready_for_query_plan" and request_match:
-        assert translation.adapter_result is not None
-        assert translation.adapter_result.request_path is not None
+        assert translation.adapter_result is not None  # noqa: S101 - type narrowing after a guard that already returned; not validation
+        assert translation.adapter_result.request_path is not None  # noqa: S101 - type narrowing after a guard that already returned; not validation
         plan = run_analytics_query_plan(
             translation.adapter_result.request_path,
             database_path,

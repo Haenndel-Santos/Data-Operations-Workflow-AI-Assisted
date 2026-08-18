@@ -136,7 +136,7 @@ def run_worker(
         str(table_count),
     ]
     try:
-        completed = subprocess.run(
+        completed = subprocess.run(  # noqa: S603 - argv is built locally from a fixed template, never from user input
             command,
             check=False,
             capture_output=True,

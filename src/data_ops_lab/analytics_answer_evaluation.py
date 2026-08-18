@@ -667,7 +667,7 @@ def _materialize_dataset(dataset: dict[str, Any], database_path: Path) -> None:
             if table["rows"]:
                 placeholders = ", ".join("?" for _ in table["columns"])
                 connection.executemany(
-                    f"INSERT INTO {quote_identifier(table['name'])} VALUES ({placeholders})",
+                    f"INSERT INTO {quote_identifier(table['name'])} VALUES ({placeholders})",  # noqa: S608 - identifier via quote_identifier; values bound via executemany
                     table["rows"],
                 )
 
@@ -710,8 +710,8 @@ def _case_row(
     controls_match = False
 
     if translation_status == "ready_for_query_plan" and request_match:
-        assert translation.adapter_result is not None
-        assert translation.adapter_result.request_path is not None
+        assert translation.adapter_result is not None  # noqa: S101 - type narrowing after a guard that already returned; not validation
+        assert translation.adapter_result.request_path is not None  # noqa: S101 - type narrowing after a guard that already returned; not validation
         plan = run_analytics_query_plan(
             translation.adapter_result.request_path,
             database_path,

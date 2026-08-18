@@ -279,7 +279,7 @@ def build_materialization(
         if identifier in invalid_identifiers:
             continue
         parts = source_identifier_parts(identifier)
-        assert parts is not None
+        assert parts is not None  # noqa: S101 - type narrowing after a guard that already returned; not validation
         source_type, source_row = parts
         exclusions.append(
             {

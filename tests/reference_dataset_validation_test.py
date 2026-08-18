@@ -18,7 +18,7 @@ def sha256(path: Path) -> str:
 def sample_sql(*, orphan: bool = False, duplicate_order: bool = False) -> str:
     customer_id = 999 if orphan else 1
     duplicate = (
-        f"INSERT Orders VALUES (10, {customer_id}, 7.00)\n" if duplicate_order else ""
+        f"INSERT Orders VALUES (10, {customer_id}, 7.00)\n" if duplicate_order else ""  # noqa: S608 - fixture T-SQL text parsed by the conversion module, not executed
     )
     return f"""
 CREATE TABLE Customers
@@ -40,7 +40,7 @@ INSERT Customers VALUES (1, 'Alice')
 INSERT Customers VALUES (2, 'Bob')
 INSERT Orders VALUES (10, {customer_id}, 12.50)
 {duplicate}GO
-"""
+"""  # noqa: S608 - fixture T-SQL text parsed by the conversion module, not executed
 
 
 def build_reference_package(

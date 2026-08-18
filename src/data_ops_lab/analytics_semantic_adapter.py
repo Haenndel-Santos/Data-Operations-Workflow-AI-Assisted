@@ -758,14 +758,14 @@ def compile_intent(
 
     if blockers or clarifications:
         return None
-    assert base_entity is not None
-    assert isinstance(limit, int)
+    assert base_entity is not None  # noqa: S101 - type narrowing after a guard that already returned; not validation
+    assert isinstance(limit, int)  # noqa: S101 - type narrowing after a guard that already returned; not validation
 
     base_table = str(base_entity.get("source_table", ""))
     selected_tables = {base_table}
     joins: list[dict[str, str]] = []
     for path_index, path in enumerate(paths):
-        assert path is not None
+        assert path is not None  # noqa: S101 - type narrowing after a guard that already returned; not validation
         hops = path.get("hops", [])
         if not isinstance(hops, list) or not hops:
             add_blocker(
@@ -824,7 +824,7 @@ def compile_intent(
     request_metrics: list[dict[str, str]] = []
     output_aliases: set[str] = set()
     for index, (entity, alias) in enumerate(dimensions):
-        assert entity is not None and alias is not None
+        assert entity is not None and alias is not None  # noqa: S101 - type narrowing after a guard that already returned; not validation
         source_table = str(entity.get("source_table", ""))
         if source_table not in selected_tables:
             add_blocker(
@@ -848,7 +848,7 @@ def compile_intent(
             }
         )
     for index, (entity, alias) in enumerate(metrics):
-        assert entity is not None and alias is not None
+        assert entity is not None and alias is not None  # noqa: S101 - type narrowing after a guard that already returned; not validation
         source_table = str(entity.get("source_table", ""))
         source_column = str(entity.get("source_column", ""))
         if source_table not in selected_tables:
@@ -876,7 +876,7 @@ def compile_intent(
 
     request_filters: list[dict[str, Any]] = []
     for index, (entity, operator, value) in enumerate(filters):
-        assert entity is not None
+        assert entity is not None  # noqa: S101 - type narrowing after a guard that already returned; not validation
         source_table = str(entity.get("source_table", ""))
         if source_table not in selected_tables:
             add_blocker(

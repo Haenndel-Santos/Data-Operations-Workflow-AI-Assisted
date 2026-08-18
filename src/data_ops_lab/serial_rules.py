@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import csv
 import re
-from collections import defaultdict
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path

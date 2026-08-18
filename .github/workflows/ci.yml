@@ -15,6 +15,25 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  secret-scan:
+    name: Secret scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      # Full-history baseline (all 876 blobs) was verified clean before this gate
+      # was added. On PR/push the action scans the event's commit range, so this
+      # job blocks newly introduced secrets; it does not re-scan all history on
+      # every run. A scheduled or workflow_dispatch full scan can be added later.
+      - name: Block newly introduced secrets
+        uses: gitleaks/gitleaks-action@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   offline-tests:
     name: Windows / Python 3.13
     runs-on: windows-latest
@@ -41,6 +60,14 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install -e ".[dev]"
+
+      - name: Lint with Ruff
+        shell: pwsh
+        run: python -m ruff check .
+
+      - name: Audit dependencies for known vulnerabilities
+        shell: pwsh
+        run: python -m pip_audit --skip-editable --progress-spinner off
 
       - name: Run offline test suite
         shell: pwsh

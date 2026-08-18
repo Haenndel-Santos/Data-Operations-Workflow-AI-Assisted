@@ -18,7 +18,7 @@ def generate_starter_queries(schema: dict, keys: dict) -> list[SuggestedQuery]:
         queries.append(
             SuggestedQuery(
                 title=f"Row count for {table_name}",
-                sql=f"select count(*) as row_count from {table_name};",
+                sql=f"select count(*) as row_count from {table_name};",  # noqa: S608 - reviewable suggestion text; never executed by this module
                 rationale="Basic reconciliation query for validating loaded row volume.",
             )
         )
