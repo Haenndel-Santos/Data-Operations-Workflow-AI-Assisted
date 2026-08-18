@@ -38,6 +38,7 @@ import io
 import re
 import shutil
 import tempfile
+import uuid
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -45,6 +46,8 @@ from typing import Any, Mapping
 
 import pandas as pd
 import yaml
+
+from dataclasses import asdict
 
 from .contracts.atomic_publish import publish_new_directory
 from .contracts.blockers import add_blocker
@@ -501,6 +504,10 @@ def run_governed_cleaning_propose(
         "version": PROPOSAL_VERSION,
         "engine_version": ENGINE_VERSION,
         "status": status,
+        # Artifact identity, covered by proposal_sha256. Two proposals over
+        # unchanged data in the same second would otherwise hash the same, and
+        # a review must bind to the exact artifact the human looked at.
+        "proposal_id": str(uuid.uuid4()),
         "proposed_at": utc_now(),
         "source_sha256": inventory.source_sha256 if inventory else "",
         "source_files": [dict(f) for f in inventory.files] if inventory else [],
@@ -595,6 +602,9 @@ def _load_proposal(proposal_dir: Path, blockers: list[dict[str, str]]) -> tuple[
     if manifest.get("version") != PROPOSAL_VERSION:
         add_blocker(blockers, "unsupported_proposal_version", f"Proposal must use version {PROPOSAL_VERSION}.", field="proposal_manifest.version")
         return {}, []
+    if manifest.get("engine_version") != ENGINE_VERSION:
+        add_blocker(blockers, "unsupported_engine_version", f"Proposal was produced by engine version {manifest.get('engine_version')!r}; this engine is version {ENGINE_VERSION}.", field="proposal_manifest.engine_version")
+        return {}, []
     if manifest.get("status") != "ready_for_review":
         add_blocker(blockers, "proposal_not_ready", f"Proposal status is {manifest.get('status')!r}, not ready_for_review.", field="proposal_manifest.status")
         return {}, []
@@ -627,9 +637,17 @@ def _load_proposal(proposal_dir: Path, blockers: list[dict[str, str]]) -> tuple[
     return manifest, candidates
 
 
-def _load_review(review_path: Path | None, candidates: list[TransformationCandidate], blockers: list[dict[str, str]]) -> dict[str, TransformationDecision]:
+def _load_review(
+    review_path: Path | None,
+    candidates: list[TransformationCandidate],
+    expected_proposal_sha256: str,
+    blockers: list[dict[str, str]],
+) -> dict[str, TransformationDecision]:
     """Return decisions keyed by candidate_id. Malformed, duplicate, or unknown
-    decisions are blockers; a missing decision is not (it is incompleteness)."""
+    decisions are blockers; a missing decision is not (it is incompleteness).
+    The review must name the exact proposal artifact being authorized: two
+    proposals over unchanged data can carry identical candidate hashes and
+    still be different artifacts, and the human reviewed one of them."""
     decisions: dict[str, TransformationDecision] = {}
     if review_path is None:
         return decisions
@@ -638,6 +656,9 @@ def _load_review(review_path: Path | None, candidates: list[TransformationCandid
         return decisions
     if review.get("version") != AUTHORIZATION_VERSION:
         add_blocker(blockers, "unsupported_review_version", f"Review must use version {AUTHORIZATION_VERSION}.", field="review.version")
+        return decisions
+    if str(review.get("proposal_sha256") or "") != expected_proposal_sha256:
+        add_blocker(blockers, "review_proposal_hash_mismatch", "The review is bound to a different proposal artifact than the one being authorized.", field="review.proposal_sha256")
         return decisions
     default_reviewer = str(review.get("reviewer") or "")
     entries = review.get("decisions")
@@ -765,16 +786,34 @@ def _order_steps(authorities: list) -> list:
     return sorted(authorities, key=key)
 
 
-def _check_composition(authorities: list, blockers: list[dict[str, str]]) -> None:
-    """Engine v1: at most one value-changing operation per (table, column)."""
+def _check_composition(authorities: list, blockers: list[dict[str, str]], table_columns: Mapping[str, list[str]] | None = None) -> None:
+    """Engine v1: at most one value-changing operation per (table, column), and
+    no two renames in one table may collapse to the same target, nor may a
+    rename target collide with an existing column that is not being renamed."""
     seen: dict[tuple[str, str], str] = {}
+    targets: dict[str, dict[str, str]] = {}
+    renamed_sources: dict[str, set[str]] = {}
     for auth in authorities:
+        if auth.operation is TransformationOperation.NORMALIZE_COLUMN_NAME:
+            target = slugify(auth.column)
+            table_targets = targets.setdefault(auth.table, {})
+            if target in table_targets:
+                add_blocker(blockers, "rename_target_collision", f"{auth.table}: both {table_targets[target]!r} and {auth.column!r} normalize to {target!r}.", field="application_plan")
+            table_targets[target] = auth.column
+            renamed_sources.setdefault(auth.table, set()).add(auth.column)
+            continue
         if governance_class_for(auth.operation) not in VALUE_CHANGING_CLASSES:
             continue
         key = (auth.table, auth.column)
         if key in seen:
             add_blocker(blockers, "unsupported_operation_composition", f"{auth.table}.{auth.column} has more than one value-changing operation ({seen[key]} and {auth.operation.value}); engine v1 supports one per column.", field="application_plan")
         seen[key] = auth.operation.value
+    if table_columns:
+        for table, table_targets in targets.items():
+            existing = set(table_columns.get(table, [])) - renamed_sources.get(table, set())
+            for target, source in table_targets.items():
+                if target in existing:
+                    add_blocker(blockers, "rename_target_collision", f"{table}: renaming {source!r} to {target!r} would collide with an existing column.", field="application_plan")
 
 
 def run_governed_cleaning_authorize(
@@ -795,7 +834,7 @@ def run_governed_cleaning_authorize(
     source_sha256 = manifest.get("source_sha256", "") if manifest else ""
     if inventory is not None and manifest and inventory.source_sha256 != source_sha256:
         add_blocker(blockers, "source_changed_since_proposal", "The Parquet source no longer matches the hash the proposal was built against.", field="source_sha256")
-    decisions = _load_review(review_path, candidates, blockers)
+    decisions = _load_review(review_path, candidates, str(manifest.get("proposal_sha256") or "") if manifest else "", blockers)
     policy = _load_policy(policy_path, blockers)
 
     authorities: list = []
@@ -851,7 +890,8 @@ def run_governed_cleaning_authorize(
                 continue
             authorities.append(auth)
             dispositions.append({"governance_class": "safe_automatic", "operation": operation.value, "table": auth.table, "column": auth.column, "disposition": "automatic", "authority_sha256": auth.authority_sha256})
-        _check_composition(authorities, blockers)
+        table_columns = {str(tbl.get("table")): list(tbl.get("columns") or []) for tbl in manifest.get("tables", []) if isinstance(tbl, dict)}
+        _check_composition(authorities, blockers, table_columns)
 
     if blockers:
         status = "blocked"
@@ -865,8 +905,11 @@ def run_governed_cleaning_authorize(
     plan_doc = {
         "version": APPLICATION_PLAN_VERSION,
         "source_sha256": source_sha256,
+        # The plan is authoritative only over order. Every other fact about a
+        # step is read from the self-bound authority record it references, so
+        # there is no redundant metadata that could disagree with it.
         "steps": [
-            {"sequence": i + 1, "authority_sha256": a.authority_sha256, "authority_kind": a.authority_kind.value, "table": a.table, "column": a.column, "operation": a.operation.value}
+            {"sequence": i + 1, "authority_sha256": a.authority_sha256}
             for i, a in enumerate(ordered)
         ] if status == "authorized" else [],
         "application_plan_sha256": plan_sha256,
@@ -982,6 +1025,9 @@ def _load_authorization(authority_dir: Path, blockers: list[dict[str, str]]) -> 
     if manifest.get("version") != AUTHORIZATION_VERSION:
         add_blocker(blockers, "unsupported_authorization_version", f"Authorization must use version {AUTHORIZATION_VERSION}.", field="authorization_manifest.version")
         return {}, {}, []
+    if manifest.get("engine_version") != ENGINE_VERSION:
+        add_blocker(blockers, "unsupported_engine_version", f"Authorization was produced by engine version {manifest.get('engine_version')!r}; this engine is version {ENGINE_VERSION}.", field="authorization_manifest.engine_version")
+        return {}, {}, []
     if manifest.get("status") != "authorized":
         add_blocker(blockers, "authorization_not_ready", f"Authorization status is {manifest.get('status')!r}, not authorized; nothing may be applied.", field="authorization_manifest.status")
         return {}, {}, []
@@ -1000,6 +1046,10 @@ def _load_authorization(authority_dir: Path, blockers: list[dict[str, str]]) -> 
     if not isinstance(steps, list) or plan.get("version") != APPLICATION_PLAN_VERSION:
         add_blocker(blockers, "invalid_application_plan", "application_plan.yml must be version 1 and list steps.", field="application_plan")
         return {}, {}, []
+    for index, step in enumerate(steps):
+        if not isinstance(step, dict) or set(step) != {"sequence", "authority_sha256"}:
+            add_blocker(blockers, "invalid_application_plan", f"application_plan step {index + 1} must carry exactly sequence and authority_sha256; step semantics come from the referenced authority record.", field=f"application_plan.steps[{index}]")
+            return {}, {}, []
     step_hashes = [str(s.get("authority_sha256") or "") for s in steps if isinstance(s, dict)]
     recomputed = _plan_hash(str(plan.get("source_sha256") or ""), step_hashes)
     if recomputed != plan.get("application_plan_sha256") or recomputed != manifest.get("application_plan_sha256"):
@@ -1053,6 +1103,14 @@ def run_governed_cleaning_apply(
             if step.get("sequence") != index + 1:
                 add_blocker(blockers, "invalid_application_plan", f"application_plan step sequence must be {index + 1}.", field=f"application_plan.steps[{index}].sequence")
             ordered.append(auth)
+        # The plan is the exact executable projection of the complete
+        # authorized bundle: every authority once, in canonical order. A plan
+        # that omits, adds, repeats, or reorders authorities is refused even
+        # if every referenced authority is genuine and every hash was rehashed.
+        expected = [a.authority_sha256 for a in _order_steps(authorities)]
+        actual = [str(s.get("authority_sha256") or "") for s in plan.get("steps", []) if isinstance(s, dict)]
+        if actual != expected:
+            add_blocker(blockers, "application_plan_authority_set_mismatch", "application_plan.yml is not the complete authorized authority set in canonical order; it omits, adds, repeats, or reorders authorities.", field="application_plan.steps")
         for auth in ordered:
             if isinstance(auth, ApprovedTransformation):
                 verify_authority(auth, current_source_sha256=source_sha256, blockers=blockers)
@@ -1083,7 +1141,7 @@ def run_governed_cleaning_apply(
         for entry in inventory.files:
             frames[Path(entry["path"]).stem] = pd.read_parquet(parquet_dir / entry["path"])
         applied_at = utc_now()
-        lineage_rows: list[dict[str, Any]] = []
+        step_metrics: list[dict[str, Any]] = []
         step_rows: list[dict[str, Any]] = []
         for index, auth in enumerate(ordered):
             frame = frames.get(auth.table)
@@ -1120,10 +1178,7 @@ def run_governed_cleaning_apply(
                 frame = frame.copy()
                 frame[auth.column] = out
                 frames[auth.table] = frame
-            lineage = build_lineage(auth, output_sha256="0" * 64, rows_examined=rows_examined, rows_changed=changed, applied_at=applied_at, blockers=blockers)
-            if lineage is None:
-                raise ValueError("Lineage could not be built for an authorized step.")
-            lineage_rows.append({"sequence": index + 1, "authority_kind": auth.authority_kind.value, "authority_sha256": auth.authority_sha256, "table": auth.table, "column": auth.column, "operation": auth.operation.value, "rows_examined": rows_examined, "rows_changed": changed, "values_failed": failed})
+            step_metrics.append({"authority": auth, "rows_examined": rows_examined, "rows_changed": changed, "values_failed": failed})
             step_rows.append({"sequence": index + 1, "authority_sha256": auth.authority_sha256, "operation": auth.operation.value, "table": auth.table, "column": auth.column})
         tables_out: list[dict[str, Any]] = []
         for table, frame in sorted(frames.items()):
@@ -1131,9 +1186,29 @@ def run_governed_cleaning_apply(
             frame.to_parquet(path, index=False)
             tables_out.append({"table": table, "path": f"{PARQUET_DIR_NAME}/{table}.parquet", "rows": int(len(frame)), "columns": [str(c) for c in frame.columns], "physical_sha256": file_sha256(path), "logical_content_sha256": logical_content_sha256(frame)})
         by_table = {t["table"]: t for t in tables_out}
-        for row in lineage_rows:
-            row["output_logical_sha256"] = by_table[row["table"]]["logical_content_sha256"]
-            row["output_physical_sha256"] = by_table[row["table"]]["physical_sha256"]
+        # Lineage is the D1 TransformationLineage built with the real output
+        # hash, serialized as-is; D2 adds its own evidence beside it. The
+        # contract output_sha256 is the logical content hash, which is what
+        # the engine promises to be deterministic; the physical Parquet hash
+        # is recorded as D2 metadata.
+        lineage_rows: list[dict[str, Any]] = []
+        for index, metric in enumerate(step_metrics):
+            auth = metric["authority"]
+            lineage = build_lineage(
+                auth,
+                output_sha256=by_table[auth.table]["logical_content_sha256"],
+                rows_examined=metric["rows_examined"],
+                rows_changed=metric["rows_changed"],
+                applied_at=applied_at,
+                blockers=blockers,
+            )
+            if lineage is None:
+                raise ValueError("Lineage could not be built for an authorized step.")
+            record = {k: (v.value if hasattr(v, "value") else v) for k, v in asdict(lineage).items()}
+            record["sequence"] = index + 1
+            record["values_failed"] = metric["values_failed"]
+            record["output_physical_sha256"] = by_table[auth.table]["physical_sha256"]
+            lineage_rows.append(record)
         app_manifest = {
             "version": APPLICATION_VERSION,
             "engine_version": ENGINE_VERSION,

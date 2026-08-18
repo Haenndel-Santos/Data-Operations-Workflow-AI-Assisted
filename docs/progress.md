@@ -255,9 +255,12 @@ database, provider, upload, publication, training, or deployment changes.
 - All 12 project-local skills passed the official skill validator on 2026-07-13.
 - Internal link check: 110 checked, 0 broken on 2026-07-20.
 - Governed cleaning contract (D1) validation on 2026-08-18: 114 contract
-  invariant tests and 9 legacy-cleaner characterization tests added.
-- Governed cleaning engine (D2) validation on 2026-08-18: 35 on-disk engine
-  tests added; error taxonomy registry pinned at 746 codes; full offline
+  invariant tests and 9 legacy-cleaner characterization tests added; a
+  narrow raw-column-name rule for `normalize_column_name` was added during
+  the engine's final review (130 contract tests).
+- Governed cleaning engine (D2) validation on 2026-08-18: 46 on-disk engine
+  tests and 130 contract tests after final-review fixes; a static legacy
+  golden fixture; error taxonomy registry pinned at 751 codes; full offline
   suite passes with the new tests.
 - Main suite is offline and uses temporary directories for generated test artifacts.
 - Documentation link checker is available at `scripts/check_internal_links.py`.

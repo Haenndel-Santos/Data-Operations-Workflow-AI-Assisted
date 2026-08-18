@@ -52,6 +52,18 @@ SHA256_PATTERN = re.compile(r"^[0-9a-f]{64}$")
 IDENTIFIER_PATTERN = re.compile(r"^[A-Za-z_][A-Za-z0-9_]{0,127}$")
 CANDIDATE_ID_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$")
 
+# A raw source column name that normalize_column_name may act on. It is not an
+# identifier yet - that is the point of the operation - but it is bounded: 1 to
+# 255 characters, no control characters, and at least one letter or digit so a
+# deterministic identifier can be derived from it. This exception exists for
+# NORMALIZE_COLUMN_NAME only; every other operation scopes authority by
+# IDENTIFIER_PATTERN.
+RAW_COLUMN_NAME_MAX_LENGTH = 255
+RAW_COLUMN_NAME_PATTERN = re.compile(r"^(?=.*[A-Za-z0-9])[^\x00-\x1f\x7f]{1,255}$")
+
+def is_valid_raw_column_name(value: Any) -> bool:
+    return isinstance(value, str) and RAW_COLUMN_NAME_PATTERN.fullmatch(value) is not None
+
 
 class GovernanceClass(str, Enum):
     """How much authority a transformation needs before it may run.
@@ -1009,7 +1021,13 @@ def build_automatic_authority(
         add_blocker(blockers, "invalid_source_sha256", "Source hash must be 64 lowercase hex characters.", field="source_sha256")
     if not IDENTIFIER_PATTERN.fullmatch(table or ""):
         add_blocker(blockers, "invalid_table_identifier", "Table must be a simple identifier.", field="table")
-    if not IDENTIFIER_PATTERN.fullmatch(column or ""):
+    if operation is TransformationOperation.NORMALIZE_COLUMN_NAME:
+        # The one operation whose purpose is to act on a name that is not an
+        # identifier yet. Its scope is the exact raw source name, bounded by
+        # RAW_COLUMN_NAME_PATTERN, and the authority hash binds that raw name.
+        if not is_valid_raw_column_name(column):
+            add_blocker(blockers, "invalid_raw_column_name", "normalize_column_name needs a bounded raw source column name: 1-255 characters, no control characters, at least one letter or digit.", field="column")
+    elif not IDENTIFIER_PATTERN.fullmatch(column or ""):
         add_blocker(blockers, "invalid_column_identifier", "Column must be a simple identifier.", field="column")
     if OPERATION_GOVERNANCE.get(operation) is not GovernanceClass.SAFE_AUTOMATIC:
         add_blocker(
@@ -1047,6 +1065,9 @@ def verify_automatic_authority(
         ok = False
     if OPERATION_GOVERNANCE.get(authority.operation) is not GovernanceClass.SAFE_AUTOMATIC:
         add_blocker(blockers, "operation_not_automatic", f"{authority.operation.value} is no longer safe_automatic in the operation table.", field="operation")
+        ok = False
+    if authority.operation is TransformationOperation.NORMALIZE_COLUMN_NAME and not is_valid_raw_column_name(authority.column):
+        add_blocker(blockers, "invalid_raw_column_name", "Automatic authority carries a raw column name outside the bounded rule.", field="column")
         ok = False
     expected = automatic_authority_hash(
         authority_kind=authority.authority_kind,

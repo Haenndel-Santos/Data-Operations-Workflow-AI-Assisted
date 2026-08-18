@@ -4352,3 +4352,37 @@ $env:PYTHONDONTWRITEBYTECODE = "1"
 - Do not widen the one-value-changing-operation-per-column rule without tests.
 - Do not pin `pyarrow` or promise byte-identical Parquet without evidence.
 - Do not add model or provider involvement to proposing.
+
+## 2026-08-18 - Claude - Governed Cleaning Engine (D2) Final-Review Fixes
+
+### Scope
+
+- Blocker 1: `build_automatic_authority` / `verify_automatic_authority` accept a
+  bounded raw source column name for `normalize_column_name` only
+  (`RAW_COLUMN_NAME_PATTERN`, `invalid_raw_column_name`); end-to-end rename
+  test added; `rename_target_collision` added at authorize.
+- Blocker 2: lineage rows are the serialized D1 `TransformationLineage` built
+  with the real logical output hash; `values_failed`, `sequence`, and
+  `output_physical_sha256` beside it; the placeholder hash is gone.
+- Blocker 3: apply requires the plan to equal `_order_steps(all verified
+  authorities)` (`application_plan_authority_set_mismatch`); omission and
+  reorder-with-full-rehash tests added.
+- Blocker 4 (Option A): plan steps carry only `sequence` + `authority_sha256`;
+  any other key is `invalid_application_plan`.
+- Blocker 5: `review.proposal_sha256` must equal the proposal manifest's
+  (`review_proposal_hash_mismatch`); proposals carry a UUID `proposal_id`
+  covered by `proposal_sha256` (two proposals in the same second over
+  unchanged data were previously indistinguishable).
+- Blocker 6: `tests/fixtures/legacy_cleaner/legacy_cleaner_golden.yml` holds
+  static logical hashes captured from `origin/main` at `826cfc4`; the A-vs-B
+  test is replaced by a fixed-baseline comparison plus a guard that the
+  fixture values are static digests.
+- Hardening 7: `unsupported_engine_version` on proposal load (authorize) and
+  authorization load (apply).
+- Taxonomy: registry 746 -> 751; D1 family +1, engine family +4 (40 literal).
+
+### Do Not Do Yet
+
+- Do not merge #26 without the owner's final review.
+- Do not widen the engine-version policy or the composition rule.
+- Do not regenerate the legacy golden without a recorded decision.

@@ -1,0 +1,25 @@
+# Fixed logical baseline of the legacy cleaning path over samples/raw.
+#
+# Computed once from origin/main at 826cfc4 (pandas 3.0.3), before the governed
+# cleaning engine existed, using the same canonical logical-content hash the
+# engine records (schema + dtypes + values; independent of Parquet writer
+# bytes). The engine's regression test compares run_workflow output against
+# these values. They are static on purpose: a test that hashes two fresh runs
+# against each other proves only determinism, not that legacy behavior stayed
+# equal to the approved baseline.
+#
+# Regenerate ONLY with an explicit decision to change legacy behavior, from a
+# clean checkout of the approved baseline, and record the decision in
+# docs/decisions.md.
+version: 1
+source: samples/raw
+baseline_commit: 826cfc4
+pandas_baseline: ">=3.0.3,<3.1"
+hash: logical_content_sha256
+tables:
+  customers:
+    logical_content_sha256: 7d6279272889277bbf2e98390aa36c001eb727e3e80ec3ddfe395ae329f35761
+  order_items:
+    logical_content_sha256: cadd6795bdd4cc54e33c0f3ac56f98969348f609a8be3a4726ed4db829ba6c0c
+  orders:
+    logical_content_sha256: ea270b42f8fb9c8c2b2fd6dac1cc5bb343a9ab81d796b95c3277df18abe1adf8

@@ -84,9 +84,18 @@ is no `dayfirst` heuristic anywhere in the engine.
 
 A column whose name is not identifier-shaped receives only the automatic
 rename in this cycle; the contract scopes value authority by identifier, so
-value operations come in a later cycle over the renamed column. On the
-converted-Parquet route the converter has already normalized names, so the
-automatic list is normally empty - verified per column, not assumed.
+value operations come in a later cycle over the renamed column. The rename
+authority itself binds the exact raw source name under the contract's bounded
+raw-name rule (`invalid_raw_column_name` otherwise); the target is
+`slugify(name)`, derived by the engine. Two renames in one table that collapse
+to the same target, or a target that collides with an existing column, are
+`rename_target_collision` at authorize. On the converted-Parquet route the
+converter has already normalized names, so the automatic list is normally
+empty - verified per column, not assumed.
+
+Every proposal carries a `proposal_id` (UUID) covered by `proposal_sha256`, so
+two proposals over unchanged data are distinct artifacts even within the same
+second.
 
 Bundle:
 
@@ -99,13 +108,20 @@ proposal/
 └── report.md
 ```
 
-`proposal_sha256` covers the manifest content; `candidates.yml` is bound to
-it, and its governed list must match the manifest exactly.
+`proposal_sha256` covers the manifest content (including `proposal_id`,
+`engine_version`, source files, tables, and every step); `candidates.yml` is
+bound to it, and its governed list must match the manifest exactly.
 
 ## Authorize
 
 Inputs: the proposal bundle, the current source, an optional completed review
 (`--review`), an optional cleaning policy (`--policy`).
+
+The review must name the exact proposal artifact: `review.proposal_sha256`
+must equal the proposal manifest's; otherwise `review_proposal_hash_mismatch`.
+Two proposals over unchanged data carry identical candidate hashes and are
+still different artifacts - the human reviewed one of them. Proposals from
+another `engine_version` are refused (`unsupported_engine_version`).
 
 Dispositions, exactly as the contract states:
 
@@ -134,6 +150,20 @@ list of authority hashes is hashed:
 application_plan_sha256 = sha256({version, source_sha256, steps: [authority_sha256, ...]})
 ```
 
+Each plan step carries exactly `sequence` and `authority_sha256`. The plan is
+authoritative only over order; every other fact about a step (kind, table,
+column, operation, parameters) is read from the self-bound authority record it
+references, so there is no redundant metadata that could disagree with the
+authority. A step with any other key is refused at apply
+(`invalid_application_plan`).
+
+The plan is the exact executable projection of the **complete** authorized
+bundle: every authority once, in canonical order. Apply recomputes
+`_order_steps(all verified authorities)` and requires the plan's hash list to
+equal it (`application_plan_authority_set_mismatch`). A plan that omits, adds,
+repeats, or reorders authorities is refused even when every referenced
+authority is genuine and every hash was rehashed consistently.
+
 Engine v1 composition rule: at most one value-changing operation per
 `(table, column)`; a second one is `unsupported_operation_composition` and
 blocks authorization. Start restrictive; widen with tests.
@@ -153,15 +183,18 @@ authority/
 
 All preconditions are checked before staging is created:
 
-1. authorization status is `authorized`;
+1. authorization status is `authorized` and `engine_version` matches;
 2. current source hash equals the authorized one;
 3. `authorities.yml` hashes to `authorities_sha256` in the manifest;
 4. `application_plan.yml` hashes to its own `application_plan_sha256` **and**
-   to the manifest's; its source hash matches;
+   to the manifest's; its source hash matches; each step carries exactly
+   `sequence` and `authority_sha256`;
 5. every plan step references exactly one known authority, once, in sequence;
-6. every authority passes its own `verify_*` against the current source;
-7. every operation is one engine v1 implements;
-8. the composition rule holds.
+6. the plan equals the canonical projection of the complete verified bundle
+   (`application_plan_authority_set_mismatch` otherwise);
+7. every authority passes its own `verify_*` against the current source;
+8. every operation is one engine v1 implements;
+9. the composition rule holds.
 
 Any failure publishes a `blocked` bundle with blockers and **no `parquet/`**.
 
@@ -177,13 +210,30 @@ Values a governed operation cannot parse become `NA` **and are counted** in
 lineage as `values_failed`; the reviewer approved the candidate knowing its
 `failure_count`, and the record shows what happened.
 
+### Lineage
+
+Each row of `lineage.yml` is the D1 `TransformationLineage` built by
+`build_lineage` with the **real** output hash after the table is written,
+serialized as-is (`source_sha256`, `authority_kind`, `authority_sha256`,
+`output_sha256`, `table`, `column`, `operation`, `rows_examined`,
+`rows_changed`, `applied_at`, `contract_version`), plus D2 evidence beside it:
+`sequence`, `values_failed`, and `output_physical_sha256`. There is no
+placeholder hash and no parallel lineage schema.
+
+Decision: the contract `output_sha256` is the **logical content hash** of the
+output table, because that is what the engine promises to be deterministic
+across environments; the physical Parquet hash is recorded as D2 metadata and
+is not promised across writer versions. `applied_at` is part of the contract
+and stays; determinism tests compare the deterministic fields and exclude the
+timestamp and the physical hash.
+
 Bundle:
 
 ```text
 output/
 ├── parquet/<table>.parquet
-├── lineage.yml               one row per step: authority_kind, authority_sha256, scope,
-│                             rows_examined, rows_changed, values_failed, output hashes
+├── lineage.yml               D1 TransformationLineage per step + sequence, values_failed,
+│                             output_physical_sha256
 ├── application_manifest.yml  status, all upstream hashes, per-table physical and logical hashes,
 │                             logical_dataset_sha256
 ├── blockers.csv
@@ -200,6 +250,28 @@ output/
 `pyarrow` remains unpinned; the engine does not promise byte-identical Parquet
 across installations. Lineage and the application manifest carry both hashes
 so "the data changed" and "the encoder changed" stay distinguishable.
+
+## Engine Version
+
+Every bundle records `engine_version`. Artifacts that cross a process boundary
+are checked on load with the v1 policy `artifact.engine_version ==
+ENGINE_VERSION`: the proposal manifest by `authorize`, the authorization
+manifest by `apply`. A mismatch is `unsupported_engine_version` and nothing is
+authorized or applied. Widening the policy (ranges, migrations) is a later,
+explicit decision.
+
+## Legacy Baseline
+
+The legacy path is compared against a **fixed** baseline, not against itself:
+`tests/fixtures/legacy_cleaner/legacy_cleaner_golden.yml` holds the logical
+content hashes of `customers`, `order_items`, and `orders` produced by
+`run_workflow` over `samples/raw` on `origin/main` at `826cfc4` (pandas
+3.0.3), before the engine existed. The regression test runs the current
+workflow and compares against those static values; a deterministic change to
+`cleaner.py` fails it even though two fresh runs would still agree with each
+other. `tests/legacy_cleaner_characterization_test.py` remains beside it: the
+characterization suite pins individual behaviors, the golden pins the whole
+output.
 
 ## The D2 Checklist
 
@@ -231,21 +303,23 @@ so "the data changed" and "the encoder changed" stay distinguishable.
 | 1 | `test_propose_never_changes_source_data`, `test_apply_never_touches_the_source` |
 | 2, 4 | `test_missing_disposition_yields_incomplete_not_a_blocker_and_no_apply_ready_bundle`, `test_authorization_never_stores_approved_as_free_standing_state` |
 | 3 | `test_rejected_is_a_valid_disposition_with_zero_authority` |
-| 5 | `test_authorization_emits_canonical_order_and_a_hash_bound_plan`, `test_unknown_authority_in_plan_fails_apply` |
-| 6 | `test_same_authorities_in_a_different_order_have_a_different_plan_hash`, `test_tampered_or_reordered_application_plan_fails_apply_before_staging` |
+| 5 | `test_authorization_emits_canonical_order_and_a_hash_bound_plan`, `test_unknown_authority_in_plan_fails_apply`, `test_plan_that_omits_one_authorized_authority_is_refused_before_transformation`, `test_apply_recomputes_canonical_order_from_the_verified_bundle` |
+| 6 | `test_same_authorities_in_a_different_order_have_a_different_plan_hash`, `test_tampered_or_reordered_application_plan_fails_apply_before_staging`, `test_plan_reordered_with_every_hash_rehashed_is_still_refused` |
 | 7 | `test_source_changed_after_propose_fails_authorization`, `test_source_changed_after_authorize_fails_before_transformation`, `test_propose_refuses_when_source_manifest_disagrees_with_actual_parquet` |
 | 8 | `test_tampered_authority_bundle_fails_apply`, `test_one_authority_failing_verify_leaves_zero_output`, `test_forged_authority_kind_on_disk_fails_the_per_authority_self_check` |
-| 9 | `test_tampered_or_reordered_application_plan_fails_apply_before_staging` |
+| 9 | `test_tampered_or_reordered_application_plan_fails_apply_before_staging`, `test_plan_step_with_extra_metadata_is_refused_before_transformation` |
 | 10 | `test_partial_failure_publishes_nothing`, `test_one_authority_failing_verify_leaves_zero_output` |
 | 11 | `test_same_source_and_same_plan_produce_the_same_logical_output_and_lineage` |
-| 12, 13 | `test_apply_writes_every_table_and_lineage_names_exactly_one_mechanism_per_step` |
+| 12, 13 | `test_apply_writes_every_table_and_lineage_names_exactly_one_mechanism_per_step`, `test_persisted_lineage_is_the_d1_contract_object_with_the_real_output_hash` |
 | 14 | `test_configured_operation_outside_exact_policy_scope_gets_no_authority`, `test_no_policy_means_configured_steps_get_no_authority` |
 | 15 | `test_policy_that_lists_a_governed_operation_is_a_blocker` (contract: `test_a_human_decision_cannot_authorize_a_non_governed_operation`) |
-| 16 | contract: `test_operation_table_grants_no_authority_outside_safe_automatic` |
-| 17, 18 | `test_legacy_workflow_golden_file_over_samples_is_unchanged`, `tests/legacy_cleaner_characterization_test.py` |
+| 16 | contract: `test_operation_table_grants_no_authority_outside_safe_automatic`; engine: `test_raw_column_name_is_proposed_authorized_and_renamed_end_to_end`, `test_two_raw_names_that_normalize_to_the_same_target_are_refused_at_authorize` |
+| 17, 18 | `test_legacy_workflow_matches_the_fixed_golden_baseline`, `test_golden_fixture_values_are_static_hex_digests`, `tests/legacy_cleaner_characterization_test.py` |
 | 19 | `test_engine_is_opt_in_and_run_workflow_does_not_call_it` |
 | 20 | `test_engine_imports_no_network_capable_module`, `tests/network_boundary_test.py` |
 | v1 rule | `test_two_value_changing_operations_on_one_column_are_refused_before_apply` |
+| review binding | `test_review_for_another_proposal_over_the_same_source_is_refused` |
+| engine version | `test_proposal_from_another_engine_version_is_refused_by_authorize`, `test_authorization_from_another_engine_version_is_refused_by_apply` |
 
 ## CLI
 

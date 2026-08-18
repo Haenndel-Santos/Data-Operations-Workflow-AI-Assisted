@@ -16,7 +16,7 @@ import pytest
 import yaml
 
 from data_ops_lab.cleaner import clean_dataframe
-from data_ops_lab.governed_cleaning import sha256_of
+from data_ops_lab.governed_cleaning import is_aware_iso_timestamp, sha256_of
 from data_ops_lab.governed_cleaning_engine import (
     APPLICATION_MANIFEST_NAME,
     APPLICATION_PLAN_NAME,
@@ -27,6 +27,10 @@ from data_ops_lab.governed_cleaning_engine import (
     LINEAGE_NAME,
     PROPOSAL_MANIFEST_NAME,
     REVIEW_TEMPLATE_NAME,
+    ENGINE_VERSION,
+    _order_steps,
+    _plan_hash,
+    _proposal_hash,
     logical_content_sha256,
     run_governed_cleaning_apply,
     run_governed_cleaning_authorize,
@@ -194,6 +198,37 @@ def test_propose_proposes_automatic_rename_only_when_column_is_not_normalized(tm
     assert all(c["column"] != "Order Date" for c in read_yaml(tmp_path / "proposal" / CANDIDATES_NAME)["candidates"])
 
 
+def test_raw_column_name_is_proposed_authorized_and_renamed_end_to_end(tmp_path):
+    """Blocker 1: the case the proposer detects must be authorizable and
+    applicable. "Order Date" -> AutomaticAuthority -> "order_date" in output;
+    source unchanged; lineage names the operation table."""
+    src = write_parquet(tmp_path / "src", t={"Order Date": pd.Series(["2025-01-05", "2025-02-11"], dtype=object), "amount": pd.Series(["1", "2"], dtype=object)})
+    before = (src / "t.parquet").read_bytes()
+    run_governed_cleaning_propose(src, tmp_path / "proposal")
+    manifest = read_yaml(tmp_path / "proposal" / PROPOSAL_MANIFEST_NAME)
+    assert [(s["column"], s["target"]) for s in manifest["automatic"]] == [("Order Date", "order_date")]
+    review = full_review(tmp_path / "proposal", tmp_path / "review.yml", decision="rejected")  # keep it to the rename
+    auth = run_governed_cleaning_authorize(tmp_path / "proposal", src, tmp_path / "auth", review_path=review)
+    assert auth.status == "authorized", blocker_types(tmp_path / "auth")
+    records = read_yaml(tmp_path / "auth" / AUTHORITIES_NAME)["authorities"]
+    assert [(r["authority_kind"], r["column"], r["operation"]) for r in records] == [("operation_table", "Order Date", "normalize_column_name")]
+    result = run_governed_cleaning_apply(tmp_path / "auth", src, tmp_path / "out")
+    assert result.status == "applied" and result.step_count == 1
+    out = pd.read_parquet(tmp_path / "out" / "parquet" / "t.parquet")
+    assert "order_date" in out.columns and "Order Date" not in out.columns
+    assert out["order_date"].tolist() == ["2025-01-05", "2025-02-11"]     # values untouched by a rename
+    assert (src / "t.parquet").read_bytes() == before
+    lineage = read_yaml(tmp_path / "out" / LINEAGE_NAME)["lineage"]
+    assert [(r["authority_kind"], r["column"], r["operation"], r["rows_changed"]) for r in lineage] == [("operation_table", "Order Date", "normalize_column_name", 0)]
+
+
+def test_two_raw_names_that_normalize_to_the_same_target_are_refused_at_authorize(tmp_path):
+    src = write_parquet(tmp_path / "src", t={"Order Date": pd.Series(["x"], dtype=object), "order date": pd.Series(["y"], dtype=object)})
+    run_governed_cleaning_propose(src, tmp_path / "proposal")
+    auth = run_governed_cleaning_authorize(tmp_path / "proposal", src, tmp_path / "auth")
+    assert auth.status == "blocked" and "rename_target_collision" in blocker_types(tmp_path / "auth")
+
+
 def test_propose_refuses_to_overwrite_an_existing_output_directory(tmp_path):
     src = dataset(tmp_path)
     (tmp_path / "proposal").mkdir()
@@ -251,6 +286,22 @@ def test_unknown_or_extra_review_decision_is_a_blocker(tmp_path):
     assert auth.status == "blocked" and "unknown_review_candidate" in blocker_types(tmp_path / "auth")
 
 
+def test_review_for_another_proposal_over_the_same_source_is_refused(tmp_path):
+    """Blocker 5: two proposals over unchanged data carry identical candidate
+    hashes and are still different artifacts; the review authorizes the exact
+    proposal it was written against."""
+    src = dataset(tmp_path)
+    run_governed_cleaning_propose(src, tmp_path / "proposal_a")
+    review_a = full_review(tmp_path / "proposal_a", tmp_path / "review_a.yml")
+    run_governed_cleaning_propose(src, tmp_path / "proposal_b")
+    a, b = read_yaml(tmp_path / "proposal_a" / PROPOSAL_MANIFEST_NAME), read_yaml(tmp_path / "proposal_b" / PROPOSAL_MANIFEST_NAME)
+    assert a["source_sha256"] == b["source_sha256"] and a["governed"] == b["governed"]  # same candidates
+    assert a["proposal_sha256"] != b["proposal_sha256"]                                   # different artifacts
+    auth = run_governed_cleaning_authorize(tmp_path / "proposal_b", src, tmp_path / "auth", review_path=review_a)
+    assert auth.status == "blocked" and "review_proposal_hash_mismatch" in blocker_types(tmp_path / "auth")
+    assert read_yaml(tmp_path / "auth" / APPLICATION_PLAN_NAME)["steps"] == []
+
+
 def test_hash_mismatched_decision_is_a_blocker(tmp_path):
     src = dataset(tmp_path)
     run_governed_cleaning_propose(src, tmp_path / "proposal")
@@ -260,6 +311,31 @@ def test_hash_mismatched_decision_is_a_blocker(tmp_path):
     write_yaml(review, payload)
     auth = run_governed_cleaning_authorize(tmp_path / "proposal", src, tmp_path / "auth", review_path=review)
     assert auth.status == "blocked" and "decision_hash_mismatch" in blocker_types(tmp_path / "auth")
+
+
+def test_proposal_from_another_engine_version_is_refused_by_authorize(tmp_path):
+    src = dataset(tmp_path)
+    run_governed_cleaning_propose(src, tmp_path / "proposal")
+    review = full_review(tmp_path / "proposal", tmp_path / "review.yml")
+    manifest = read_yaml(tmp_path / "proposal" / PROPOSAL_MANIFEST_NAME)
+    manifest["engine_version"] = ENGINE_VERSION + 1
+    manifest["proposal_sha256"] = _proposal_hash(manifest)  # keep the artifact self-consistent
+    write_yaml(tmp_path / "proposal" / PROPOSAL_MANIFEST_NAME, manifest)
+    candidates = read_yaml(tmp_path / "proposal" / CANDIDATES_NAME)
+    candidates["proposal_sha256"] = manifest["proposal_sha256"]
+    write_yaml(tmp_path / "proposal" / CANDIDATES_NAME, candidates)
+    auth = run_governed_cleaning_authorize(tmp_path / "proposal", src, tmp_path / "auth", review_path=review)
+    assert auth.status == "blocked" and "unsupported_engine_version" in blocker_types(tmp_path / "auth")
+
+
+def test_authorization_from_another_engine_version_is_refused_by_apply(tmp_path):
+    src, _, auth_dir = full_cycle(tmp_path)
+    manifest = read_yaml(auth_dir / AUTHORIZATION_MANIFEST_NAME)
+    manifest["engine_version"] = ENGINE_VERSION + 1
+    write_yaml(auth_dir / AUTHORIZATION_MANIFEST_NAME, manifest)
+    result = run_governed_cleaning_apply(auth_dir, src, tmp_path / "out")
+    assert result.status == "blocked" and "unsupported_engine_version" in blocker_types(tmp_path / "out")
+    assert not (tmp_path / "out" / "parquet").exists()
 
 
 def test_proposal_artifact_changed_after_review_fails_authorization(tmp_path):
@@ -318,15 +394,31 @@ def test_policy_that_lists_a_governed_operation_is_a_blocker(tmp_path):
 
 
 def test_authorization_emits_canonical_order_and_a_hash_bound_plan(tmp_path):
-    """D2-5/6."""
+    """D2-5/6. The plan is authoritative only over order; every other fact
+    about a step is read from the self-bound authority record it references."""
     _, _, auth_dir = full_cycle(tmp_path)
     plan = read_yaml(auth_dir / APPLICATION_PLAN_NAME)
-    order = [(s["table"], s["column"], s["operation"]) for s in plan["steps"]]
-    assert order == sorted(order)
+    assert all(set(s) == {"sequence", "authority_sha256"} for s in plan["steps"])
     assert [s["sequence"] for s in plan["steps"]] == [1, 2, 3, 4]
+    authorities = {a["authority_sha256"]: a for a in read_yaml(auth_dir / AUTHORITIES_NAME)["authorities"]}
+    order = [(authorities[s["authority_sha256"]]["table"], authorities[s["authority_sha256"]]["column"], authorities[s["authority_sha256"]]["operation"]) for s in plan["steps"]]
+    assert order == sorted(order)
     assert plan["application_plan_sha256"] == read_yaml(auth_dir / AUTHORIZATION_MANIFEST_NAME)["application_plan_sha256"]
-    hashes = {a["authority_sha256"] for a in read_yaml(auth_dir / AUTHORITIES_NAME)["authorities"]}
-    assert {s["authority_sha256"] for s in plan["steps"]} == hashes
+    assert {s["authority_sha256"] for s in plan["steps"]} == set(authorities)
+
+
+def test_plan_step_with_extra_metadata_is_refused_before_transformation(tmp_path):
+    """Blocker 4: a step may not carry table/column/operation/authority_kind
+    that could disagree with the referenced authority; the authority record
+    is the sole source of step semantics."""
+    src, _, auth_dir = full_cycle(tmp_path)
+    plan = read_yaml(auth_dir / APPLICATION_PLAN_NAME)
+    plan["steps"][0]["operation"] = "parse_date"
+    plan["steps"][0]["column"] = "ssn"
+    write_yaml(auth_dir / APPLICATION_PLAN_NAME, plan)
+    result = run_governed_cleaning_apply(auth_dir, src, tmp_path / "out")
+    assert result.status == "blocked" and "invalid_application_plan" in blocker_types(tmp_path / "out")
+    assert not (tmp_path / "out" / "parquet").exists()
 
 
 def test_same_authorities_in_a_different_order_have_a_different_plan_hash(tmp_path):
@@ -361,7 +453,7 @@ def test_apply_writes_every_table_and_lineage_names_exactly_one_mechanism_per_st
     assert [(row["column"], row["authority_kind"]) for row in lineage] == [
         ("amount", "human_decision"), ("customer_code", "cleaning_policy"), ("notes", "cleaning_policy"), ("order_date", "human_decision"),
     ]
-    assert all(len(row["authority_sha256"]) == 64 and len(row["output_logical_sha256"]) == 64 for row in lineage)
+    assert all(len(row["authority_sha256"]) == 64 and len(row["output_sha256"]) == 64 for row in lineage)
     out = pd.read_parquet(tmp_path / "out" / "parquet" / "orders.parquet")
     assert out["amount"].tolist()[:3] == [100.0, 2500.0, 300.5] and pd.isna(out["amount"].iloc[3])
     assert out["order_date"].tolist()[0] == dt.date(2025, 1, 5)
@@ -370,6 +462,28 @@ def test_apply_writes_every_table_and_lineage_names_exactly_one_mechanism_per_st
     assert notes[0] == "ok" and pd.isna(notes[1]) and notes[2] == "-" and notes[3] == "fine"  # only N/A configured
     failed = {row["column"]: row["values_failed"] for row in lineage}
     assert failed["amount"] == 1  # the ABC value, recorded, not silent
+
+
+def test_persisted_lineage_is_the_d1_contract_object_with_the_real_output_hash(tmp_path):
+    """Blocker 2: lineage.yml rows are serialized TransformationLineage records
+    built with the real logical output hash, plus D2 evidence beside them.
+    No placeholder hash, no parallel schema."""
+    src, _, auth_dir = full_cycle(tmp_path)
+    run_governed_cleaning_apply(auth_dir, src, tmp_path / "out")
+    manifest = read_yaml(tmp_path / "out" / APPLICATION_MANIFEST_NAME)
+    logical = {t["table"]: t["logical_content_sha256"] for t in manifest["tables"]}
+    physical = {t["table"]: t["physical_sha256"] for t in manifest["tables"]}
+    contract_fields = {"source_sha256", "authority_kind", "authority_sha256", "output_sha256", "table", "column",
+                       "operation", "rows_examined", "rows_changed", "applied_at", "contract_version"}
+    for row in read_yaml(tmp_path / "out" / LINEAGE_NAME)["lineage"]:
+        assert contract_fields <= set(row), sorted(contract_fields - set(row))
+        assert row["output_sha256"] == logical[row["table"]] and row["output_sha256"] != "0" * 64
+        assert row["source_sha256"] == manifest["source_sha256"]
+        assert is_aware_iso_timestamp(row["applied_at"])
+        assert row["contract_version"] == 1
+        assert "values_failed" in row and "sequence" in row               # D2 evidence beside the contract
+        assert row["output_physical_sha256"] == physical[row["table"]]  # physical hash recorded, not promised
+        assert row["output_sha256"] == logical_content_sha256(pd.read_parquet(tmp_path / "out" / "parquet" / f"{row['table']}.parquet"))
 
 
 def test_apply_never_touches_the_source(tmp_path):
@@ -387,8 +501,10 @@ def test_same_source_and_same_plan_produce_the_same_logical_output_and_lineage(t
     m1, m2 = read_yaml(tmp_path / "out1" / APPLICATION_MANIFEST_NAME), read_yaml(tmp_path / "out2" / APPLICATION_MANIFEST_NAME)
     assert m1["logical_dataset_sha256"] == m2["logical_dataset_sha256"]
     l1, l2 = read_yaml(tmp_path / "out1" / LINEAGE_NAME)["lineage"], read_yaml(tmp_path / "out2" / LINEAGE_NAME)["lineage"]
-    strip = lambda rows: [{k: v for k, v in r.items() if k != "output_physical_sha256"} for r in rows]  # noqa: E731 - local comparator
+    run_specific = {"applied_at", "output_physical_sha256"}   # timestamp is contract; bytes are not promised
+    strip = lambda rows: [{k: v for k, v in r.items() if k not in run_specific} for r in rows]  # noqa: E731 - local comparator
     assert strip(l1) == strip(l2)
+    assert all(is_aware_iso_timestamp(r["applied_at"]) for r in l1 + l2)
     a, b = pd.read_parquet(tmp_path / "out1" / "parquet" / "orders.parquet"), pd.read_parquet(tmp_path / "out2" / "parquet" / "orders.parquet")
     assert logical_content_sha256(a) == logical_content_sha256(b)
 
@@ -428,6 +544,56 @@ def test_tampered_or_reordered_application_plan_fails_apply_before_staging(tmp_p
     result = run_governed_cleaning_apply(auth_dir, src, tmp_path / "out")
     assert result.status == "blocked" and "application_plan_hash_mismatch" in blocker_types(tmp_path / "out")
     assert not (tmp_path / "out" / "parquet").exists()
+
+
+def _rehash_plan_and_manifest(auth_dir, plan):
+    plan["application_plan_sha256"] = _plan_hash(plan["source_sha256"], [s["authority_sha256"] for s in plan["steps"]])
+    write_yaml(auth_dir / APPLICATION_PLAN_NAME, plan)
+    manifest = read_yaml(auth_dir / AUTHORIZATION_MANIFEST_NAME)
+    manifest["application_plan_sha256"] = plan["application_plan_sha256"]
+    write_yaml(auth_dir / AUTHORIZATION_MANIFEST_NAME, manifest)
+
+
+def test_plan_that_omits_one_authorized_authority_is_refused_before_transformation(tmp_path):
+    """Blocker 3: the plan is the exact executable projection of the complete
+    authorized bundle. Dropping one genuine authority, renumbering, and
+    rehashing plan and manifest consistently must still be refused."""
+    src, _, auth_dir = full_cycle(tmp_path)
+    plan = read_yaml(auth_dir / APPLICATION_PLAN_NAME)
+    assert len(plan["steps"]) == 4
+    del plan["steps"][2]
+    for i, s in enumerate(plan["steps"]):
+        s["sequence"] = i + 1
+    _rehash_plan_and_manifest(auth_dir, plan)
+    result = run_governed_cleaning_apply(auth_dir, src, tmp_path / "out")
+    assert result.status == "blocked"
+    types = blocker_types(tmp_path / "out")
+    assert "application_plan_authority_set_mismatch" in types and "unknown_plan_authority" not in types
+    assert not (tmp_path / "out" / "parquet").exists()
+
+
+def test_plan_reordered_with_every_hash_rehashed_is_still_refused(tmp_path):
+    """Order is part of the authority over the result. Even a reorder that
+    rehashes plan and manifest consistently is refused because the plan must
+    equal the canonical projection of the bundle."""
+    src, _, auth_dir = full_cycle(tmp_path)
+    plan = read_yaml(auth_dir / APPLICATION_PLAN_NAME)
+    plan["steps"] = list(reversed(plan["steps"]))
+    for i, s in enumerate(plan["steps"]):
+        s["sequence"] = i + 1
+    _rehash_plan_and_manifest(auth_dir, plan)
+    result = run_governed_cleaning_apply(auth_dir, src, tmp_path / "out")
+    assert result.status == "blocked" and "application_plan_authority_set_mismatch" in blocker_types(tmp_path / "out")
+    assert not (tmp_path / "out" / "parquet").exists()
+
+
+def test_apply_recomputes_canonical_order_from_the_verified_bundle(tmp_path):
+    src, _, auth_dir = full_cycle(tmp_path)
+    plan = read_yaml(auth_dir / APPLICATION_PLAN_NAME)
+    from data_ops_lab.governed_cleaning_engine import _authority_from_record
+    records = read_yaml(auth_dir / AUTHORITIES_NAME)["authorities"]
+    expected = [a.authority_sha256 for a in _order_steps([_authority_from_record(r, [], "x") for r in records])]
+    assert [s["authority_sha256"] for s in plan["steps"]] == expected
 
 
 def test_unknown_authority_in_plan_fails_apply(tmp_path):
@@ -523,22 +689,35 @@ def test_two_value_changing_operations_on_one_column_are_refused_before_apply(tm
 # --------------------------------------------------------------------------- #
 
 
-def test_legacy_workflow_golden_file_over_samples_is_unchanged(tmp_path):
-    """D2-17/18. run_workflow output over samples/raw is byte-identical for
-    the cleaned Parquet before and after the engine exists. The golden hashes
-    are computed by the legacy path itself in this test so they track the
-    pinned pandas range, not a hardcoded blob."""
-    from data_ops_lab.workflow import run_workflow
+def test_legacy_workflow_matches_the_fixed_golden_baseline(tmp_path):
+    """D2-17/18. run_workflow output over samples/raw must equal the committed
+    logical baseline captured from origin/main before the engine existed. The
+    expected values are static in tests/fixtures/legacy_cleaner/
+    legacy_cleaner_golden.yml; nothing here computes them at test time. A
+    deterministic change to cleaner.py would fail this test even though two
+    fresh runs would still agree with each other."""
     from pathlib import Path
-    a = run_workflow(Path(SAMPLES), tmp_path / "a")
-    b = run_workflow(Path(SAMPLES), tmp_path / "b")
-    for name in ("customers", "order_items", "orders"):
-        pa = a.output_dir / "02_cleaned" / f"{name}.parquet"
-        pb = b.output_dir / "02_cleaned" / f"{name}.parquet"
-        assert logical_content_sha256(pd.read_parquet(pa)) == logical_content_sha256(pd.read_parquet(pb))
-    # legacy cleaner still coerces silently - the engine did not change it
+
+    from data_ops_lab.workflow import run_workflow
+    golden = read_yaml(Path("tests/fixtures/legacy_cleaner/legacy_cleaner_golden.yml"))
+    assert golden["version"] == 1 and golden["hash"] == "logical_content_sha256"
+    assert set(golden["tables"]) == {"customers", "order_items", "orders"}
+    result = run_workflow(Path(SAMPLES), tmp_path / "wf")
+    actual = {name: logical_content_sha256(pd.read_parquet(result.output_dir / "02_cleaned" / f"{name}.parquet")) for name in golden["tables"]}
+    expected = {name: entry["logical_content_sha256"] for name, entry in golden["tables"].items()}
+    assert actual == expected, {k: (actual[k], expected[k]) for k in expected if actual[k] != expected[k]}
+    # the legacy cleaner still coerces silently - the engine did not change it
     coerced = clean_dataframe(pd.DataFrame({"amount": pd.Series(["100"] * 9 + ["ABC"], dtype=object)}))
     assert pd.isna(coerced["amount"].iloc[9])
+
+
+def test_golden_fixture_values_are_static_hex_digests():
+    """Guard against someone turning the baseline into a computed value."""
+    import re
+    from pathlib import Path
+    text = Path("tests/fixtures/legacy_cleaner/legacy_cleaner_golden.yml").read_text(encoding="utf-8")
+    digests = re.findall(r"logical_content_sha256: ([0-9a-f]{64})$", text, re.M)
+    assert len(digests) == 3 and len(set(digests)) == 3
 
 
 def test_engine_is_opt_in_and_run_workflow_does_not_call_it(tmp_path, monkeypatch):

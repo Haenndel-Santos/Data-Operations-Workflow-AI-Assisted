@@ -47,6 +47,7 @@ from data_ops_lab.governed_cleaning import (
     governance_class_for,
     is_aware_iso_timestamp,
     is_canonical_payload,
+    is_valid_raw_column_name,
     policy_hash,
     record_decision,
     sha256_of,
@@ -300,6 +301,60 @@ def test_safe_automatic_authority_is_the_versioned_table_entry_bound_to_scope():
     again = build_automatic_authority(source_sha256=SOURCE, table="orders", column="order_date",
                                       operation=TransformationOperation.NORMALIZE_COLUMN_NAME, blockers=[])
     assert again == auth
+
+
+def test_normalize_column_name_binds_authority_to_a_raw_non_identifier_source_name():
+    """Narrow compatibility correction found by the engine: the operation whose
+    purpose is to normalize a name that is not an identifier yet must be able
+    to bind authority to that raw name. The exception is operation-specific
+    and bounded; the hash binds the exact raw name."""
+    blockers: list[dict[str, str]] = []
+    auth = build_automatic_authority(source_sha256=SOURCE, table="orders", column="Order Date",
+                                     operation=TransformationOperation.NORMALIZE_COLUMN_NAME, blockers=blockers)
+    assert auth is not None and blockers == []
+    assert auth.column == "Order Date"
+    assert verify_automatic_authority(auth, current_source_sha256=SOURCE, blockers=blockers) and blockers == []
+    other = build_automatic_authority(source_sha256=SOURCE, table="orders", column="Order  Date",
+                                      operation=TransformationOperation.NORMALIZE_COLUMN_NAME, blockers=[])
+    assert other is not None and other.authority_sha256 != auth.authority_sha256  # exact raw name is bound
+
+
+@pytest.mark.parametrize("raw", ["", " ", "   ", "	", "---", "x" * 256, "tab	here", "nul" + chr(0) + "byte"])
+def test_pathological_raw_column_names_are_refused_by_the_bounded_rule(raw):
+    assert not is_valid_raw_column_name(raw)
+    blockers: list[dict[str, str]] = []
+    assert build_automatic_authority(source_sha256=SOURCE, table="orders", column=raw,
+                                     operation=TransformationOperation.NORMALIZE_COLUMN_NAME, blockers=blockers) is None
+    assert "invalid_raw_column_name" in {b["blocker_type"] for b in blockers}
+
+
+@pytest.mark.parametrize("raw", ["Order Date", " padded ", "a-b (c)", "Ünïcödé Name", "x" * 255])
+def test_plausible_raw_column_names_are_accepted_by_the_bounded_rule(raw):
+    assert is_valid_raw_column_name(raw)
+
+
+def test_raw_name_exception_does_not_leak_to_other_operations():
+    """Only normalize_column_name gets the raw-name rule. Every other operation
+    keeps IDENTIFIER_PATTERN scoping; the exception is not a generic bypass."""
+    blockers: list[dict[str, str]] = []
+    built = build_candidate(
+        candidate_id="orders.x.parse_number", source_sha256=SOURCE, table="orders", column="Order Date",
+        operation=TransformationOperation.PARSE_NUMBER, parameters={}, evidence=evidence(), blockers=blockers,
+    )
+    assert built is None and "invalid_column_identifier" in {b["blocker_type"] for b in blockers}
+    blockers = []
+    p = policy(operations=(PolicyOperation(TransformationOperation.TRIM_WHITESPACE, "orders", ("Order Date",)),))
+    assert not validate_policy(p, blockers) and "invalid_column_identifier" in {b["blocker_type"] for b in blockers}
+
+
+def test_stored_automatic_authority_with_pathological_raw_name_fails_verify():
+    auth = build_automatic_authority(source_sha256=SOURCE, table="orders", column="Order Date",
+                                     operation=TransformationOperation.NORMALIZE_COLUMN_NAME, blockers=[])
+    assert auth is not None
+    forged = dataclasses.replace(auth, column="   ")
+    blockers: list[dict[str, str]] = []
+    assert not verify_automatic_authority(forged, current_source_sha256=SOURCE, blockers=blockers)
+    assert {"invalid_raw_column_name", "authority_hash_mismatch"} <= {b["blocker_type"] for b in blockers}
 
 
 @pytest.mark.parametrize("op", [op for op, cls in OPERATION_GOVERNANCE.items() if cls is not GovernanceClass.SAFE_AUTOMATIC])

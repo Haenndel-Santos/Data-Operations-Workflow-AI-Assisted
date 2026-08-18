@@ -620,6 +620,10 @@ Default tests must remain offline. Any future API, database, or hosted-service i
   dispositions, ordered hash-bound plan, tamper and drift refusal, partial
   failure publishing nothing, logical determinism, lineage per step, legacy
   golden file over `samples/raw`, and opt-in isolation.
+- `tests/fixtures/legacy_cleaner/legacy_cleaner_golden.yml` is the static
+  logical baseline of the legacy workflow over `samples/raw` (captured from
+  `origin/main` at `826cfc4`); `test_legacy_workflow_matches_the_fixed_golden_baseline`
+  compares against it rather than against a second fresh run.
 - The `governed_cleaning` and `governed_cleaning_engine` blocker families are
   registered in the error taxonomy; `tests/failure_label_inventory_test.py`
-  pins the registry at 746 codes.
+  pins the registry at 751 codes.

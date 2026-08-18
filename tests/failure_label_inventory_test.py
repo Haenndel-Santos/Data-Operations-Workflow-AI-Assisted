@@ -1633,6 +1633,7 @@ def test_governed_cleaning_is_a_complete_family_of_literal_standard_blockers():
         "invalid_evidence_metric",
         "invalid_lineage_count",
         "invalid_output_sha256",
+        "invalid_raw_column_name",
         "invalid_reviewed_at",
         "invalid_source_sha256",
         "invalid_table_identifier",
@@ -1683,7 +1684,7 @@ def test_governed_cleaning_engine_is_a_complete_family_of_literal_standard_block
         if any(any(f"/{filename}:" in location for filename in consumer_files) for location in locations)
     }
     assert consumer_files == frozenset({"governed_cleaning_engine.py"})
-    assert len(literal_codes) == 36
+    assert len(literal_codes) == 40
     assert literal_codes <= set(ERROR_CLASSIFICATION_REGISTRY)
     assert {"duplicate_review_decision", "unknown_transformation_operation", "unsupported_review_version"} <= literal_codes
     assert not {loc for loc in dynamic_sites if "/governed_cleaning_engine.py:" in loc}
@@ -1732,4 +1733,4 @@ def test_registry_covers_only_complete_registered_consumer_families():
         expected_codes.update(family_codes)
 
     assert set(ERROR_CLASSIFICATION_REGISTRY) == expected_codes
-    assert len(ERROR_CLASSIFICATION_REGISTRY) == 746
+    assert len(ERROR_CLASSIFICATION_REGISTRY) == 751
