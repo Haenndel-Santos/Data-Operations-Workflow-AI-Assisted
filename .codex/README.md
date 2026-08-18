@@ -1,48 +1,43 @@
-# EDS SQL Codex Knowledge Layer
+# Agent Knowledge Layer
 
-This `.codex` directory gives future agent sessions project-specific rules for the EDS ERP SQL modeling workflow. It is a documentation and guidance layer only; it does not change source code, data, migrations, outputs, tests, or analytical results.
+This directory gives agent sessions project-specific rules for the customer-hosted
+Data Intelligence platform described in `docs/product-vision.md`. It is a guidance
+layer only: it does not change source code, data, outputs, tests, approvals, or
+analytical results.
 
-Read `AGENTS.md`, `docs/progress.md`, and the newest entry in `docs/agent-handoff.md` before selecting a skill.
+Skills orient. Code, tests, and CI enforce. When this directory and an executable
+check disagree, the check wins and this directory is wrong.
 
-Use these skills and agent profiles when working on ERP data modeling, product reference reconciliation, business flow analysis, human approval handling, data quality review, SQL generation, documentation, and validation.
+Read `AGENTS.md` (or `CLAUDE.md`), `docs/progress.md`, and the newest entry in
+`docs/agent-handoff.md` before selecting a skill.
 
-## Shared Context
+## Scope
 
-All skills and agents should use `.codex/project-context/eds-sql-domain-rules.md` as shared project context before making recommendations.
+The project began as an EDS ERP/SQL modeling workflow and now targets a broader
+product: small and medium-sized businesses asking governed analytical questions
+without SQL expertise. ERP knowledge remains valuable, but it is a **domain
+specialization**, not the definition of the system.
 
-The most important rule is:
+- Cross-project skills apply to any dataset and any product surface.
+- Domain skills carry EDS-specific ERP semantics and apply only to that work.
 
-**Human approval always wins over automation.**
+## Permanent Rules
 
-Human review decisions must never be silently replaced. Conflicts between automated findings and human review files must be flagged clearly.
-
-## Recommended Implementation Order
-
-1. Data Model Architect
-2. Product Reference Specialist
-3. Human Approval Manager
-4. ERP Business Flow Analyst
-5. Data Quality Auditor
-6. SQL Generator
-7. Documentation Writer
-8. ERP Test Engineer
+- Human approval always wins over automation.
+- Candidate, pending, approved, rejected, blocked, and conflicting states stay
+  mechanically separate.
+- The model interprets and explains; deterministic code calculates, authorizes,
+  plans, and executes.
+- Customer data, prompts, results, logs, and generated artifacts stay inside the
+  Customer Data Boundary.
+- Do not invent relationships or promote candidates without evidence.
+- Generated reports are evidence, never authority over versioned approvals.
 
 ## Choosing The Correct Skill
 
-Use the narrowest skill that matches the work:
+Use the narrowest skill that matches the work.
 
-| Work type | Skill |
-| --- | --- |
-| Primary key, foreign key, relationship, or schema modeling decisions | `data-model-architect` |
-| Product references, `Product_ref.nr.xlsx`, SKU/PD reconciliation, duplicate or missing product refs | `product-reference-specialist` |
-| ERP document flow, commercial/logistics/purchase/finance relationships | `erp-business-flow` |
-| Approved human review files, conflicting decisions, blocked decisions | `human-approval-manager` |
-| Duplicates, nulls, malformed prefixes, orphan references, suspicious keys | `data-quality-auditor` |
-| SQL schema, migration drafts, indexes, constraints, views | `sql-generator` |
-| Markdown schema docs, flow maps, decision logs, executive summaries | `documentation-writer` |
-| Validation checks, pytest planning, regression testing expectations | `test-engineer` |
-
-Use these cross-project skills for execution and continuity:
+### Cross-project
 
 | Work type | Skill |
 | --- | --- |
@@ -50,16 +45,51 @@ Use these cross-project skills for execution and continuity:
 | Workflow selection, dependency ordering, state, dry-run, or resume design | `project-orchestrator` |
 | Module input/output/schema/failure/compatibility definition | `module-contract` |
 | Small approved code or documentation implementation | `implementation` |
+| Validation checks, pytest planning, regression testing expectations | `test-engineer` |
+| Approved human review files, conflicting decisions, blocked decisions | `human-approval-manager` |
+| Analytical query planning, semantic adaptation, read-only execution safety | `query-planning-safety` |
+| Duplicates, nulls, malformed values, orphan references, suspicious keys | `data-quality-auditor` |
+| Primary key, foreign key, relationship, or schema modeling decisions | `data-model-architect` |
+| Markdown schema docs, flow maps, decision logs, executive summaries | `documentation-writer` |
 
-Use agent profiles in `.codex/agents/` when a task needs several skills combined.
+### Domain: EDS ERP
 
-## Global Rules
+These carry EDS-specific ERP semantics from
+`.codex/project-context/eds-sql-domain-rules.md`. Do not apply them to generic
+customer datasets, benchmark datasets, or product API/UI work.
 
-- Do not invent relationships.
-- Prefer evidence from ERP exports, validated outputs, tests, and approved human review files.
-- Document every modeling decision.
-- Every PK/FK recommendation must include evidence, confidence, and unresolved risks.
-- Distinguish approved decisions, candidates, blocked items, and assumptions.
-- Do not generate final SQL constraints from unapproved candidates.
-- Do not change source data silently.
-- Do not assume every product has a valid PD reference.
+| Work type | Skill |
+| --- | --- |
+| ERP document flow, commercial/logistics/purchase/finance relationships | `erp-business-flow` |
+| Product references, SKU/PD reconciliation, duplicate or missing product refs | `product-reference-specialist` |
+
+Agent profiles in `.codex/agents/` combine several skills. The current profiles
+are EDS-oriented and named accordingly.
+
+## Product And Security Baseline
+
+Product, boundary, and security work must start from the Sprint 0 baseline
+rather than from this directory:
+
+- [Product Vision](../docs/product-vision.md)
+- [Customer Data Boundary](../docs/customer-data-boundary.md)
+- [Security Architecture Baseline](../docs/security-architecture.md)
+- [Product Threat Model](../docs/threat-model.md)
+- [AI Analytical Capability Matrix](../docs/ai-analytical-capability-matrix.md)
+- [MVP Architecture](../docs/mvp-architecture.md)
+
+## Enforcement
+
+Guidance in this directory is not a substitute for a check. The mechanical gates
+are:
+
+| Invariant | Enforced by |
+| --- | --- |
+| No known-vulnerable dependency | `pip-audit` in CI |
+| No secret in the working tree or history | Gitleaks in CI |
+| Correctness and security lint rules | `ruff check .` in CI |
+| Contract, approval, and execution behaviour | the offline pytest suite |
+| Documentation links resolve | `scripts/check_internal_links.py` in CI |
+
+Adding a rule here without a corresponding check makes it advisory. Prefer the
+check.
