@@ -294,7 +294,7 @@ class OllamaSemanticIntentProvider:
         }
         if len(body) > MAX_OLLAMA_REQUEST_BYTES:
             raise OllamaProviderError("The minimized Ollama request exceeds its local size limit.")
-        request = Request(
+        request = Request(  # noqa: S310 - endpoint is pinned to loopback http by validate_loopback_endpoint
             f"{self.endpoint}/api/chat",
             data=body,
             headers={"Content-Type": "application/json", "Accept": "application/json"},

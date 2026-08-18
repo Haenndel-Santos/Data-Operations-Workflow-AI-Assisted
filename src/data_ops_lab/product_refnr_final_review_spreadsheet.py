@@ -53,18 +53,6 @@ NOTE_SUGGESTIONS = {
 }
 
 
-@dataclass(frozen=True)
-class ProductRefnrFinalReviewSpreadsheetResult:
-    output_dir: Path
-    xlsx_path: Path
-    csv_path: Path
-    readme_path: Path
-    required_review_count: int
-    missing_notes_count: int
-    inconsistency_count: int
-    all_exceptions_count: int
-
-
 def run_id() -> str:
     return datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
 

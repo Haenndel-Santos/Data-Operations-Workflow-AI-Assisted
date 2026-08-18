@@ -28,10 +28,6 @@ from .analytics_nl_translation import (
 )
 from .analytics_ollama_soak import run_analytics_ollama_soak
 from .ollama_provider import (
-    DEFAULT_CONTEXT_TOKENS,
-    DEFAULT_MAX_OUTPUT_TOKENS,
-    DEFAULT_OLLAMA_ENDPOINT,
-    DEFAULT_OLLAMA_MODEL,
     OllamaSemanticIntentProvider,
 )
 from .analytics_query_execution import AnalyticsExecutionLimits, run_analytics_query_execution

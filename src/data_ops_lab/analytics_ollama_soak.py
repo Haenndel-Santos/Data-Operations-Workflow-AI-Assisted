@@ -551,7 +551,7 @@ def sample_ollama_soak_resources(output_dir: Path) -> dict[str, Any]:
     sample.update(_process_memory_samples())
     try:
         completed = subprocess.run(
-            [
+            [  # noqa: S607 - fixed literal argv; telemetry only, no shell and no user input
                 "nvidia-smi",
                 "--query-gpu=temperature.gpu,utilization.gpu,power.draw",
                 "--format=csv,noheader,nounits",
@@ -1168,7 +1168,7 @@ def run_analytics_ollama_soak(
 
             def tracked_sampler() -> dict[str, Any]:
                 sample = sampler()
-                cycle_samples.append(sample)
+                cycle_samples.append(sample)  # noqa: B023 - consumed inside the same iteration; never escapes the loop
                 all_samples.append(sample)
                 return sample
 
@@ -1180,12 +1180,12 @@ def run_analytics_ollama_soak(
 
             def case_guard() -> str | None:
                 if (output_dir / policy.stop_file_name).exists():
-                    cycle_guard_reasons.append("stop_file_detected")
+                    cycle_guard_reasons.append("stop_file_detected")  # noqa: B023 - consumed inside the same iteration; never escapes the loop
                     return "stop_file_detected"
                 sample = tracked_sampler()
                 reasons = _resource_stop_reasons(sample, policy)
                 if reasons:
-                    cycle_guard_reasons.extend(reasons)
+                    cycle_guard_reasons.extend(reasons)  # noqa: B023 - consumed inside the same iteration; never escapes the loop
                     return reasons[0]
                 return None
 

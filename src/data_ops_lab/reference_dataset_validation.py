@@ -245,7 +245,7 @@ def validate_conversion(
         add_blocker(blockers, "invalid_conversion", "Conversion metadata is required.", "conversion")
         return {}, {}, {}
     manifest_path = normalized_path(config.get("manifest_path"), "conversion.manifest_path", blockers)
-    actual_manifest_hash = validate_hash(manifest_path, config.get("manifest_sha256"), "conversion.manifest_sha256", blockers)
+    validate_hash(manifest_path, config.get("manifest_sha256"), "conversion.manifest_sha256", blockers)
     manifest = load_yaml(manifest_path, "conversion.manifest_path", blockers) if manifest_path else {}
     if manifest:
         if manifest.get("status") != "ready_for_local_benchmark":

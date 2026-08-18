@@ -968,7 +968,7 @@ def sample_local_resources() -> dict[str, Any]:
             pass
     try:
         completed = subprocess.run(
-            [
+            [  # noqa: S607 - fixed literal argv; telemetry only, no shell and no user input
                 "nvidia-smi",
                 "--query-gpu=memory.total,memory.used",
                 "--format=csv,noheader,nounits",

@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import csv
-from collections import defaultdict
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -138,7 +137,6 @@ def key_recommendation(row: dict[str, str], validation: dict[str, str], mapping:
     regex_match = pct(validation.get("regex_match_rate"))
     namespace = mapping.get("semantic_namespace", NEEDS_CONTEXT)
     tech_conf = technical_confidence(non_null, unique, duplicates)
-    ser_conf = serial_confidence(prefix_match, regex_match, namespace)
 
     if current_table_type == "line":
         if "row_position" in row["candidate_key"] and tech_conf == "high":
@@ -169,7 +167,6 @@ def build_serial_aware_key_review(
 ) -> list[dict[str, Any]]:
     validation_lookup = {row["table_name"]: row for row in validation_rows}
     enrichment_lookup = {(row["table_name"], row["candidate_key"]): row for row in enrichment_rows}
-    observations_by_table = {obs.table_name: obs for obs in observations}
     rows: list[dict[str, Any]] = []
 
     for key in key_rows:
