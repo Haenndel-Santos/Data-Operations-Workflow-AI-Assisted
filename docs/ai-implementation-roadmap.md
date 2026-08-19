@@ -227,6 +227,9 @@ provider use, and provider selection remain later gates.
 
 ### Phase 6 - Generic Dataset Recognition
 
+Design for the readiness gate that this phase produces:
+[Generic Dataset Readiness](dataset-readiness.md) (design for owner review).
+
 - Detect physical types, nullability, uniqueness, candidate keys, repeated line
   structures, relationship evidence, and business-domain patterns.
 - Generate semantic candidates and clarification questions.
