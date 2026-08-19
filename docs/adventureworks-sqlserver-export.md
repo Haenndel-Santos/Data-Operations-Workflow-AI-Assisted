@@ -68,6 +68,24 @@ set. The generated relationship review and approved-registry projection remain
 version 2 and pending until a separate complete human review is supplied.
 Northwind's version-1 artifacts and review shape remain supported.
 
+## Local Prerequisites (Phase 5.2 stop state)
+
+Phase 5.2 has been stopped on local prerequisites, not on contract work. Before
+resuming, from an **elevated** PowerShell session on the workstation that holds
+the ignored raw artifact:
+
+    Get-Service MSSQLSERVER, SQLBrowser, SQLWriter          # confirm the default instance is installed
+    Start-Service MSSQLSERVER                                # requires local administrator authority
+    Test-Path "datasets\benchmarks\raw\adventureworks\AdventureWorks2025.bak"
+
+Expected: `MSSQLSERVER` reports `Running`, and the `.bak` exists at the exact
+path the versioned inventory names (its SHA-256 is recorded in
+`datasets/benchmarks/manifests/datasets.yml`). If either check fails, do not
+substitute another instance or another backup: the export contract binds the
+default instance and the exact source hash. Starting the service and restoring
+the ignored artifact are local-administrator actions and are not performed by
+agents.
+
 ## Usage
 
 Install the optional local adapter without changing the default offline suite:

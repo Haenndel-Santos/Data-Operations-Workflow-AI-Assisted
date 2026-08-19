@@ -351,8 +351,13 @@ database, provider, upload, publication, training, or deployment changes.
 
 ## Next Logical Milestone
 
-Review and merge the governed cleaning engine (D2). Then generic dataset
-readiness over the governed route, then Product API. `run_workflow()` and
+Owner review of the Generic Dataset Readiness design (PR #28), amended with
+refresh compatibility, versioned dataset expectations, and a v2 logical
+content hash as prerequisite. In parallel, the P0 items from the 2026-08-19
+expert panel review (`docs/reviews/2026-08-19-expert-panel-review.md`): a
+risk-based review policy, the roadmap re-estimate, the README/testing
+corrections (done), and the AdventureWorks prerequisites (documented). Then
+readiness contract and engine, then Product API. `run_workflow()` and
 `clean_dataframe()` stay unchanged throughout; the engine remains opt-in.
 
 Review and accept or revise the Sprint 0 product/security baseline, then restore

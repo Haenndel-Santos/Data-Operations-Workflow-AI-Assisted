@@ -82,7 +82,8 @@ provider-outcome, registry-validation, soak, and reference validation/review
 and Product promotion/materialization status surfaces. Four control-text
 surfaces, five module-specific blocker formats, the reference approval
 projection, and three Product authority boundaries have separate provenance.
-The 675-code registry covers only the 22 complete registered consumer modules.
+The 751-code registry covers only the complete registered consumer families
+(the count is pinned by `tests/failure_label_inventory_test.py`).
 Run them with the directly affected modules:
 
 ```powershell
