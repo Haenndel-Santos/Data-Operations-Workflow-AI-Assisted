@@ -110,7 +110,7 @@ Raw XLSX / CSV
 | Data Profiler | Reports columns, types, nulls, duplicates, unique counts, and examples. |
 | Schema Detector | Infers physical and semantic column types; key inference pushes metadata, null, uniqueness, and overlap work into local DuckDB. |
 | Key Identifier | Suggests primary keys and foreign keys as candidates. Candidates are never promoted without evidence and human approval. |
-| Data Cleaner (legacy) | Standardizes column names, blanks, text, dates, and numeric strings by heuristic. Behavior is characterized by tests and frozen while the governed path is built beside it. |
+| Data Cleaner (legacy) | Heuristic cleaner on the default path: normalizes column names and parses date-named columns; its blank-sentinel, whitespace, and numeric-coercion branches fire only on `object`/`string`-dtype columns, so under the pinned pandas 3 they do **not** fire on freshly-read Parquet/CSV string columns (dtype `str`). Behavior is characterized by tests, pinned by a static golden, and frozen while the governed path is built beside it. |
 | SQL Assistant | Generates starter SQL checks and join queries from detected metadata for a human to read. It is not an execution path. |
 | Query Validator | Checks relationship match rates and join fan-out risk. |
 | Export Layer | Writes clean CSV/Parquet files and creates a DuckDB database. |
@@ -299,8 +299,13 @@ required only to run the opt-in live tests and the live evaluation commands.
   3-table workload); analytical execution has fixed resource limits. Large
   production datasets have not been exercised.
 - **Legacy cleaner behavior depends on the pandas major**, which is why pandas
-  is pinned to `>=3.0.3,<3.1`; the legacy path is frozen and pinned by a static
-  golden baseline while the governed engine is the route for new work.
+  is pinned to `>=3.0.3,<3.1`. Under pandas 3 the legacy cleaner's blank,
+  whitespace, and numeric-coercion branches do not fire on freshly-read string
+  columns; only column-name normalization and name-based date parsing do. The
+  legacy path is frozen and pinned by a static golden baseline while the
+  governed engine is the route for new work; whether to repair the legacy
+  branches (and regenerate the golden under a recorded decision) or leave them
+  frozen is an open owner decision.
 - **Governed engine v1 scope.** Five operations (`normalize_column_name`,
   `trim_whitespace`, `normalize_blank_sentinel`, `parse_number`, `parse_date`
   with explicit format), one value-changing operation per column, logical
