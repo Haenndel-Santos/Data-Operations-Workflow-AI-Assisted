@@ -106,6 +106,7 @@ must not be reported as merely incomplete.
 | `cleaning.lineage_integrity` | integrity | When (b): `lineage.yml` rows are contract `TransformationLineage` records whose `output_sha256` equals the table's logical hash and whose `authority_sha256` values appear in the referenced authority bundle |
 | `cleaning.pending_candidates` | advisory | The proposal that fed the application has no governed candidate left without disposition (a `rejected` disposition is fine; `missing` is a warning, not a blocker - the owner may have chosen not to decide yet) |
 | `schema.inference_present` | advisory | `schema.json` / `keys.json` (or equivalent evidence) exist for the analytical tables |
+| `source.refresh_compatibility` | required (when `--previous` is given) | Against a previous readiness artifact for the same `dataset_id`: every table present before is present now; per-table column names and dtypes are unchanged; approved keys stay unique; approved relationships keep referential integrity within tolerance. Content hashes are expected to differ - that is a refresh. A schema difference lists the exact tables/columns and is `not_ready`, never silently ready |
 
 ### `analytics_v1` - the dataset can be queried through the governed analytics route
 
@@ -123,6 +124,9 @@ Includes every `preparation_v1` check, plus:
 | `semantics.compiles` | required | The approved semantic catalog compiles against the current physical catalog with zero blockers and zero unresolved ambiguities (`analytics-semantic-catalog` contract, read-only) |
 | `execution.contract` | required | The analytics module registry validates statically for the session entrypoints (no execution), and Stage 5A/5B limits are the fixed ones (readiness records the limit values it saw) |
 | `keys.approval` | advisory | `approved_keys.yml` (or the dataset's equivalent) is non-empty; absence is a warning because Stage 5A does not need approved keys, only approved relationships |
+| `relationships.cardinality` | required | Every approved relationship carries a mechanically measured cardinality (`1:1`, `N:1`, `1:N`, `N:M`) and fan-out factor recorded at review time, and the semantic catalog declares a `grain` per table; readiness recomputes the cardinality against the current data and refuses on drift. This is the prerequisite for the planner to refuse fan-out-inflating aggregations (`fanout_join_blocked`) instead of relying on reviewer caveats |
+| `expectations.declared` | advisory | A versioned, hash-bound dataset expectations file exists (uniqueness of approved keys, referential integrity of approved relationships within tolerance, freshness, row-count anomaly bounds, accepted values for approved categorical dimensions) |
+| `expectations.hold` | required (when declared) | Every declared expectation evaluates true against the current data; a failed expectation is `not_ready` with the failing expectation named. Expectations are evaluated by deterministic code only and never promote anything |
 
 The two profiles are the v1 answer to "which properties are necessary before
 the Product API can accept a dataset": the API accepts a dataset for
@@ -150,6 +154,23 @@ Every equality above is an `integrity` check. Any failure is `blocked`. The
 readiness artifact records every hash it recomputed and every hash it
 compared against, so a later reader can repeat the same comparisons.
 
+## Prerequisites Discovered By Review
+
+Two items surfaced by the 2026-08-19 expert panel change what readiness may
+depend on:
+
+- **Logical content hash v2.** The current `logical_content_sha256` is O(n)
+  pure Python (measured 25.3 s and 155 MB for 300k rows x 5 columns). Readiness
+  recomputes it for every table on every evaluation, so it must first become
+  Arrow/DuckDB-native and versioned (`LOGICAL_HASH_VERSION = 2`, v1 retained
+  for artifacts already published). Readiness records the hash version it used
+  in `bindings`, and treats a v1/v2 mismatch against an upstream artifact as a
+  recomputation, not a drift.
+- **Refresh is the normal case, not the exception.** A small business receives
+  a new ERP export weekly. Readiness must therefore answer "what survives a
+  refresh" mechanically (`source.refresh_compatibility` above) instead of
+  forcing a full re-approval whenever bytes change and the schema does not.
+
 ## The Artifact
 
 `dataset_readiness.yml`, published atomically to a new directory with
@@ -164,6 +185,8 @@ profile_version: 1
 evaluated_at: 2026-08-19T10:00:00Z
 state: ready | not_ready | blocked
 bindings:
+  logical_hash_version: 2
+  previous_readiness_sha256: ...        # when --previous is given
   source_sha256: ...
   logical_dataset_sha256: ...
   physical_catalog_sha256: ...
@@ -235,7 +258,14 @@ new `dataset_readiness` taxonomy family, and named by check: for example
 `unsupported_profile`, `unsupported_readiness_engine_version`. Warning codes
 are a separate, also-literal vocabulary (`source_manifest_absent`,
 `pending_cleaning_candidates`, `approved_keys_absent`,
-`relationship_coverage_gap`, ...). Exact lists are fixed at contract time.
+`relationship_coverage_gap`, `schema_changed_since_previous`,
+`expectation_failed`, `cardinality_drift`, ...). Exact lists are fixed at
+contract time.
+
+Every code will also have an entry in the versioned **message catalog** the
+Product API and UI share (code -> business-language title and explanation,
+resolving role, next action). Readiness emits codes; the catalog, not the
+engine, decides how a business user reads them.
 
 ## Testing Strategy
 
@@ -268,11 +298,13 @@ src/data_ops_lab/dataset_readiness.py
     evaluate_dataset_readiness(dataset_dir, database_path, output_dir, *,
         profile, dataset_id, semantic_state_path=None, relationships_path=None,
         application_manifest_path=None, source_manifest_path=None,
-        schema_dir=None) -> DatasetReadinessResult
+        schema_dir=None, expectations_path=None,
+        previous_artifact_path=None) -> DatasetReadinessResult
     verify_readiness_artifact(artifact_path, ...) -> bool + blockers   # downstream re-verify
 
 cli_commands/dataset_readiness.py
-    dataset-readiness-evaluate   one flat command; additive registration in cli.py
+    dataset-readiness-evaluate   one flat command; additive registration in cli.py;
+                                 --previous <artifact> enables source.refresh_compatibility
 ```
 
 Contract-level pieces (states, classes, check registry, artifact hash, profile
@@ -295,6 +327,20 @@ does the file reading in the D2 style.
    that human registration lives in the Product API.
 5. **`blocked` vs `not_ready`.** Confirm the split: integrity failure is not
    incompleteness.
+6. **Refresh contract.** Confirm `source.refresh_compatibility` as a required
+   check when a previous artifact is supplied, and its rule: schema and
+   approved-key/relationship properties must hold; content hashes may change.
+7. **Expectations.** Confirm a versioned, hash-bound expectations file as an
+   input to readiness (`advisory` when absent, `required` when declared), and
+   that expectations are evaluated by deterministic code only.
+8. **Cardinality and grain.** Confirm that `analytics_v1` requires mechanically
+   measured relationship cardinality and a declared table grain, so the planner
+   can refuse fan-out-inflating aggregations rather than rely on caveats. This
+   touches the relationship-review and semantic-catalog contracts (additive
+   fields) and is the largest scope item; say if it should be a separate
+   increment before readiness rather than inside it.
+9. **Logical hash v2 as prerequisite.** Confirm that the Arrow/DuckDB-native
+   `logical_content_sha256` v2 lands before the readiness engine.
 
 ## Related
 
@@ -308,3 +354,6 @@ does the file reading in the D2 style.
 - [MVP Product Requirements](mvp-prd.md) and [MVP Architecture](mvp-architecture.md) -
   "Dataset readiness" as the first product screen and `/datasets` endpoint
 - [AI platform implementation roadmap](ai-implementation-roadmap.md) - Phase 6
+- Expert panel review of 2026-08-19 (`docs/reviews/2026-08-19-expert-panel-review.md`,
+  arriving in PR #29) - source of the refresh, expectations, cardinality, and
+  hash-v2 amendments
